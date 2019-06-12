@@ -2,6 +2,10 @@ import { find, forEach } from "lodash";
 
 const listAdminRoutes = [
     /*==========================================================================*/
+    { name: "SECURE_CODE", path: "/auth/secure", language: "en"},
+
+
+    /*==========================================================================*/
     { name: "AUTH_LOGIN", path: "/auth/login", language: "en"},
     /*==========================================================================*/
     { name: "MAINPAGE", path: "/", language: "en"},

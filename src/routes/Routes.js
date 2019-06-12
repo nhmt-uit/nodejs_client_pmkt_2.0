@@ -1,5 +1,6 @@
 import DashboardPage from 'my-pages/DashboardPage';
 import LoginPage from 'my-pages/auth/LoginPage';
+import SecureCodePage from 'my-pages/auth/SecureCodePage';
 
 import { AccountantListPage } from 'my-pages/accountant';
 import RoutesService from './RoutesService'
@@ -11,6 +12,11 @@ const Routes = [
 		component: DashboardPage,
 	},
 	// authentication
+	{
+		path: RoutesService.getPath('ADMIN', 'SECURE_CODE'),
+		exact: true,
+		component: SecureCodePage,
+	},
 	{
 		path: RoutesService.getPath('ADMIN', 'AUTH_LOGIN'),
 		exact: true,

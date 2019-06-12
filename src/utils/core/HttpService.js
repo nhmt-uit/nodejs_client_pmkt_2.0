@@ -1,9 +1,10 @@
 import axios from 'axios';
 import { isEmpty } from 'lodash';
-import qs from 'qs'
+import qs from 'qs';
+import Cookies from 'universal-cookie';
+import { Helpers } from 'my-utils';
 
-import { Helpers } from 'my-utils'
-
+const cookie = new Cookies();
 class HttpService {
     constructor() {
         let config = {
@@ -12,7 +13,7 @@ class HttpService {
                 'Accept': 'application/json',
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
-        }
+        };
         //Inital Service
         this.service = axios.create(config);
         this.service.interceptors.request.use(this.handleRequest, this.handleError);
@@ -21,12 +22,12 @@ class HttpService {
 
     getCancelTokenSource = () => {
         return axios.CancelToken.source();
-    }
+    };
 
     getCancelToken = () => {
         let source = this.getCancelTokenSource();
         return source.token;
-    }
+    };
 
     //Create request with method get
     get = (path, queryParams, cancelToken) => {
@@ -39,7 +40,7 @@ class HttpService {
             params: queryParams,
             cancelToken: cancelToken
         });
-    }
+    };
 
     //Create request with method post
     post = (path, payload, cancelToken) => {
@@ -51,7 +52,7 @@ class HttpService {
         //Convert Object to form data
         // payload = this.obj2fd(payload)
         return this.service.post(path, qs.stringify(payload), { cancelToken: cancelToken });
-    }
+    };
 
     //Create request with method put
     put = (path, payload, cancelToken) => {
@@ -60,7 +61,7 @@ class HttpService {
             cancelToken = this.getCancelToken();
         }
         return this.service.put(path, payload, { cancelToken: cancelToken });
-    }
+    };
 
     //Create request with method delete
     delete = (path, queryParams, cancelToken) => {
@@ -73,33 +74,37 @@ class HttpService {
             params: queryParams,
             cancelToken: cancelToken
         });
-    }
+    };
 
     //Set JWT Token
     setAuthorization = () => {
-        // this.service.defaults.headers.common['Authorization'] = 'Basic ' + btoa(`${AppConfig.API_AUTH_USER}:${AppConfig.API_AUTH_PASS}`);
-    }
+        const accessToken = cookie.get('access_token');
+
+        if (accessToken) {
+            this.service.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+        }
+    };
 
     //Handle berfore send request
     handleRequest = config => {
         console.log('test')
         Helpers.showLoading();
         return config;
-    }
-        
+    };
+
     //Handle when request sucessful
     handleSuccess = response => {
         //obj response : data, status, statusText, headers
         const { data } = response;
         Helpers.hideLoading();
         return data;
-    }
+    };
 
     //Handle when request fail
     handleError = error => {
         Helpers.hideLoading();
         return Promise.reject(error);
-    }
+    };
 
     //Convert object to form data
     obj2fd = obj => {

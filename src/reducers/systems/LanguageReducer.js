@@ -1,8 +1,9 @@
 import { LanguageActionType } from 'my-constants/action-types';
+
 let defaultState = {
     lang_code: null,
     resources: {}
-}
+};
 
 const LanguageReducer = (state = defaultState, action) => {
 	switch(action.type){
@@ -11,6 +12,6 @@ const LanguageReducer = (state = defaultState, action) => {
 		default:
 			return {...state};
 	}
-}
+};
 
 export default LanguageReducer;

@@ -39,7 +39,7 @@ class BaseComponent extends Component {
     |--------------------------------------------------------------------------
     */
     componentWillMount() {
-        console.log("=========================> componentWillMount");
+        // console.log("=========================> componentWillMount");
     }
 
     /*
@@ -48,7 +48,7 @@ class BaseComponent extends Component {
     |--------------------------------------------------------------------------
     */
     componentDidMount() {
-        console.log("=========================> componentDidMount");
+        // console.log("=========================> componentDidMount");
     }
 
     /*
@@ -57,7 +57,7 @@ class BaseComponent extends Component {
     |--------------------------------------------------------------------------
     */
     componentWillReceiveProps(newProps) {
-        console.log("=========================> componentWillReceiveProps", newProps);
+        // console.log("=========================> componentWillReceiveProps", newProps);
     }
 
     /*
@@ -66,7 +66,7 @@ class BaseComponent extends Component {
     |--------------------------------------------------------------------------
     */
     shouldComponentUpdate(newProps, newState) {
-        console.log("=========================> shouldComponentUpdate", newProps, newState);
+        // console.log("=========================> shouldComponentUpdate", newProps, newState);
         return true;
     }
 
@@ -76,7 +76,7 @@ class BaseComponent extends Component {
     |--------------------------------------------------------------------------
     */
     componentWillUpdate(nextProps, nextState) {
-        console.log("=========================> componentWillUpdate", nextProps, nextState);
+        // console.log("=========================> componentWillUpdate", nextProps, nextState);
     }
 
     /*
@@ -85,7 +85,7 @@ class BaseComponent extends Component {
     |--------------------------------------------------------------------------
     */
     componentDidUpdate(prevProps, prevState) {
-        console.log("=========================> componentDidUpdate", prevProps, prevState);
+        // console.log("=========================> componentDidUpdate", prevProps, prevState);
     }
 
     /*
@@ -94,7 +94,7 @@ class BaseComponent extends Component {
     |--------------------------------------------------------------------------
     */
     componentWillUnmount() {
-        console.log("=========================> componentWillUnmount");
+        // console.log("=========================> componentWillUnmount");
     }
 }
 

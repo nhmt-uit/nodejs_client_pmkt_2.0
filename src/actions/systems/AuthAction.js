@@ -24,4 +24,38 @@ export const login = (lang_code) => {
             })
         })
     }
-}
+};
+
+export const getSecure = () => {
+    return (dispatch) => {
+        return AuthService.getSecure()
+            .then(res => {
+                dispatch({
+                    type: AuthActionType.AUTH_GET_SECURE_SUCCESS,
+                    payload: res,
+                });
+            }).catch(e => {
+                dispatch({
+                    type: AuthActionType.AUTH_GET_SECURE_FAIL,
+                    payload: e,
+                });
+            });
+    };
+};
+
+export const checkSecure = (secureCode) => {
+    return (dispatch) => {
+        return AuthService.checkSecure(secureCode)
+            .then(res => {
+                dispatch({
+                    type: AuthActionType.AUTH_CHECK_SECURE_SUCCESS,
+                    payload: res,
+                });
+            }).catch(e => {
+                dispatch({
+                    type: AuthActionType.AUTH_CHECK_SECURE_FAIL,
+                    payload: e,
+                });
+            });
+    };
+};
