@@ -1,17 +1,19 @@
-import Cookies from 'universal-cookie';
+
 
 import { AuthActionType } from 'my-constants/action-types';
-import AuthService from 'my-services/systems/AuthService'
 
-const cookies = new Cookies();
+import AuthService from 'my-services/systems/AuthService'
+import { CookieService } from 'my-utils/core';
+
+
 export const login = (lang_code) => {
     return (dispatch) => {
         return AuthService.login(lang_code).then(res => {
-            cookies.set('access_token', res.access_token, {path: "/"});
-            cookies.set('expires_in', res.expires_in, {path: "/"});
-            cookies.set('refresh_token', res.refresh_token, {path: "/"});
-            cookies.set('token_type', res.token_type, {path: "/"});
-            cookies.set('isLogin', '1', {path: "/"});
+            CookieService.set('access_token', res.access_token);
+            CookieService.set('expires_in', res.expires_in);
+            CookieService.set('refresh_token', res.refresh_token);
+            CookieService.set('token_type', res.token_type);
+            CookieService.set('isLogin', '1');
 
             dispatch({
                 type: AuthActionType.AUTH_LOGIN_SUCCESS,

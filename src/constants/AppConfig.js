@@ -13,6 +13,8 @@ export const API_AUTH_USER = "halfdefense";
 export const API_AUTH_PASS = "$jSZ9y})haSLp>LB";
 export const API_CLIENT_SECRET = "jashdfjkh1#!$%#^2342@#$@35";
 
+export const SOCKET_SERVER_URL = "http://localhost:5013";
+
 /*
 |--------------------------------------------------------------------------
 | Define App System Variable Enviroment

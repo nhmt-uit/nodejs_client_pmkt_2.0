@@ -28,6 +28,9 @@ class HttpService {
         return source.token;
     }
 
+    getTest() {
+        return "12321321"
+    }
     //Create request with method get
     get = (path, queryParams, cancelToken) => {
         this.setAuthorization();

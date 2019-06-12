@@ -49,7 +49,7 @@ class FormLoginContainer extends React.Component {
                         </div>
                         <div className="form-group">
                             <label className="control-label visible-ie8 visible-ie9">{t("Username")}</label>
-                            <Field name="username" type="text" component="input" className="form-control form-control-solid placeholder-no-fix"  autoComplete="off" placeholder={t("Username")}></Field>
+                            <Field name="username" type="text" component="input" className="form-control form-control-solid placeholder-no-fix"  autoComplete="off" placeholder={t("Username")} autoFocus ></Field>
                         </div>
                         <div className="form-group">
                             <label className="control-label visible-ie8 visible-ie9">{t("Password")}</label>

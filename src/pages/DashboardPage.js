@@ -2,7 +2,26 @@ import React, { Component } from 'react';
 
 import { QuickAtivitiesContainer, CommentContainer } from "my-containers/dashboard"
 
+import { SocketService } from 'my-utils/core';
 class DashboardPage extends Component {
+    constructor(props) {
+        super(props)
+        
+        SocketService.connect('/accountant')
+        SocketService.send('init', {username: "av8899"})
+    let args = {
+            from_date: "06/01/2019",
+            to_date: "06/16/2019",
+            id: "5acc5a9f787dcb61d72711ef",
+            more_post: {login_name: "av8899"}
+        }
+        SocketService.send('scan', args)
+
+        SocketService.get('message').then(res => {
+
+            console.log(res)
+        })
+    }
     render() {
         return (
             <section>
