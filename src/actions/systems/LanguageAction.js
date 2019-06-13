@@ -12,7 +12,7 @@ export const changeLanguage = (lang_code) => {
             
             dispatch({
                 type: LanguageActionType.ON_CHANGE_LANGUAGE,
-                payload: res,
+                payload: res.listLang,
                 lang_code: lang_code
             })
         })

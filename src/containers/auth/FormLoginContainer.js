@@ -4,7 +4,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom'
 import { Field, reduxForm } from 'redux-form';
-import Cookies from 'universal-cookie';
+import { CookieService } from 'my-utils/core';
 import $ from "jquery";
 import _ from 'lodash';
 
@@ -12,7 +12,6 @@ import { changeLanguage } from 'my-actions/systems/LanguageAction';
 import { login } from 'my-actions/systems/AuthAction';
 import { RoutesService } from 'my-routes';
 
-const cookies = new Cookies();
 class FormLoginContainer extends React.Component {
     handleChangeLanguage = (e, newValue) => {
         this.props.changeLanguage(newValue)
@@ -25,9 +24,11 @@ class FormLoginContainer extends React.Component {
 
     render() {
         const { t } = this.props;
-        if (cookies.get("isLogin") || this.props.auth.login_status) {
-            if (!cookies.get('isCheckSecure')) {
+        if (CookieService.get("isLogin") || this.props.auth.login_status) {
+            if (!CookieService.get('isCheckSecure')) {
                 return <Redirect to={ RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'secure' }) } />;
+            } else if (CookieService.get('needChangeSecurePassword')) {
+                return <Redirect to={ RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'reset-secure-password' }) } />
             }
 
             return <Redirect to="/dashboard" />
@@ -44,7 +45,7 @@ class FormLoginContainer extends React.Component {
                         </a>
                     </div>
                     <form className="login-form" onSubmit={this.handleSubmit}>
-                        <h3 className="form-title font-green">{t("Login to VW3 Application")}</h3>
+                        <h3 className="form-title font-red">{t("Login to VW3 Application")}</h3>
                         <div className="alert alert-danger display-hide">
                             <button className="close" data-close="alert" />
                             <span> {t(this.props.auth.errors.error_description)} </span>
@@ -78,7 +79,7 @@ class FormLoginContainer extends React.Component {
                             </Field>
                         </div>
                         <div className="form-actions text-center">
-                            <button type="submit" className="btn green uppercase">{t("Login")}</button>
+                            <button type="submit" className="btn red uppercase">{t("Login")}</button>
                         </div>
                     </form>
                 </div>

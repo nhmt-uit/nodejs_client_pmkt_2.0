@@ -1,8 +1,27 @@
 import React, {Component} from 'react';
 import { withTranslation } from 'react-i18next';
+import {Field, reduxForm} from "redux-form";
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { get } from 'lodash';
+import { Link } from 'react-router-dom';
 
 class ResetSecurePassword extends Component {
-    render() {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            isAccept: false,
+        };
+    }
+
+    changeAcceptStatus(value) {
+        this.setState({
+            isAccept: value,
+        });
+    }
+
+    renderAnnouncement() {
         const t = this.props.t;
 
         return (
@@ -41,13 +60,84 @@ class ResetSecurePassword extends Component {
                             <em>{t('If have any questions, please contact customer service department for answers.')}</em>
                         </li>
                     </ul>
-                    <p className='text-center'><button className="btn btn-primary red btn-announcement">{t('i accept')}</button></p>
+                    <p className='text-center'><button onClick={this.changeAcceptStatus.bind(this, true)} className="btn btn-primary red btn-announcement">{t('i accept')}</button></p>
+                </div>
+            </div>
+        );
+    }
+
+    handleSubmit() {
+
+    }
+
+    render() {
+        const t = this.props.t;
+
+        if (!this.state.isAccept) {
+            this.renderAnnouncement.bind(this);
+        }
+
+        return (
+            <div className="login" style={{ backgroundColor : 'transparent' }}>
+                <div className="content">
+                    <div className="logo">
+                        <a href="index.html">
+                            <img src="/assets/images/logo.png" alt="logo vw3" />
+                        </a>
+                    </div>
+                    <form className="login-form" onSubmit={this.handleSubmit}>
+                        <h3 className="form-title font-red">{t("Update secure password")}</h3>
+                        <div className="alert alert-danger display-hide">
+                            <button className="close" data-close="alert" />
+                            <span> {t(this.props.auth.errors.error_description)} </span>
+                        </div>
+                        <div className="form-group">
+                            <label className="control-label visible-ie8 visible-ie9">{t("Username")}</label>
+                            <Field
+                                name="username"
+                                type="text"
+                                component="input"
+                                className="form-control form-control-solid placeholder-no-fix"
+                                autoComplete="off"
+                                placeholder={t("Insert new secure password")}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label className="control-label visible-ie8 visible-ie9">{t("Password")}</label>
+                            <Field
+                                name="password"
+                                type="password"
+                                component="input"
+                                className="form-control form-control-solid placeholder-no-fix"
+                                autoComplete="off"
+                                placeholder={t("Confirm new secure password")}
+                            />
+                        </div>
+                        <div className="form-actions text-center">
+                            <button type="submit" className="btn red uppercase">{t("Continue")}</button>
+                            &nbsp;&nbsp;&nbsp;
+                            <Link to="/dashboard" className="btn red uppercase">{t("Skip")}</Link>
+                        </div>
+                    </form>
                 </div>
             </div>
         );
     }
 }
 
-ResetSecurePassword.propTypes = {};
+const mapStateToProps = state => {
+    return {
+        initValueForm: get(state, 'form.form_secure_password.values', {}),
+        auth: state.AuthReducer,
+    };
+};
 
-export default withTranslation()(ResetSecurePassword);
+const mapDispatchToProps = () => {
+
+};
+
+export default compose(
+    reduxForm({form: 'form_secure_password'}),
+    connect(mapStateToProps, mapDispatchToProps),
+    withTranslation()
+)(ResetSecurePassword);
