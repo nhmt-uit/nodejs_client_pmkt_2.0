@@ -10,6 +10,7 @@ import _ from 'lodash';
 
 import { changeLanguage } from 'my-actions/systems/LanguageAction';
 import { login } from 'my-actions/systems/AuthAction';
+import { RoutesService } from 'my-routes';
 
 const cookies = new Cookies();
 class FormLoginContainer extends React.Component {
@@ -25,6 +26,10 @@ class FormLoginContainer extends React.Component {
     render() {
         const { t } = this.props;
         if (cookies.get("isLogin") || this.props.auth.login_status) {
+            if (!cookies.get('isCheckSecure')) {
+                return <Redirect to={ RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'secure' }) } />;
+            }
+
             return <Redirect to="/dashboard" />
         } else if (this.props.auth.login_status === false) {
             $('div.alert').fadeIn()

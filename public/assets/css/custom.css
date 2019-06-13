@@ -26,3 +26,30 @@ html {font-size: 15px;}
   margin-left: 0 !important;
   margin-right: 0 !important;
 }
+
+.input-secure-code {
+    background-color: #FFFFFF!important;
+}
+.div-top-center {
+    margin: 3% auto;
+    background-color: #FFFFFF;
+    width: 75%;
+}
+
+.ul-announcement {
+    list-style-type: none;
+    padding: 0;
+}
+
+.ul-announcement li {
+    margin: .8rem 0;
+}
+
+.text-red {
+    color: #ff1123;
+}
+
+.btn-announcement {
+    padding: .5rem 1.5rem;
+    border-radius: .5rem !important;
+}
