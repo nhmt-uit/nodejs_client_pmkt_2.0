@@ -1,5 +1,9 @@
-import FormLoginContainer from './FormLoginContainer'
+import FormLoginContainer from './FormLoginContainer';
+import SecureCodeWidget from './SecureCodeWidget';
+import ResetSecurePassword from './ResetSecurePassword';
 
 export {
-    FormLoginContainer
+    FormLoginContainer,
+    SecureCodeWidget,
+    ResetSecurePassword
 }

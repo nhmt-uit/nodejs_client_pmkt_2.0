@@ -14,12 +14,14 @@ const RenderComponent = () => {
 
 	// Check user is login? change template
 	const isLogin = cookies.get("isLogin");
-	if (!isLogin) {
+	const isCheckSecure = cookies.get('isCheckSecure');
+
+	if (!isLogin || !isCheckSecure !== undefined) {
 		component = ( <AuthenticationLayout /> );
 	}
 	
 	return component;
-}
+};
 
 class AppPage extends BaseComponent {
 	render() {
@@ -34,6 +36,6 @@ class AppPage extends BaseComponent {
 
 const mapStateToProps = state => ({
     auth : state.AuthReducer
-})
+});
 
 export default connect(mapStateToProps,null)(AppPage);

@@ -29,6 +29,7 @@ html {
   margin-right: 0 !important;
 }
 
+<<<<<<< HEAD
 /* Custom From Bootstrap */
 .form-inline .form-group, .form-inline .btn {
 	margin-right: 5px
@@ -75,3 +76,31 @@ html {
 }
 
 
+=======
+.input-secure-code {
+    background-color: #FFFFFF!important;
+}
+.div-top-center {
+    margin: 3% auto;
+    background-color: #FFFFFF;
+    width: 75%;
+}
+
+.ul-announcement {
+    list-style-type: none;
+    padding: 0;
+}
+
+.ul-announcement li {
+    margin: .8rem 0;
+}
+
+.text-red {
+    color: #ff1123;
+}
+
+.btn-announcement {
+    padding: .5rem 1.5rem;
+    border-radius: .5rem !important;
+}
+>>>>>>> 6e612766651dd6f781ed928ca802ec31f03e1ac9

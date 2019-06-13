@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 import { compose } from 'redux';
@@ -7,38 +6,46 @@ import { Redirect } from 'react-router-dom'
 import { Field, reduxForm } from 'redux-form';
 import Cookies from 'universal-cookie';
 import $ from "jquery";
+import _ from 'lodash';
 
 import { changeLanguage } from 'my-actions/systems/LanguageAction';
 import { login } from 'my-actions/systems/AuthAction';
-
+import { RoutesService } from 'my-routes';
 
 const cookies = new Cookies();
 class FormLoginContainer extends React.Component {
-    handleChangeLanguage = _ => {
-        setTimeout(_ => {
-            this.props.changeLanguage(this.props.initialValues.lang_code)
-        }, 1000)
-    }
+    handleChangeLanguage = (e, newValue) => {
+        this.props.changeLanguage(newValue)
+    };
 
     handleSubmit = e => {
-        this.props.login(this.props.initialValues)
+        this.props.login(this.props.initialValues);
         e.preventDefault();
+<<<<<<< HEAD
     }
     
+=======
+    };
+
+>>>>>>> 6e612766651dd6f781ed928ca802ec31f03e1ac9
     render() {
-        const { t } = this.props
+        const { t } = this.props;
         if (cookies.get("isLogin") || this.props.auth.login_status) {
+            if (!cookies.get('isCheckSecure')) {
+                return <Redirect to={ RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'secure' }) } />;
+            }
+
             return <Redirect to="/dashboard" />
         } else if (this.props.auth.login_status === false) {
             $('div.alert').fadeIn()
         }
 
         return (
-            <div className=" login" style={{ backgroundColor : 'transparent' }}>
+            <div className="login" style={{ backgroundColor : 'transparent' }}>
                 <div className="content">
-                    <div class="logo">
+                    <div className="logo">
                         <a href="index.html">
-                            <img src="/assets/images/logo.png" alt="" />
+                            <img src="/assets/images/logo.png" alt="logo vw3" />
                         </a>
                     </div>
                     <form className="login-form" onSubmit={this.handleSubmit}>
@@ -49,16 +56,34 @@ class FormLoginContainer extends React.Component {
                         </div>
                         <div className="form-group">
                             <label className="control-label visible-ie8 visible-ie9">{t("Username")}</label>
+<<<<<<< HEAD
                             <Field name="username" type="text" component="input" className="form-control form-control-solid placeholder-no-fix"  autoComplete="off" placeholder={t("Username")} autoFocus ></Field>
+=======
+                            <Field
+                                name="username"
+                                type="text"
+                                component="input"
+                                className="form-control form-control-solid placeholder-no-fix"
+                                autoComplete="off"
+                                placeholder={t("Username")}
+                            />
+>>>>>>> 6e612766651dd6f781ed928ca802ec31f03e1ac9
                         </div>
                         <div className="form-group">
                             <label className="control-label visible-ie8 visible-ie9">{t("Password")}</label>
-                            <Field name="password" type="password" component="input" className="form-control form-control-solid placeholder-no-fix"  autoComplete="off" placeholder={t("Password")}></Field>
+                            <Field
+                                name="password"
+                                type="password"
+                                component="input"
+                                className="form-control form-control-solid placeholder-no-fix"
+                                autoComplete="off"
+                                placeholder={t("Password")}
+                            />
                         </div>
                         <div className="form-group">
-                            <Field name="lang_code" component="select" className="form-control">
-                                <option value="vi">Tiếng Việt</option>
+                            <Field name="lang_code" component="select" className="form-control" onChange={this.handleChangeLanguage}>
                                 <option value="en">English</option>
+                                <option value="vi">Tiếng Việt</option>
                             </Field>
                         </div>
                         <div className="form-actions text-center">
@@ -66,32 +91,28 @@ class FormLoginContainer extends React.Component {
                         </div>
                     </form>
                 </div>
-                <div class="copyright"> 2019 © VW3 Application </div>
+                <div className="copyright"> 2019 © VW3 Application </div>
             </div>
         );
     }
 }
 
-
 const mapStateToProps = state => {
-    let initialValues = {}
-    if(state.form.form_login) {
-        initialValues = state.form.form_login.values;
+    return {
+        initialValues: _.get(state, 'form.form_login.values', {}),
+        auth : state.AuthReducer,
     }
-    return {initialValues, auth : state.AuthReducer}
-}
+};
 
 const mapDispatchToProps = (dispatch) => {
     return {
         changeLanguage: params => {dispatch(changeLanguage(params))},
         login: params => {dispatch(login(params))}
     }
-}
+};
 
 export default compose(
     reduxForm({form: 'form_login'}),
     connect(mapStateToProps, mapDispatchToProps),
     withTranslation()
 )(FormLoginContainer);
-
-

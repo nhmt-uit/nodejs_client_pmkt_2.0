@@ -4,7 +4,7 @@ import CookieService from 'my-utils/core/CookieService';
 
 
 class AuthService extends BaseService {
-    serviceUrl = `${AppConfig.API_URL}/oauth2`;
+    serviceUrl = AppConfig.API_URL;
     /*
     |--------------------------------------------------------------------------
     | @content: authentication username & password
@@ -17,10 +17,18 @@ class AuthService extends BaseService {
             client_secret : AppConfig.API_CLIENT_SECRET,
             client_id: 1,
             grant_type: "password"
-        }
+        };
         // Merge object
-        payload = {...payload, ...obj}
-        return HttpService.post(`${this.serviceUrl}/token`, payload)
+        payload = {...payload, ...obj};
+        return HttpService.post(`${this.serviceUrl}/oauth2/token`, payload);
+    };
+
+    getSecure() {
+        return HttpService.post(`${this.serviceUrl}/secure/get`);
+    };
+
+    checkSecure(payload) {
+        return HttpService.post(`${this.serviceUrl}/secure/check`, payload);
     }
 
     /*

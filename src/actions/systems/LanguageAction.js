@@ -5,10 +5,10 @@ import i18n from 'my-utils/i18n'
 export const changeLanguage = (lang_code) => {
     return (dispatch) => {
         return LanguageService.getLanguage(lang_code).then(res => {
-			i18n.removeResourceBundle(lang_code, "translation")
-			i18n.addResourceBundle(lang_code, "translation", res)
-			i18n.reloadResources(lang_code, "translation")
-            i18n.changeLanguage(lang_code)
+			i18n.removeResourceBundle(lang_code, "translation");
+			i18n.addResourceBundle(lang_code, "translation", res);
+			i18n.reloadResources(lang_code, "translation");
+            i18n.changeLanguage(lang_code);
             
             dispatch({
                 type: LanguageActionType.ON_CHANGE_LANGUAGE,
@@ -17,4 +17,4 @@ export const changeLanguage = (lang_code) => {
             })
         })
     }
-}
+};
