@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router } from "react-router-dom";
 
-import { Header, Breadcrumb, MainNavigation, Footer } from 'my-pages/layouts/partials';
+import { Header, MainNavigation, Footer } from 'my-pages/layouts/partials';
 import RenderRoutes from 'my-routes/RenderRoutes';
 
 
@@ -17,7 +17,6 @@ class MainLayout extends Component {
 								<MainNavigation />
 								<div className="page-content-wrapper">
 									<div className="page-content">
-										<Breadcrumb />
 										<RenderRoutes />
 									</div>
 								</div>

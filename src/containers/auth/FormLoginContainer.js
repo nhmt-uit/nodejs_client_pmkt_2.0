@@ -24,7 +24,7 @@ class FormLoginContainer extends React.Component {
         this.props.login(this.props.initialValues)
         e.preventDefault();
     }
-
+    
     render() {
         const { t } = this.props
         if (cookies.get("isLogin") || this.props.auth.login_status) {

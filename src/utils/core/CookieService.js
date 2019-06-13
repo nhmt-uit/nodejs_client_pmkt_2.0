@@ -33,6 +33,15 @@ class CookieService {
         this.options = {...this.options, ...options}
         this.cookies.remove(key, this.options);
     }
+
+    removeAll(options = {}) {
+        this.options = {...this.options, ...options}
+        let curCookies = this.getAll(options)
+        for (let x in curCookies) {
+            this.remove(x, options);
+        }
+        
+    }
 }
 
 export default new CookieService();
