@@ -21,13 +21,8 @@ class FormLoginContainer extends React.Component {
     handleSubmit = e => {
         this.props.login(this.props.initialValues);
         e.preventDefault();
-<<<<<<< HEAD
-    }
-    
-=======
     };
 
->>>>>>> 6e612766651dd6f781ed928ca802ec31f03e1ac9
     render() {
         const { t } = this.props;
         if (cookies.get("isLogin") || this.props.auth.login_status) {
@@ -56,9 +51,6 @@ class FormLoginContainer extends React.Component {
                         </div>
                         <div className="form-group">
                             <label className="control-label visible-ie8 visible-ie9">{t("Username")}</label>
-<<<<<<< HEAD
-                            <Field name="username" type="text" component="input" className="form-control form-control-solid placeholder-no-fix"  autoComplete="off" placeholder={t("Username")} autoFocus ></Field>
-=======
                             <Field
                                 name="username"
                                 type="text"
@@ -67,7 +59,6 @@ class FormLoginContainer extends React.Component {
                                 autoComplete="off"
                                 placeholder={t("Username")}
                             />
->>>>>>> 6e612766651dd6f781ed928ca802ec31f03e1ac9
                         </div>
                         <div className="form-group">
                             <label className="control-label visible-ie8 visible-ie9">{t("Password")}</label>

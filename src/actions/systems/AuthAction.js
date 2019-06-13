@@ -1,22 +1,9 @@
-<<<<<<< HEAD
-
-
-import { AuthActionType } from 'my-constants/action-types';
-
-import AuthService from 'my-services/systems/AuthService'
-import { CookieService } from 'my-utils/core';
-
-
-=======
-import Cookies from 'universal-cookie';
 import _get from 'lodash/get';
 
 import { AuthActionType } from 'my-constants/action-types';
 import { AuthService, LanguageService } from 'my-services/systems';
+import { CookieService } from 'my-utils/core';
 
-const cookies = new Cookies();
-
->>>>>>> 6e612766651dd6f781ed928ca802ec31f03e1ac9
 export const login = (lang_code) => {
     return (dispatch) => {
         return AuthService.login(lang_code).then(res => {
@@ -62,7 +49,7 @@ export const getSecure = _ => {
                 }
             }).catch(e => {
                 if (e.response.status === 500) {
-                    cookies.set('isCheckSecure', true, { path: '/' });
+                    CookieService.set('isCheckSecure', true);
 
                     dispatch({
                         type: AuthActionType.AUTH_CHECK_SECURE_SUCCESS,
@@ -86,14 +73,14 @@ export const checkSecure = (secureCode) => {
         return AuthService.checkSecure(secureCode)
             .then(res => {
                 if (res.status && _get(res, 'res.valid', true)) {
-                    cookies.set('isCheckSecure', true, { path: '/' });
+                    CookieService.set('isCheckSecure', true);
                     dispatch({
                         type: AuthActionType.AUTH_CHECK_SECURE_SUCCESS,
                         payload: res,
                     });
                 } else {
-                    cookies.remove('isLogin', { path: '/' });
-                    cookies.remove('access_token', { path: '/' });
+                    CookieService.remove('isLogin');
+                    CookieService.remove('access_token');
                     dispatch({
                         type: AuthActionType.AUTH_CHECK_SECURE_FAIL,
                         payload: {
