@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 
-import { QuickAtivitiesContainer, CommentContainer } from "my-containers/dashboard"
+import { QuickAtivitiesContainer, PanelAlert } from "my-containers/dashboard"
 
 import { SocketService } from 'my-utils/core';
+import BankerListContainer from "my-containers/banker/BankerListContainer";
 class DashboardPage extends Component {
     constructor(props) {
         super(props)
@@ -26,6 +27,7 @@ class DashboardPage extends Component {
         return (
             <section>
                 <QuickAtivitiesContainer />
+                <BankerListContainer/>
                 <div className="row widget-row">
                     <div className="col-md-3">
                         {/* BEGIN WIDGET THUMB */}
@@ -84,11 +86,7 @@ class DashboardPage extends Component {
                         {/* END WIDGET THUMB */}
                     </div>
                 </div>
-
-                <div className="row">
-                    <CommentContainer />
-                    <CommentContainer />
-                </div>
+                <PanelAlert/>
             </section>
         );
     }
