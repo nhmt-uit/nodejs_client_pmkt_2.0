@@ -11,7 +11,6 @@ import MultiSelect from "@khanacademy/react-multi-select";
 
 import { AppConfig } from 'my-constants'
 import BootstrapInputIcon from 'my-utils/components/date-picker/BootstrapInputIcon'
-import SelectWithCheckbox from 'my-utils/components/react-select/SelectWithCheckbox'
 import { FormScanButtonComponent, FormScanGroupDateComponent } from 'my-components/accountant'
 
 
@@ -36,15 +35,12 @@ const end_last_week = moment().endOf('week').subtract(6, 'days').format('YYYY-MM
 class AccountantFormScanContainer extends Component {
     state = {
         selected: ['chocolate', 'vanilla'],
-        selectedOption: { value: 'vanilla', label: 'Vanilla' },
         typeGroupDate: 'today',
         date_from: new Date(),
         date_to: new Date()
     }
 
     handleChange = selectedOption => {
-        this.setState({ selectedOption })
-        console.log(`Option selected:`, selectedOption)
     }
 
     /*
@@ -133,7 +129,7 @@ class AccountantFormScanContainer extends Component {
 
     render() {
         const { t } = this.props
-        const { selectedOption, selected, date_from, date_to, typeGroupDate } = this.state
+        const { selected, date_from, date_to, typeGroupDate } = this.state
         console.log(selected)
         return (
             <div className="portlet light bordered">

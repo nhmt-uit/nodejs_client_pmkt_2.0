@@ -4,7 +4,7 @@ import { withTranslation } from 'react-i18next'
 
 const groupDateType = [
     {value: 'today', label: 'Today'},
-    {value: 'yesterday', label: 'Yes:terday'},
+    {value: 'yesterday', label: 'Yesterday'},
     {value: 'this_week', label: 'This week'},
     {value: 'last_week', label: 'Last week'},
 ]
