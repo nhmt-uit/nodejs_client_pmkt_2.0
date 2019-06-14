@@ -1,7 +1,6 @@
 import { AppConfig } from 'my-constants';
 import { BaseService, HttpService } from 'my-utils/core';
 
-
 class LanguageService extends BaseService {
     serviceUrl = `${AppConfig.API_URL}/language`;
     /*

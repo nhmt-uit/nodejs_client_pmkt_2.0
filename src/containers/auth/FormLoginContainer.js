@@ -30,7 +30,7 @@ class FormLoginContainer extends React.Component {
                 return <Redirect to={ RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'secure' }) } />;
             }
 
-            return <Redirect to="/dashboard" />
+            return <Redirect to="/dashboard"/>
         } else if (this.props.auth.login_status === false) {
             $('div.alert').fadeIn()
         }
@@ -89,6 +89,7 @@ class FormLoginContainer extends React.Component {
 }
 
 const mapStateToProps = state => {
+    console.log("state language", state)
     return {
         initialValues: _.get(state, 'form.form_login.values', {}),
         auth : state.AuthReducer,

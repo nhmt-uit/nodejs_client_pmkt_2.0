@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 
 import { QuickAtivitiesContainer, PanelAlert } from "my-containers/dashboard"
+// import BankerListContainer from "my-containers/banker/BankerListContainer";
+
 
 import { SocketService } from 'my-utils/core';
-import BankerListContainer from "my-containers/banker/BankerListContainer";
+import InfoUserContainer from "my-containers/infoUser/InfoUserContainer";
+// import BankerListContainer from "my-containers/banker/BankerListContainer";
 class DashboardPage extends Component {
     constructor(props) {
         super(props)
@@ -24,10 +27,14 @@ class DashboardPage extends Component {
         })
     }
     render() {
+        var x = []
+        x = document.cookie;;
+        console.log("COOKIE", x)
         return (
             <section>
                 <QuickAtivitiesContainer />
-                <BankerListContainer/>
+                <InfoUserContainer/>
+                {/*<BankerListContainer/>*/}
                 <div className="row widget-row">
                     <div className="col-md-3">
                         {/* BEGIN WIDGET THUMB */}

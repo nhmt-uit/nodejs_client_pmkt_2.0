@@ -9,6 +9,7 @@ export const DEBUG_ENABLED = true;
 |--------------------------------------------------------------------------
 */
 export const API_URL = "http://124.248.229.43:3013";
+export const URL = "http://localhost:3013";
 export const API_AUTH_USER = "halfdefense";
 export const API_AUTH_PASS = "$jSZ9y})haSLp>LB";
 export const API_CLIENT_SECRET = "jashdfjkh1#!$%#^2342@#$@35";
