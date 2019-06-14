@@ -1,10 +1,10 @@
 import axios from 'axios';
 import { isEmpty } from 'lodash';
 import qs from 'qs';
-import Cookies from 'universal-cookie';
-import { Helpers } from 'my-utils';
 
-const cookie = new Cookies();
+import { Helpers } from 'my-utils';
+import CookieService from 'my-utils/core/CookieService';
+
 class HttpService {
     constructor() {
         let config = {
@@ -81,7 +81,7 @@ class HttpService {
 
     //Set JWT Token
     setAuthorization = () => {
-        const accessToken = cookie.get('access_token');
+        const accessToken = CookieService.get('access_token');
 
         if (accessToken) {
             this.service.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;

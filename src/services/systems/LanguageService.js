@@ -10,7 +10,8 @@ class LanguageService extends BaseService {
     |--------------------------------------------------------------------------
     */
     getLanguage(lang_code){
-        const payload = {code: lang_code, updateLang: true}
+        const payload = {code: lang_code, updateLang: true};
+
         return HttpService.post(`${this.serviceUrl}/get`, payload).then(res => {
             if (res.status === true) {
                 /*
@@ -25,7 +26,8 @@ class LanguageService extends BaseService {
                         listLang[langKeys[x].name] = langVals[langKeys[x].id].name
                     }
                 }
-                return listLang
+                res.res.listLang = listLang
+                return res.res
             }
         })
     }
