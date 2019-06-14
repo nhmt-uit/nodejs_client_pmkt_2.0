@@ -4,3 +4,4 @@ export { default as BaseService } from "./BaseService";
 export { default as BaseComponent } from "./BaseComponent";
 export { default as SocketService } from "./SocketService";
 export { default as CookieService } from "./CookieService";
+export { default as EventsService } from "./EventsService";

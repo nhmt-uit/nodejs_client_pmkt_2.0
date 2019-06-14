@@ -16,6 +16,10 @@ html {
   color: rgb(244, 67, 54);
   transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
 }
+.table {
+  margin-bottom: 0px;
+}
+
 
 .fredux-radio-inline {
   display: block !important;
@@ -29,7 +33,6 @@ html {
   margin-right: 0 !important;
 }
 
-<<<<<<< HEAD
 /* Custom From Bootstrap */
 .form-inline .form-group, .form-inline .btn {
 	margin-right: 5px
@@ -64,6 +67,18 @@ html {
 .multi-select .dropdown {
 	z-index: 10;
 }
+.multi-select span.dropdown-heading-value {
+  max-width: 96% !important;
+  color: #888!important;
+}
+
+.multi-select abel.select-item{
+  margin-bottom: 0px !important;
+}
+.multi-select label.mt-checkbox {
+  margin: 5px 15px !important;
+}
+
 /* Custom React Datepicker */
 .react-datepicker-wrapper {
 	height: 34px;
@@ -76,7 +91,6 @@ html {
 }
 
 
-=======
 .input-secure-code {
     background-color: #FFFFFF!important;
 }
@@ -103,4 +117,30 @@ html {
     padding: .5rem 1.5rem;
     border-radius: .5rem !important;
 }
->>>>>>> 6e612766651dd6f781ed928ca802ec31f03e1ac9
+
+
+.portlet .caption label.mt-checkbox {
+  margin-bottom: 0px;
+  font-size: 18px;
+  line-height: 20px;
+}
+
+.list-banker-account .panel-title label.mt-checkbox {
+  margin: 5px 10px;
+  line-height: 20px;
+  font-size: 14px;
+}
+.portlet .panel-group:last-of-type {
+ margin-bottom: 0px;
+}
+.table label.mt-checkbox:last-of-type {
+  margin-bottom: 0px;
+}
+
+.list-banker-account .portlet-body {
+  padding: 10px 15px 0px 15px !important;
+}
+
+.list-banker-account .portlet-body:last-of-type {
+  padding-bottom: 10px !important;
+}

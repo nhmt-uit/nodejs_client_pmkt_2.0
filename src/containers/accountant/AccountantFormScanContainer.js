@@ -1,29 +1,21 @@
 import React, { Component } from 'react'
 import { compose } from 'redux'
+import { connect } from 'react-redux'
 import { withTranslation } from 'react-i18next'
 import moment  from 'moment'
-import { join } from 'lodash'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css"
-
 import MultiSelect from "@khanacademy/react-multi-select";
+import { join, filter } from 'lodash'
 
 
 import { AppConfig } from 'my-constants'
 import BootstrapInputIcon from 'my-utils/components/date-picker/BootstrapInputIcon'
 import { FormScanButtonComponent, FormScanGroupDateComponent } from 'my-components/accountant'
+import EventsService from 'my-utils/core/EventsService'
+import { socketInitData } from 'my-actions/AccountantAction';
+import { Helpers } from 'my-utils';
 
-
-var options = [
-    {label: 'Chocolate', value: 'chocolate'},
-    {label: 'Vanilla', value: 'vanilla'},
-    {label: 'Strawberry', value: 'strawberry'},
-    {label: 'Caramel', value: 'caramel'},
-    {label: 'Chocolate', value: 'chocolatee'},
-    {label: 'Vanilla', value: 'vanillaa'},
-    {label: 'Strawberry', value: 'strawberrey'},
-    {label: 'Caramel', value: 'caramrel'},
-]
 
 const today = moment().format('YYYY-MM-DD')
 const yesterday = moment().subtract(1, 'days').format('YYYY-MM-DD')
@@ -34,13 +26,17 @@ const end_last_week = moment().endOf('week').subtract(6, 'days').format('YYYY-MM
 
 class AccountantFormScanContainer extends Component {
     state = {
-        selected: ['chocolate', 'vanilla'],
+        selectedMember: [],
         typeGroupDate: 'today',
         date_from: new Date(),
         date_to: new Date()
     }
 
-    handleChange = selectedOption => {
+    componentDidMount() {
+        Array.from(document.getElementsByClassName('multi-select')).forEach((el) => {
+            el.getElementsByClassName('dropdown')[0].removeAttribute('tabindex');
+        });
+        this.props.socketInitData()
     }
 
     /*
@@ -65,6 +61,11 @@ class AccountantFormScanContainer extends Component {
         setTimeout(_ => {
             this.checkDateToSelectGroupDate()
         }, 200)
+    }
+
+    componentWillUnmount() {
+        EventsService.removeAllListeners('hello')
+        EventsService.removeAllListeners('hello-world')
     }
 
     /*
@@ -116,21 +117,47 @@ class AccountantFormScanContainer extends Component {
             default:break
         }
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Detect when component update
+    | Display loading when init data
+    |--------------------------------------------------------------------------
+    */
+    componentDidUpdate = _ => {
+        const full_payload = this.props.accountant_full_payload, request_type = this.props.accountant_request_type
+        if(request_type === "accountant_init" && full_payload.type === "notify" && full_payload.message === "init_data") {
+            Helpers.showLoading();
+        } else {
+            Helpers.hideLoading();
+        }
+    }
+
     renderOption = ({ checked, option, onClick }) => (
-        <label className="mt-checkbox">
+        <label className="mt-checkbox uppercase">
             <input type="checkbox" checked={checked} onChange={onClick} /> {option.label}
             <span></span>
         </label>
     )
-    renderValue = selected => {
-        let label = (selected.length) ? join(selected, ', ') : 'Select the member'
-        return <span style={{'color': 'ccc'}}>{label}</span>
+    
+    renderValue = (selected, options) => {
+        let label = 'Select the member'
+        if (selected.length) {
+            let labels = []
+            for (let x in selected) {
+                let check = filter(options, ['value', selected[x]]);
+                labels.push(check[0].label)
+            }
+            label = join(labels, ", ")
+        }
+        return <span className="uppercase" style={{'color': 'ccc'}}>{label}</span>
     }
 
     render() {
         const { t } = this.props
-        const { selected, date_from, date_to, typeGroupDate } = this.state
-        console.log(selected)
+        let memberOptions = (this.props.accountant_payload) ? this.props.accountant_payload.memberOptionsProcessed : []
+        const { selectedMember, date_from, date_to, typeGroupDate } = this.state
+
         return (
             <div className="portlet light bordered">
                 <div className="portlet-title">
@@ -146,9 +173,9 @@ class AccountantFormScanContainer extends Component {
                         <div className="clearfix"></div>
                         <div className="form-group input-large">
                             <MultiSelect
-                                options={options}
-                                selected={selected}
-                                onSelectedChanged={selected => this.setState({selected})}
+                                options={memberOptions}
+                                selected={selectedMember}
+                                onSelectedChanged={selectedMember => this.setState({selectedMember})}
                                 ItemRenderer={this.renderOption}
                                 valueRenderer={this.renderValue}
                                 />
@@ -174,6 +201,22 @@ class AccountantFormScanContainer extends Component {
     }
 }
 
+const mapStateToProps = state => {
+    return {
+        accountant_request_type : state.AccountantReducer.request_type,
+        accountant_full_payload : state.AccountantReducer.full_payload,
+        accountant_payload : state.AccountantReducer.payload,
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        socketInitData: params => {dispatch(socketInitData(params))},
+    }
+};
+
 export default compose(
+    connect(mapStateToProps, mapDispatchToProps),
     withTranslation()
-)(AccountantFormScanContainer)
+)(AccountantFormScanContainer);
+

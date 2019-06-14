@@ -3,11 +3,11 @@ import uuidv4 from 'uuid/v4'
 
 import { AppConfig } from 'my-constants';
 import { AuthService } from 'my-services/systems'
-
+import EventsService from 'my-utils/core/EventsService'
 
 class SocketService {
     socketUrl = AppConfig.SOCKET_SERVER_URL;
-
+    listUUID2Event = {}
     constructor() {
         this.option = {
             query: `refresh_token=${AuthService.getRefreshToken()}`
@@ -30,24 +30,37 @@ class SocketService {
     /*
     |--------------------------------------------------------------------------
     | Method send request to websocket
+    | event: init, scan, get_report, get_member
     |--------------------------------------------------------------------------
     */
     send(event, args) {
-        this.socket.send({___Send: true, event: event, uuid: uuidv4(), args: [args]})
+        let uuid = uuidv4()
+        this.listUUID2Event[uuid] = event
+        this.socket.send({___Send: true, event: event, uuid: uuid, args: [args]})
 
-        this.socket.on("message", msg => {return msg})
+        // Loading
+        if (event === 'init') EventsService.emit('accountant_init', {type: "notify", message: "init_data"})
+        this.socket.on('message', msg => {
+            console.log(this.listUUID2Event, msg.uuid, this.listUUID2Event[msg.uuid])
+            switch (this.listUUID2Event[msg.uuid]) {
+                case "init":
+                    console.log("init")
+                    EventsService.emit('accountant_init', msg)
+                break;
+                case "scan":
+                    EventsService.emit('accountant_scan', msg)
+                break;
+                case "reject":
+                break;
+                default: break;
+            }
+        })
+
     }
 
-    get(channel) {
-        return new Promise((resolve, reject) => {
-            this.socket.on(channel, msg => {
-                console.log(msg)
-                if (msg) {
-                    resolve(msg)
-                } else {
-                    reject(msg)
-                }
-            })
+    get(channel, callback) {
+        this.socket.on(channel, msg => {
+            callback(msg)
         })
     }
     /*

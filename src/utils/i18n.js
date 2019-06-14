@@ -20,6 +20,7 @@ i18n
     lng: "en",
     fallbackLng: "en",
     keySeparator: false,
+    nsSeparator: false
 
     // interpolation: {
     //     escapeValue: false

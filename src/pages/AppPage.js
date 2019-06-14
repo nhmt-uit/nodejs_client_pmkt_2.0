@@ -16,8 +16,8 @@ const RenderComponent = () => {
 	const isLogin = cookies.get("isLogin");
 	const isCheckSecure = cookies.get('isCheckSecure');
 
-	if (!isLogin || !isCheckSecure !== undefined) {
-		component = ( <AuthenticationLayout /> );
+	if (!isLogin || isCheckSecure !== "undefined") {
+		// component = ( <AuthenticationLayout /> );
 	}
 	
 	return component;
