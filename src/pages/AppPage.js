@@ -15,9 +15,10 @@ const RenderComponent = () => {
 	// Check user is login? change template
 	const isLogin = cookies.get("isLogin");
 	const isCheckSecure = cookies.get('isCheckSecure');
+	const byPassDashboard = cookies.get('byPassDashboard');
 
-	if (!isLogin || isCheckSecure !== "undefined") {
-		// component = ( <AuthenticationLayout /> );
+	if ((!isLogin || !isCheckSecure !== undefined) && !byPassDashboard) {
+		component = ( <AuthenticationLayout /> );
 	}
 	
 	return component;

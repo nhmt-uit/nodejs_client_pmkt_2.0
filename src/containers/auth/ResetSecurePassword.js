@@ -1,10 +1,15 @@
 import React, {Component} from 'react';
 import { withTranslation } from 'react-i18next';
-import {Field, reduxForm} from "redux-form";
+import {Field, reduxForm, SubmissionError} from "redux-form";
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
-import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
+import $ from 'jquery';
+
+import { resetSecurePassword } from 'my-actions/systems/AuthAction';
+import { RoutesService } from 'my-routes';
+import { CookieService } from 'my-utils/core';
 
 class ResetSecurePassword extends Component {
     constructor(props) {
@@ -15,15 +20,21 @@ class ResetSecurePassword extends Component {
         };
     }
 
+    UNSAFE_componentWillReceiveProps(nextProps, nextContext) {
+        if (nextProps.error) {
+            this.setState({
+                error: nextProps.error,
+            });
+        }
+    }
+
     changeAcceptStatus(value) {
         this.setState({
             isAccept: value,
         });
     }
 
-    renderAnnouncement() {
-        const t = this.props.t;
-
+    renderAnnouncement(t) {
         return (
             <div className="div-top-center">
                 <div className="content" style={{ padding: '1rem 2rem' }} >
@@ -66,15 +77,59 @@ class ResetSecurePassword extends Component {
         );
     }
 
-    handleSubmit() {
+    validateForm(values) {
+        if (!(/^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%])[0-9A-Za-z!@#$%]{8,}$/).test(values.new_password2)) {
+            throw new SubmissionError({
+                new_password2: 'is required at least 8 characters, included Uppercase, normal and special',
+                _error: 'Secure password is required at least 8 characters, included Uppercase, normal and special'
+            });
+        }
+        
+        if (values.new_password2.trim() !== get(values, 're_password2', '').trim()) {
+            throw new SubmissionError({
+                new_password2: 'Confirm secure password do not match secure password',
+                _error: 'Confirm secure password do not match secure password'
+            });
+        }
 
+        this.props.resetSecurePassword(this.props.formValues);
+    }
+
+    renderField({ input, label, type, meta: { touched, error }, ...otherProps }) {
+        return (
+            <div>
+                <div>
+                    <input className={otherProps.className} {...input} placeholder={otherProps.placeholder} type={type} />
+                </div>
+            </div>
+        )
+    }
+
+    handleSkip() {
+        CookieService.set('byPassDashboard', true);
+
+        this.forceUpdate();
     }
 
     render() {
-        const t = this.props.t;
+        const { t, handleSubmit, submitting, error, auth } = this.props;
+
+        if (Number(CookieService.get('needChangeSecurePassword')) === 0 && this.state.isAccept) {
+            this.handleSkip();
+        }
+
+        if (CookieService.get('byPassDashboard')) {
+            return <Redirect to={RoutesService.getPath('ADMIN', 'DASHBOARD')} />
+        }
 
         if (!this.state.isAccept) {
-            this.renderAnnouncement.bind(this);
+            return this.renderAnnouncement(t);
+        }
+
+        if (error || get(auth, 'errors.error_description', null)) {
+            $('div.alert').fadeIn()
+        } else {
+            $('div.alert').fadeOut()
         }
 
         return (
@@ -85,38 +140,39 @@ class ResetSecurePassword extends Component {
                             <img src="/assets/images/logo.png" alt="logo vw3" />
                         </a>
                     </div>
-                    <form className="login-form" onSubmit={this.handleSubmit}>
+                    <form className="login-form" onSubmit={handleSubmit(this.validateForm.bind(this))}>
                         <h3 className="form-title font-red">{t("Update secure password")}</h3>
                         <div className="alert alert-danger display-hide">
-                            <button className="close" data-close="alert" />
-                            <span> {t(this.props.auth.errors.error_description)} </span>
+                            {
+                                get(this.props.auth, 'errors.error_description', null)
+                                    ? <span> {t(this.props.auth.errors.error_description)} </span>
+                                    : this.props.error && <span>{t(this.props.error)}</span>
+                            }
                         </div>
                         <div className="form-group">
-                            <label className="control-label visible-ie8 visible-ie9">{t("Username")}</label>
                             <Field
-                                name="username"
-                                type="text"
-                                component="input"
+                                name="new_password2"
+                                type="password"
+                                component={this.renderField}
                                 className="form-control form-control-solid placeholder-no-fix"
                                 autoComplete="off"
                                 placeholder={t("Insert new secure password")}
                             />
                         </div>
                         <div className="form-group">
-                            <label className="control-label visible-ie8 visible-ie9">{t("Password")}</label>
                             <Field
-                                name="password"
+                                name="re_password2"
                                 type="password"
-                                component="input"
+                                component={this.renderField}
                                 className="form-control form-control-solid placeholder-no-fix"
                                 autoComplete="off"
                                 placeholder={t("Confirm new secure password")}
                             />
                         </div>
                         <div className="form-actions text-center">
-                            <button type="submit" className="btn red uppercase">{t("Continue")}</button>
+                            <button type="submit" disabled={submitting} className="btn red uppercase">{t("Continue")}</button>
                             &nbsp;&nbsp;&nbsp;
-                            <Link to="/dashboard" className="btn red uppercase">{t("Skip")}</Link>
+                            <button disabled={submitting} onClick={this.handleSkip.bind(this)} className="btn red uppercase">{t("Skip")}</button>
                         </div>
                     </form>
                 </div>
@@ -127,13 +183,15 @@ class ResetSecurePassword extends Component {
 
 const mapStateToProps = state => {
     return {
-        initValueForm: get(state, 'form.form_secure_password.values', {}),
+        formValues: get(state, 'form.form_secure_password.values', {}),
         auth: state.AuthReducer,
     };
 };
 
-const mapDispatchToProps = () => {
-
+const mapDispatchToProps = dispatch => {
+    return {
+        resetSecurePassword: params => { dispatch(resetSecurePassword(params)) }
+    };
 };
 
 export default compose(

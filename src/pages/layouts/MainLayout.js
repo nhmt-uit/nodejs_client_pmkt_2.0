@@ -4,7 +4,6 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { Header, MainNavigation, Footer } from 'my-pages/layouts/partials';
 import RenderRoutes from 'my-routes/RenderRoutes';
 
-
 class MainLayout extends Component {
     render() {
         return (

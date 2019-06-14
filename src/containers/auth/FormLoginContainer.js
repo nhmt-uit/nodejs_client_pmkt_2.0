@@ -22,18 +22,27 @@ class FormLoginContainer extends React.Component {
         e.preventDefault();
     };
 
-    render() {
-        const { t } = this.props;
-        if (CookieService.get("isLogin") || this.props.auth.login_status) {
-            if (!CookieService.get('isCheckSecure')) {
-                return <Redirect to={ RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'secure' }) } />;
-            } else if (CookieService.get('needChangeSecurePassword')) {
-                return <Redirect to={ RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'reset-secure-password' }) } />
-            }
+    handleKeyDown(e) {
+        if (e.key === 'Enter' && e.shiftKey === false) {
+            return this.handleSubmit(e);
+        }
+    }
 
-            return <Redirect to="/dashboard" />
-        } else if (this.props.auth.login_status === false) {
-            $('div.alert').fadeIn()
+    render() {
+        const { t, auth } = this.props;
+
+        if (auth.login_status) {
+            $('div.alert').fadeIn();
+
+            const redirect = CookieService.get('isCheckSecure')
+                ? RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'secure' })
+                : CookieService.get('needChangeSecurePassword')
+                    ? RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'reset-secure-password' })
+                    : RoutesService.getPath('ADMIN', 'DASHBOARD');
+
+            return <Redirect to={redirect} />
+        } else if (auth.login_status === false && _.get(this.props, 'auth.errors.error_description', null)) {
+            $('div.alert').fadeIn();
         }
 
         return (
@@ -44,7 +53,7 @@ class FormLoginContainer extends React.Component {
                             <img src="/assets/images/logo.png" alt="logo vw3" />
                         </a>
                     </div>
-                    <form className="login-form" onSubmit={this.handleSubmit}>
+                    <form className="login-form" onSubmit={this.handleSubmit} onKeyDown={this.handleKeyDown.bind(this)}>
                         <h3 className="form-title font-red">{t("Login to VW3 Application")}</h3>
                         <div className="alert alert-danger display-hide">
                             <button className="close" data-close="alert" />

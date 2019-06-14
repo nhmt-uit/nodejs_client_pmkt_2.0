@@ -23,23 +23,45 @@ class AuthService extends BaseService {
         return HttpService.post(`${this.serviceUrl}/oauth2/token`, payload);
     };
 
+    /*
+    |--------------------------------------------------------------------------
+    | @content: Get secure code
+    |--------------------------------------------------------------------------
+    */
     getSecure() {
         return HttpService.post(`${this.serviceUrl}/secure/get`);
     };
 
+    /*
+    |--------------------------------------------------------------------------
+    | @content: Check secure code
+    | @param: {
+    |   value1: Number
+    |   value2: Number
+    | }
+    |--------------------------------------------------------------------------
+    */
     checkSecure(payload) {
         return HttpService.post(`${this.serviceUrl}/secure/check`, payload);
+    }
+    
+    /*
+    |--------------------------------------------------------------------------
+    | @content: Reset secure password
+    |--------------------------------------------------------------------------
+    */
+    resetSecurePassword(post) {
+        return HttpService.post(`${this.serviceUrl}/reset_secure_password`, post)
     }
 
     /*
     |--------------------------------------------------------------------------
-    | Get username
+    | @content: Get username
     |--------------------------------------------------------------------------
     */
     getUsername() {
         return CookieService.get("username")
     }
-
 
     /*
     |--------------------------------------------------------------------------
@@ -57,6 +79,15 @@ class AuthService extends BaseService {
     */
     getAccessToken() {
         return CookieService.get("access_token")
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Logout user
+    |--------------------------------------------------------------------------
+    */
+    logout() {
+        return HttpService.post(`${this.serviceUrl}/signout`)
     }
 }
 
