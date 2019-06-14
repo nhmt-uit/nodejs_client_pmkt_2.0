@@ -27,12 +27,12 @@ class AccountantListBankerContainer extends Component {
                                 <div className="panel-heading" onClick={this.handleCollapse}>
                                     <h4 className="panel-title">
                                         <div className="col-sm-6">
-                                            <label className="mt-checkbox upercase">
+                                            <label className="mt-checkbox uppercase">
                                                 <input type="checkbox"  /> {account.acc_name}
                                                 <span></span>
                                             </label>
                                         </div>
-                                        <div className="col-sm-6"><label className="mt-checkbox"> {account.note}</label></div>
+                                        <div className="col-sm-6"><label className="mt-checkbox "> {account.note}</label></div>
                                         <div className="clearfix"></div>
                                     </h4>
                                 </div>
