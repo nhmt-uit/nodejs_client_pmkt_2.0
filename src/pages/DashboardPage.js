@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 
 import { QuickAtivitiesContainer, CommentContainer } from "my-containers/dashboard"
 
 import { SocketService } from 'my-utils/core';
+import { CookieService } from 'my-utils/core';
+import { RoutesService } from 'my-routes';
+
 class DashboardPage extends Component {
     constructor(props) {
         super(props)
@@ -23,6 +27,10 @@ class DashboardPage extends Component {
         })
     }
     render() {
+        if (!CookieService.get('isLogin')) {
+            return <Redirect to={RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'login' })} />
+        }
+
         return (
             <section>
                 <QuickAtivitiesContainer />

@@ -90,10 +90,10 @@ export const getSecure = _ => {
                 } else {
                     dispatch({
                         type: AuthActionType.AUTH_GET_SECURE_FAIL,
-                        payload: {
+                        payload: _get(e, 'response.data', {
                             status: false,
-                            error_description: e.stack
-                        },
+                            error_description: e.stack,
+                        }),
                     });
                 }
             });
@@ -124,11 +124,69 @@ export const checkSecure = (secureCode) => {
             }).catch(e => {
                 dispatch({
                     type: AuthActionType.AUTH_CHECK_SECURE_FAIL,
-                    payload: {
+                    payload: _get(e, 'response.data', {
                         status: false,
-                        error_description: e.stack
-                    },
+                        error_description: e.stack,
+                    }),
                 });
             });
     };
+};
+
+export const resetSecurePassword = (post) => {
+    return dispatch => {
+        return AuthService.resetSecurePassword(post)
+            .then(res => {
+                if (res.status) {
+                    CookieService.set('byPassDashboard', true);
+
+                    setTimeout(() => {
+                        dispatch({
+                            type: AuthActionType.RESET_SECURE_PASSWORD_SUCCESS,
+                            payload: res,
+                        });
+                    }, 1000);
+                } else {
+                    dispatch({
+                        type: AuthActionType.RESET_SECURE_PASSWORD_FAIL,
+                        payload: {
+                            status: false,
+                            error_description: _get(res, 'res.data.message', '')
+                        },
+                    });
+                }
+            })
+            .catch(e => {
+                dispatch({
+                    type: AuthActionType.RESET_SECURE_PASSWORD_FAIL,
+                    payload: _get(e, 'response.data', {
+                        status: false,
+                        error_description: e.stack,
+                    }),
+                });
+            })
+    }
+};
+
+export const logout = () => {
+    return dispatch => {
+        return AuthService.logout()
+            .then((res) => {
+                CookieService.removeAll();
+
+                dispatch({
+                    type: AuthActionType.LOGOUT_SUCCESS,
+                    payload: res,
+                });
+            })
+            .catch(e => {
+                dispatch({
+                    type: AuthActionType.LOGOUT_FAIL,
+                    payload: _get(e, 'response.data', {
+                        status: false,
+                        error_description: e.stack,
+                    }),
+                });
+            });
+    }
 };
