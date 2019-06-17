@@ -2,12 +2,15 @@ import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
+import { Button, Modal, ModalBody, ModalFooter } from 'reactstrap';
+import { Link } from 'react-router-dom';
 
 import { ZopimChat, Notification } from 'my-components/navigation';
 import { AuthAction } from 'my-actions/systems';
 import BankerListContainer from "my-containers/banker/BankerListContainer";
-import { Button, Modal, ModalBody, ModalFooter } from 'reactstrap';
-import 'my-styles/reactstrap-modal.css'
+import 'my-styles/reactstrap-modal.css';
+import { CookieService } from 'my-utils/core';
+import { RoutesService } from 'my-routes';
 
 class Header extends Component {
     handleLogout() {
@@ -15,6 +18,8 @@ class Header extends Component {
     }
 
     render() {
+        const isLogin = CookieService.get('isLogin');
+
         return (
             <div>
                 <div className="page-header navbar navbar-fixed-top">
@@ -284,10 +289,17 @@ class Header extends Component {
                                             </a>
                                         </li>
                                         <li className="divider"> </li>
-                                        <li>
-                                            <a href="page_user_lock_1.html">
-                                                <i className="icon-lock" /> Lock Screen </a>
-                                        </li>
+                                        {
+                                            isLogin
+                                                ? (
+                                                    <li>
+                                                        <Link to={RoutesService.getPath('ADMIN', 'CHANGE_PASSWORD')}>
+                                                            <i className="icon-lock" /> {this.props.t('Change Password')}
+                                                        </Link>
+                                                    </li>
+                                                )
+                                                : null
+                                        }
                                         <li>
                                             <a onClick={this.handleLogout.bind(this)}>
                                                 <i className="icon-key" /> {this.props.t('Log Out')} </a>
