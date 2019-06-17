@@ -99,7 +99,6 @@ class FormLoginContainer extends React.Component {
 }
 
 const mapStateToProps = state => {
-    console.log("state language", state)
     return {
         initialValues: _.get(state, 'form.form_login.values', {}),
         auth : state.AuthReducer,
