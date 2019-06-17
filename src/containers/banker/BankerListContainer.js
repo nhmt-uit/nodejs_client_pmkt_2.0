@@ -5,7 +5,8 @@ import {connect} from "react-redux";
 import {withTranslation} from "react-i18next";
 import { getBanker } from "my-actions/banker/BankerAction";
 
-var _ = require ('underscore')
+// var _ = require ('underscore')
+import { isEmpty} from 'lodash'
 
 
 class BankerListContainer extends React.Component{
@@ -18,11 +19,11 @@ class BankerListContainer extends React.Component{
         DATA = this.props.bankerList.payload;
         // console.log("DATA:", typeof DATA);
 
-        if(_.isEmpty(DATA)){
+        if(isEmpty(DATA)){
             console.log("DATA is empty!")
             return null;
         }
-        var List ={};
+        var List = {};
         var List = DATA.res.data.List;
         console.log("LIST: ", List);
 
@@ -46,7 +47,6 @@ class BankerListContainer extends React.Component{
                                 <tbody>
                                 {List.map(function (display) {
                                     var url = display.logo.replace(".", "")
-                                    console.log("url", url)
                                     return(
                                         <tr>
                                             <td><img src={"/assets" + url} alt={display.name} style={{height:60, width:120}} /></td>
