@@ -13,7 +13,7 @@ import { AppConfig } from 'my-constants'
 import BootstrapInputIcon from 'my-utils/components/date-picker/BootstrapInputIcon'
 import { FormScanButtonComponent, FormScanGroupDateComponent } from 'my-components/accountant'
 import EventsService from 'my-utils/core/EventsService'
-import { socketInitData } from 'my-actions/AccountantAction';
+import { socketInitData, socketScanData } from 'my-actions/AccountantAction';
 import { Helpers } from 'my-utils';
 
 
@@ -162,16 +162,27 @@ class AccountantFormScanContainer extends Component {
             <div className="portlet light bordered">
                 <div className="portlet-title">
                     <div className="caption font-red-sunglo"><span className="caption-subject bold uppercase">{t("Accountant")}</span></div>
-                    <div className="tools"><a href="#/" className="collapse"> </a></div>
+                    <div className="tools"><span className="collapse"> </span></div>
                 </div>
                 <div className="portlet-body form">
+                    
                     <form className="form-inline">
-                        
-                        <div className="form-group input-large"></div>
+                        <div className="form-group input-xlarge">
+                            <div className="mt-radio-inline">
+                                <label className="mt-radio">
+                                    <input type="radio" name="optionsRadios"  /> {t("All")}
+                                    <span></span>
+                                </label>
+                                <label className="mt-radio">
+                                    <input type="radio" name="optionsRadios"  /> {t("SB & CSN & GAMES-XS & RACING & ESB")}
+                                    <span></span>
+                                </label>
+                            </div>
+                        </div>
                         <FormScanGroupDateComponent changeGroupDate={this.changeGroupDate} typeGroupDate={typeGroupDate} />
 
                         <div className="clearfix"></div>
-                        <div className="form-group input-large">
+                        <div className="form-group input-xlarge">
                             <MultiSelect
                                 options={memberOptions}
                                 selected={selectedMember}
@@ -193,7 +204,7 @@ class AccountantFormScanContainer extends Component {
                                 onChange={this.onChangeDateTo} selected={date_to}
                                 dateFormat={AppConfig.FORMAT_DATE_DATEPICKER} />
                         </div>
-                        <FormScanButtonComponent />
+                        <FormScanButtonComponent socketScanData={this.props.socketScanData} />
                     </form>
                 </div>
             </div>
@@ -211,7 +222,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        socketInitData: params => {dispatch(socketInitData(params))},
+        socketInitData: _ => {dispatch(socketInitData())},
+        socketScanData: _ => {dispatch(socketScanData())},
     }
 };
 

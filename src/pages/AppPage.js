@@ -1,5 +1,4 @@
 import React from 'react';
-import Cookies from 'universal-cookie';
 import { connect } from 'react-redux';
 
 import { BaseComponent } from "my-utils/core"

@@ -5,7 +5,6 @@ import { QuickAtivitiesContainer, PanelAlert } from "my-containers/dashboard"
 // import BankerListContainer from "my-containers/banker/BankerListContainer";
 import InfoUserContainer from "my-containers/infoUser/InfoUserContainer";
 
-import { SocketService } from 'my-utils/core';
 import { CookieService } from 'my-utils/core';
 import { RoutesService } from 'my-routes';
 
