@@ -6,6 +6,7 @@ import { compose } from 'redux';
 import { ZopimChat, Notification } from 'my-components/navigation';
 import { AuthAction } from 'my-actions/systems';
 import BankerListContainer from "my-containers/banker/BankerListContainer";
+import InfoUserContainer from "my-containers/infoUser/InfoUserContainer";
 import { Button, Modal, ModalBody, ModalFooter } from 'reactstrap';
 import 'my-styles/reactstrap-modal.css'
 
@@ -31,6 +32,11 @@ class Header extends Component {
                         <a href="index.html" className="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse">
                             <span />
                         </a>
+                        {/*=========================================*/}
+                        <div>
+                            <InfoUserContainer/>
+                        </div>
+                        {/*=========================================*/}
                         <div className="top-menu">
                             <ul className="nav navbar-nav pull-right">
                                 <ZopimChat label="Live support" className="text-red" />
@@ -256,6 +262,12 @@ class Header extends Component {
                                         </li>
                                     </ul>
                                 </li>
+                                {/*=========================================*/}
+                                <li className="dropdown dropdown-extended dropdown-inbox">
+                                    <MenuCompany/>
+                                </li>
+                                {/*=========================================*/}
+
                                 <li className="dropdown dropdown-user">
                                     <a href="index.html" className="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                                         <img className="img-circle" src="/assets/layouts/layout/img/avatar3_small.jpg" alt="avatar" />

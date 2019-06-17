@@ -2,7 +2,7 @@ import { AppConfig } from 'my-constants';
 import { BaseService, HttpService } from 'my-utils/core';
 
 class InfoUserService extends BaseService{
-    serviceUrl = `${AppConfig.URL}/language`;
+    serviceUrl = `${AppConfig.API_URL}/language`;
 
     getInfoUser(){
         const payload = {code: "en", updateLang: true};

@@ -3,7 +3,7 @@ import { Redirect } from 'react-router-dom';
 
 import { QuickAtivitiesContainer, PanelAlert } from "my-containers/dashboard"
 // import BankerListContainer from "my-containers/banker/BankerListContainer";
-import InfoUserContainer from "my-containers/infoUser/InfoUserContainer";
+// import InfoUserContainer from "my-containers/infoUser/InfoUserContainer";
 
 import { SocketService } from 'my-utils/core';
 import { CookieService } from 'my-utils/core';
@@ -19,7 +19,7 @@ class DashboardPage extends Component {
         return (
             <section>
                 <QuickAtivitiesContainer />
-                <InfoUserContainer/>
+                {/*<InfoUserContainer/>*/}
                 {/*<BankerListContainer/>*/}
                 <div className="row widget-row">
                     <div className="col-md-3">

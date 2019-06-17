@@ -23,7 +23,6 @@ class BankerListContainer extends React.Component{
             console.log("DATA is empty!")
             return null;
         }
-        var List = {};
         var List = DATA.res.data.List;
         console.log("LIST: ", List);
 
@@ -84,5 +83,5 @@ const mapDispatchToProps = (dispatch) => {
 export default compose(
     reduxForm({form: 'banker'}),
     connect(mapStateToProps, mapDispatchToProps),
-    withTranslation()
+    withTranslation(),
 )(BankerListContainer);
