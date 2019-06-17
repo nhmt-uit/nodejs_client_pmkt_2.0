@@ -16,6 +16,7 @@ class Header extends Component {
     }
 
     render() {
+        const { t } = this.props;
         return (
             <div>
                 <div className="page-header navbar navbar-fixed-top">
@@ -345,7 +346,7 @@ class MenuCompany extends React.Component{
                         <BankerListContainer />
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="secondary" onClick={this.toggle}>Close</Button>
+                        <Button color="secondary" onClick={this.toggle}> Close </Button>
                     </ModalFooter>
                 </Modal>
                 {/*<button type="button" className="btn btn-primary" data-toggle="modal" data-target="#exampleModal">*/}

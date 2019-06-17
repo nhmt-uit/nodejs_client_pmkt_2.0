@@ -15,10 +15,10 @@ class BankerListContainer extends React.Component{
     }
 
     render() {
+        const { t } = this.props;
         var DATA = {};
         DATA = this.props.bankerList.payload;
         // console.log("DATA:", typeof DATA);
-
         if(isEmpty(DATA)){
             console.log("DATA is empty!")
             return null;
@@ -32,7 +32,7 @@ class BankerListContainer extends React.Component{
                     <div className="portlet-title">
                         <div className="caption">
                             <i className="icon-social-dribbble font-green"></i>
-                            <span className="caption-subject font-green bold uppercase"> Company </span>
+                            <span className="caption-subject font-green bold uppercase"> {t("Company")} </span>
                         </div>
                     </div>
                     <div className="portlet-body">
@@ -44,12 +44,12 @@ class BankerListContainer extends React.Component{
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {List.map(function (display) {
-                                    var url = display.logo.replace(".", "")
+                                {List.map(function (items) {
+                                    var url = items.logo.replace(".", "")
                                     return(
                                         <tr>
-                                            <td><img src={"/assets" + url} alt={display.name} style={{height:60, width:120}} /></td>
-                                            <td><a href={display.member_url} target="_blank"> {display.member_url} </a> </td>
+                                            <td><img src={"/assets" + url} alt={items.name} style={{height:60, width:120}} /></td>
+                                            <td><a href={items.member_url} target="_blank"> {items.member_url} </a> </td>
                                         </tr>
                                     )
                                 })}

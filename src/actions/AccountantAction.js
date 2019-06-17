@@ -4,7 +4,7 @@ import { AuthService } from 'my-services/systems'
 import { AccountantService }  from 'my-services'
 
 export const socketInitData = (user) => {
-    SocketService.connect('/accountant')
+    SocketService.connect('/accountant');
     return (dispatch) => {
         EventsService.on('accountant_init', res => {
             if (res) {
