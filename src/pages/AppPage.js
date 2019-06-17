@@ -5,17 +5,15 @@ import { connect } from 'react-redux';
 import { BaseComponent } from "my-utils/core"
 import { MainLayout, AuthenticationLayout } from 'my-pages/layouts'
 import { Loading } from 'my-pages/layouts/partials';
-
-
-const cookies = new Cookies();
+import { CookieService } from 'my-utils/core';
 
 const RenderComponent = () => {
 	let component = ( <MainLayout /> );
 
 	// Check user is login? change template
-	const isLogin = cookies.get("isLogin");
-	const isCheckSecure = cookies.get('isCheckSecure');
-	const byPassDashboard = cookies.get('byPassDashboard');
+	const isLogin = CookieService.get("isLogin");
+	const isCheckSecure = CookieService.get('isCheckSecure');
+	const byPassDashboard = CookieService.get('byPassDashboard');
 
 	if ((!isLogin || !isCheckSecure !== undefined) && !byPassDashboard) {
 		component = ( <AuthenticationLayout /> );

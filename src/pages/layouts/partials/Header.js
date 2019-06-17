@@ -5,6 +5,9 @@ import { compose } from 'redux';
 
 import { ZopimChat, Notification } from 'my-components/navigation';
 import { AuthAction } from 'my-actions/systems';
+import BankerListContainer from "my-containers/banker/BankerListContainer";
+import { Button, Modal, ModalBody, ModalFooter } from 'reactstrap';
+import 'my-styles/reactstrap-modal.css'
 
 class Header extends Component {
     handleLogout() {
@@ -23,6 +26,7 @@ class Header extends Component {
                             <div className="menu-toggler sidebar-toggler">
                                 <span />
                             </div>
+
                         </div>
                         <a href="index.html" className="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse">
                             <span />
@@ -170,43 +174,82 @@ class Header extends Component {
                                                         </span>
                                                     </a>
                                                 </li>
-                                                <li>
-                                                    <a href="index.html">
-                                                        <span className="task">
-                                                            <span className="desc">Web server upgrade</span>
-                                                            <span className="percent">58%</span>
+                                            <li>
+                                                <a href="index.html">
+                                                    <span className="task">
+                                                        <span className="desc">Application deployment</span>
+                                                        <span className="percent">65%</span>
+                                                    </span>
+                                                    <span className="progress">
+                                                        <span style={{ width: '65%' }} className="progress-bar progress-bar-danger" aria-valuenow={65} aria-valuemin={0} aria-valuemax={100}>
+                                                            <span className="sr-only">65% Complete</span>
                                                         </span>
-                                                        <span className="progress">
-                                                            <span style={{ width: '58%' }} className="progress-bar progress-bar-info" aria-valuenow={58} aria-valuemin={0} aria-valuemax={100}>
-                                                                <span className="sr-only">58% Complete</span>
-                                                            </span>
+                                                    </span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="index.html">
+                                                    <span className="task">
+                                                        <span className="desc">Mobile app release</span>
+                                                        <span className="percent">98%</span>
+                                                    </span>
+                                                    <span className="progress">
+                                                        <span style={{ width: '98%' }} className="progress-bar progress-bar-success" aria-valuenow={98} aria-valuemin={0} aria-valuemax={100}>
+                                                            <span className="sr-only">98% Complete</span>
                                                         </span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="index.html">
-                                                        <span className="task">
-                                                            <span className="desc">Mobile development</span>
-                                                            <span className="percent">85%</span>
+                                                    </span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="index.html">
+                                                    <span className="task">
+                                                        <span className="desc">Database migration</span>
+                                                        <span className="percent">10%</span>
+                                                    </span>
+                                                    <span className="progress">
+                                                        <span style={{ width: '10%' }} className="progress-bar progress-bar-warning" aria-valuenow={10} aria-valuemin={0} aria-valuemax={100}>
+                                                            <span className="sr-only">10% Complete</span>
                                                         </span>
-                                                        <span className="progress">
-                                                            <span style={{ width: '85%' }} className="progress-bar progress-bar-success" aria-valuenow={85} aria-valuemin={0} aria-valuemax={100}>
-                                                                <span className="sr-only">85% Complete</span>
-                                                            </span>
+                                                    </span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="index.html">
+                                                    <span className="task">
+                                                        <span className="desc">Web server upgrade</span>
+                                                        <span className="percent">58%</span>
+                                                    </span>
+                                                    <span className="progress">
+                                                        <span style={{ width: '58%' }} className="progress-bar progress-bar-info" aria-valuenow={58} aria-valuemin={0} aria-valuemax={100}>
+                                                            <span className="sr-only">58% Complete</span>
                                                         </span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="index.html">
-                                                        <span className="task">
-                                                            <span className="desc">New UI release</span>
-                                                            <span className="percent">38%</span>
+                                                    </span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="index.html">
+                                                    <span className="task">
+                                                        <span className="desc">Mobile development</span>
+                                                        <span className="percent">85%</span>
+                                                    </span>
+                                                    <span className="progress">
+                                                        <span style={{ width: '85%' }} className="progress-bar progress-bar-success" aria-valuenow={85} aria-valuemin={0} aria-valuemax={100}>
+                                                            <span className="sr-only">85% Complete</span>
                                                         </span>
-                                                        <span className="progress progress-striped">
-                                                            <span style={{ width: '38%' }} className="progress-bar progress-bar-important" aria-valuenow={18} aria-valuemin={0} aria-valuemax={100}>
-                                                                <span className="sr-only">38% Complete</span>
-                                                            </span>
+                                                    </span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="index.html">
+                                                    <span className="task">
+                                                        <span className="desc">New UI release</span>
+                                                        <span className="percent">38%</span>
+                                                    </span>
+                                                    <span className="progress progress-striped">
+                                                        <span style={{ width: '38%' }} className="progress-bar progress-bar-important" aria-valuenow={18} aria-valuemin={0} aria-valuemax={100}>
+                                                            <span className="sr-only">38% Complete</span>
                                                         </span>
+                                                    </span>
                                                     </a>
                                                 </li>
                                             </ul>
@@ -262,6 +305,54 @@ class Header extends Component {
                 </div>
                 <div className="clearfix"> </div>
             </div>
+        );
+    }
+}
+
+class MenuCompany extends React.Component{
+    constructor(props) {
+        super(props);
+        this.state = {
+            modal: false
+        };
+        this.toggle = this.toggle.bind(this);
+    }
+    toggle() {
+        this.setState(prevState => ({
+            modal: !prevState.modal
+        }));
+    }
+    render() {
+        return (
+            <>
+                <a onClick={this.toggle} className="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                    <i className={'fa fa-bank'}/>
+                </a>
+                <Modal isOpen={this.state.modal}>
+                    <ModalBody>
+                        <BankerListContainer />
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="secondary" onClick={this.toggle}>Close</Button>
+                    </ModalFooter>
+                </Modal>
+                {/*<button type="button" className="btn btn-primary" data-toggle="modal" data-target="#exampleModal">*/}
+                    {/*<i className={'fa fa-bank'}/>*/}
+                {/*</button>*/}
+                {/*<div className="modal fade" id="exampleModal" tabIndex="-1" role="dialog"*/}
+                     {/*aria-labelledby="exampleModalLabel" aria-hidden="true">*/}
+                    {/*<div className="modal-dialog" role="document">*/}
+                        {/*<div className="modal-content">*/}
+                            {/*<div className="modal-body">*/}
+                                {/*<BankerListContainer />*/}
+                            {/*</div>*/}
+                            {/*<div className="modal-footer">*/}
+                                {/*<button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>*/}
+                            {/*</div>*/}
+                        {/*</div>*/}
+                    {/*</div>*/}
+                {/*</div>*/}
+            </>
         );
     }
 }
