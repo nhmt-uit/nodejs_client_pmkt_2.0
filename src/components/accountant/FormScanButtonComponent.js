@@ -7,7 +7,7 @@ class FormScanButtonComponent extends Component {
         const { t, socketScanData } = this.props
         return (
             <div className="form-group">
-                <a type="submit" className="btn btn-default red" onClick={socketScanData}>{t("Scan")}</a>
+                <a href="#/" type="submit" className="btn btn-default red" onClick={socketScanData}>{t("Scan")}</a>
                 <button type="submit" className="btn btn-default grey">{t("Stop")}</button>
                 <button type="submit" className="btn btn-default grey">{t("Sign Out")}</button>
                 <button type="submit" className="btn btn-default red">{t("Save report")}</button>

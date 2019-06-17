@@ -18,7 +18,7 @@ class ZopimChat extends Component {
 
         return (
             <li className="pointer" id="zopim-chat" {...otherProps}>
-                <a className={otherProps.className} href="javascript:void($zopim.livechat.window.openPopout())"><span className="fa fa-wechat"/> {t(label)}</a>
+                <a className={otherProps.className} href="javascript:void($zopim.livechat.window.openPopout());"><span className="fa fa-wechat"/> {t(label)}</a>
             </li>
         )
     }

@@ -123,6 +123,8 @@ const validate = values => {
                             errors[name] = `${label} do not match ${objIndex.label || field}`;
                         }
                     });
+                    break
+                default: break
             }
         })
     });

@@ -10,8 +10,6 @@ import {
 import { Grid, Table, TableHeaderRow, TableTreeColumn } from '@devexpress/dx-react-grid-bootstrap3'
 import LazyLoad from 'react-lazyload';
 
-
-import { ListBankerAccountsComponent } from 'my-components/accountant'
 const getChildRows = (row, rootRows) => (row ? row.items : rootRows);
 const Cell = (props) => {
     // console.log(props)

@@ -2,24 +2,25 @@ import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { Button, Modal, ModalBody, ModalFooter } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
 import { ZopimChat, Notification } from 'my-components/navigation';
 import { AuthAction } from 'my-actions/systems';
 import BankerListContainer from "my-containers/banker/BankerListContainer";
-import 'my-styles/reactstrap-modal.css';
 import { CookieService } from 'my-utils/core';
 import { RoutesService } from 'my-routes';
+import InfoUserContainer from "my-containers/infoUser/InfoUserContainer";
+import 'my-styles/reactstrap-modal.css'
 
 class Header extends Component {
-    handleLogout() {
+    handleLogout = _ => {
         return this.props.logout();
     }
 
     render() {
         const isLogin = CookieService.get('isLogin');
-
+        // const { t } = this.props;
         return (
             <div>
                 <div className="page-header navbar navbar-fixed-top">
@@ -36,6 +37,11 @@ class Header extends Component {
                         <a href="index.html" className="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse">
                             <span />
                         </a>
+                        {/*=========================================*/}
+                        <div>
+                            <InfoUserContainer/>
+                        </div>
+                        {/*=========================================*/}
                         <div className="top-menu">
                             <ul className="nav navbar-nav pull-right">
                                 <ZopimChat label="Live support" className="text-red" />
@@ -261,6 +267,12 @@ class Header extends Component {
                                         </li>
                                     </ul>
                                 </li>
+                                {/*=========================================*/}
+                                <li className="dropdown dropdown-extended dropdown-inbox">
+                                    <MenuCompany/>
+                                </li>
+                                {/*=========================================*/}
+
                                 <li className="dropdown dropdown-user">
                                     <a href="index.html" className="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                                         <img className="img-circle" src="/assets/layouts/layout/img/avatar3_small.jpg" alt="avatar" />
@@ -301,13 +313,13 @@ class Header extends Component {
                                                 : null
                                         }
                                         <li>
-                                            <a onClick={this.handleLogout.bind(this)}>
+                                            <a href="#/" onClick={this.handleLogout}>
                                                 <i className="icon-key" /> {this.props.t('Log Out')} </a>
                                         </li>
                                     </ul>
                                 </li>
                                 <li className="dropdown dropdown-quick-sidebar-toggler">
-                                    <a href="#" className="dropdown-toggle">
+                                    <a href="#/" className="dropdown-toggle">
                                         <i className="icon-logout" />
                                     </a>
                                 </li>
@@ -337,15 +349,16 @@ class MenuCompany extends React.Component{
     render() {
         return (
             <>
-                <a onClick={this.toggle} className="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                <a href="#/" onClick={this.toggle} className="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                     <i className={'fa fa-bank'}/>
                 </a>
-                <Modal isOpen={this.state.modal}>
+                <Modal isOpen={this.state.modal} toggle={this.toggle} scrollable={true}>
+                    <ModalHeader toggle={this.toggle} ><i class="icon-social-dribbble font-green"></i><span class="caption-subject font-green bold uppercase"> Company </span></ModalHeader>
                     <ModalBody>
                         <BankerListContainer />
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="secondary" onClick={this.toggle}>Close</Button>
+                        <Button color="secondary" onClick={this.toggle}> Close </Button>
                     </ModalFooter>
                 </Modal>
                 {/*<button type="button" className="btn btn-primary" data-toggle="modal" data-target="#exampleModal">*/}
