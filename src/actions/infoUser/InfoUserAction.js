@@ -4,7 +4,6 @@ import InfoUserService from 'my-services/infoUser/InfoUserService'
 export const getInfoUser = () => {
     return (dispatch) => {
         return InfoUserService.getInfoUser().then(res => {
-            console.log("GET USER INFO RESPONSE: ", res)
             dispatch({
                 type: InfoUserActionType.GET_INFO_USER,
                 payload: res,

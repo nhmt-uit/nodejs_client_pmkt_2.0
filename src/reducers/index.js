@@ -4,7 +4,7 @@ import { reducer as formReducer } from 'redux-form';
 // System Reducers
 import LanguageReducer from './systems/LanguageReducer';
 import AuthReducer from './systems/AuthReducer';
-import AccountantReducer from './AccountantReducer';
+import { AccountantReducer, AccountantScanReducer, AccountantToggleReducer } from './AccountantReducer';
 import NotificationReducer from './systems/NotificationReducer';
 import BankerReducer from './banker/BankerReducer'
 
@@ -17,7 +17,7 @@ const appReducers = combineReducers({
     AuthReducer,
 
     // Accountant Reducer
-    AccountantReducer,
+    AccountantReducer, AccountantScanReducer, AccountantToggleReducer,
     NotificationReducer
 });
 

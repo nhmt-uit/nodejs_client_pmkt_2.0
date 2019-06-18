@@ -3,6 +3,7 @@ import { compose } from 'redux'
 import { withTranslation } from 'react-i18next'
 
 class FormScanButtonComponent extends Component {
+
     render() {
         const { t, socketScanData } = this.props
         return (

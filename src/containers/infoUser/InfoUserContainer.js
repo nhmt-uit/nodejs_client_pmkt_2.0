@@ -33,7 +33,6 @@ class InfoUserContainer extends Component {
 }
 
 const mapStateToProps = state => {
-    console.log("State info user", state);
     let initialValues = {};
     if(state.form.info_user){
         initialValues = state.form.info_user.values;

@@ -28,8 +28,8 @@ class AccountantFormScanContainer extends Component {
     state = {
         selectedMember: [],
         typeGroupDate: 'today',
-        date_from: new Date(),
-        date_to: new Date()
+        from_date: new Date(),
+        to_date: new Date()
     }
 
     componentDidMount() {
@@ -41,11 +41,11 @@ class AccountantFormScanContainer extends Component {
 
     /*
     |--------------------------------------------------------------------------
-    | Handle date picker change date_from
+    | Handle date picker change from_date
     |--------------------------------------------------------------------------
     */
     onChangeDateFrom = date  => {
-        this.setState({date_from: date})
+        this.setState({from_date: date})
         setTimeout(_ => {
             this.checkDateToSelectGroupDate()
         }, 200)
@@ -53,11 +53,11 @@ class AccountantFormScanContainer extends Component {
 
     /*
     |--------------------------------------------------------------------------
-    | Handle date picker change date_to
+    | Handle date picker change to_date
     |--------------------------------------------------------------------------
     */
     onChangeDateTo = date  => {
-        this.setState({date_to: date})
+        this.setState({to_date: date})
         setTimeout(_ => {
             this.checkDateToSelectGroupDate()
         }, 200)
@@ -70,14 +70,14 @@ class AccountantFormScanContainer extends Component {
 
     /*
     |--------------------------------------------------------------------------
-    | Generate date_to & date_from when change radio date type
+    | Generate to_date & from_date when change radio date type
     |--------------------------------------------------------------------------
     */
     checkDateToSelectGroupDate() {
-        let date_form = moment(this.state.date_from).format('YYYY-MM-DD')
-        let date_to = moment(this.state.date_to).format('YYYY-MM-DD')
+        let date_form = moment(this.state.from_date).format('YYYY-MM-DD')
+        let to_date = moment(this.state.to_date).format('YYYY-MM-DD')
         this.setState({typeGroupDate: null})
-        if (date_form === date_to) {
+        if (date_form === to_date) {
             if (date_form === today) {
                 this.setState({typeGroupDate: 'today'})
             }
@@ -85,10 +85,10 @@ class AccountantFormScanContainer extends Component {
                 this.setState({typeGroupDate: 'yesterday'})
             }
         } else {
-            if (start_this_week === date_form && end_this_week === date_to) {
+            if (start_this_week === date_form && end_this_week === to_date) {
                 this.setState({typeGroupDate: 'this_week'})
             }
-            if (start_last_week === date_form && end_last_week === date_to) {
+            if (start_last_week === date_form && end_last_week === to_date) {
                 this.setState({typeGroupDate: 'last_week'})
             }
         }
@@ -103,19 +103,28 @@ class AccountantFormScanContainer extends Component {
         this.setState({typeGroupDate: type})
         switch (type) {
             case 'today':
-                this.setState({date_from: new Date(today), date_to: new Date(today)})
+                this.setState({from_date: new Date(today), to_date: new Date(today)})
             break
             case 'yesterday':
-                this.setState({date_from: new Date(yesterday), date_to: new Date(yesterday)})
+                this.setState({from_date: new Date(yesterday), to_date: new Date(yesterday)})
             break
             case 'this_week':
-                this.setState({date_from: new Date(start_this_week), date_to: new Date(end_this_week)})
+                this.setState({from_date: new Date(start_this_week), to_date: new Date(end_this_week)})
             break
             case 'last_week':
-                this.setState({date_from: new Date(start_last_week), date_to: new Date(end_last_week)})
+                this.setState({from_date: new Date(start_last_week), to_date: new Date(end_last_week)})
             break
             default:break
         }
+    }
+
+    handleRequestScan = _ => {
+        let bankerAccountIds = []
+        for(let x in this.props.isCheckBankerAccount) {
+            if (this.props.isCheckBankerAccount[x] === true) bankerAccountIds.push(x)
+        }
+        this.props.socketScanData({ids: bankerAccountIds, from_date: this.state.to_date, to_date: this.state.to_date})
+
     }
 
     /*
@@ -125,12 +134,12 @@ class AccountantFormScanContainer extends Component {
     |--------------------------------------------------------------------------
     */
     componentDidUpdate = _ => {
-        const full_payload = this.props.accountant_full_payload, request_type = this.props.accountant_request_type
-        if(request_type === "accountant_init" && full_payload.type === "notify" && full_payload.message === "init_data") {
-            Helpers.showLoading();
-        } else {
-            Helpers.hideLoading();
-        }
+        // const full_payload = this.props.accountant_full_payload, request_type = this.props.accountant_request_type
+        // if(request_type === "accountant_init" && full_payload.type === "notify" && full_payload.message === "init_data") {
+        //     Helpers.showLoading();
+        // } else {
+        //     Helpers.hideLoading();
+        // }
     }
 
     renderOption = ({ checked, option, onClick }) => (
@@ -156,7 +165,7 @@ class AccountantFormScanContainer extends Component {
     render() {
         const { t } = this.props
         let memberOptions = (this.props.accountant_payload) ? this.props.accountant_payload.memberOptionsProcessed : []
-        const { selectedMember, date_from, date_to, typeGroupDate } = this.state
+        const { selectedMember, from_date, to_date, typeGroupDate } = this.state
 
         return (
             <div className="portlet light bordered">
@@ -193,18 +202,18 @@ class AccountantFormScanContainer extends Component {
                         </div>
                         <div className="form-group">
                             <DatePicker customInput={<BootstrapInputIcon />}
-                                name="date_from"
-                                onChange={this.onChangeDateFrom} selected={date_from}
+                                name="from_date"
+                                onChange={this.onChangeDateFrom} selected={from_date}
                                 dateFormat={AppConfig.FORMAT_DATE_DATEPICKER} />
                             
                         </div>
                         <div className="form-group">
                             <DatePicker customInput={<BootstrapInputIcon />}
-                                name="date_from"
-                                onChange={this.onChangeDateTo} selected={date_to}
+                                name="from_date"
+                                onChange={this.onChangeDateTo} selected={to_date}
                                 dateFormat={AppConfig.FORMAT_DATE_DATEPICKER} />
                         </div>
-                        <FormScanButtonComponent socketScanData={this.props.socketScanData} />
+                        <FormScanButtonComponent socketScanData={this.handleRequestScan} />
                     </form>
                 </div>
             </div>
@@ -217,13 +226,14 @@ const mapStateToProps = state => {
         accountant_request_type : state.AccountantReducer.request_type,
         accountant_full_payload : state.AccountantReducer.full_payload,
         accountant_payload : state.AccountantReducer.payload,
+        isCheckBankerAccount : state.AccountantToggleReducer.isCheckBankerAccount,
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
         socketInitData: _ => {dispatch(socketInitData())},
-        socketScanData: _ => {dispatch(socketScanData())},
+        socketScanData: params => {dispatch(socketScanData(params))},
     }
 };
 
