@@ -1,62 +1,81 @@
-import _get from 'lodash/get';
+import { get as _get } from 'lodash';
 
-import { AuthActionType } from 'my-constants/action-types';
-import { AuthService, LanguageService } from 'my-services/systems';
-import { CookieService } from 'my-utils/core';
-import { AppConfig } from 'my-constants';
+import { ChangePasswordActionType } from 'my-constants/action-types';
+import { ChangePasswordService } from 'my-services/systems';
 
-export const login = (user) => {
+export const savePassword = (password) => {
     return (dispatch) => {
-        return AuthService.login(user).then(resLogin => {
-            CookieService.set('access_token', resLogin.access_token);
-
-            LanguageService.getLanguage(AppConfig.DEFAULT_LANG)
-                .then(data => {
-                    const userInfo = data.data.userInfo;
-
-                    const isLogin = userInfo.isLogin;
-                    const isReset = userInfo.isReset;
-                    const isCheckSecure = userInfo.isCheckSecure;
-                    const isAdmin = userInfo.isAdmin;
-                    const roles = userInfo.roles || 0;
-                    const rolesMaster = userInfo.rolesMaster || 0;
-                    const username = userInfo.username || '';
-                    const hasSpecialFeature = userInfo.hasSpecialFeature;
-                    const hasReportDetailFeature = userInfo.hasReportDetailFeature;
-                    const status = userInfo.status || 0;
-                    const needChangeSecurePassword = userInfo.needChangeSecurePassword || 0;
-
-                    CookieService.set('isLogin', isLogin ? '1' : '0');
-                    CookieService.set('isReset', isReset ? '1' : '0');
-                    CookieService.set('isCheckSecure', isCheckSecure ? '1' : '0');
-                    CookieService.set('isAdmin', isAdmin ? '1' : '0');
-                    CookieService.set('roles', roles);
-                    CookieService.set('expires', userInfo.ep);
-                    CookieService.set('rolesMaster', rolesMaster);
-                    CookieService.set('username', username);
-                    CookieService.set('hasSpecialFeature', hasSpecialFeature ? '1' : '0');
-                    CookieService.set('hasReportDetailFeature', hasReportDetailFeature ? '1' : '0');
-                    CookieService.set('status', status );
-                    CookieService.set('needChangeSecurePassword', needChangeSecurePassword ? '1' : '0' );
-
-                    CookieService.set('expires_in', resLogin.expires_in);
-                    CookieService.set('refresh_token', resLogin.refresh_token);
-                    CookieService.set('token_type', resLogin.token_type);
-                    CookieService.set('isLogin', '1');
-                }).then(_ => {
+        return ChangePasswordService.savePassword(password).then(res => {
+            if (_get(res, 'status',false)) {
                 dispatch({
-                    type: AuthActionType.AUTH_LOGIN_SUCCESS,
-                    payload: resLogin
+                    type: ChangePasswordActionType.CHANGE_PASSWORD_SUCCESS,
+                    payload: res
                 });
-            });
+            } else {
+                dispatch({
+                    type: ChangePasswordActionType.CHANGE_PASSWORD_FAIL,
+                    payload: {
+                        errors: {
+                            status: true,
+                            error_description: _get(res, 'res.data.message', 'Chang password fail'),
+                        },
+                    },
+                });
+            }
+
         }).catch (error => {
             dispatch({
-                type: AuthActionType.AUTH_LOGIN_FAIL,
-                payload: _get(error, 'response.data', {
-                    status: false,
-                    error_description: error.stack,
-                }),
+                type: ChangePasswordActionType.CHANGE_PASSWORD_FAIL,
+                payload: {
+                    errors: {
+                        status: true,
+                        error_description: _get(error, 'response.data.error_description', 'Change password fail'),
+                    },
+                }
             })
         })
+    }
+};
+
+export const savePassword2 = (password) => {
+    return (dispatch) => {console.log(ChangePasswordActionType.CHANGE_PASSWORD2_FAIL);
+        return ChangePasswordService.savePassword2(password).then(res => {
+            if (_get(res, 'status',false)) {
+                dispatch({
+                    type: ChangePasswordActionType.CHANGE_PASSWORD2_SUCCESS,
+                    payload: res
+                });
+            } else {
+                dispatch({
+                    type: ChangePasswordActionType.CHANGE_PASSWORD2_FAIL,
+                    payload: {
+                        errors: {
+                            status: true,
+                            error_description: _get(res, 'res.data.message', 'Chang password fail'),
+                        },
+                    },
+                });
+            }
+        }).catch (error => {
+            dispatch({
+                type: ChangePasswordActionType.CHANGE_PASSWORD2_FAIL,
+                payload: {
+                    errors: {
+                        status: true,
+                        error_description: _get(error, 'response.data.error_description', 'Change password fail'),
+                    },
+                }
+            })
+        })
+    }
+};
+
+
+export const toggleNotify = value => {
+    return (dispatch) => {
+        dispatch({
+            type: ChangePasswordActionType.CHANGE_PASSWORD_TOGGLE_NOTIFY,
+            isShowNotify: value
+        });
     }
 };

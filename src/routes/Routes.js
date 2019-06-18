@@ -1,6 +1,6 @@
 import DashboardPage from 'my-pages/DashboardPage';
 import { LoginPage, SecureCodePage, ResetSecurePasswordPage } from 'my-pages/auth';
-import { ChangePasswordPage } from 'my-pages/navigation';
+import { ChangePasswordPage, ChangePassword2Page, ChangeSecureCodePage } from 'my-pages/navigation';
 
 import { AccountantListPage } from 'my-pages/accountant';
 import RoutesService from './RoutesService'
@@ -41,6 +41,16 @@ const Routes = [
 		path: RoutesService.getPath('ADMIN', 'CHANGE_PASSWORD'),
 		exact: true,
 		component: ChangePasswordPage,
+	},
+	{
+		path: RoutesService.getPath('ADMIN', 'CHANGE_PASSWORD_2'),
+		exact: true,
+		component: ChangePassword2Page,
+	},
+	{
+		path: RoutesService.getPath('ADMIN', 'CHANGE_SECURE_CODE'),
+		exact: true,
+		component: ChangeSecureCodePage,
 	},
 	{
 		path: '*',
