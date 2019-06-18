@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -304,11 +304,24 @@ class Header extends Component {
                                         {
                                             isLogin
                                                 ? (
-                                                    <li>
-                                                        <Link to={RoutesService.getPath('ADMIN', 'CHANGE_PASSWORD')}>
-                                                            <i className="icon-lock" /> {this.props.t('Change Password')}
-                                                        </Link>
-                                                    </li>
+                                                    <Fragment>
+                                                        <li>
+                                                            <Link to={RoutesService.getPath('ADMIN', 'CHANGE_PASSWORD')}>
+                                                                <i className="icon-lock" /> {this.props.t('Change Password')}
+                                                            </Link>
+                                                        </li>
+                                                        <li>
+                                                            <Link to={RoutesService.getPath('ADMIN', 'CHANGE_PASSWORD_2')}>
+                                                                <i className="icon-lock" /> {this.props.t('Change Password 2')}
+                                                            </Link>
+                                                        </li>
+                                                        <li>
+                                                            <Link to={RoutesService.getPath('ADMIN', 'CHANGE_SECURE_CODE')}>
+                                                                <i className="icon-lock" /> {this.props.t('Change Secure Code')}
+                                                            </Link>
+                                                        </li>
+                                                    </Fragment>
+
                                                 )
                                                 : null
                                         }

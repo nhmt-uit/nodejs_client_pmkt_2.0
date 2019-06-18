@@ -5,32 +5,29 @@ import { withTranslation } from "react-i18next";
 import { get as _get } from 'lodash';
 
 import { FormWithReduxForm } from 'my-components/navigation';
-import { savePassword, toggleNotify } from 'my-actions/systems/ChangePasswordAction';
+import { saveSecureCode, toggleNotify } from 'my-actions/systems/ChangeSecureCodeAction';
 
-class ChangePasswordContainer extends Component {
+class ChangeSecureCodeContainer extends Component {
     data = [
         {
-            name: 'current_password',
-            label: 'Current Password',
-            type: 'password',
-            rules: ['required'],
+            name: 'current_secure',
+            label: 'Current Secure',
+            rules: ['required', 'onlyNumber', 'maxLength6'],
         },
         {
-            name: 'new_password',
-            label: 'New Password',
-            type: 'password',
-            rules: ['required', 'passwordValid'],
+            name: 'new_secure',
+            label: 'New Secure',
+            rules: ['required', 'onlyNumber', 'maxLength6'],
         },
         {
-            name: 're_new_password',
-            label: 'Confirm Password',
-            type: 'password',
-            rules: ['required', 'confirmNewPassword'],
+            name: 're_new_secure',
+            label: 'Confirm Secure',
+            rules: ['required', 'confirmNewSecure'],
         }
     ];
 
-    handleSubmitForm = password => {
-        this.props.savePassword(password);
+    handleSubmitForm = secure => {
+        this.props.saveSecureCode(secure);
     };
 
     handleToggleNotify = _ => {
@@ -52,7 +49,7 @@ class ChangePasswordContainer extends Component {
                 err={dataStore.errors || {}}
                 success={{
                     status: dataStore.status || false,
-                    msg: t('Change password successfully')
+                    msg: t('Change secure code successfully')
                 }}
             />
         );
@@ -67,7 +64,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        savePassword: (password) => dispatch(savePassword(password)),
+        saveSecureCode: (secure) => dispatch(saveSecureCode(secure)),
         toggleNotify: value => {dispatch(toggleNotify(value))},
     };
 };
@@ -75,4 +72,4 @@ const mapDispatchToProps = dispatch => {
 export default compose(
     connect(mapStateToProps, mapDispatchToProps),
     withTranslation(),
-)(ChangePasswordContainer);
+)(ChangeSecureCodeContainer);
