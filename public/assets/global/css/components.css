@@ -8232,7 +8232,8 @@ Custom colored portlets
 .portlet.solid.blue-hoki > .portlet-title > .tools > a.fullscreen {
   color: #fdfdfd; }
 
-.portlet.box.blue-hoki {
+.portlet.box.
+{
   border: 1px solid #869ab3;
   border-top: 0; }
   .portlet.box.blue-hoki > .portlet-title {

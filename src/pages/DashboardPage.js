@@ -24,7 +24,6 @@ class DashboardPage extends Component {
                             <div className="widget-thumb-wrap">
                                 <i className="widget-thumb-icon bg-green icon-user" />
                                 <div className="widget-thumb-body">
-                                    <span className="widget-thumb-subtitle">USD</span>
                                     <span className="widget-thumb-body-stat" data-counter="counterup" data-value="7,644">0</span>
                                 </div>
                             </div>
@@ -38,7 +37,6 @@ class DashboardPage extends Component {
                             <div className="widget-thumb-wrap">
                                 <i className="widget-thumb-icon bg-red icon-layers" />
                                 <div className="widget-thumb-body">
-                                    <span className="widget-thumb-subtitle">USD</span>
                                     <span className="widget-thumb-body-stat" data-counter="counterup" data-value="1,293">0</span>
                                 </div>
                             </div>
@@ -52,7 +50,6 @@ class DashboardPage extends Component {
                             <div className="widget-thumb-wrap">
                                 <i className="widget-thumb-icon bg-purple icon-screen-desktop" />
                                 <div className="widget-thumb-body">
-                                    <span className="widget-thumb-subtitle">USD</span>
                                     <span className="widget-thumb-body-stat" data-counter="counterup" data-value={815}>0</span>
                                 </div>
                             </div>
@@ -66,7 +63,6 @@ class DashboardPage extends Component {
                             <div className="widget-thumb-wrap">
                                 <i className="widget-thumb-icon bg-purple icon-screen-desktop" />
                                 <div className="widget-thumb-body">
-                                    <span className="widget-thumb-subtitle">USD</span>
                                     <span className="widget-thumb-body-stat" data-counter="counterup" data-value={815}>0</span>
                                 </div>
                             </div>
