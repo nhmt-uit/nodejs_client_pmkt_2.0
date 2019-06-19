@@ -19,8 +19,8 @@ class Header extends Component {
     }
 
     render() {
+        const t = this.props
         const isLogin = CookieService.get('isLogin');
-        // const { t } = this.props;
         return (
             <div>
                 <div className="page-header navbar navbar-fixed-top">
@@ -360,6 +360,7 @@ class MenuCompany extends React.Component{
         }));
     }
     render() {
+        const { t } = this.props;
         return (
             <>
                 <a href="#/" onClick={this.toggle} className="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
@@ -388,4 +389,4 @@ const mapDispatchToProps = dispatch => {
 export default compose(
     withTranslation(),
     connect(null, mapDispatchToProps),
-)(Header);
+)(Header, MenuCompany);

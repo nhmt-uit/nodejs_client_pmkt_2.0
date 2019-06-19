@@ -21,15 +21,15 @@ class AccountantManualPage extends Component {
             return null;
         }
         var List = DATA.res.data.List;
-        console.log("TEST LIST", List)
+        // console.log("TEST LIST", List)
         var item = List.map(function (item, index) {
             var url = item.logo.replace(".","");
             return(
                 <div key={index} className="col-xs-4 col-md-4">
-                    <a href="#">
+                    <a href={item.name.toLowerCase()+ '/login'}>
                         <div className="widget-thumb margin-bottom-20 bordered">
-                            <div className="widget-thumb-wrap">
-                                <img src={"/assets" + url} alt={item.name} title={item.name} style={{height:60, width:140}}/>
+                            <div className="widget-thumb-wrap" style={{textAlign: "center"}}>
+                                <img src={"/assets" + url} alt={item.name} title={item.name} style={{height:33, width:"auto"}}/>
                             </div>
                         </div>
                     </a>
@@ -57,7 +57,6 @@ class AccountantManualPage extends Component {
     }
 }
 const mapStateToProps = state => {
-    console.log("State banker", state);
     let initialValues = {};
     if(state.form.banker){
         initialValues = state.form.banker.values;

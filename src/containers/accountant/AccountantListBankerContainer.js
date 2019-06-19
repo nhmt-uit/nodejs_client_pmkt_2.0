@@ -138,6 +138,7 @@ class AccountantListBankerContainer extends Component {
                 let isCheckBanker = this.props.isCheckBanker[banker.id] || false
                 let classOpenBanker = isOpenBanker ? "fa fa-chevron-down" : "fa fa-chevron-up"
                 return (
+
                     <div key={idx} className="portlet box grey-cascade list-banker-account">
                         <div className="portlet-title">
                             <div className="caption">
