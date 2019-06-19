@@ -6,7 +6,7 @@ class AccountantService {
         //Gernate Member Select Options [{value:value, label: label}]
         if (payload && payload.memberMap) {
             let memberOptions = payload.memberMap.map(item => {
-                return {label : item.member.fullname, value: item.member.id}
+                return {label : item.member.fullname, value: item.member.id, bankerAccount: item.accounts}
             })
             payload['memberOptionsProcessed'] = memberOptions
         }

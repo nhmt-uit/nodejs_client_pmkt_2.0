@@ -123,7 +123,7 @@ class AccountantFormScanContainer extends Component {
         for(let x in this.props.isCheckBankerAccount) {
             if (this.props.isCheckBankerAccount[x] === true) bankerAccountIds.push(x)
         }
-        this.props.socketScanData({ids: bankerAccountIds, from_date: this.state.to_date, to_date: this.state.to_date})
+        this.props.socketScanData({ids: bankerAccountIds, from_date: this.state.from_date, to_date: this.state.to_date})
 
     }
 
@@ -162,6 +162,26 @@ class AccountantFormScanContainer extends Component {
         return <span className="uppercase" style={{'color': 'ccc'}}>{label}</span>
     }
 
+    handleSelectMember = selected => {
+        let memberOptions = (this.props.accountant_payload) ? this.props.accountant_payload.memberOptionsProcessed : []
+        console.log(memberOptions)
+        console.log(selected)
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Custom filter react-multiple-select
+    |--------------------------------------------------------------------------
+    */
+    filterSearch = (options, filter) => {
+        if (!filter) return options
+        return options.filter(item => {
+            let label = item.label.toLowerCase()
+            filter = filter.toLowerCase()
+            if(label.search(filter) !== -1) return item
+        })
+    }
+
     render() {
         const { t } = this.props
         let memberOptions = (this.props.accountant_payload) ? this.props.accountant_payload.memberOptionsProcessed : []
@@ -174,7 +194,6 @@ class AccountantFormScanContainer extends Component {
                     <div className="tools"><span className="collapse"> </span></div>
                 </div>
                 <div className="portlet-body form">
-                    
                     <form className="form-inline">
                         <div className="form-group input-xlarge">
                             <div className="mt-radio-inline">
@@ -195,9 +214,10 @@ class AccountantFormScanContainer extends Component {
                             <MultiSelect
                                 options={memberOptions}
                                 selected={selectedMember}
-                                onSelectedChanged={selectedMember => this.setState({selectedMember})}
+                                onSelectedChanged={this.handleSelectMember}
                                 ItemRenderer={this.renderOption}
                                 valueRenderer={this.renderValue}
+                                filterOptions={this.filterSearch}
                                 />
                         </div>
                         <div className="form-group">

@@ -11,9 +11,8 @@ export const socketInitData = () => {
     SocketService.connect('/accountant')
     return (dispatch) => {
         EventsService.on('accountant_init', res => {
-            console.log(res)
             if (res) {
-                AccountantService.processDataFromSocket(res.data)
+                res.data = AccountantService.processDataFromSocket(res.data)
                 // Unscrubscripe chanel 'accountant_init' when finish & disconnect socket
                 if (res.type === "resolve") {
                     EventsService.removeAllListeners('accountant_init')
@@ -91,7 +90,6 @@ export const socketScanData = (params) => {
                     full_payload: res,
                     payload: res.data
                 });
-                
             }
         })
         
@@ -108,7 +106,6 @@ export const socketScanData = (params) => {
         })
 
         EventsService.on('accountant_scan_resolve', res => {
-            // console.log("Emiter", res)
             if (res) {
                 // Dispatch data to reducer
                 dispatch({

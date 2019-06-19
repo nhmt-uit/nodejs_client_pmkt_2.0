@@ -20,7 +20,7 @@ let defaultScanState = {
 	request_type: null,
 	full_payload: null,
 	payload: null,
-	payload_notify: null
+	payloadBankerAccount: null
 }
 
 export const AccountantReducer = (state = defaultState, action) => {
@@ -100,45 +100,54 @@ export const AccountantToggleReducer = (state = toggleBankerAccountState, action
 }
 
 export const AccountantScanReducer = (state = defaultScanState, action) => {
-	let payload_notify = {}
+	let payloadBankerAccount = []
 	let uuidBankerAccountMap = {}
 	let full_payload = {}
 	switch(action.type){
 		case AccountantActionType.ACCOUNTANT_SOCKET_SCAN_DATA_START:
 			for(let x in action.payload) {
-				payload_notify[action.payload[x]] = "Sending request"
+				payloadBankerAccount.push({id: action.payload[x], message: "Sending request", type: "notify"})
 			}
-			return {...state, uuidBankerAccountMap: action.payload, request_type: action.request_type, payload_notify: payload_notify}
+			return {...state, uuidBankerAccountMap: action.payload, request_type: action.request_type, payloadBankerAccount: payloadBankerAccount}
 		case AccountantActionType.ACCOUNTANT_SOCKET_SCAN_DATA_NOTIFY:
 			uuidBankerAccountMap = {...state.uuidBankerAccountMap}
 			full_payload = {...state.full_payload}
-			payload_notify = {...state.payload_notify}
-			
+			payloadBankerAccount = [...state.payloadBankerAccount]
 			_map(uuidBankerAccountMap, (id, uuid) => {
-                if(action.full_payload && action.full_payload.uuid === uuid && action.full_payload.type === "notify" && action.full_payload.data.message) payload_notify[id] = action.full_payload.data.message
+                if(action.full_payload && action.full_payload.uuid === uuid && action.full_payload.type === "notify" && action.full_payload.data.message) {
+					let objIndex = payloadBankerAccount.findIndex((obj => obj.id === id))
+					payloadBankerAccount[objIndex].message = action.full_payload.data.message
+				}
 			})
-			return {...state, request_type: action.request_type, full_payload: action.full_payload, payload: action.payload, payload_notify: payload_notify}
+			return {...state, request_type: action.request_type, full_payload: action.full_payload, payload: action.payload, payloadBankerAccount: payloadBankerAccount}
 		case AccountantActionType.ACCOUNTANT_SOCKET_SCAN_DATA_REJECT:
 			uuidBankerAccountMap = {...state.uuidBankerAccountMap}
 			full_payload = {...state.full_payload}
-			payload_notify = {...state.payload_notify}
+			payloadBankerAccount = [...state.payloadBankerAccount]
 
 			_map(uuidBankerAccountMap, (id, uuid) => {
-				if(action.full_payload && action.full_payload.uuid === uuid && action.full_payload.type !== "notify") delete payload_notify[id]
+				if(action.full_payload && action.full_payload.uuid === uuid && action.full_payload.type === "reject") {
+					let objIndex = payloadBankerAccount.findIndex((obj => obj.id === id))
+					payloadBankerAccount[objIndex].message = action.full_payload.data.message
+					payloadBankerAccount[objIndex].type = "reject"
+				}
 			})
-			return {...state, request_type: action.request_type, full_payload: action.full_payload, payload: action.payload, payload_notify: payload_notify}
+			return {...state, request_type: action.request_type, full_payload: action.full_payload, payload: action.payload, payloadBankerAccount: payloadBankerAccount}
 		case AccountantActionType.ACCOUNTANT_SOCKET_SCAN_DATA_RESOLVE:
 			uuidBankerAccountMap = {...state.uuidBankerAccountMap}
 			full_payload = {...state.full_payload}
-			payload_notify = {...state.payload_notify}
+			payloadBankerAccount = [...state.payloadBankerAccount]
 
 			_map(uuidBankerAccountMap, (id, uuid) => {
-				console.log(uuid)
-				console.log(action.full_payload)
-				if(action.full_payload && action.full_payload.uuid === uuid && action.full_payload.type !== "notify") delete payload_notify[id]
+				if(action.full_payload && action.full_payload.uuid === uuid && action.full_payload.type === "resolve") {
+					let objIndex = payloadBankerAccount.findIndex((obj => obj.id === id))
+					payloadBankerAccount[objIndex].data = action.full_payload.data
+					payloadBankerAccount[objIndex].message = null
+					payloadBankerAccount[objIndex].type = "resolve"
+				}
 			})
 
-			return {...state, request_type: action.request_type, full_payload: action.full_payload, payload: action.payload, payload_notify: payload_notify}
+			return {...state, request_type: action.request_type, full_payload: action.full_payload, payload: action.payload, payloadBankerAccount: payloadBankerAccount}
 		default:
 			return {...state}
 	}
