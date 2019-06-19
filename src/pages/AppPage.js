@@ -5,6 +5,7 @@ import { BaseComponent } from "my-utils/core"
 import { MainLayout, AuthenticationLayout } from 'my-pages/layouts'
 import { Loading } from 'my-pages/layouts/partials';
 import { CookieService } from 'my-utils/core';
+import { changeLanguage } from 'my-actions/systems/LanguageAction';
 
 const RenderComponent = () => {
 	let component = ( <MainLayout /> );
@@ -22,6 +23,10 @@ const RenderComponent = () => {
 };
 
 class AppPage extends BaseComponent {
+	componentDidMount() {
+		this.props.changeLanguage();
+	}
+
 	render() {
 		return (
 			<section>
@@ -36,4 +41,10 @@ const mapStateToProps = state => ({
     auth : state.AuthReducer
 });
 
-export default connect(mapStateToProps,null)(AppPage);
+const mapDispatchToProps = dispatch => {
+	return {
+		changeLanguage: _ => dispatch(changeLanguage()),
+	};
+};
+
+export default connect(mapStateToProps,mapDispatchToProps)(AppPage);

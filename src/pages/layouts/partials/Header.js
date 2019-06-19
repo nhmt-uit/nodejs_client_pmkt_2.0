@@ -12,15 +12,24 @@ import { CookieService } from 'my-utils/core';
 import { RoutesService } from 'my-routes';
 import InfoUserContainer from "my-containers/infoUser/InfoUserContainer";
 import 'my-styles/reactstrap-modal.css'
+import { changeLanguage } from 'my-actions/systems/LanguageAction';
 
 class Header extends Component {
     handleLogout = _ => {
         return this.props.logout();
-    }
+    };
+
+    handleChangeLanguage = type => () => {
+        CookieService.set('lang', type);
+
+        return this.props.changeLanguage(type);
+    };
 
     render() {
         const isLogin = CookieService.get('isLogin');
-        // const { t } = this.props;
+        const lang = CookieService.get('lang');
+        const { t } = this.props;
+
         return (
             <div>
                 <div className="page-header navbar navbar-fixed-top">
@@ -46,6 +55,27 @@ class Header extends Component {
                             <ul className="nav navbar-nav pull-right">
                                 <ZopimChat label="Live support" className="text-red" />
                                 <Notification />
+                                <li className="dropdown dropdown-extended dropdown-inbox" id="header_inbox_bar">
+                                    <a href="index.html" className="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                        <i className="icon-globe" />
+                                    </a>
+                                    <ul className="width-auto dropdown-menu dropdown-menu-default">
+                                        <li>
+                                            <ul className="dropdown-menu-list scroller" data-handle-color="#637283">
+                                                <li>
+                                                    <a onClick={this.handleChangeLanguage('en')} className="padding-tb-10-important text-uppercase text-center padding-">
+                                                        {lang && lang.toLowerCase() === 'en' ? <i className="fa fa-check"/> : ''}&nbsp;&nbsp;{t('english')}
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a onClick={this.handleChangeLanguage('vi')} className="padding-tb-10-important text-uppercase text-center">
+                                                        {lang && lang.toLowerCase() === 'vi' ? <i className="fa fa-check"/> : ''}&nbsp;&nbsp;{t('viet nam')}
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
                                 <li className="dropdown dropdown-extended dropdown-inbox" id="header_inbox_bar">
                                     <a href="index.html" className="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                                         <i className="icon-envelope-open" />
@@ -307,21 +337,20 @@ class Header extends Component {
                                                     <Fragment>
                                                         <li>
                                                             <Link to={RoutesService.getPath('ADMIN', 'CHANGE_PASSWORD')}>
-                                                                <i className="icon-lock" /> {this.props.t('Change Password')}
+                                                                <i className="icon-lock" /> {t('Change Password')}
                                                             </Link>
                                                         </li>
                                                         <li>
                                                             <Link to={RoutesService.getPath('ADMIN', 'CHANGE_PASSWORD_2')}>
-                                                                <i className="icon-lock" /> {this.props.t('Change Password 2')}
+                                                                <i className="icon-lock" /> {t('Change password 2')}
                                                             </Link>
                                                         </li>
                                                         <li>
                                                             <Link to={RoutesService.getPath('ADMIN', 'CHANGE_SECURE_CODE')}>
-                                                                <i className="icon-lock" /> {this.props.t('Change Secure Code')}
+                                                                <i className="icon-lock" /> {t('Change Secure Code')}
                                                             </Link>
                                                         </li>
                                                     </Fragment>
-
                                                 )
                                                 : null
                                         }
@@ -397,7 +426,8 @@ class MenuCompany extends React.Component{
 
 const mapDispatchToProps = dispatch => {
     return {
-        logout: () => dispatch(AuthAction.logout())
+        logout: () => dispatch(AuthAction.logout()),
+        changeLanguage: type => dispatch(changeLanguage(type)),
     };
 };
 

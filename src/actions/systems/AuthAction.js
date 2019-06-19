@@ -172,8 +172,6 @@ export const logout = () => {
     return dispatch => {
         return AuthService.logout()
             .then((res) => {
-                CookieService.removeAll();
-
                 dispatch({
                     type: AuthActionType.LOGOUT_SUCCESS,
                     payload: res,
