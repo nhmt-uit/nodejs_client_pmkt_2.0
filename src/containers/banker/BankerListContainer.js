@@ -13,7 +13,6 @@ class BankerListContainer extends React.Component{
     }
 
     render() {
-        const { t } = this.props;
         var DATA = {};
         DATA = this.props.bankerList.payload;
         // console.log("DATA:", typeof DATA);

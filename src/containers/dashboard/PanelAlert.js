@@ -57,7 +57,7 @@ class PanelAlert extends Component{
                                 <span className="caption-subject font-dark bold uppercase"> {t("Alert")} </span>
                             </div>
                         </div>
-                        <div className="portlet-body" className="table-scrollable" style={{maxHeight:"400px", overflowY: 'scroll'}}>
+                        <div className="portlet-body table-scrollable" style={{maxHeight:"400px", overflowY: 'scroll'}}>
                             <div className="mt-btm-transform ">
                                 {/*====================================================================*/}
                                 {List.map(function (items) {
