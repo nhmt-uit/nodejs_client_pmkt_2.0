@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import { AccountantFormScanContainer, AccountantListBankerContainer, AccountantStatusAccountContainer } from "my-containers/accountant"
+// import AccountantQuickActivitiesContainer from "my-containers/accountant/AccountantQuickActivitiesContainer";
 
 class AccountantListPage extends Component {
     render() {
@@ -8,6 +9,7 @@ class AccountantListPage extends Component {
             <>
                 <AccountantFormScanContainer />
                 <AccountantStatusAccountContainer />
+                {/* <AccountantQuickActivitiesContainer/> */}
                 <AccountantListBankerContainer />
             </>
         );

@@ -13,8 +13,8 @@ const groupDateType = [
 class FormScanGroupDateComponent extends Component {
     render() {
         
-            
         const { t, changeGroupDate, typeGroupDate } = this.props
+
         const groupDateTypeXhtml = groupDateType.map((item, index) => {
             return (
                 <label key={index} className="mt-radio">

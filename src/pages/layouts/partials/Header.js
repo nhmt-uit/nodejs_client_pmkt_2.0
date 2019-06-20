@@ -19,8 +19,8 @@ class Header extends Component {
     }
 
     render() {
+        const t = this.props
         const isLogin = CookieService.get('isLogin');
-        // const { t } = this.props;
         return (
             <div>
                 <div className="page-header navbar navbar-fixed-top">
@@ -44,7 +44,7 @@ class Header extends Component {
                         {/*=========================================*/}
                         <div className="top-menu">
                             <ul className="nav navbar-nav pull-right">
-                                <ZopimChat label="Live support" className="text-red" />
+                                <ZopimChat />
                                 <Notification />
                                 <li className="dropdown dropdown-extended dropdown-inbox" id="header_inbox_bar">
                                     <a href="index.html" className="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
@@ -354,12 +354,14 @@ class MenuCompany extends React.Component{
         };
         this.toggle = this.toggle.bind(this);
     }
+
     toggle() {
         this.setState(prevState => ({
             modal: !prevState.modal
         }));
     }
     render() {
+        const { t } = this.props;
         return (
             <>
                 <a href="#/" onClick={this.toggle} className="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
@@ -388,4 +390,4 @@ const mapDispatchToProps = dispatch => {
 export default compose(
     withTranslation(),
     connect(null, mapDispatchToProps),
-)(Header);
+)(Header, MenuCompany);

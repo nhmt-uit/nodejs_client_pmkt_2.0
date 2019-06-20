@@ -156,13 +156,15 @@ export const checkBanker = bankerId => {
 | Handle Toogle toggle check banker account
 |--------------------------------------------------------------------------
 */
-export const checkBankerAccount = (bankerId, bankerAccountId) => {
+export const checkBankerAccount = (type_check, params) => {
     // Dispatch toggle banker
    return (dispatch) => {
         dispatch({
             type: AccountantActionType.ACCOUNTANT_TOGGLE_CHECK_BANKER_ACCOUNT,
-            bankerId: bankerId,
-            bankerAccountId: bankerAccountId
+            type_check: type_check,
+            memberId: params.memberId,
+            bankerId: params.bankerId,
+            bankerAccountId: params.bankerAccountId
         });
    }
 }

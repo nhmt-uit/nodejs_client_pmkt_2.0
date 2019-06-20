@@ -1,15 +1,19 @@
-import { map as _map} from 'lodash'
+import { map as _map, isEmpty as _isEmpty } from 'lodash'
 import { AccountantActionType } from 'my-constants/action-types'
 
 let defaultState = {
+	isSocketInitSuccess: false,
 	request_type: null,
 	full_payload: null,
 	payload: null
 }
 
 let toggleBankerAccountState = {
+	bankerAccountCheck: {},
+	memberAccount: {},
 	bankerAccount: {},
 	isOpenBanker: {},
+	isCheckMember: {},
 	isCheckBanker: {},
 	isCheckBankerAccount: {},
 }
@@ -26,77 +30,128 @@ let defaultScanState = {
 export const AccountantReducer = (state = defaultState, action) => {
 	switch(action.type){
 		case AccountantActionType.ACCOUNTANT_SOCKET_INIT_DATA:
-			return {...state, request_type: action.request_type, full_payload: action.full_payload, payload: action.payload}
+			let isSocketInitSuccess = false
+			if(action.request_type === "accountant_init" && action.full_payload.type !== "notify" && action.full_payload.message !== "init_data") {
+				isSocketInitSuccess = true
+			}
+			return {...state, isSocketInitSuccess: isSocketInitSuccess, request_type: action.request_type, full_payload: action.full_payload, payload: action.payload}
 		default:
 			return {...state}
 	}
 }
 
 export const AccountantToggleReducer = (state = toggleBankerAccountState, action) => {
-	let objToggleBanker, objIsCheckBanker, objIsCheckBankerAccount, objBankerAccount
+	let objToggleBanker
+	let objIsCheckMember = {...state.isCheckMember}
+	let objIsCheckBanker = {...state.isCheckBanker}
+	let objIsCheckBankerAccount = {...state.isCheckBankerAccount}
+	let objBankerAccount = {...state.bankerAccount}
+	let objMemberAccount = {...state.memberAccount}
 	switch(action.type){
 		case AccountantActionType.ACCOUNTANT_TOGGLE_BANKER:
-			objToggleBanker = {}
-			objIsCheckBanker = {}
-			objIsCheckBankerAccount = {}
-			objBankerAccount = {}
 			var resObj = {}
-			if (action.type_toggle === "default") {
-				if (typeof action.payload !== "undefined") {
-					for (let x in action.payload.listBankerProcessed) {
-						objToggleBanker[action.payload.listBankerProcessed[x].id] = true
-						objIsCheckBanker[action.payload.listBankerProcessed[x].id] = true
-
-						// Map account of banker
-						objBankerAccount[action.payload.listBankerProcessed[x].id] = []
-						for (let i in action.payload.listBankerProcessed[x].listAccounts) {
-							
-							objBankerAccount[action.payload.listBankerProcessed[x].id].push(action.payload.listBankerProcessed[x].listAccounts[i].id)
-							objIsCheckBankerAccount[action.payload.listBankerProcessed[x].listAccounts[i].id] = true
-						}
-					}
+			
+			if (action.type_toggle === "default" && typeof action.payload !== "undefined") {
+				objIsCheckMember = []
+				objIsCheckBanker = {}
+				objIsCheckBankerAccount = {}
+				for (let x in action.payload.bankerAccountMap ) {
+					objIsCheckBanker[x] = true
+					action.payload.bankerAccountMap[x].map(acc_id => {
+						objIsCheckBankerAccount[acc_id] = true
+					})
 				}
-				resObj = {...state, bankerAccount: objBankerAccount, isOpenBanker: objToggleBanker, isCheckBanker: objIsCheckBanker, isCheckBankerAccount : objIsCheckBankerAccount}
+
+				//Default checked member
+				for (let x in action.payload.memberAccountMap ) {
+					objIsCheckMember[x] = false
+				}
+
+				resObj = {...state, bankerAccount: action.payload.bankerAccountMap, memberAccount: action.payload.memberAccountMap, isCheckMember : objIsCheckMember, isCheckBanker: objIsCheckBanker, isCheckBankerAccount: objIsCheckBankerAccount}
 			} else if (action.type_toggle === "on_change") {
 				objToggleBanker = {...state.isOpenBanker}
 				objToggleBanker[action.bankerId] = !objToggleBanker[action.bankerId]
 				resObj = {...state, isOpenBanker: objToggleBanker}
 			}
 			return resObj
-		case AccountantActionType.ACCOUNTANT_TOGGLE_CHECK_BANKER:
-			objIsCheckBanker = {...state.isCheckBanker}
-			objIsCheckBankerAccount = {...state.isCheckBankerAccount}
-			objBankerAccount = {...state.bankerAccount}
-			objIsCheckBanker[action.bankerId] = !objIsCheckBanker[action.bankerId]
-
-			//Toggle Check Banker Account
-			for (let x in objBankerAccount[action.bankerId] ) {
-				objIsCheckBankerAccount[objBankerAccount[action.bankerId][x]] = objIsCheckBanker[action.bankerId]
-			}
-			return {...state, isCheckBanker: objIsCheckBanker, isCheckBankerAccount: objIsCheckBankerAccount}
 		case AccountantActionType.ACCOUNTANT_TOGGLE_CHECK_BANKER_ACCOUNT:
-			objIsCheckBanker = {...state.isCheckBanker}
-			objIsCheckBankerAccount = {...state.isCheckBankerAccount}
-			objBankerAccount = {...state.bankerAccount}
-			objIsCheckBankerAccount[action.bankerAccountId] = !objIsCheckBankerAccount[action.bankerAccountId]
+			if (action.type_check === "member") {
+				// case uncheckall
+				for ( let x in objIsCheckMember) {
+					objIsCheckMember[x] = false
+					if (action.memberId.includes(x)) objIsCheckMember[x] = true
+				}
 
-			// Toggle Banker based on banker_account
-			let isCheckBanker = true
-			if (objIsCheckBankerAccount[action.bankerAccountId] === false) {
-				isCheckBanker = false
-			} else {
-				for (let x in objBankerAccount[action.bankerId] ) {
-					if (objIsCheckBankerAccount[objBankerAccount[action.bankerId][x]] === false) {
-						isCheckBanker = false
-						break
+				for (let x in objMemberAccount ) {
+					if(!objIsCheckMember[x]) {
+						objMemberAccount[x].map(acc_id => {
+							objIsCheckBankerAccount[acc_id] = false
+						})
 					}
 				}
+
+				for (let x in objMemberAccount ) {
+					if(objIsCheckMember[x]) {
+						objMemberAccount[x].map(acc_id => {
+							objIsCheckBankerAccount[acc_id] = true
+						})
+					}
+				}
+
+
+				// objIsCheckMember = action.memberId
+				// for (let x in objMemberAccount ) {
+				// 	if(action.memberId.includes(x)) console.log(objMemberAccount[x])
+				// 	objMemberAccount[x].map(acc_id => {
+				// 		let isCheck = false
+				// 		if(action.memberId.includes(x)) isCheck = true
+				// 		objIsCheckBankerAccount[acc_id] = isCheck
+				// 	})
+				// }
+				// console.log(objIsCheckBankerAccount)
+				// objIsCheckBanker = toggleCheckBanker(objIsCheckBanker, objBankerAccount, objIsCheckBankerAccount)
+			} else if (action.type_check === "banker") {
+				objIsCheckBanker[action.bankerId] = !objIsCheckBanker[action.bankerId]
+				//Toggle Check Banker Account
+				for (let x in objBankerAccount[action.bankerId] ) {
+					objIsCheckBankerAccount[objBankerAccount[action.bankerId][x]] = objIsCheckBanker[action.bankerId]
+				}
+			} else if  (action.type_check === "banker_account") {
+				console.log(action.bankerAccountId);
+				objIsCheckBankerAccount[action.bankerAccountId] = !objIsCheckBankerAccount[action.bankerAccountId]
+				objIsCheckBankerAccount = togglecheckBankerAccount(objIsCheckMember, objIsCheckBankerAccount, objMemberAccount)
+				// Toggle Banker based on banker_account
+				objIsCheckBanker = toggleCheckBanker(objIsCheckBanker, objBankerAccount, objIsCheckBankerAccount)
 			}
-			objIsCheckBanker[action.bankerId] = isCheckBanker
-			return {...state, isCheckBanker: objIsCheckBanker, isCheckBankerAccount: objIsCheckBankerAccount}
+			return {...state, isCheckMember: objIsCheckMember, isCheckBanker: objIsCheckBanker, isCheckBankerAccount: objIsCheckBankerAccount}
 		default:
 			return {...state}
 	}
+}
+
+function togglecheckBankerAccount(objIsCheckMember, objIsCheckBankerAccount, objMemberAccount) {
+	if(!_isEmpty(objIsCheckMember)) {
+		// objIsCheckMember.map(memberId => {
+		// 	objMemberAccount[memberId].map(accId => {
+		// 		// objIsCheckBankerAccount[accId] = true
+		// 	})
+		// })
+	}
+	return objIsCheckBankerAccount
+}
+
+function  toggleCheckBanker(objIsCheckBanker, objBankerAccount, objIsCheckBankerAccount) {
+	for (let bankerId in objBankerAccount ) {
+		let isCheckBanker = true
+		for (let x in objBankerAccount[bankerId] ) {
+			if (objIsCheckBankerAccount[objBankerAccount[bankerId][x]] === false) {
+				isCheckBanker = false
+				break
+			}
+		}
+		objIsCheckBanker[bankerId] = isCheckBanker
+	}
+	return objIsCheckBanker
 }
 
 export const AccountantScanReducer = (state = defaultScanState, action) => {

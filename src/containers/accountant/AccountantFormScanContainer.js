@@ -6,14 +6,14 @@ import moment  from 'moment'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css"
 import MultiSelect from "@khanacademy/react-multi-select";
-import { join, filter } from 'lodash'
+import { join, filter, isEmpty as _isEmpty } from 'lodash'
 
 
 import { AppConfig } from 'my-constants'
 import BootstrapInputIcon from 'my-utils/components/date-picker/BootstrapInputIcon'
 import { FormScanButtonComponent, FormScanGroupDateComponent } from 'my-components/accountant'
 import EventsService from 'my-utils/core/EventsService'
-import { socketInitData, socketScanData } from 'my-actions/AccountantAction';
+import { socketInitData, socketScanData, checkBankerAccount } from 'my-actions/AccountantAction';
 import { Helpers } from 'my-utils';
 
 
@@ -26,7 +26,7 @@ const end_last_week = moment().endOf('week').subtract(6, 'days').format('YYYY-MM
 
 class AccountantFormScanContainer extends Component {
     state = {
-        selectedMember: [],
+        
         typeGroupDate: 'today',
         from_date: new Date(),
         to_date: new Date()
@@ -134,12 +134,11 @@ class AccountantFormScanContainer extends Component {
     |--------------------------------------------------------------------------
     */
     componentDidUpdate = _ => {
-        // const full_payload = this.props.accountant_full_payload, request_type = this.props.accountant_request_type
-        // if(request_type === "accountant_init" && full_payload.type === "notify" && full_payload.message === "init_data") {
-        //     Helpers.showLoading();
-        // } else {
-        //     Helpers.hideLoading();
-        // }
+        if(!this.props.isSocketInitSuccess) {
+            // Helpers.showLoading();
+        } else {
+            // Helpers.hideLoading();
+        }
     }
 
     renderOption = ({ checked, option, onClick }) => (
@@ -163,9 +162,19 @@ class AccountantFormScanContainer extends Component {
     }
 
     handleSelectMember = selected => {
-        let memberOptions = (this.props.accountant_payload) ? this.props.accountant_payload.memberOptionsProcessed : []
-        console.log(memberOptions)
-        console.log(selected)
+        // let memberOptions = (this.props.accountant_payload) ? this.props.accountant_payload.memberOptionsProcessed : []
+        this.props.checkBankerAccount("member", {memberId: selected})
+    }
+
+    handleIsCheckMember = _ => {
+        const isCheckMember =  this.props.isCheckMember
+        let checked = []
+        if (_isEmpty(isCheckMember)) return checked
+
+        for(let x in isCheckMember) {
+            if (isCheckMember[x]) checked.push(x)
+        }
+        return checked
     }
 
     /*
@@ -183,9 +192,10 @@ class AccountantFormScanContainer extends Component {
     }
 
     render() {
-        const { t } = this.props
+        const { t, isSocketInitSuccess } = this.props
         let memberOptions = (this.props.accountant_payload) ? this.props.accountant_payload.memberOptionsProcessed : []
-        const { selectedMember, from_date, to_date, typeGroupDate } = this.state
+        const { from_date, to_date, typeGroupDate } = this.state
+        const selectChecked = this.handleIsCheckMember()
 
         return (
             <div className="portlet light bordered">
@@ -213,7 +223,7 @@ class AccountantFormScanContainer extends Component {
                         <div className="form-group input-xlarge">
                             <MultiSelect
                                 options={memberOptions}
-                                selected={selectedMember}
+                                selected={selectChecked}
                                 onSelectedChanged={this.handleSelectMember}
                                 ItemRenderer={this.renderOption}
                                 valueRenderer={this.renderValue}
@@ -233,7 +243,7 @@ class AccountantFormScanContainer extends Component {
                                 onChange={this.onChangeDateTo} selected={to_date}
                                 dateFormat={AppConfig.FORMAT_DATE_DATEPICKER} />
                         </div>
-                        <FormScanButtonComponent socketScanData={this.handleRequestScan} />
+                        <FormScanButtonComponent isSocketInitSuccess={isSocketInitSuccess}  socketScanData={this.handleRequestScan} />
                     </form>
                 </div>
             </div>
@@ -243,9 +253,11 @@ class AccountantFormScanContainer extends Component {
 
 const mapStateToProps = state => {
     return {
+        isSocketInitSuccess : state.AccountantReducer.isSocketInitSuccess,
         accountant_request_type : state.AccountantReducer.request_type,
         accountant_full_payload : state.AccountantReducer.full_payload,
         accountant_payload : state.AccountantReducer.payload,
+        isCheckMember : state.AccountantToggleReducer.isCheckMember || [],
         isCheckBankerAccount : state.AccountantToggleReducer.isCheckBankerAccount,
     }
 }
@@ -254,6 +266,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         socketInitData: _ => {dispatch(socketInitData())},
         socketScanData: params => {dispatch(socketScanData(params))},
+        checkBankerAccount: (type_check, params) => {dispatch(checkBankerAccount(type_check, params))},
     }
 };
 

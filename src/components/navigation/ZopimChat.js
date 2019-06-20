@@ -14,11 +14,10 @@ class ZopimChat extends Component {
     }
 
     render() {
-        const { t, label, ...otherProps } = this.props;
-
+        const { t } = this.props;
         return (
-            <li className="pointer" id="zopim-chat" {...otherProps}>
-                <a className={otherProps.className} href="javascript:void($zopim.livechat.window.openPopout());"><span className="fa fa-wechat"/> {t(label)}</a>
+            <li className="pointer" id="zopim-chat">
+                <a className="text-red" href="javascript:void($zopim.livechat.window.openPopout());"><span className="fa fa-wechat"/> {t("Live support")}</a>
             </li>
         )
     }

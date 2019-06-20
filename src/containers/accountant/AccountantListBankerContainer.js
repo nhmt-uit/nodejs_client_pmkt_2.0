@@ -3,6 +3,7 @@ import { compose } from 'redux'
 import { connect } from 'react-redux'
 import { withTranslation } from 'react-i18next'
 import { Collapse } from 'reactstrap'
+import { has as _has } from 'lodash'
 import {
     TreeDataState,
     CustomTreeData,
@@ -12,6 +13,7 @@ import { Grid, Table, TableHeaderRow, TableTreeColumn } from '@devexpress/dx-rea
 import LazyLoad from 'react-lazyload';
 
 import { collapseBanker, checkBanker, checkBankerAccount } from 'my-actions/AccountantAction';
+import { LoadingComponent } from 'my-components';
 
 const getChildRows = (row, rootRows) => (row ? row.items : rootRows);
 const Cell = (props) => {
@@ -100,7 +102,8 @@ class AccountantListBankerContainer extends Component {
 
         if (bankerAccounts) {
             xhtml = bankerAccounts.map((account, idx) => {
-                let isCheckBankerAccount = this.props.isCheckBankerAccount[account.id] || false
+                let isCheckBankerAccount = _has(this.props.isCheckBankerAccount, account.id) ? this.props.isCheckBankerAccount[account.id] : false
+                // let isCheckBankerAccount = true
                 return (
                     <div key={idx} className="panel-group accordion">
                         <div className="panel panel-default">
@@ -108,7 +111,7 @@ class AccountantListBankerContainer extends Component {
                                 <h4 className="panel-title">
                                     <div className="col-sm-6">
                                         <label className="mt-checkbox uppercase">
-                                            <input type="checkbox" onChange={_ => this.props.checkBankerAccount(account.banker, account.id)} checked={isCheckBankerAccount}/> {account.acc_name}
+                                            <input type="checkbox" onChange={_ => this.props.checkBankerAccount("banker_account", {bankerId: account.banker, bankerAccountId: account.id})} checked={isCheckBankerAccount}/> {account.acc_name}
                                             <span></span>
                                         </label>
                                     </div>
@@ -131,18 +134,26 @@ class AccountantListBankerContainer extends Component {
     */
     renderListBanker = _ => {
         let xhtml = null
-        if (this.props.accountant_payload) {
+
+        // Sending request to websocket
+        if (!this.props.isSocketInitSuccess) {
+            xhtml = <LoadingComponent />
+        }
+
+        // Finish socket init & get message
+        if (this.props.isSocketInitSuccess && this.props.accountant_payload) {
             const listBankerProcessed = this.props.accountant_payload.listBankerProcessed
             xhtml = listBankerProcessed.map((banker, idx) => {
-                let isOpenBanker = this.props.isOpenBanker[banker.id] || false
-                let isCheckBanker = this.props.isCheckBanker[banker.id] || false
+                let isOpenBanker = _has(this.props.isOpenBanker, banker.id) ? this.props.isOpenBanker[banker.id] : true
+                let isCheckBanker = _has(this.props.isCheckBanker, banker.id) ? this.props.isCheckBanker[banker.id] : false
                 let classOpenBanker = isOpenBanker ? "fa fa-chevron-down" : "fa fa-chevron-up"
                 return (
+
                     <div key={idx} className="portlet box grey-cascade list-banker-account">
                         <div className="portlet-title">
                             <div className="caption">
                                 <label className="mt-checkbox caption-subject bold uppercase">
-                                    <input type="checkbox" onChange={_ => this.props.checkBanker(banker.id)} checked={isCheckBanker} /> {banker.name}
+                                    <input type="checkbox" onChange={_ => this.props.checkBankerAccount("banker", {bankerId: banker.id})} checked={isCheckBanker} /> {banker.name}
                                     <span></span>
                                 </label>
                             </div>
@@ -166,8 +177,11 @@ class AccountantListBankerContainer extends Component {
     }
 }
 
+
+
 const mapStateToProps = state => {
     return {
+        isSocketInitSuccess : state.AccountantReducer.isSocketInitSuccess,
         accountant_payload : state.AccountantReducer.payload,
         isOpenBanker : state.AccountantToggleReducer.isOpenBanker,
         isCheckBanker : state.AccountantToggleReducer.isCheckBanker,
@@ -179,7 +193,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         collapseBanker: bankerId => {dispatch(collapseBanker(bankerId))},
         checkBanker: bankerId => {dispatch(checkBanker(bankerId))},
-        checkBankerAccount: (bankerId, bankerAccountId) => {dispatch(checkBankerAccount(bankerId, bankerAccountId))},
+        checkBankerAccount: (type_check, params) => {dispatch(checkBankerAccount(type_check, params))},
     }
 };
 

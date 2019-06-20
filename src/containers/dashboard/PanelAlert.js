@@ -81,26 +81,6 @@ class PanelAlert extends Component{
                                         </div>
                                     )
                                 })}
-                                {/*{List.map(function (items) {*/}
-                                    {/*return(*/}
-                                        {/*<div className="row invoice-body" >*/}
-                                            {/*<div className="col-xs-12 table-responsive">*/}
-                                                {/*<table className="table table-hover">*/}
-                                                    {/*<thead className="portlet box blue-hoki">*/}
-                                                    {/*<tr>*/}
-                                                        {/*<th className="caption"><i className="fa fa-newspaper-o"></i> {items.created_format}</th>*/}
-                                                    {/*</tr>*/}
-                                                    {/*</thead>*/}
-                                                    {/*<tbody className="dataTables_wrapper no-footer">*/}
-                                                    {/*<tr className="dataTables_wrapper no-footer">*/}
-                                                        {/*<td dangerouslySetInnerHTML={{ __html: items.name }} />*/}
-                                                    {/*</tr>*/}
-                                                    {/*</tbody>*/}
-                                                {/*</table>*/}
-                                            {/*</div>*/}
-                                        {/*</div>*/}
-                                    {/*)*/}
-                                {/*})}*/}
                                 {/*====================================================================*/}
                             </div>
                         </div>
