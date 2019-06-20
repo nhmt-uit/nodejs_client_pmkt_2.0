@@ -34,12 +34,11 @@ class SocketService {
     | event: init, scan, get_report, get_member
     |--------------------------------------------------------------------------
     */
-    send(event, args) {
-        let uuid = uuidv4()
-        this.listUUID2Event[uuid] = event
-        this.socket.send({___Send: true, event: event, uuid: uuid, args: [args]})
+    send(event, args, uuid) {
+        let _uuid = uuid || uuidv4()
+        this.listUUID2Event[_uuid] = event
+        this.socket.send({___Send: true, event: event, uuid: _uuid, args: [args]})
 
-        
         switch (event) {
             case "init":
                 // Emit channel when first init data
@@ -47,21 +46,25 @@ class SocketService {
             break
             case "scan":
                 // Map uuid & account_id
-                this.listUUID2AccID[uuid] = args.id
-                console.log(this.listUUID2AccID)
             break
             default: break
         }
+    }
 
+    listenerResponse() {
         // Listen response from websocket
         this.socket.on('message', msg => {
             switch (this.listUUID2Event[msg.uuid]) {
                 case "init":
-                    console.log("init")
                     EventsService.emit('accountant_init', msg)
                 break
                 case "scan":
-                    EventsService.emit('accountant_scan', msg)
+                    if (msg.type === "notify")
+                        EventsService.emit('accountant_scan_notify', msg)
+                    if (msg.type === "reject")
+                        EventsService.emit('accountant_scan_reject', msg)
+                    if (msg.type === "resolve")
+                        EventsService.emit('accountant_scan_resolve', msg)
                 break
                 case "get_report":
                 break
@@ -70,7 +73,6 @@ class SocketService {
                 default: break
             }
         })
-
     }
 
     /*

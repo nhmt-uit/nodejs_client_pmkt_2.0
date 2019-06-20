@@ -5,9 +5,7 @@ import {connect} from "react-redux";
 import {withTranslation} from "react-i18next";
 import { getBanker } from "my-actions/banker/BankerAction";
 
-// var _ = require ('underscore')
 import { isEmpty} from 'lodash'
-
 
 class BankerListContainer extends React.Component{
     componentWillMount() {
@@ -15,7 +13,6 @@ class BankerListContainer extends React.Component{
     }
 
     render() {
-        const { t } = this.props;
         var DATA = {};
         DATA = this.props.bankerList.payload;
         // console.log("DATA:", typeof DATA);
@@ -24,38 +21,23 @@ class BankerListContainer extends React.Component{
             return null;
         }
         var List = DATA.res.data.List;
-        console.log("LIST: ", List);
-
         return(
             <div>
                 <div className="col-xs-12 portlet light bordered">
-                    <div className="portlet-title">
-                        <div className="caption">
-                            <i className="icon-social-dribbble font-green"></i>
-                            <span className="caption-subject font-green bold uppercase"> {t("Company")} </span>
-                        </div>
-                    </div>
-                    <div className="portlet-body">
-                        <div className="table-scrollable">
-                            <table className="table table-hover">
-                                <thead>
-                                <tr>
-
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {List.map(function (items) {
-                                    var url = items.logo.replace(".", "")
-                                    return(
-                                        <tr>
-                                            <td><img src={"/assets" + url} alt={items.name} style={{height:60, width:120}} /></td>
-                                            <td><a href={items.member_url} target="_blank" rel="noopener noreferrer"> {items.member_url} </a> </td>
-                                        </tr>
-                                    )
-                                })}
-                                </tbody>
-                            </table>
-                        </div>
+                    <div className="table-scrollable">
+                        <table className="table table-hover">
+                            <tbody>
+                            {List.map(function (items) {
+                                var url = items.logo.replace(".", "")
+                                return(
+                                    <tr key={items.name}>
+                                        <td><img src={"/assets" + url} alt={items.name} style={{height:60, width:120}} /></td>
+                                        <td><a href={items.member_url} target="_blank" rel="noopener noreferrer"> {items.member_url} </a> </td>
+                                    </tr>
+                                )
+                            })}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -66,7 +48,7 @@ class BankerListContainer extends React.Component{
 }
 
 const mapStateToProps = state => {
-    console.log("State", state);
+    console.log("State banker", state);
     let initialValues = {};
     if(state.form.banker){
         initialValues = state.form.banker.values;

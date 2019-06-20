@@ -35,7 +35,6 @@ class QuickAtivitiesContainer extends Component {
                     <Link to ="/accountant" className="icon-btn">
                         <i className="fa fa-calculator" />
                         <div> {t("Accountant")} </div>
-                        {/*<span className="badge badge-info"> 12 </span>*/}
                     </Link>
                 </div>
             </div>

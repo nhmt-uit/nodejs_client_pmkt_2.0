@@ -25,7 +25,7 @@ export const BASE_HREF = "";
 export const SESSION_EXPIRED = 24;
 export const DEFAULT_LANG = "vi";
 export const DEFAULT_TIMEZONE = "Asia/Ho_Chi_Minh";
-export const FORMAT_DATE = "YYYY/MM/DD";
+export const FORMAT_DATE = "MM/DD/YYYY";
 export const FORMAT_DATE_DATEPICKER = "MM/dd/yyyy";
 
 export const FORMAT_MONTH = "YYYY";

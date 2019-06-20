@@ -6,16 +6,18 @@ import { Collapse } from 'reactstrap'
 import {
     TreeDataState,
     CustomTreeData,
+    DataTypeProvider
   } from '@devexpress/dx-react-grid';
 import { Grid, Table, TableHeaderRow, TableTreeColumn } from '@devexpress/dx-react-grid-bootstrap3'
 import LazyLoad from 'react-lazyload';
+
+import { collapseBanker, checkBanker, checkBankerAccount } from 'my-actions/AccountantAction';
 
 const getChildRows = (row, rootRows) => (row ? row.items : rootRows);
 const Cell = (props) => {
     // console.log(props)
     return (
-            <Table.Cell {...props}>
-            </Table.Cell>
+        <Table.Cell {...props} />
     )
 };
 const Row = props => {
@@ -28,7 +30,7 @@ const Row = props => {
             <td>4</td>
             <td>5</td>
             <td>6</td>
-            <td>7</td>
+            <td rowspan="2">7</td>
             <td>8</td>
             <td>9</td>
             <td>10</td>
@@ -49,26 +51,34 @@ const Row = props => {
 
 
 const treeColumnCell = props => {
-    return <TableTreeColumn.Cell {...props} rowSpan={props.row.rowSpan || 1}/>;
+    return <TableTreeColumn.Cell {...props} rowSpan={props.row.rowSpan || 1}/>
 };
 
-class AccountantListBankerContainer extends Component {
-    state = {
-        isOpen: true
-    }
 
-    handleCollapse = _ => {
-        let isOpen = !this.state.isOpen
-        this.setState({isOpen})
-    }
+const CurrencyFormatter = ({ value }) => (
+    <>
+        <div class="td-item">number 001</div>
+        <div class="td-item">number 002</div>
+        <div class="td-item">number 003</div>
+        <div class="td-item">number 004</div>
+    </>
+  );
+
+  const CurrencyTypeProvider = props => (
+    <DataTypeProvider
+      formatterComponent={CurrencyFormatter}
+      {...props}
+    />
+  );
+
+class AccountantListBankerContainer extends Component {
 
     renderListBankerAccount = bankerAccounts => {
         let xhtml = null
-        console.log(bankerAccounts)
         let rowData = [
             { id: 123213, account: "Femallele Cha", report_type: "Sandra", turnover: "Las Vegas", company: "Audi A4", rowSpan:2,
             items:[
-                { id: 123214, account: "Femalee Con", report_type: "Sandra", turnover: "Las Vegas", company: "Audi A4", parentId: 123213 },
+                { id: 123214, account: "Femalee Con 01", report_type: "Sandra", turnover: "Las Vegas", company: "Audi A4", parentId: 123213 },
                 { id: 123215, account: "Femalee Con", report_type: "Sandra", turnover: "Las Vegas", company: "Audi A4", parentId: 123213 },
                 { id: 123216, account: "Femalee Con", report_type: "Sandra", turnover: "Las Vegas", company: "Audi A4", parentId: 123213 },
                 { id: 123217, account: "Femalee Con", report_type: "Sandra", turnover: "Las Vegas", company: "Audi A4", parentId: 123213,
@@ -90,84 +100,57 @@ class AccountantListBankerContainer extends Component {
 
         if (bankerAccounts) {
             xhtml = bankerAccounts.map((account, idx) => {
+                let isCheckBankerAccount = this.props.isCheckBankerAccount[account.id] || false
                 return (
-                    <Collapse isOpen={this.handleCollapse} className="portlet-body">
-                        <div className="panel-group accordion">
-                            <div className="panel panel-default">
-                                <div className="panel-heading">
-                                    <h4 className="panel-title">
-                                        <div className="col-sm-6">
-                                            <label className="mt-checkbox uppercase">
-                                                <input type="checkbox" onChange={_ => null} /> {account.acc_name}
-                                                <span></span>
-                                            </label>
-                                        </div>
-                                        <div className="col-sm-6"><label className="mt-checkbox "> {account.note}</label></div>
-                                        <div className="clearfix"></div>
-                                    </h4>
-                                </div>
-                                <Collapse isOpen={this.state.isOpen} className="panel-collapse">
-                                    <div className="panel-body">
-                                        <LazyLoad>
-                                            <Grid
-                                                rows={rowData}
-                                                columns={[
-                                                    { name: "account", title: "Account" },
-                                                    { name: "report_type", title: "Report Type" },
-                                                    { name: "turnover", title: "Turn over" },
-                                                    { name: "net_turnover", title: "Net Turn over" },
-                                                    { name: "gross_comm", title: "GrossComm" },
-                                                    { name: "member_comm", title: "MemberComm" },
-                                                    { name: "win_loss", title: "Win lose" },
-                                                    { name: "company", title: "Company" },
-                                                    { name: "total_code", title: "Total code" },
-                                                    { name: "formua", title: "Formula" },
-                                                    { name: "member", title: "Member" },
-                                                    { name: "result", title: "Result" },
-                                                    { name: "currency", title: "Currency" },
-                                                    { name: "control_formula", title: "+/- Formula" },
-                                                ]}>
-                                                <TreeDataState defaultExpandedRowIds={[4]} />
-                                                <CustomTreeData getChildRows={getChildRows} />
-                                                <Table
-                                                    cellComponent={Cell}
-                                                    rowComponent={Row}
-                                                    columnExtensions={[{ columnName: 'account', width: 300 }]}
-                                                />
-                                                <TableHeaderRow />
-                                                <TableTreeColumn for="account" cellComponent={treeColumnCell}/>
-                                            </Grid>
-                                    </LazyLoad>
+                    <div key={idx} className="panel-group accordion">
+                        <div className="panel panel-default">
+                            <div className="panel-heading">
+                                <h4 className="panel-title">
+                                    <div className="col-sm-6">
+                                        <label className="mt-checkbox uppercase">
+                                            <input type="checkbox" onChange={_ => this.props.checkBankerAccount(account.banker, account.id)} checked={isCheckBankerAccount}/> {account.acc_name}
+                                            <span></span>
+                                        </label>
                                     </div>
-                                </Collapse>
-
+                                    <div className="col-sm-6"><label className="mt-checkbox "> {account.note}</label></div>
+                                    <div className="clearfix"></div>
+                                </h4>
                             </div>
                         </div>
-                    </Collapse>
+                    </div>
                 )
             })
         }
         return xhtml
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Render List Banker
+    |--------------------------------------------------------------------------
+    */
     renderListBanker = _ => {
         let xhtml = null
         if (this.props.accountant_payload) {
             const listBankerProcessed = this.props.accountant_payload.listBankerProcessed
             xhtml = listBankerProcessed.map((banker, idx) => {
+                let isOpenBanker = this.props.isOpenBanker[banker.id] || false
+                let isCheckBanker = this.props.isCheckBanker[banker.id] || false
+                let classOpenBanker = isOpenBanker ? "fa fa-chevron-down" : "fa fa-chevron-up"
                 return (
-                    <div className="portlet box grey-cascade list-banker-account">
+                    <div key={idx} className="portlet box grey-cascade list-banker-account">
                         <div className="portlet-title">
                             <div className="caption">
                                 <label className="mt-checkbox caption-subject bold uppercase">
-                                    <input type="checkbox"  /> {banker.name}
+                                    <input type="checkbox" onChange={_ => this.props.checkBanker(banker.id)} checked={isCheckBanker} /> {banker.name}
                                     <span></span>
                                 </label>
                             </div>
-                            <div className="tools"><a href="#/"  onClick={this.handleCollapse}> hide show </a></div>
+                            <div className="tools"><a href="#/"  onClick={_ => this.props.collapseBanker(banker.id)}><i className={classOpenBanker}></i></a></div>
                         </div>
-
-                        {this.renderListBankerAccount(banker.listAccounts)}
+                        <Collapse key={idx} isOpen={isOpenBanker} className="portlet-body">
+                            {this.renderListBankerAccount(banker.listAccounts)}
+                        </Collapse>
                     </div>
                 )
             })
@@ -186,10 +169,21 @@ class AccountantListBankerContainer extends Component {
 const mapStateToProps = state => {
     return {
         accountant_payload : state.AccountantReducer.payload,
+        isOpenBanker : state.AccountantToggleReducer.isOpenBanker,
+        isCheckBanker : state.AccountantToggleReducer.isCheckBanker,
+        isCheckBankerAccount : state.AccountantToggleReducer.isCheckBankerAccount,
     }
 }
 
+const mapDispatchToProps = (dispatch) => {
+    return {
+        collapseBanker: bankerId => {dispatch(collapseBanker(bankerId))},
+        checkBanker: bankerId => {dispatch(checkBanker(bankerId))},
+        checkBankerAccount: (bankerId, bankerAccountId) => {dispatch(checkBankerAccount(bankerId, bankerAccountId))},
+    }
+};
+
 export default compose(
-    connect(mapStateToProps, null),
+    connect(mapStateToProps, mapDispatchToProps),
     withTranslation()
 )(AccountantListBankerContainer);
