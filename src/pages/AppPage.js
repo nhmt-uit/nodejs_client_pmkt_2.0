@@ -1,7 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+
 import { BaseComponent } from "my-utils/core"
+import { AppConfig } from "my-constants"
 import { MainLayout, AuthenticationLayout } from 'my-pages/layouts'
 import { Loading } from 'my-pages/layouts/partials';
 import { CookieService } from 'my-utils/core';
@@ -23,8 +25,9 @@ const RenderComponent = () => {
 };
 
 class AppPage extends BaseComponent {
-	componentDidMount() {
-		this.props.changeLanguage();
+	constructor(props) {
+		super(props)
+		this.props.changeLanguage(AppConfig.DEFAULT_LANG);
 	}
 
 	render() {
@@ -43,7 +46,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => {
 	return {
-		changeLanguage: _ => dispatch(changeLanguage()),
+		changeLanguage: lang_code => dispatch(changeLanguage(lang_code)),
 	};
 };
 
