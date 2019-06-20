@@ -11,9 +11,8 @@ export const socketInitData = () => {
     SocketService.connect('/accountant')
     return (dispatch) => {
         EventsService.on('accountant_init', res => {
-            console.log(res)
             if (res) {
-                AccountantService.processDataFromSocket(res.data)
+                res.data = AccountantService.processDataFromSocket(res.data)
                 // Unscrubscripe chanel 'accountant_init' when finish & disconnect socket
                 if (res.type === "resolve") {
                     EventsService.removeAllListeners('accountant_init')
@@ -91,7 +90,6 @@ export const socketScanData = (params) => {
                     full_payload: res,
                     payload: res.data
                 });
-                
             }
         })
         
@@ -108,7 +106,6 @@ export const socketScanData = (params) => {
         })
 
         EventsService.on('accountant_scan_resolve', res => {
-            // console.log("Emiter", res)
             if (res) {
                 // Dispatch data to reducer
                 dispatch({
@@ -159,13 +156,15 @@ export const checkBanker = bankerId => {
 | Handle Toogle toggle check banker account
 |--------------------------------------------------------------------------
 */
-export const checkBankerAccount = (bankerId, bankerAccountId) => {
+export const checkBankerAccount = (type_check, params) => {
     // Dispatch toggle banker
    return (dispatch) => {
         dispatch({
             type: AccountantActionType.ACCOUNTANT_TOGGLE_CHECK_BANKER_ACCOUNT,
-            bankerId: bankerId,
-            bankerAccountId: bankerAccountId
+            type_check: type_check,
+            memberId: params.memberId,
+            bankerId: params.bankerId,
+            bankerAccountId: params.bankerAccountId
         });
    }
 }

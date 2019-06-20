@@ -4,6 +4,7 @@ import { AuthActionType } from 'my-constants/action-types';
 import { AuthService, LanguageService } from 'my-services/systems';
 import { CookieService } from 'my-utils/core';
 import { AppConfig } from 'my-constants';
+import { RoutesService } from 'my-routes';
 
 export const login = (user) => {
     return (dispatch) => {
@@ -176,6 +177,8 @@ export const logout = () => {
                     type: AuthActionType.LOGOUT_SUCCESS,
                     payload: res,
                 });
+
+                window.location = RoutesService.getPath('ADMIN', 'DASHBOARD');
             })
             .catch(e => {
                 dispatch({

@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
 import {compose} from "redux";
 import {Link} from "react-router-dom";
+import { RoutesService } from 'my-routes';
 
 
-class QuickAtivitiesContainer extends Component {
+class QuickActivitiesContainer extends Component {
     render() {
         const { t } = this.props;
         return (
@@ -32,7 +33,7 @@ class QuickAtivitiesContainer extends Component {
                         <i className="fa fa-server" />
                         <div> {t("Outstanding")} </div>
                     </Link>
-                    <Link to ="/accountant" className="icon-btn">
+                    <Link to={RoutesService.getPath('ADMIN', 'ACCOUNTANT_LIST')} className="icon-btn">
                         <i className="fa fa-calculator" />
                         <div> {t("Accountant")} </div>
                     </Link>
@@ -44,4 +45,4 @@ class QuickAtivitiesContainer extends Component {
 
 export default compose(
     withTranslation()
-)(QuickAtivitiesContainer);
+)(QuickActivitiesContainer);

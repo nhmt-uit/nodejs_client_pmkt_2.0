@@ -16,6 +16,7 @@ const appReducers = combineReducers({
     form: formReducer,
     banker: BankerReducer,
     alert: AlertReducer,
+
     // System reducers
     LanguageReducer,
     AuthReducer,
