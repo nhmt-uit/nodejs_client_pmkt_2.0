@@ -149,3 +149,17 @@ html {
 }
 
 .body-notify-acc-scan {height: 200px; overflow-y: auto}
+
+.padding-lf-10 {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.padding-tb-10-important {
+    padding-top: 10px!important;
+    padding-bottom: 10px!important;
+}
+
+.width-auto {
+    width: auto!important;
+}

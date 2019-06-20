@@ -9,6 +9,7 @@ import NotificationReducer from './systems/NotificationReducer';
 import ChangePasswordReducer from './systems/ChangePasswordReducer';
 import BankerReducer from './banker/BankerReducer'
 import AlertReducer from './systems/AlertReducer';
+import ChangeSecureCodeReducer from './systems/ChangeSecureCodeReducer'
 
 const appReducers = combineReducers({
     // Redux form reducer
@@ -23,7 +24,8 @@ const appReducers = combineReducers({
     // Accountant Reducer
     AccountantReducer, AccountantScanReducer, AccountantToggleReducer,
     NotificationReducer,
-    ChangePasswordReducer
+    ChangePasswordReducer,
+    ChangeSecureCodeReducer
 });
 
 export default appReducers;

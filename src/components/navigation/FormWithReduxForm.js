@@ -26,11 +26,13 @@ const defaultProps = {
 };
 
 class FormWithReduxForm extends Component {
-    handleSubmit() {
+    handleSubmit = _ => {
         if (!_get(this.props, 'form.syncErrors', undefined)) {
-            return this.props.onSubmitForm(this.props.formValues);
+            this.props.onSubmitForm(this.props.formValues);
+
+            return this.props.reset();
         }
-    }
+    };
 
     rules = {
         required: value => value ? undefined : 'is required',
@@ -53,15 +55,15 @@ class FormWithReduxForm extends Component {
             _isEqual(value, _get(this.props, 'formValues.current_password2', undefined))
                 ? 'must be different from current password 2'
                 : undefined,
-        maxLength6: value => value && value.length > 6 ? 'must be 6 characters' : undefined,
-        onlyNumber: value => value && isNaN(Number(value)) ? 'must be a number' : undefined
+        maxLength6: value => value && ( value.length > 6 || value.length < 6) ? 'must be 6 characters' : undefined,
+        number: value => value && isNaN(Number(value)) ? 'must be a number' : undefined
     };
 
     renderForm() {
-        const {data, t, err, success} = this.props;
+        const {data, t, err, success, handleSubmit} = this.props;
 
         return (
-            <form className="form-horizontal">
+            <form className="form-horizontal" onSubmit={handleSubmit(this.handleSubmit)}>
                 <div className="form-body">
                     <div className="form-group">
                         <div className="col-md-offset-3 col-md-9">
@@ -105,7 +107,7 @@ class FormWithReduxForm extends Component {
                     }
                     <div className="form-group">
                         <div className="col-md-offset-3 col-md-9">
-                            <button disabled={_get(this.props, 'form.syncErrors', false)} type="button" onClick={this.handleSubmit.bind(this)} className="col-md-12 btn red">{t('Save')}</button>
+                            <button disabled={_get(this.props, 'form.syncErrors', false)} type="submit" className="col-md-12 btn red">{t('Save')}</button>
                             &nbsp;&nbsp;
                         </div>
                     </div>
@@ -161,7 +163,7 @@ const mapStateToProps = state => {
 
 export default compose(
     reduxForm({
-        form: 'form_navigation'
+        form: 'form_navigation',
     }),
     connect(mapStateToProps, null),
     withTranslation(),

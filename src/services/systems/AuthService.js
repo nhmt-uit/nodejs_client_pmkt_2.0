@@ -2,7 +2,6 @@ import { AppConfig } from 'my-constants';
 import { BaseService, HttpService } from 'my-utils/core';
 import CookieService from 'my-utils/core/CookieService';
 
-
 class AuthService extends BaseService {
     serviceUrl = AppConfig.API_URL;
     /*
@@ -96,6 +95,8 @@ class AuthService extends BaseService {
     |--------------------------------------------------------------------------
     */
     logout() {
+        CookieService.removeAll();
+
         return HttpService.post(`${this.serviceUrl}/signout`)
     }
 }

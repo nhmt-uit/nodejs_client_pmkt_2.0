@@ -12,12 +12,12 @@ class ChangeSecureCodeContainer extends Component {
         {
             name: 'current_secure',
             label: 'Current Secure',
-            rules: ['required', 'onlyNumber', 'maxLength6'],
+            rules: ['required', 'number', 'maxLength6'],
         },
         {
             name: 'new_secure',
             label: 'New Secure',
-            rules: ['required', 'onlyNumber', 'maxLength6'],
+            rules: ['required', 'number', 'maxLength6'],
         },
         {
             name: 're_new_secure',
@@ -41,10 +41,11 @@ class ChangeSecureCodeContainer extends Component {
         return (
             <FormWithReduxForm
                 data={this.data}
-                title="Change Password"
+                title="Change Secure Code"
                 onSubmitForm={this.handleSubmitForm}
                 onToggleNotify={this.handleToggleNotify}
                 isShowNotify={dataStore.isShowNotify}
+                onSubmit={this.handleSubmitForm}
                 isReset={isReset}
                 err={dataStore.errors || {}}
                 success={{
