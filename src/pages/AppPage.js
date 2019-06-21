@@ -20,7 +20,7 @@ const RenderComponent = () => {
 	if ((!isLogin || !isCheckSecure !== undefined) && !byPassDashboard) {
 		component = ( <AuthenticationLayout /> );
 	}
-	
+
 	return component;
 };
 
@@ -28,6 +28,10 @@ class AppPage extends BaseComponent {
 	constructor(props) {
 		super(props)
 		this.props.changeLanguage(AppConfig.DEFAULT_LANG);
+
+		CookieService.addChangeListener(obj => {
+			if ((obj.name === "isLogin"  && !obj.value) || (obj.name === "byPassDashboard" && obj.value) ) this.forceUpdate()
+		})
 	}
 
 	render() {

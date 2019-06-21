@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import { compose } from 'redux'
-import { connect } from 'react-redux'
 import { withTranslation } from 'react-i18next'
 
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
@@ -9,7 +7,6 @@ import { AccountService } from 'my-services/account'
 
 class ModalDeleteAccountContainer extends Component {
     handleDeleteAccount = async _ => {
-        console.log(this.props.account)
         await AccountService.deleteAccount(this.props.account.id)
         if (this.props.callback) this.props.callback(this.props.account)
         this.props.toggle()
@@ -33,17 +30,4 @@ class ModalDeleteAccountContainer extends Component {
     }
 }
 
-
-
-const mapStateToProps = state => {
-    
-}
-
-const mapDispatchToProps = (dispatch) => {
-
-};
-
-export default compose(
-    connect(mapStateToProps, mapDispatchToProps),
-    withTranslation()
-)(ModalDeleteAccountContainer);
+export default withTranslation()(ModalDeleteAccountContainer);

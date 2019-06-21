@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { isEmpty } from 'lodash';
+import { isEmpty as _isEmpty, get as _get } from 'lodash';
 import qs from 'qs';
 
 import { Helpers } from 'my-utils';
@@ -32,7 +32,7 @@ class HttpService {
     //Create request with method get
     get = (path, queryParams, cancelToken) => {
         this.setAuthorization();
-        if(isEmpty(cancelToken)){
+        if(_isEmpty(cancelToken)){
             cancelToken = this.getCancelToken();
         }
 
@@ -45,7 +45,7 @@ class HttpService {
     //Create request with method post
     post = (path, payload, cancelToken) => {
         this.setAuthorization();
-        if(isEmpty(cancelToken)){
+        if(_isEmpty(cancelToken)){
             cancelToken = this.getCancelToken();
         }
 
@@ -57,7 +57,7 @@ class HttpService {
     //Create request with method put
     put = (path, payload, cancelToken) => {
         this.setAuthorization();
-        if(isEmpty(cancelToken)){
+        if(_isEmpty(cancelToken)){
             cancelToken = this.getCancelToken();
         }
         return this.service.put(path, payload, { cancelToken: cancelToken });
@@ -66,7 +66,7 @@ class HttpService {
     //Create request with method delete
     delete = (path, queryParams, cancelToken) => {
         this.setAuthorization();
-        if(isEmpty(cancelToken)){
+        if(_isEmpty(cancelToken)){
             cancelToken = this.getCancelToken();
         }
 
@@ -102,7 +102,7 @@ class HttpService {
     //Handle when request fail
     handleError = error => {
         Helpers.hideLoading();
-        if (error.response.status === 401) {
+        if (_get(error, 'response.status') === 401) {
             CookieService.removeAll()
             window.history.pushState(null, null, '/auth/login')
 			window.location.reload()

@@ -11,7 +11,7 @@ class AccountantStatusAccountContainer extends Component {
     state = {
         typeModal: null,
         modal: false,
-        deleteItem: null
+        selectedItem: null
     };
     /*
     |--------------------------------------------------------------------------
@@ -57,11 +57,13 @@ class AccountantStatusAccountContainer extends Component {
             isOpenModal = true
             typeModal = 'update'
         }
+
+        if (type === "close") isOpenModal = false
         
         this.setState({
             typeModal: typeModal,
             isOpenModal: isOpenModal,
-            deleteItem: bankerAccount
+            selectedItem: bankerAccount
         });
     }
 
@@ -71,17 +73,17 @@ class AccountantStatusAccountContainer extends Component {
 
     render() {
         this.generateData()
-        
+        console.log("render")
         return (
             <>
                 <BankerAccountProcessingComponent bankerAccounts={this.bankerAccountProcessing} />
                 <div className="row">
                     <BankerAccountEmptyComponent isOpenModal={this.state.isOpenModal} toggleModal={this.toggleModal} bankerAccounts={this.bankerAccountEmpty} />
-                    <BankerAccountErrorComponent isOpenModal={this.state.isOpenModal} toggleModal={(type, bankerAccount) => this.toggleModal(type, bankerAccount)} clear bankerAccounts={this.bankerAccountError} />
+                    <BankerAccountErrorComponent isOpenModal={this.state.isOpenModal} toggleModal={(type, bankerAccount) => this.toggleModal(type, bankerAccount)} bankerAccounts={this.bankerAccountError} />
                 </div>
                 {/* Modal Area */}
-                <ModalDeleteAccountContainer isOpen={this.state.typeModal === "delete" && this.state.isOpenModal} toggle={this.toggleModal} account={this.state.deleteItem} callback={this.handleFinishDelete} />
-                <ModalFormAccountContainer isOpen={this.state.typeModal === "update" && this.state.isOpenModal} toggle={this.toggleModal} account={this.state.deleteItem} formType="update" />
+                <ModalDeleteAccountContainer isOpen={this.state.typeModal === "delete" && this.state.isOpenModal} toggle={this.toggleModal} account={this.state.selectedItem} callback={this.handleFinishDelete} />
+                <ModalFormAccountContainer isOpen={this.state.typeModal === "update" && this.state.isOpenModal} toggle={this.toggleModal} account={this.state.selectedItem} formType="update" />
             </>
         );
     }

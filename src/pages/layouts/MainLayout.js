@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Redirect } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 
 import { Header, MainNavigation, Footer } from 'my-pages/layouts/partials';
 import RenderRoutes from 'my-routes/RenderRoutes';

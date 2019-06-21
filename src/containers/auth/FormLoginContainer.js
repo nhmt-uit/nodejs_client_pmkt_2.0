@@ -11,8 +11,15 @@ import _ from 'lodash';
 import { changeLanguage } from 'my-actions/systems/LanguageAction';
 import { login } from 'my-actions/systems/AuthAction';
 import { RoutesService } from 'my-routes';
+import { AppConfig } from "my-constants"
 
 class FormLoginContainer extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.props.initialize({ ...(this.props.initialValues || {}), lang_code: AppConfig.DEFAULT_LANG });
+    }
+
     handleChangeLanguage = (e, newValue) => {
         this.props.changeLanguage(newValue)
     };
@@ -30,7 +37,6 @@ class FormLoginContainer extends React.Component {
 
     render() {
         const { t, auth } = this.props;
-
         if (auth.login_status) {
             $('div.alert').fadeIn();
 
@@ -39,8 +45,7 @@ class FormLoginContainer extends React.Component {
                 : CookieService.get('needChangeSecurePassword')
                     ? RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'reset-secure-password' })
                     : RoutesService.getPath('ADMIN', 'DASHBOARD');
-
-            return <Redirect to={redirect} />
+            return  <Redirect to={redirect} />
         } else if (auth.login_status === false && _.get(this.props, 'auth.errors.error_description', null)) {
             $('div.alert').fadeIn();
         }
