@@ -5,15 +5,15 @@ import { withTranslation } from 'react-i18next'
 class FormScanButtonComponent extends Component {
 
     render() {
-        const { t, socketScanData, isSocketInitSuccess } = this.props
+        const { t, socketScanData, socketStopScanData, socketSaveReport, isSocketInitSuccess, isProcessing, isAllowReport } = this.props
         if(!isSocketInitSuccess) return false
         return (
             <div className="form-group">
-                <a href="#/" type="submit" className="btn btn-default red" onClick={socketScanData}>{t("Scan")}</a>
-                <button type="submit" className="btn btn-default grey">{t("Stop")}</button>
-                <button type="submit" className="btn btn-default grey">{t("Sign Out")}</button>
-                <button type="submit" className="btn btn-default red">{t("Save report")}</button>
-                <button type="submit" className="btn btn-default red">{t("export to csv")}</button>
+                {!isProcessing ? <a href="#/" className="btn btn-default red" onClick={socketScanData}>{t("Scan")}</a> : null}
+                {isProcessing ? <a href="#/" className="btn btn-default grey" onClick={socketStopScanData}>{t("Stop")}</a> : null}
+                {/* <button type="submit" className="btn btn-default grey">{t("Sign Out")}</button> */}
+                {isAllowReport ? <a href="#/" type="submit" className="btn btn-default red" onClick={socketSaveReport}>{t("Save report")}</a> : null}
+                {isAllowReport ? <a href="#/" type="submit" className="btn btn-default red">{t("export to csv")}</a> : null}
             </div>
         )
     }

@@ -6,15 +6,18 @@ import moment  from 'moment'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css"
 import MultiSelect from "@khanacademy/react-multi-select";
-import { join, filter, isEmpty as _isEmpty } from 'lodash'
+import { join, filter, isEmpty as _isEmpty, map as _map } from 'lodash'
+import { withRouter } from 'react-router-dom';
 
 
 import { AppConfig } from 'my-constants'
 import BootstrapInputIcon from 'my-utils/components/date-picker/BootstrapInputIcon'
 import { FormScanButtonComponent, FormScanGroupDateComponent } from 'my-components/accountant'
 import EventsService from 'my-utils/core/EventsService'
-import { socketInitData, socketScanData, checkBankerAccount } from 'my-actions/AccountantAction';
+import { socketInitData, socketScanData, socketStopScanData, socketSaveReport, checkBankerAccount } from 'my-actions/AccountantAction';
 import { Helpers } from 'my-utils';
+import { SocketService } from 'my-utils/core';
+import { RoutesService } from 'my-routes'
 
 
 const today = moment().format('YYYY-MM-DD')
@@ -61,11 +64,6 @@ class AccountantFormScanContainer extends Component {
         setTimeout(_ => {
             this.checkDateToSelectGroupDate()
         }, 200)
-    }
-
-    componentWillUnmount() {
-        EventsService.removeAllListeners('hello')
-        EventsService.removeAllListeners('hello-world')
     }
 
     /*
@@ -118,13 +116,48 @@ class AccountantFormScanContainer extends Component {
         }
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Call action to scan data
+    |--------------------------------------------------------------------------
+    */
     handleRequestScan = _ => {
         let bankerAccountIds = []
         for(let x in this.props.isCheckBankerAccount) {
             if (this.props.isCheckBankerAccount[x] === true) bankerAccountIds.push(x)
         }
         this.props.socketScanData({ids: bankerAccountIds, from_date: this.state.from_date, to_date: this.state.to_date})
+    }
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Call action to save report
+    |--------------------------------------------------------------------------
+    */
+    handleSaveReport = _ => {
+        const { payloadBankerAccount } = this.props
+        let bankerAccount = []
+        if(payloadBankerAccount) {
+            _map(payloadBankerAccount, item => {
+                if (item.type === "resolve" && item.data.reportSave) bankerAccount.push(item)
+            })
+        }
+        this.props.socketSaveReport({payloadBankerAccount: bankerAccount})
+        this.props.history.push(RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT'))
+    }
+    
+
+
+    handleStopScan = _ => {
+        const { payloadBankerAccount } = this.props
+        let bankerAccountIds = []
+        if(payloadBankerAccount) {
+            _map(payloadBankerAccount, item => {
+                if (item.type === "notify") bankerAccountIds.push(item.id)
+            })
+        }
+        if (!_isEmpty(bankerAccountIds)) this.props.socketStopScanData({ids: bankerAccountIds})
     }
 
     /*
@@ -139,6 +172,20 @@ class AccountantFormScanContainer extends Component {
         } else {
             // Helpers.hideLoading();
         }
+    }
+
+    checkIsProcessingScan = _ => {
+        const { payloadBankerAccount } = this.props
+        let isProcessing = false
+        let isAllowReport = false
+        if(payloadBankerAccount) {
+            _map(payloadBankerAccount, item => {
+                if (item.type === "notify") isProcessing = true
+                if (item.type === "resolve") isAllowReport = true
+            })
+            if (!isProcessing) SocketService.unListenerResponse()
+        }
+        return {isProcessing, isAllowReport}
     }
 
     renderOption = ({ checked, option, onClick }) => (
@@ -194,8 +241,10 @@ class AccountantFormScanContainer extends Component {
     render() {
         const { t, isSocketInitSuccess } = this.props
         let memberOptions = (this.props.accountant_payload) ? this.props.accountant_payload.memberOptionsProcessed : []
+
         const { from_date, to_date, typeGroupDate } = this.state
         const selectChecked = this.handleIsCheckMember()
+        const {isProcessing, isAllowReport} = this.checkIsProcessingScan()
 
         return (
             <div className="portlet light bordered">
@@ -243,7 +292,7 @@ class AccountantFormScanContainer extends Component {
                                 onChange={this.onChangeDateTo} selected={to_date}
                                 dateFormat={AppConfig.FORMAT_DATE_DATEPICKER} />
                         </div>
-                        <FormScanButtonComponent isSocketInitSuccess={isSocketInitSuccess}  socketScanData={this.handleRequestScan} />
+                        <FormScanButtonComponent isSocketInitSuccess={isSocketInitSuccess} socketScanData={this.handleRequestScan} socketSaveReport={this.handleSaveReport} socketStopScanData={this.handleStopScan}  isProcessing={isProcessing} isAllowReport={isAllowReport} />
                     </form>
                 </div>
             </div>
@@ -259,6 +308,7 @@ const mapStateToProps = state => {
         accountant_payload : state.AccountantReducer.payload,
         isCheckMember : state.AccountantToggleReducer.isCheckMember || [],
         isCheckBankerAccount : state.AccountantToggleReducer.isCheckBankerAccount,
+        payloadBankerAccount : state.AccountantScanReducer.payloadBankerAccount
     }
 }
 
@@ -266,12 +316,15 @@ const mapDispatchToProps = (dispatch) => {
     return {
         socketInitData: _ => {dispatch(socketInitData())},
         socketScanData: params => {dispatch(socketScanData(params))},
+        socketStopScanData: bankerAccount => {dispatch(socketStopScanData(bankerAccount))},
+        socketSaveReport: bankerAccount => {dispatch(socketSaveReport(bankerAccount))},
         checkBankerAccount: (type_check, params) => {dispatch(checkBankerAccount(type_check, params))},
     }
 };
 
 export default compose(
     connect(mapStateToProps, mapDispatchToProps),
-    withTranslation()
+    withTranslation(),
+    withRouter
 )(AccountantFormScanContainer);
 
