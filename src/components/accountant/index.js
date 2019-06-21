@@ -4,6 +4,7 @@ import ListBankerAccountsComponent from './ListBankerAccountsComponent'
 import BankerAccountErrorComponent from './BankerAccountErrorComponent'
 import BankerAccountEmptyComponent from './BankerAccountEmptyComponent'
 import BankerAccountProcessingComponent from './BankerAccountProcessingComponent'
+import BankerAccountStatusIconComponent from './BankerAccountStatusIconComponent'
 
 export {
     FormScanButtonComponent,
@@ -12,4 +13,5 @@ export {
     BankerAccountErrorComponent,
     BankerAccountEmptyComponent,
     BankerAccountProcessingComponent,
+    BankerAccountStatusIconComponent,
 }

@@ -40,9 +40,6 @@ class AppPage extends BaseComponent {
 	}
 }
 
-const mapStateToProps = state => ({
-    auth : state.AuthReducer
-});
 
 const mapDispatchToProps = dispatch => {
 	return {
@@ -50,4 +47,4 @@ const mapDispatchToProps = dispatch => {
 	};
 };
 
-export default connect(mapStateToProps,mapDispatchToProps)(AppPage);
+export default connect(null, mapDispatchToProps)(AppPage);

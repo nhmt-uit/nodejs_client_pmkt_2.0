@@ -102,6 +102,12 @@ class HttpService {
     //Handle when request fail
     handleError = error => {
         // Helpers.hideLoading();
+        if (error.response.status === 401) {
+            CookieService.removeAll()
+            window.history.pushState(null, null, '/auth/login')
+            window.location.reload()
+        }
+
         return Promise.reject(error);
     };
 

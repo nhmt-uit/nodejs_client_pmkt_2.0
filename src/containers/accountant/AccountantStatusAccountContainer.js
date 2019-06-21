@@ -28,6 +28,7 @@ class AccountantStatusAccountContainer extends Component {
                         this.bankerAccountProcessing.push(item)
                     break
                     case "reject":
+                    case "stop":
                         if (message === "Empty data") {
                             this.bankerAccountEmpty.push(item)
                         } else {

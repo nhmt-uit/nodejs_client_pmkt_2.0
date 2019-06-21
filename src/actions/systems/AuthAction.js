@@ -51,6 +51,7 @@ export const login = (user) => {
                     type: AuthActionType.AUTH_LOGIN_SUCCESS,
                     payload: resLogin
                 });
+                window.location.reload()
             });
         }).catch (error => {
             dispatch({

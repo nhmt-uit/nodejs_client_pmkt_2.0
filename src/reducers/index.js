@@ -12,6 +12,7 @@ import ChangeSecureCodeReducer from './systems/ChangeSecureCodeReducer'
 import AlertReducer from './systems/AlertReducer';
 import ReportReducer from './ReportReducer';
 
+
 const appReducers = combineReducers({
     // Redux form reducer
     form: formReducer,

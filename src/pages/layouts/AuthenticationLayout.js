@@ -6,6 +6,7 @@ import 'my-public/assets/pages/css/login.min.css';
 
 class AuthenticationLayout extends Component {
     render() {
+        
         return (
             <Router>
                 <RenderRoutes />
