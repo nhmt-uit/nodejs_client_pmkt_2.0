@@ -89,7 +89,7 @@ class FormLoginContainer extends React.Component {
                         <div className="form-group">
                             <Field name="lang_code" component="select" className="form-control" onChange={this.handleChangeLanguage}>
                                 <option value="en">English</option>
-                                <option selected value="vi">Tiếng Việt</option>
+                                <option value="vi">Tiếng Việt</option>
                             </Field>
                         </div>
                         <div className="form-actions text-center">

@@ -87,7 +87,7 @@ class HttpService {
 
     //Handle berfore send request
     handleRequest = config => {
-        Helpers.showLoading();
+        // Helpers.showLoading();
         return config;
     };
 
@@ -95,13 +95,13 @@ class HttpService {
     handleSuccess = response => {
         //obj response : data, status, statusText, headers
         const { data } = response;
-        Helpers.hideLoading();
+        // Helpers.hideLoading();
         return data;
     };
 
     //Handle when request fail
     handleError = error => {
-        Helpers.hideLoading();
+        // Helpers.hideLoading();
         return Promise.reject(error);
     };
 
