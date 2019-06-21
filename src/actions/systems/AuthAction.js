@@ -26,6 +26,7 @@ export const login = (user) => {
                     const hasReportDetailFeature = userInfo.hasReportDetailFeature;
                     const status = userInfo.status || 0;
                     const needChangeSecurePassword = userInfo.needChangeSecurePassword || 0;
+                    const lang = data.data.code || AppConfig.DEFAULT_LANG;
 
                     CookieService.set('isLogin', isLogin ? '1' : '0');
                     CookieService.set('isReset', isReset ? '1' : '0');
@@ -44,6 +45,7 @@ export const login = (user) => {
                     CookieService.set('refresh_token', resLogin.refresh_token);
                     CookieService.set('token_type', resLogin.token_type);
                     CookieService.set('isLogin', '1');
+                    CookieService.set('lang', lang);
                 }).then(_ => {
                 dispatch({
                     type: AuthActionType.AUTH_LOGIN_SUCCESS,
@@ -166,28 +168,5 @@ export const resetSecurePassword = (post) => {
                     }),
                 });
             })
-    }
-};
-
-export const logout = () => {
-    return dispatch => {
-        return AuthService.logout()
-            .then((res) => {
-                dispatch({
-                    type: AuthActionType.LOGOUT_SUCCESS,
-                    payload: res,
-                });
-
-                window.location = RoutesService.getPath('ADMIN', 'DASHBOARD');
-            })
-            .catch(e => {
-                dispatch({
-                    type: AuthActionType.LOGOUT_FAIL,
-                    payload: _get(e, 'response.data', {
-                        status: false,
-                        error_description: e.stack,
-                    }),
-                });
-            });
     }
 };

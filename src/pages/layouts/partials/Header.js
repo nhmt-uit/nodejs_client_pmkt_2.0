@@ -3,7 +3,7 @@ import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
 import { ZopimChat, Notification } from 'my-components/navigation';
 import { AuthAction } from 'my-actions/systems';
@@ -13,10 +13,14 @@ import { RoutesService } from 'my-routes';
 import InfoUserContainer from "my-containers/infoUser/InfoUserContainer";
 import 'my-styles/reactstrap-modal.css'
 import { changeLanguage } from 'my-actions/systems/LanguageAction';
+import { AuthService } from 'my-services/systems';
+
 
 class Header extends Component {
-    handleLogout = _ => {
-        return this.props.logout();
+    handleLogout = async _ => {
+        await AuthService.logout()
+
+        this.props.history.push('/auth/login');
     };
 
     handleChangeLanguage = type => () => {
@@ -28,7 +32,7 @@ class Header extends Component {
     render() {
         const isLogin = CookieService.get('isLogin');
         const lang = CookieService.get('lang');
-        const { t } = this.props
+        const { t } = this.props;
 
         return (
             <div>
@@ -64,12 +68,12 @@ class Header extends Component {
                                             <ul className="dropdown-menu-list scroller" data-handle-color="#637283">
                                                 <li>
                                                     <a onClick={this.handleChangeLanguage('en')} className="padding-tb-10-important text-uppercase text-center padding-">
-                                                        {lang && lang.toLowerCase() === 'en' ? <i className="fa fa-check"/> : ''}&nbsp;&nbsp;{t('english')}
+                                                        {(lang && lang.toLowerCase() === 'en') ? <i className="fa fa-check"/> : ''}&nbsp;&nbsp;{t('english')}
                                                     </a>
                                                 </li>
                                                 <li>
                                                     <a onClick={this.handleChangeLanguage('vi')} className="padding-tb-10-important text-uppercase text-center">
-                                                        {lang && lang.toLowerCase() === 'vi' ? <i className="fa fa-check"/> : ''}&nbsp;&nbsp;{t('viet nam')}
+                                                        {(lang && lang.toLowerCase() === 'vi') ? <i className="fa fa-check"/> : ''}&nbsp;&nbsp;{t('viet nam')}
                                                     </a>
                                                 </li>
                                             </ul>
@@ -147,156 +151,7 @@ class Header extends Component {
                                         </li>
                                     </ul>
                                 </li>
-                                <li className="dropdown dropdown-extended dropdown-tasks" id="header_task_bar">
-                                    <a href="index.html" className="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                                        <i className="icon-calendar" />
-                                        <span className="badge badge-default"> 3 </span>
-                                    </a>
-                                    <ul className="dropdown-menu extended tasks">
-                                        <li>
-                                            <h3>You have <span className="bold">12 pending</span> tasks</h3>
-                                            <a href="app_todo.html">view all</a>
-                                        </li>
-                                        <li className="external">
-                                            <h3>You have <span className="bold">12 pending</span> tasks</h3>
-                                            <a href="app_todo.html">view all</a>
-                                        </li>
-                                        <li>
-                                            <ul className="dropdown-menu-list scroller" style={{ height: 275 }} data-handle-color="#637283">
-                                                <li>
-                                                    <a href="index.html">
-                                                        <span className="task">
-                                                            <span className="desc">New release v1.2 </span>
-                                                            <span className="percent">30%</span>
-                                                        </span>
-                                                        <span className="progress">
-                                                            <span style={{ width: '40%' }} className="progress-bar progress-bar-success" aria-valuenow={40} aria-valuemin={0} aria-valuemax={100}>
-                                                                <span className="sr-only">40% Complete</span>
-                                                            </span>
-                                                        </span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="index.html">
-                                                        <span className="task">
-                                                            <span className="desc">Application deployment</span>
-                                                            <span className="percent">65%</span>
-                                                        </span>
-                                                        <span className="progress">
-                                                            <span style={{ width: '65%' }} className="progress-bar progress-bar-danger" aria-valuenow={65} aria-valuemin={0} aria-valuemax={100}>
-                                                                <span className="sr-only">65% Complete</span>
-                                                            </span>
-                                                        </span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="index.html">
-                                                        <span className="task">
-                                                            <span className="desc">Mobile app release</span>
-                                                            <span className="percent">98%</span>
-                                                        </span>
-                                                        <span className="progress">
-                                                            <span style={{ width: '98%' }} className="progress-bar progress-bar-success" aria-valuenow={98} aria-valuemin={0} aria-valuemax={100}>
-                                                                <span className="sr-only">98% Complete</span>
-                                                            </span>
-                                                        </span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="index.html">
-                                                        <span className="task">
-                                                            <span className="desc">Database migration</span>
-                                                            <span className="percent">10%</span>
-                                                        </span>
-                                                        <span className="progress">
-                                                            <span style={{ width: '10%' }} className="progress-bar progress-bar-warning" aria-valuenow={10} aria-valuemin={0} aria-valuemax={100}>
-                                                                <span className="sr-only">10% Complete</span>
-                                                            </span>
-                                                        </span>
-                                                    </a>
-                                                </li>
-                                            <li>
-                                                <a href="index.html">
-                                                    <span className="task">
-                                                        <span className="desc">Application deployment</span>
-                                                        <span className="percent">65%</span>
-                                                    </span>
-                                                    <span className="progress">
-                                                        <span style={{ width: '65%' }} className="progress-bar progress-bar-danger" aria-valuenow={65} aria-valuemin={0} aria-valuemax={100}>
-                                                            <span className="sr-only">65% Complete</span>
-                                                        </span>
-                                                    </span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="index.html">
-                                                    <span className="task">
-                                                        <span className="desc">Mobile app release</span>
-                                                        <span className="percent">98%</span>
-                                                    </span>
-                                                    <span className="progress">
-                                                        <span style={{ width: '98%' }} className="progress-bar progress-bar-success" aria-valuenow={98} aria-valuemin={0} aria-valuemax={100}>
-                                                            <span className="sr-only">98% Complete</span>
-                                                        </span>
-                                                    </span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="index.html">
-                                                    <span className="task">
-                                                        <span className="desc">Database migration</span>
-                                                        <span className="percent">10%</span>
-                                                    </span>
-                                                    <span className="progress">
-                                                        <span style={{ width: '10%' }} className="progress-bar progress-bar-warning" aria-valuenow={10} aria-valuemin={0} aria-valuemax={100}>
-                                                            <span className="sr-only">10% Complete</span>
-                                                        </span>
-                                                    </span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="index.html">
-                                                    <span className="task">
-                                                        <span className="desc">Web server upgrade</span>
-                                                        <span className="percent">58%</span>
-                                                    </span>
-                                                    <span className="progress">
-                                                        <span style={{ width: '58%' }} className="progress-bar progress-bar-info" aria-valuenow={58} aria-valuemin={0} aria-valuemax={100}>
-                                                            <span className="sr-only">58% Complete</span>
-                                                        </span>
-                                                    </span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="index.html">
-                                                    <span className="task">
-                                                        <span className="desc">Mobile development</span>
-                                                        <span className="percent">85%</span>
-                                                    </span>
-                                                    <span className="progress">
-                                                        <span style={{ width: '85%' }} className="progress-bar progress-bar-success" aria-valuenow={85} aria-valuemin={0} aria-valuemax={100}>
-                                                            <span className="sr-only">85% Complete</span>
-                                                        </span>
-                                                    </span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="index.html">
-                                                    <span className="task">
-                                                        <span className="desc">New UI release</span>
-                                                        <span className="percent">38%</span>
-                                                    </span>
-                                                    <span className="progress progress-striped">
-                                                        <span style={{ width: '38%' }} className="progress-bar progress-bar-important" aria-valuenow={18} aria-valuemin={0} aria-valuemax={100}>
-                                                            <span className="sr-only">38% Complete</span>
-                                                        </span>
-                                                    </span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </li>
+
                                 {/*=========================================*/}
                                 <li className="dropdown dropdown-extended dropdown-inbox">
                                     <MenuCompany/>
@@ -310,27 +165,6 @@ class Header extends Component {
                                         <i className="fa fa-angle-down" />
                                     </a>
                                     <ul className="dropdown-menu dropdown-menu-default">
-                                        <li>
-                                            <a href="page_user_profile_1.html">
-                                                <i className="icon-user" /> My Profile </a>
-                                        </li>
-                                        <li>
-                                            <a href="app_calendar.html">
-                                                <i className="icon-calendar" /> My Calendar </a>
-                                        </li>
-                                        <li>
-                                            <a href="app_inbox.html">
-                                                <i className="icon-envelope-open" /> My Inbox
-                                                <span className="badge badge-danger"> 3 </span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="app_todo.html">
-                                                <i className="icon-rocket" /> My Tasks
-                                                <span className="badge badge-success"> 7 </span>
-                                            </a>
-                                        </li>
-                                        <li className="divider"> </li>
                                         {
                                             isLogin
                                                 ? (
@@ -355,7 +189,7 @@ class Header extends Component {
                                                 : null
                                         }
                                         <li>
-                                            <a href="#/" onClick={this.handleLogout}>
+                                            <a onClick={this.handleLogout}>
                                                 <i className="icon-key" /> {this.props.t('Log Out')} </a>
                                         </li>
                                     </ul>
@@ -412,7 +246,6 @@ class MenuCompany extends React.Component{
 
 const mapDispatchToProps = dispatch => {
     return {
-        logout: () => dispatch(AuthAction.logout()),
         changeLanguage: type => dispatch(changeLanguage(type)),
     };
 };
@@ -420,4 +253,5 @@ const mapDispatchToProps = dispatch => {
 export default compose(
     withTranslation(),
     connect(null, mapDispatchToProps),
+    withRouter
 )(Header, MenuCompany);
