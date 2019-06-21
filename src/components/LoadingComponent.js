@@ -7,13 +7,7 @@ class LoadingComponent extends Component {
             <div className="wrap-loader-inside-component">
                 <div className="loading">
                     <h2>Loading...</h2>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                    <span /><span /><span /><span /><span /><span /><span />
                 </div>
             </div>
         );

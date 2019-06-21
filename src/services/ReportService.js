@@ -11,6 +11,15 @@ class ReportService extends BaseService {
     getCyclePage(pagination){
         return HttpService.post(`${this.serviceUrl}/get_cycle_page`, pagination);
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | @content: close cycle
+    |--------------------------------------------------------------------------
+    */
+    closeCycle(chuky){
+        return HttpService.post(`${this.serviceUrl}/close`, chuky);
+    }
 }
 
 export default new ReportService()

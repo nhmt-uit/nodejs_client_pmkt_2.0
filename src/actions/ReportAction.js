@@ -37,3 +37,34 @@ export const getCyclePage = (pagination) => {
             })
     }
 };
+
+export const closeCycle = (chuky) => {
+    return dispatch => {
+        return ReportService.closeCycle(chuky)
+            .then(res => {
+                if (res.status) {
+                    dispatch({
+                        type: ReportActionType.CLOSE_CYCLE_SUCCESS,
+                        payload: res.res || {},
+                    });
+                } else {
+                    dispatch({
+                        type: ReportActionType.CLOSE_CYCLE_FAIL,
+                        payload: {
+                            status: false,
+                            error_description: _get(res, 'res.data.message', '')
+                        },
+                    });
+                }
+            })
+            .catch(e => {
+                dispatch({
+                    type: ReportActionType.CLOSE_CYCLE_FAIL,
+                    payload: _get(e, 'response.data', {
+                        status: false,
+                        error_description: e.stack,
+                    }),
+                });
+            })
+    }
+};

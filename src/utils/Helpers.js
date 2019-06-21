@@ -6,6 +6,6 @@ export function showLoading() {
 }
 
 //Hide global loading
-export function hideLoading() {
-    $('.wrap-loader').delay(200).hide(0);
+export function hideLoading(delay = 200) {
+    $('.wrap-loader').delay(delay).hide(0);
 }

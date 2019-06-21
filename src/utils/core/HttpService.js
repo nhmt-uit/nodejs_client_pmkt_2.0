@@ -87,7 +87,7 @@ class HttpService {
 
     //Handle berfore send request
     handleRequest = config => {
-        Helpers.showLoading();
+        // Helpers.showLoading();
         return config;
     };
 
@@ -95,18 +95,20 @@ class HttpService {
     handleSuccess = response => {
         //obj response : data, status, statusText, headers
         const { data } = response;
-        Helpers.hideLoading();
+        // Helpers.hideLoading();
         return data;
     };
 
     //Handle when request fail
     handleError = error => {
-        Helpers.hideLoading();
-        if (_get(error, 'response.status') === 401) {
+        // Helpers.hideLoading();
+        let responstStatus = _get(error, 'response.status')
+        if ( responstStatus === 401 || responstStatus === 400 ) {
             CookieService.removeAll()
             window.history.pushState(null, null, '/auth/login')
-			window.location.reload()
+            window.location.reload()
         }
+
         return Promise.reject(error);
     };
 
