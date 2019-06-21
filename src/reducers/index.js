@@ -8,15 +8,14 @@ import { AccountantReducer, AccountantScanReducer, AccountantToggleReducer } fro
 import NotificationReducer from './systems/NotificationReducer';
 import ChangePasswordReducer from './systems/ChangePasswordReducer';
 import BankerReducer from './banker/BankerReducer'
-import AlertReducer from './systems/AlertReducer';
 import ChangeSecureCodeReducer from './systems/ChangeSecureCodeReducer'
+import AlertReducer from './systems/AlertReducer';
 
 const appReducers = combineReducers({
     // Redux form reducer
     form: formReducer,
     banker: BankerReducer,
     alert: AlertReducer,
-
     // System reducers
     LanguageReducer,
     AuthReducer,
