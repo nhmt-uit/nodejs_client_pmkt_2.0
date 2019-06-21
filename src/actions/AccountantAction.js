@@ -5,7 +5,7 @@ import { has as _has } from 'lodash'
 import { AccountantActionType } from 'my-constants/action-types';
 import { SocketService, EventsService } from 'my-utils/core';
 import { AuthService } from 'my-services/systems'
-import { AccountantService }  from 'my-services'
+import { AccountantService }  from 'my-services/account'
 import { AppConfig } from 'my-constants'
 
 export const socketInitData = () => {
@@ -125,7 +125,6 @@ export const socketScanData = (params) => {
 |--------------------------------------------------------------------------
 */
 export const socketStopScanData = (params) => {
-    console.log(params);
     return (dispatch) => {
         // Active listener before send request
         for(let x in params.ids) {

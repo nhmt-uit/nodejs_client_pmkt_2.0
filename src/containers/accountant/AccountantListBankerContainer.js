@@ -230,7 +230,6 @@ class AccountantListBankerContainer extends Component {
 
 
     render() {
-        
         return (
             this.renderListBanker()
         );
