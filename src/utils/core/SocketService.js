@@ -66,6 +66,9 @@ class SocketService {
                     if (msg.type === "resolve")
                         EventsService.emit('accountant_scan_resolve', msg)
                 break
+                case "stop":
+                    EventsService.emit('accountant_scan_stop', msg)
+                break
                 case "get_report":
                 break
                 case "get_member":
@@ -73,6 +76,15 @@ class SocketService {
                 default: break
             }
         })
+    }
+
+    unListenerResponse() {
+        // this.socket.off('message')
+        EventsService.removeAllListeners('accountant_init')
+        EventsService.removeAllListeners('accountant_scan_notify')
+        EventsService.removeAllListeners('accountant_scan_reject')
+        EventsService.removeAllListeners('accountant_scan_resolve')
+        // EventsService.removeAllListeners('accountant_scan_stop')
     }
 
     /*
@@ -94,7 +106,13 @@ class SocketService {
         // Reset variable
         this.listUUID2Event = {}
         this.listUUID2AccID = {}
+        this.socket.off('connect')
+        this.socket.off('ready')
+        this.socket.off('connect_error')
+        this.socket.off('disconnect')
+        this.socket.off('message')
         this.socket.disconnect()
+        this.socket = null
     }
 
     /*

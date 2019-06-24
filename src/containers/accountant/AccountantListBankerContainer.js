@@ -14,6 +14,7 @@ import LazyLoad from 'react-lazyload';
 
 import { collapseBanker, checkBanker, checkBankerAccount } from 'my-actions/AccountantAction';
 import { LoadingComponent } from 'my-components';
+import { BankerAccountStatusIconComponent } from 'my-components/accountant';
 
 const getChildRows = (row, rootRows) => (row ? row.items : rootRows);
 const Cell = (props) => {
@@ -59,10 +60,10 @@ const treeColumnCell = props => {
 
 const CurrencyFormatter = ({ value }) => (
     <>
-        <div class="td-item">number 001</div>
-        <div class="td-item">number 002</div>
-        <div class="td-item">number 003</div>
-        <div class="td-item">number 004</div>
+        <div className="td-item">number 001</div>
+        <div className="td-item">number 002</div>
+        <div className="td-item">number 003</div>
+        <div className="td-item">number 004</div>
     </>
   );
 
@@ -75,59 +76,7 @@ const CurrencyFormatter = ({ value }) => (
 
 class AccountantListBankerContainer extends Component {
 
-    renderListBankerAccount = bankerAccounts => {
-        let xhtml = null
-        let rowData = [
-            { id: 123213, account: "Femallele Cha", report_type: "Sandra", turnover: "Las Vegas", company: "Audi A4", rowSpan:2,
-            items:[
-                { id: 123214, account: "Femalee Con 01", report_type: "Sandra", turnover: "Las Vegas", company: "Audi A4", parentId: 123213 },
-                { id: 123215, account: "Femalee Con", report_type: "Sandra", turnover: "Las Vegas", company: "Audi A4", parentId: 123213 },
-                { id: 123216, account: "Femalee Con", report_type: "Sandra", turnover: "Las Vegas", company: "Audi A4", parentId: 123213 },
-                { id: 123217, account: "Femalee Con", report_type: "Sandra", turnover: "Las Vegas", company: "Audi A4", parentId: 123213,
-                    items:[
-                        { id: 123214, account: "Femalee Con", report_type: "Sandra", turnover: "Las Vegas", company: "Audi A4", parentId: 123213 },
-                        { id: 123215, account: "Femalee Con", report_type: "Sandra", turnover: "Las Vegas", company: "Audi A4", parentId: 123213 },
-                        { id: 123216, account: "Femalee Con", report_type: "Sandra", turnover: "Las Vegas", company: "Audi A4", parentId: 123213 ,
-                            items:[
-                                { id: 123214, account: "Femalee Con", report_type: "Sandra", turnover: "Las Vegas", company: "Audi A4", parentId: 123213 },
-                                { id: 123215, account: "Femalee Con", report_type: "Sandra", turnover: "Las Vegas", company: "Audi A4", parentId: 123213 },
-                                { id: 123216, account: "Femalee Con", report_type: "Sandra", turnover: "Las Vegas", company: "Audi A4", parentId: 123213 },
-                                { id: 123217, account: "Femalee Con", report_type: "Sandra", turnover: "Las Vegas", company: "Audi A4", parentId: 123213 },
-                            ]},
-                        { id: 123217, account: "Femalee Con", report_type: "Sandra", turnover: "Las Vegas", company: "Audi A4", parentId: 123213 },
-                    ] },
-            ]},
-            
-        ];
-
-        if (bankerAccounts) {
-            xhtml = bankerAccounts.map((account, idx) => {
-                let isCheckBankerAccount = _has(this.props.isCheckBankerAccount, account.id) ? this.props.isCheckBankerAccount[account.id] : false
-                // let isCheckBankerAccount = true
-                return (
-                    <div key={idx} className="panel-group accordion">
-                        <div className="panel panel-default">
-                            <div className="panel-heading">
-                                <h4 className="panel-title">
-                                    <div className="col-sm-6">
-                                        <label className="mt-checkbox uppercase">
-                                            <input type="checkbox" onChange={_ => this.props.checkBankerAccount("banker_account", {bankerId: account.banker, bankerAccountId: account.id})} checked={isCheckBankerAccount}/> {account.acc_name}
-                                            <span></span>
-                                        </label>
-                                    </div>
-                                    <div className="col-sm-6"><label className="mt-checkbox "> {account.note}</label></div>
-                                    <div className="clearfix"></div>
-                                </h4>
-                            </div>
-                        </div>
-                    </div>
-                )
-            })
-        }
-        return xhtml
-    }
-
-    /*
+       /*
     |--------------------------------------------------------------------------
     | Render List Banker
     |--------------------------------------------------------------------------
@@ -157,7 +106,7 @@ class AccountantListBankerContainer extends Component {
                                     <span></span>
                                 </label>
                             </div>
-                            <div className="tools"><a href="#/"  onClick={_ => this.props.collapseBanker(banker.id)}><i className={classOpenBanker}></i></a></div>
+                            <div className="tools"><a href="#/"  onClick={_ => this.props.collapseBanker('single', banker.id)}><i className={classOpenBanker}></i></a></div>
                         </div>
                         <Collapse key={idx} isOpen={isOpenBanker} className="portlet-body">
                             {this.renderListBankerAccount(banker.listAccounts)}
@@ -165,8 +114,118 @@ class AccountantListBankerContainer extends Component {
                     </div>
                 )
             })
+            xhtml = <>
+                        {this.renderUtilButton()}
+                        {xhtml}
+                    </>
         }
         return xhtml
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Render List Banker Account
+    |--------------------------------------------------------------------------
+    */
+    renderListBankerAccount = bankerAccounts => {
+        let xhtml = null
+        let rowData = [
+            { id: 123213, account: "Femallele Cha", report_type: "Sandra", turnover: "Las Vegas", company: "Audi A4", rowSpan:2,
+            items:[
+                { id: 123214, account: "Femalee Con 01", report_type: "Sandra", turnover: "Las Vegas", company: "Audi A4", parentId: 123213 },
+                { id: 123215, account: "Femalee Con", report_type: "Sandra", turnover: "Las Vegas", company: "Audi A4", parentId: 123213 },
+                { id: 123216, account: "Femalee Con", report_type: "Sandra", turnover: "Las Vegas", company: "Audi A4", parentId: 123213 },
+                { id: 123217, account: "Femalee Con", report_type: "Sandra", turnover: "Las Vegas", company: "Audi A4", parentId: 123213,
+                    items:[
+                        { id: 123214, account: "Femalee Con", report_type: "Sandra", turnover: "Las Vegas", company: "Audi A4", parentId: 123213 },
+                        { id: 123215, account: "Femalee Con", report_type: "Sandra", turnover: "Las Vegas", company: "Audi A4", parentId: 123213 },
+                        { id: 123216, account: "Femalee Con", report_type: "Sandra", turnover: "Las Vegas", company: "Audi A4", parentId: 123213 ,
+                            items:[
+                                { id: 123214, account: "Femalee Con", report_type: "Sandra", turnover: "Las Vegas", company: "Audi A4", parentId: 123213 },
+                                { id: 123215, account: "Femalee Con", report_type: "Sandra", turnover: "Las Vegas", company: "Audi A4", parentId: 123213 },
+                                { id: 123216, account: "Femalee Con", report_type: "Sandra", turnover: "Las Vegas", company: "Audi A4", parentId: 123213 },
+                                { id: 123217, account: "Femalee Con", report_type: "Sandra", turnover: "Las Vegas", company: "Audi A4", parentId: 123213 },
+                            ]},
+                        { id: 123217, account: "Femalee Con", report_type: "Sandra", turnover: "Las Vegas", company: "Audi A4", parentId: 123213 },
+                    ] },
+            ]}
+            
+        ];
+
+        if (bankerAccounts) {
+            xhtml = bankerAccounts.map((account, idx) => {
+                let isCheckBankerAccount = _has(this.props.isCheckBankerAccount, account.id) ? this.props.isCheckBankerAccount[account.id] : false
+                // let isCheckBankerAccount = true
+                let objIndex = this.props.payloadBankerAccount ? this.props.payloadBankerAccount.findIndex(obj => obj.id === account.id): null
+                let bankerAccountStatus = this.props.payloadBankerAccount ? this.props.payloadBankerAccount[objIndex] : null
+                return (
+                    <div key={idx} className="panel-group accordion">
+                        <div className="panel panel-default">
+                            <div className="panel-heading">
+                                <h4 className="panel-title">
+                                    <div className="col-sm-6">
+                                        <label className="mt-checkbox uppercase">
+                                            <input type="checkbox" onChange={_ => this.props.checkBankerAccount("banker_account", {bankerId: account.banker, bankerAccountId: account.id})} checked={isCheckBankerAccount}/>
+                                            {account.acc_name} <BankerAccountStatusIconComponent bankerAccountStatus={bankerAccountStatus} />
+                                            <span></span>
+                                        </label>
+                                    </div>
+                                    <div className="col-sm-6"><label className="mt-checkbox "> {account.note}</label></div>
+                                    <div className="clearfix"></div>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                )
+            })
+        }
+        return xhtml
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Render Select ALl - select-error - collapse all
+    |--------------------------------------------------------------------------
+    */
+    renderUtilButton = _ =>{
+        const { t, isOpenBanker, isCheckBanker } = this.props
+        let txtCollapse = "Close all", type_collapse_all = "close_all"
+        let isCheckAll = true
+        let typeCheckAll = 'uncheck_all'
+         
+        for (let x in isOpenBanker) {
+            if(!isOpenBanker[x]) {
+                txtCollapse = "Open all"
+                type_collapse_all = "open_all"
+            }
+        }
+
+        for (let x in isCheckBanker) {
+            if(!isCheckBanker[x]) {
+                isCheckAll = false
+                typeCheckAll = 'check_all'
+            }
+        }
+        
+        return (
+            <div className="row">
+                <div className="form-group col-md-2 col-sm-4">
+                    <label className="mt-checkbox uppercase">
+                        <input type="checkbox" onChange={_ => this.props.checkBankerAccount(typeCheckAll)} checked={isCheckAll} /> {t("Select All")}
+                        <span></span>
+                    </label>
+                </div>
+                <div className="form-group col-md-10 text-right">
+                    <label className="mt-checkbox uppercase" style={{marginRight: '50px'}}>
+                        <input type="checkbox" onChange={_ => this.props.checkBankerAccount("toggle")} /> {t("show all")}
+                        <span></span>
+                    </label>
+                    <a href="#/" type="submit" className="btn btn-default red" onClick={_ => this.props.checkBankerAccount("check_all_error", {payloadBankerAccount: this.props.payloadBankerAccount})} > {t("Select error accounts")}</a>
+                    <a href="#/" type="submit" className="btn btn-default red" onClick={_ => this.props.collapseBanker(type_collapse_all)} > {t(txtCollapse)}</a>
+                </div>
+                <div className="clearfix"></div>
+            </div>
+        )
     }
 
 
@@ -186,12 +245,13 @@ const mapStateToProps = state => {
         isOpenBanker : state.AccountantToggleReducer.isOpenBanker,
         isCheckBanker : state.AccountantToggleReducer.isCheckBanker,
         isCheckBankerAccount : state.AccountantToggleReducer.isCheckBankerAccount,
+        payloadBankerAccount : state.AccountantScanReducer.payloadBankerAccount
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        collapseBanker: bankerId => {dispatch(collapseBanker(bankerId))},
+        collapseBanker: (type, bankerId) => {dispatch(collapseBanker(type, bankerId))},
         checkBanker: bankerId => {dispatch(checkBanker(bankerId))},
         checkBankerAccount: (type_check, params) => {dispatch(checkBankerAccount(type_check, params))},
     }

@@ -37,9 +37,12 @@ html {
 }
 
 /* Custom From Bootstrap */
-.form-inline .form-group, .form-inline .btn {
+.form-inline .form-group, .form-inline .btn, .form-group .btn {
 	margin-right: 5px
 }
+
+.form-actions .btn {margin-right: 5px;}
+.form-actions .btn:last-of-type {margin-right: 0px;}
 
 /* .form-inline .form-group:last-of-type {
 	margin-right: 0px
@@ -163,3 +166,38 @@ html {
 .width-auto {
     width: auto!important;
 }
+.spinner-animate{
+    animation-name: spin;
+    animation-duration: 2000ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+@keyframes spin {
+  from {
+      transform:rotate(0deg);
+  }
+  to {
+      transform:rotate(360deg);
+  }
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.color-grey {
+    color: grey;
+}
+
+.color-red {
+    color: red;
+}
+
+.float-right {
+    float: right;
+}
+
+.mt-checkbox>span:after {border-color: #e7505a }
+.mt-radio>span:after { background: #e7505a}
+.mt-checkbox>span, .mt-radio>span {border: 1px solid #e7505a; background: none}

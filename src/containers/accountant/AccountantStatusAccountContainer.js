@@ -5,8 +5,14 @@ import { withTranslation } from 'react-i18next'
 import { get as _get, map as _map, isEmpty as _isEmpty} from 'lodash'
 
 import { BankerAccountErrorComponent, BankerAccountEmptyComponent, BankerAccountProcessingComponent } from 'my-components/accountant'
+import { ModalDeleteAccountContainer, ModalFormAccountContainer } from 'my-containers/account'
 
 class AccountantStatusAccountContainer extends Component {
+    state = {
+        typeModal: null,
+        modal: false,
+        selectedItem: null
+    };
     /*
     |--------------------------------------------------------------------------
     | type: notify, reject
@@ -28,6 +34,7 @@ class AccountantStatusAccountContainer extends Component {
                         this.bankerAccountProcessing.push(item)
                     break
                     case "reject":
+                    case "stop":
                         if (message === "Empty data") {
                             this.bankerAccountEmpty.push(item)
                         } else {
@@ -40,15 +47,43 @@ class AccountantStatusAccountContainer extends Component {
         }
     }
 
+    toggleModal = (type, bankerAccount) => {
+        let isOpenModal = !this.state.isOpenModal, typeModal = this.state.isOpenModal
+        if (type === "open_delete") {
+            isOpenModal = true
+            typeModal = 'delete'
+        }
+        if (type === "open_update") {
+            isOpenModal = true
+            typeModal = 'update'
+        }
+
+        if (type === "close") isOpenModal = false
+        
+        this.setState({
+            typeModal: typeModal,
+            isOpenModal: isOpenModal,
+            selectedItem: bankerAccount
+        });
+    }
+
+    handleFinishDelete = item =>{
+        console.log(item)
+    }
+
     render() {
         this.generateData()
+        console.log("render")
         return (
             <>
-            <BankerAccountProcessingComponent bankerAccounts={this.bankerAccountProcessing} />
-            <div className="row">
-                <BankerAccountEmptyComponent bankerAccounts={this.bankerAccountEmpty} />
-                <BankerAccountErrorComponent bankerAccounts={this.bankerAccountError} />
-            </div>
+                <BankerAccountProcessingComponent bankerAccounts={this.bankerAccountProcessing} />
+                <div className="row">
+                    <BankerAccountEmptyComponent isOpenModal={this.state.isOpenModal} toggleModal={this.toggleModal} bankerAccounts={this.bankerAccountEmpty} />
+                    <BankerAccountErrorComponent isOpenModal={this.state.isOpenModal} toggleModal={(type, bankerAccount) => this.toggleModal(type, bankerAccount)} bankerAccounts={this.bankerAccountError} />
+                </div>
+                {/* Modal Area */}
+                <ModalDeleteAccountContainer isOpen={this.state.typeModal === "delete" && this.state.isOpenModal} toggle={this.toggleModal} account={this.state.selectedItem} callback={this.handleFinishDelete} />
+                <ModalFormAccountContainer isOpen={this.state.typeModal === "update" && this.state.isOpenModal} toggle={this.toggleModal} account={this.state.selectedItem} formType="update" />
             </>
         );
     }

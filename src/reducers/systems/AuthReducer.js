@@ -33,11 +33,6 @@ const AuthReducer = (state = defaultState, action) => {
 		case AuthActionType.RESET_SECURE_PASSWORD_FAIL:
 			return {...state, resetSecurePasswordStatus: false, login_status: false, errors: action.payload};
 
-		case AuthActionType.LOGOUT_SUCCESS:
-			return {...state, login_status: false, errors: {}};
-		case AuthActionType.LOGOUT_FAIL:
-			return {...state, errors: action.payload};
-
 		default:
 			return {...state};
 	}
