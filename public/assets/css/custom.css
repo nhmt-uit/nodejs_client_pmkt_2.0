@@ -201,3 +201,61 @@ html {
 .mt-checkbox>span:after {border-color: #e7505a }
 .mt-radio>span:after { background: #e7505a}
 .mt-checkbox>span, .mt-radio>span {border: 1px solid #e7505a; background: none}
+
+.tab-report-detail {
+    min-width: 170px;
+    border: 1px solid #e8e8e8!important;
+    margin-right: 5px!important;
+}
+
+.tab-report-detail a {
+    height: 97px;
+}
+
+.tab-report::before {
+    content: "\f201";
+    font-family: FontAwesome, serif;
+    position: absolute;
+    right: 14px;
+    bottom: 6px;
+    font-size: 35px;
+    color: #dddddd;
+}
+
+.tab-accountant::before{
+    content: "\f080";
+    font-family: FontAwesome, serif;
+    position: absolute;
+    right: 14px;
+    bottom: 6px;
+    font-size: 35px;
+    color: #dddddd;
+}
+
+.display-block {
+    display: block;
+}
+
+.font-size-12 {
+    font-size: 12px!important;
+}
+
+.tabbable-report>.nav-tabs>li.active {
+    border-bottom: 4px solid #d43511!important;
+}
+
+.tabbable-report>.nav-tabs>li.open, .tabbable-report>.nav-tabs>li:hover {
+    border-bottom: 4px solid #d43511!important;
+}
+
+.tab-report-content {
+    border-top: none!important;
+}
+
+.tabs-reversed > li.title-accountant {
+    float: left;
+}
+
+.tabs-reversed > li.title-accountant a {
+    padding-left: unset;
+}

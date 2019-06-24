@@ -19,25 +19,26 @@ import { AuthService } from 'my-services/systems'
 class Header extends Component {
     state = {
         isOpenModalBaner: false
-    }
+    };
 
     handleLogout = async _ => {
-        await AuthService.logout()
+        await AuthService.logout();
+
         window.location.reload()
-    }
+    };
 
     handleChangeLanguage = type => () => {
         CookieService.set('lang', type)
         return this.props.changeLanguage(type)
-    }
+    };
 
     toggleModalBanker = _ => {
         this.setState({ isOpenModalBaner: !this.state.isOpenModalBaner })
-    }
+    };
 
     render() {
-        const lang = CookieService.get('lang')
-        const { t } = this.props
+        const lang = CookieService.get('lang');
+        const { t } = this.props;
 
         return (
             <div>
@@ -74,12 +75,12 @@ class Header extends Component {
                                             <ul className="dropdown-menu-list scroller" data-handle-color="#637283">
                                                 <li>
                                                     <a onClick={this.handleChangeLanguage('en')} className="padding-tb-10-important text-uppercase text-center padding-">
-                                                        {(lang && lang.toLowerCase() === 'en') ? <i className="fa fa-check"/> : ''}&nbsp&nbsp{t('english')}
+                                                        {(lang && lang.toLowerCase() === 'en') ? <i className="fa fa-check"/> : ''}&nbsp;&nbsp;{t('english')}
                                                     </a>
                                                 </li>
                                                 <li>
                                                     <a onClick={this.handleChangeLanguage('vi')} className="padding-tb-10-important text-uppercase text-center">
-                                                        {(lang && lang.toLowerCase() === 'vi') ? <i className="fa fa-check"/> : ''}&nbsp&nbsp{t('viet nam')}
+                                                        {(lang && lang.toLowerCase() === 'vi') ? <i className="fa fa-check"/> : ''}&nbsp;&nbsp;{t('viet nam')}
                                                     </a>
                                                 </li>
                                             </ul>
@@ -150,7 +151,7 @@ const mapDispatchToProps = dispatch => {
     return {
         changeLanguage: type => dispatch(changeLanguage(type)),
     }
-}
+};
 
 export default compose(
     connect(null, mapDispatchToProps),

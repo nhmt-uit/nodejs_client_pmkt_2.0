@@ -59,7 +59,7 @@ class ChangeSecureCodeContainer extends Component {
 
 const mapStateToProps = state => {
     return {
-        dataStore: _get(state, 'ChangePasswordReducer', {}),
+        dataStore: _get(state, 'ChangeSecureCodeReducer', {}),
     }
 };
 
