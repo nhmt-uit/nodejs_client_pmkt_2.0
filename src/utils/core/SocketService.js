@@ -69,6 +69,9 @@ class SocketService {
                 case "stop":
                     EventsService.emit('accountant_scan_stop', msg)
                 break
+                case "reloadAccInfo":
+                    EventsService.emit('accountant_reload_banker_account_info', msg)
+                break
                 case "get_report":
                 break
                 case "get_member":
@@ -84,6 +87,7 @@ class SocketService {
         EventsService.removeAllListeners('accountant_scan_notify')
         EventsService.removeAllListeners('accountant_scan_reject')
         EventsService.removeAllListeners('accountant_scan_resolve')
+        EventsService.removeAllListeners('accountant_reload_banker_account_info')
         // EventsService.removeAllListeners('accountant_scan_stop')
     }
 

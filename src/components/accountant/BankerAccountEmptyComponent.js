@@ -2,11 +2,15 @@ import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next'
 import { isEmpty as _isEmpty} from 'lodash'
 
-let checkItem = null
 class BankerAccountEmptyComponent extends Component {
     state = {
         isDelete: false,
-        isUpdate: false
+        isUpdate: false,
+    }
+    checkItem = null
+
+    componentWillReceiveProps() {
+        if (_isEmpty(this.props.bankerAccounts)) this.setState({isUpdate: false, isDelete: false})
     }
 
     handleControl = type => {
@@ -20,11 +24,11 @@ class BankerAccountEmptyComponent extends Component {
     }
     
     renderBankerAccount() {
-        const { t, bankerAccounts, isOpenModal } = this.props
+        const { bankerAccounts, isOpenModal } = this.props
         this.checkItem = isOpenModal ? this.checkItem : null
         return bankerAccounts.map((item, idx) => {
             return (
-                <div key={idx} className="form-group col-md-4" style={{marginBottom: '0px'}} >
+                <div key={idx} className="form-group col-md-4" style={{marginBottom: '5px'}} >
                     <label className="mt-radio" onClick={_ => this.handelToggleModal(item) } style={{marginBottom: '0px'}} >
                         {this.state.isUpdate || this.state.isDelete ? <input type="radio" name="optionsRadios" onChange={_ => this.checkItem = item.id} checked={item.id === this.checkItem} /> : null }
                         <b className="uppercase">{item.acc_name}</b>

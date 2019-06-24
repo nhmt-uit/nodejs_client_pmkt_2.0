@@ -4892,8 +4892,6 @@ button.list-group-item-danger {
     border-radius: 4px; }
     .panel-group .panel + .panel {
       margin-top: 5px; }
-  .panel-group .panel-heading {
-    border-bottom: 0; }
     .panel-group .panel-heading + .panel-collapse > .panel-body,
     .panel-group .panel-heading + .panel-collapse > .list-group {
       border-top: 1px solid #ddd; }

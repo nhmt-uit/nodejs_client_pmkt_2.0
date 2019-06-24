@@ -6,7 +6,7 @@ import { Redirect } from 'react-router-dom'
 import { Field, reduxForm } from 'redux-form';
 import { CookieService } from 'my-utils/core';
 import $ from "jquery";
-import _ from 'lodash';
+import {get as _get} from 'lodash';
 
 import { changeLanguage } from 'my-actions/systems/LanguageAction';
 import { login } from 'my-actions/systems/AuthAction';
@@ -46,7 +46,7 @@ class FormLoginContainer extends React.Component {
                     ? RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'reset-secure-password' })
                     : RoutesService.getPath('ADMIN', 'DASHBOARD');
             return  <Redirect to={redirect} />
-        } else if (auth.login_status === false && _.get(this.props, 'auth.errors.error_description', null)) {
+        } else if (auth.login_status === false && _get(this.props, 'auth.errors.error_description', null)) {
             $('div.alert').fadeIn();
         }
 
@@ -105,7 +105,7 @@ class FormLoginContainer extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        initialValues: _.get(state, 'form.form_login.values', {}),
+        initialValues: _get(state, 'form.form_login.values', {}),
         auth : state.AuthReducer,
     }
 };

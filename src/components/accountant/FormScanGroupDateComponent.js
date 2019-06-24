@@ -9,7 +9,6 @@ const groupDateType = [
     {value: 'last_week', label: 'Last week'},
 ]
 
-
 class FormScanGroupDateComponent extends Component {
     render() {
         

@@ -8,6 +8,7 @@ import { MainLayout, AuthenticationLayout } from 'my-pages/layouts'
 import { Loading } from 'my-pages/layouts/partials';
 import { CookieService } from 'my-utils/core';
 import { changeLanguage } from 'my-actions/systems/LanguageAction';
+import { RoutesService } from 'my-routes'
 
 const RenderComponent = () => {
 	let component = ( <MainLayout /> );
@@ -32,9 +33,15 @@ class AppPage extends BaseComponent {
 		CookieService.addChangeListener(obj => {
 			if ((obj.name === "isLogin"  && !obj.value) || (obj.name === "byPassDashboard" && obj.value) ) this.forceUpdate()
 		})
+		const isLogin = CookieService.get("isLogin");
+		const pathname = window.location.pathname;
+		if(!isLogin && !pathname.match(/\/auth\/login/i)) window.location.href = RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'login' })
 	}
 
 	render() {
+		const isLogin = CookieService.get("isLogin");
+		const pathname = window.location.pathname;
+		if(!isLogin && !pathname.match(/\/auth\/login/i)) return null
 		return (
 			<section>
 				<RenderComponent />

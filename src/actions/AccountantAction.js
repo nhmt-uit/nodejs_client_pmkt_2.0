@@ -1,6 +1,6 @@
 import moment  from 'moment'
 import uuidv4 from 'uuid/v4'
-import { has as _has } from 'lodash'
+import { get as _get } from 'lodash'
 
 import { AccountantActionType } from 'my-constants/action-types';
 import { SocketService, EventsService } from 'my-utils/core';
@@ -151,6 +151,48 @@ export const socketStopScanData = (params) => {
 
 /*
 |--------------------------------------------------------------------------
+| Handle call socket save report
+|--------------------------------------------------------------------------
+*/
+export const socketSaveReport = params => {
+    return (dispatch) => {
+        for(let x in params.payloadBankerAccount) {
+            const requestObj = {
+                from_date: params.payloadBankerAccount[x].data.from_date,
+                to_date: params.payloadBankerAccount[x].data.to_date,
+                dataReportSave: [params.payloadBankerAccount[x].data.reportSave]
+            }
+            SocketService.send('save_report', requestObj)
+        }
+    }
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Handle call socket save report
+|--------------------------------------------------------------------------
+*/
+export const socketReloadBankerAccountInfo = params => {
+    return (dispatch) => {
+        EventsService.on('accountant_reload_banker_account_info', res => {
+            if (res) {
+                // Dispatch data to reducer
+                dispatch({
+                    type: AccountantActionType.ACCOUNTANT_SOCKET_RELOAD_BANKER_ACCOUNT_INFO,
+                    full_payload: res,
+                    payload: res.data
+                });
+            }
+        })
+        
+        SocketService.send('reloadAccInfo', {id: params.id})
+    }
+}
+
+
+/*
+|--------------------------------------------------------------------------
 | Handle Toogle isOpen Collapse Account Of Banker
 |--------------------------------------------------------------------------
 */
@@ -158,14 +200,12 @@ export const collapseBanker = (type, bankerId) => {
      // Dispatch toggle banker
     return (dispatch) => {
         dispatch({
-            type: AccountantActionType.ACCOUNTANT_TOGGLE_BANKER,
-            type_toggle: 'on_change',
+            type: AccountantActionType.ACCOUNTANT_TOGGLE_COLLAPSE_BANKER_ACCOUNT,
             type_collapse: type,
             bankerId: bankerId
         });
     }
 }
-
 
 /*
 |--------------------------------------------------------------------------
@@ -176,7 +216,7 @@ export const checkBanker = bankerId => {
     // Dispatch toggle banker
     return (dispatch) => {
         dispatch({
-            type: AccountantActionType.ACCOUNTANT_TOGGLE_CHECK_BANKER,
+            type: AccountantActionType.ACCOUNTANT_TOGGLE_COLLAPSE_BANKER_ACCOUNT,
             bankerId: bankerId
         });
    }
@@ -193,35 +233,25 @@ export const checkBankerAccount = (type_check, params) => {
         dispatch({
             type: AccountantActionType.ACCOUNTANT_TOGGLE_CHECK_BANKER_ACCOUNT,
             type_check: type_check,
-            memberId: _has(params, 'memberId') ? params.memberId || [] : [],
-            bankerId: _has(params, 'bankerId') ? params.bankerId || null : null,
-            bankerAccountId: _has(params, 'bankerAccountId') ? params.bankerAccountId || null : null,
-            payloadBankerAccount: _has(params, 'payloadBankerAccount') ? params.payloadBankerAccount || [] : [],
+            isCheckAll: _get(params, 'isCheckAll', null),
+            memberIds: _get(params, 'memberId', []),
+            bankerId: _get(params, 'bankerId', null),
+            bankerAccountId: _get(params, 'bankerAccountId', null),
+            payloadBankerAccount: _get(params, 'payloadBankerAccount', [])
         });
     }
 }
 
 /*
 |--------------------------------------------------------------------------
-| Handle call socket save report
+| Remove Banker Account
 |--------------------------------------------------------------------------
 */
-export const socketSaveReport = params => {
+export const deleteBankerAccount = item => {
     return (dispatch) => {
-        params.payloadBankerAccount.map(item => {
-            const requestObj = {
-                from_date: item.data.from_date,
-                to_date: item.data.to_date,
-                dataReportSave: [item.data.reportSave]
-            }
-            SocketService.send('save_report', requestObj)
-        })
-        // SocketService.send('save_report', requestObj, uuid)
-        // dispatch({
-        //     type: AccountantActionType.ACCOUNTANT_SOCKET_SAVE_REPORT,
-        //     payloadBankerAccount: _has(params, 'payloadBankerAccount') ? params.payloadBankerAccount || [] : [],
-        // });
+        dispatch({
+            type: AccountantActionType.ACCOUNTANT_DELETE_BANKER_ACCOUNT,
+            item: item,
+        });
     }
 }
-
-

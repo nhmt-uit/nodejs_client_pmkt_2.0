@@ -5,8 +5,8 @@ import { withTranslation } from 'react-i18next'
 class FormScanButtonComponent extends Component {
 
     render() {
-        const { t, socketScanData, socketStopScanData, socketSaveReport, isSocketInitSuccess, isProcessing, isAllowReport } = this.props
-        if(!isSocketInitSuccess) return false
+        const { t, socketScanData, socketStopScanData, socketSaveReport, socketInitStatus, isProcessing, isAllowReport } = this.props
+        if(socketInitStatus !== "finish") return false
         return (
             <div className="form-group">
                 {!isProcessing ? <a href="#/" className="btn btn-default red" onClick={socketScanData}>{t("Scan")}</a> : null}

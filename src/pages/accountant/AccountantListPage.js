@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 
-import { AccountantFormScanContainer, AccountantListBankerContainer, AccountantStatusAccountContainer } from "my-containers/accountant"
+import { AccountantFormScanContainer, AccountantListBankerContainer, AccountantStatusAccountContainer, AccountantListBankerUtilContainer } from "my-containers/accountant"
 import { SocketService, EventsService } from 'my-utils/core';
-// import AccountantQuickActivitiesContainer from "my-containers/accountant/AccountantQuickActivitiesContainer";
 
 class AccountantListPage extends Component {
     componentWillUnmount() {
@@ -14,7 +13,7 @@ class AccountantListPage extends Component {
             <>
                 <AccountantFormScanContainer />
                 <AccountantStatusAccountContainer />
-                {/* <AccountantQuickActivitiesContainer/> */}
+                <AccountantListBankerUtilContainer />
                 <AccountantListBankerContainer />
             </>
         );

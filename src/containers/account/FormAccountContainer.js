@@ -1,91 +1,202 @@
 import React, { Component } from 'react'
+import { compose } from 'redux'
+import { connect } from 'react-redux'
 import { withTranslation } from 'react-i18next'
 import Select from 'react-select';
+import { Field, reduxForm } from 'redux-form';
+import { get as _get, isEmpty as _isEmpty } from 'lodash'
 
-import { AccountService } from 'my-services/account'
+import { requestInitFormData } from 'my-actions/AccountAction'
 
-const optBanker = [{value: 1, label: "Hello"},{value: 12, label: "Hello"},{value: 13, label: "Hello 13"},{value: 14, label: "Hello"},{value: 15, label: "Hello"},{value: 16, label: "Hello"},{value: 17, label: "Hello"},{value: 18, label: "Hello"},{value: 19, label: "Hello"},{value: 145, label: "Hello"}]
-const optActive = [{value: 0, label: "False"}, {value: 1, label: "True"}]
+
+const formatGroupLabel = data => (
+    <div style={{fontWeight: 'bold', fontSize: '14px', color: '#333'}}>
+        <span>{data.label}</span>
+    </div>
+  );
+const optAccountStatus = [{value: false, label: "False"}, {value: true, label: "True"}]
+const optIsSub = [{value: 0, label: "Sub"}, {value: 1, label: "Admin"}, {value: 2, label: "Agent"}, {value: 3, label: "Master"},  {value: 4, label: "Super"}]
+
+const bankerIsSub = ['s1288','hk1119']
 
 class FormAccountContainer extends Component {
     componentWillMount() {
-        AccountService.initForm(this.props.account.id)
+        console.log(this.props.account)
+        this.props.requestInitFormData(this.props.account.id)
+        this.props.initialize({...this.props.initialValues,
+            id: this.props.account.id,
+            company: this.props.account.banker,
+            acc_name: this.props.account.acc_name,
+            belong_account: this.props.account.acc_parent_id,
+            sub_user: this.props.account.sub_user,
+            sub_pass: this.props.account.sub_pass,
+            sub_code: this.props.account.sub_code,
+            note: this.props.account.note,
+            is_banker_sub: 0,
+            is_active: this.props.account.is_active,
+        })
+    }
+
+    handleChangeBanker = item => {
+        this.props.initialize({...this.props.initialValues, company: item.value })
+    }
+
+    handleChangeBelongAcc = item => {
+        this.props.initialize({...this.props.initialValues, belong_account: item.value })
     }
     
-    handleSubmitForm = _ => {
-        console.log("Submit Form")
-        this.props.isSubmitSuccess("done")
+    handleChangeIsSub = item => {
+        this.props.initialize({...this.props.initialValues, is_banker_sub: item.value })
     }
 
     render() {
-        const { t, isSubmit } = this.props
-        if(isSubmit) this.handleSubmitForm()
-        
+        const { t } = this.props
+        const optBanker = this.props.optBanker
+        const optAccountBelong = [{value: "root", label: t("Is root account").toUpperCase()}].concat(this.props.optAccountBelong.filter(item => item.value === this.props.initialValues.company))
+
+        const selectedBanker = optBanker.filter(item => item.value === this.props.initialValues.company)
+        const belong_account = this.props.initialValues.belong_account ? this.props.initialValues.belong_account : "root"
+        const selectedAccountBelong = !_isEmpty(optAccountBelong[1]) && belong_account !== "root" ? optAccountBelong[1].options.filter(item => item.value === belong_account) : optAccountBelong.filter(item => item.value === belong_account)
+        const selectedAccountStatus = optAccountStatus.filter(item => item.value === this.props.initialValues.is_active)
+        const selectedIsSub = optIsSub.filter(item => item.value === this.props.initialValues.is_banker_sub)
+
+        const isDisabledBasedOneAccountBelong = belong_account === "root" ? false : true
 
         return (
-            <form role="form">
+            <form>
                 <div className="form-body">
                     <div className="form-group">
-                        <label><label>{t("Company")}</label></label>
+                        <label>{t("Company")}</label>
                         <Select
                             className="basic-single"
                             classNamePrefix="select"
-                            name="color"
-                            defaultValue={[{value: 13, label: "Hello 13"}]}
+                            name="banker_name"
+                            isDisabled={isDisabledBasedOneAccountBelong}
+                            value={selectedBanker}
                             isSearchable={true}
                             placeholder={t('choose')}
-                            onChange={this.handleChangeCycleClose}
+                            onChange={this.handleChangeBanker}
                             options={optBanker}
                         />
                     </div>
                     <div className="form-group">
-                        <label><label>{t("Account name")}</label></label>
-                        <input className="form-control" type="text" />
+                        <label>{t("Account name")}</label>
+                        <Field
+                            name="acc_name"
+                            type="text"
+                            component="input"
+                            className="form-control form-control-solid placeholder-no-fix"
+                            autoComplete="off"
+                            readOnly={!isDisabledBasedOneAccountBelong}
+                        />
                     </div>
                     <div className="form-group">
-                        <label><label>{t("Belong to account")}</label></label>
-                        <input className="form-control" type="text" />
-                    </div>
-                    <div className="form-group">
-                        <label><label>{t("Login User")}</label></label>
-                        <input className="form-control" type="text" />
-                    </div>
-                    <div className="form-group">
-                        <label><label>{t("Sub password")}</label></label>
-                        <input className="form-control" type="text" />
-                    </div>
-                    <div className="form-group">
-                        <label><label>{t("Secure code")}</label></label>
-                        <input className="form-control" type="text" />
-                    </div>
-                    <div className="form-group">
-                        <label><label>{t("Note")}</label></label>
-                        <input className="form-control" type="text" />
-                    </div>
-                    <div className="form-group">
-                        <label><label>{t("The number of log")}</label></label>
-                        <input className="form-control" type="text" />
-                    </div>
-                    <div className="form-group">
-                        <label><label>{t("Permission")}</label></label>
-                        <input className="form-control" type="text" />
-                    </div>
-                    <div className="form-group">
-                        <label><label>{t("Is Active")}</label></label>
+                        <label>{t("Belong to account")}</label>
                         <Select
                             className="basic-single"
                             classNamePrefix="select"
-                            name="color"
-                            defaultValue={[{value: 0, label: "False"}]}
+                            name="belong_account"
+                            value={selectedAccountBelong}
+                            isSearchable={true}
+                            placeholder={t('choose')}
+                            onChange={this.handleChangeBelongAcc}
+                            options={optAccountBelong}
+                            formatGroupLabel={formatGroupLabel}
+                            menuPosition="fixed"
+                        />
+                    </div>
+                    { belong_account === "root" ? (
+                        <>
+                            <div className="form-group">
+                                <label>{t("Login User")}</label>
+                                <Field
+                                    name="sub_user"
+                                    type="text"
+                                    component="input"
+                                    className="form-control form-control-solid placeholder-no-fix"
+                                    autoComplete="off"
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label>{t("Sub password")}</label>
+                                <Field
+                                    name="sub_pass"
+                                    type="password"
+                                    component="input"
+                                    className="form-control form-control-solid placeholder-no-fix"
+                                    autoComplete="off"
+                                />
+                            </div>
+                            {
+                            _get(selectedBanker[0], 'need_security', false) ? (
+                                <div className="form-group">
+                                    <label>{t("Secure code")}</label>
+                                    <Field
+                                        name="sub_code"
+                                        type="text"
+                                        component="input"
+                                        className="form-control form-control-solid placeholder-no-fix"
+                                        autoComplete="off"
+                                    />
+                                </div>
+                            ) : null
+                            }
+                            <div className="form-group">
+                                <label>{t("Note")}</label>
+                                <Field
+                                    name="note"
+                                    type="text"
+                                    component="input"
+                                    className="form-control form-control-solid placeholder-no-fix"
+                                    autoComplete="off"
+                                />
+                            </div>
+                            { _isEmpty(selectedBanker.filter(item => bankerIsSub.indexOf(item.label.toLowerCase()) === -1)) ? (
+                                <>
+                                    <div className="form-group">
+                                        <label>{t("The number of log")}</label>
+                                        <Select
+                                            className="basic-single"
+                                            classNamePrefix="select"
+                                            name="is_banker_sub"
+                                            value={selectedIsSub}
+                                            isSearchable={true}
+                                            placeholder={t('choose')}
+                                            onChange={this.handleChangeIsSub}
+                                            options={optIsSub}
+                                            menuPosition="fixed"
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>{t("Permission")}</label>
+                                        <Select
+                                            className="basic-single"
+                                            classNamePrefix="select"
+                                            name="is_banker_sub"
+                                            value={selectedIsSub}
+                                            isSearchable={true}
+                                            placeholder={t('choose')}
+                                            onChange={this.handleChangeIsSub}
+                                            options={optIsSub}
+                                            menuPosition="fixed"
+                                        />
+                                    </div>
+                                </>
+                            ) : null }
+                        </>
+                    ) : null }
+                    <div className="form-group">
+                        <label>{t("Is Active")}</label>
+                        <Select
+                            className="basic-single"
+                            classNamePrefix="select"
+                            name="is_active"
+                            value={selectedAccountStatus}
                             isDisabled={true}
                             isSearchable={false}
                             onChange={this.handleChangeCycleClose}
-                            options={optActive}
+                            options={optAccountStatus}
                         />
-                    </div>
-                    <div className="form-actions text-right">
-                        <button type="submit" className="btn blue">{t("Save")}</button>
-                        <button type="button" className="btn default">{t("Cancel")}</button>
                     </div>
                 </div>
             </form>
@@ -93,4 +204,24 @@ class FormAccountContainer extends Component {
     }
 }
 
-export default withTranslation()(FormAccountContainer)
+
+const mapStateToProps = state => {
+    return {
+        initialValues: _get(state, 'form.form_account.values', {}),
+        initFormData : state.AccountReducer.initFormData,
+        optBanker : state.AccountReducer.optBanker,
+        optAccountBelong : state.AccountReducer.optAccountBelong,
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        requestInitFormData: (accountId) => {dispatch(requestInitFormData(accountId))},
+    }
+};
+
+export default compose(
+    reduxForm({form: 'form_account'}),
+    connect(mapStateToProps, mapDispatchToProps),
+    withTranslation()
+)(FormAccountContainer);

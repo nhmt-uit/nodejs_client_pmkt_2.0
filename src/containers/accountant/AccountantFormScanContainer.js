@@ -6,16 +6,14 @@ import moment  from 'moment'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css"
 import MultiSelect from "@khanacademy/react-multi-select";
-import { join, filter, isEmpty as _isEmpty, map as _map } from 'lodash'
+import { join, filter, isEmpty as _isEmpty, map as _map, get as _get } from 'lodash'
 import { withRouter } from 'react-router-dom';
 
 
 import { AppConfig } from 'my-constants'
 import BootstrapInputIcon from 'my-utils/components/date-picker/BootstrapInputIcon'
 import { FormScanButtonComponent, FormScanGroupDateComponent } from 'my-components/accountant'
-import EventsService from 'my-utils/core/EventsService'
 import { socketInitData, socketScanData, socketStopScanData, socketSaveReport, checkBankerAccount } from 'my-actions/AccountantAction';
-import { Helpers } from 'my-utils';
 import { SocketService } from 'my-utils/core';
 import { RoutesService } from 'my-routes'
 
@@ -29,7 +27,6 @@ const end_last_week = moment().endOf('week').subtract(6, 'days').format('YYYY-MM
 
 class AccountantFormScanContainer extends Component {
     state = {
-        
         typeGroupDate: 'today',
         from_date: new Date(),
         to_date: new Date()
@@ -122,11 +119,8 @@ class AccountantFormScanContainer extends Component {
     |--------------------------------------------------------------------------
     */
     handleRequestScan = _ => {
-        let bankerAccountIds = []
-        for(let x in this.props.isCheckBankerAccount) {
-            if (this.props.isCheckBankerAccount[x] === true) bankerAccountIds.push(x)
-        }
-        this.props.socketScanData({ids: bankerAccountIds, from_date: this.state.from_date, to_date: this.state.to_date})
+        let ids = _map(this.props.bankerAccount.filter(item => item.checked && item.type !== 'resolve' && !item.data), 'id')
+        this.props.socketScanData({ids: ids, from_date: this.state.from_date, to_date: this.state.to_date})
     }
 
 
@@ -136,50 +130,26 @@ class AccountantFormScanContainer extends Component {
     |--------------------------------------------------------------------------
     */
     handleSaveReport = _ => {
-        const { payloadBankerAccount } = this.props
-        let bankerAccount = []
-        if(payloadBankerAccount) {
-            _map(payloadBankerAccount, item => {
-                if (item.type === "resolve" && item.data.reportSave) bankerAccount.push(item)
-            })
-        }
-        this.props.socketSaveReport({payloadBankerAccount: bankerAccount})
+        this.props.socketSaveReport({payloadBankerAccount: this.props.bankerAccount.filter(item => item.type === 'resolve') })
         this.props.history.push(RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT'))
     }
     
-
-
-    handleStopScan = _ => {
-        const { payloadBankerAccount } = this.props
-        let bankerAccountIds = []
-        if(payloadBankerAccount) {
-            _map(payloadBankerAccount, item => {
-                if (item.type === "notify") bankerAccountIds.push(item.id)
-            })
-        }
-        if (!_isEmpty(bankerAccountIds)) this.props.socketStopScanData({ids: bankerAccountIds})
-    }
-
     /*
     |--------------------------------------------------------------------------
-    | Detect when component update
-    | Display loading when init data
+    | Cancel Scan Data
     |--------------------------------------------------------------------------
     */
-    componentDidUpdate = _ => {
-        if(!this.props.isSocketInitSuccess) {
-            // Helpers.showLoading();
-        } else {
-            // Helpers.hideLoading();
-        }
+    handleStopScan = _ => {
+        let ids = _map(this.props.bankerAccount.filter(item => item.type === 'notify'), 'id')
+        this.props.socketStopScanData({ids: ids})
     }
 
+
     checkIsProcessingScan = _ => {
-        const { payloadBankerAccount } = this.props
         let isProcessing = false
         let isAllowReport = false
-        if(payloadBankerAccount) {
-            _map(payloadBankerAccount, item => {
+        if(!_isEmpty(this.props.bankerAccount)) {
+            this.props.bankerAccount.map( item => {
                 if (item.type === "notify") isProcessing = true
                 if (item.type === "resolve") isAllowReport = true
             })
@@ -209,19 +179,17 @@ class AccountantFormScanContainer extends Component {
     }
 
     handleSelectMember = selected => {
-        // let memberOptions = (this.props.accountant_payload) ? this.props.accountant_payload.memberOptionsProcessed : []
         this.props.checkBankerAccount("member", {memberId: selected})
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Filter list member checked = true
+    |--------------------------------------------------------------------------
+    */
     handleIsCheckMember = _ => {
-        const isCheckMember =  this.props.isCheckMember
-        let checked = []
-        if (_isEmpty(isCheckMember)) return checked
-
-        for(let x in isCheckMember) {
-            if (isCheckMember[x]) checked.push(x)
-        }
-        return checked
+        const isCheckMember = this.props.member.filter(item => item.checked)
+        return _map(isCheckMember, 'id')
     }
 
     /*
@@ -237,10 +205,9 @@ class AccountantFormScanContainer extends Component {
             if(label.search(filter) !== -1) return item
         })
     }
-
+    
     render() {
-        const { t, isSocketInitSuccess } = this.props
-        let memberOptions = (this.props.accountant_payload) ? this.props.accountant_payload.memberOptionsProcessed : []
+        const { t } = this.props
 
         const { from_date, to_date, typeGroupDate } = this.state
         const selectChecked = this.handleIsCheckMember()
@@ -271,7 +238,7 @@ class AccountantFormScanContainer extends Component {
                         <div className="clearfix"></div>
                         <div className="form-group input-xlarge">
                             <MultiSelect
-                                options={memberOptions}
+                                options={this.props.member}
                                 selected={selectChecked}
                                 onSelectedChanged={this.handleSelectMember}
                                 ItemRenderer={this.renderOption}
@@ -292,7 +259,7 @@ class AccountantFormScanContainer extends Component {
                                 onChange={this.onChangeDateTo} selected={to_date}
                                 dateFormat={AppConfig.FORMAT_DATE_DATEPICKER} />
                         </div>
-                        <FormScanButtonComponent isSocketInitSuccess={isSocketInitSuccess} socketScanData={this.handleRequestScan} socketSaveReport={this.handleSaveReport} socketStopScanData={this.handleStopScan}  isProcessing={isProcessing} isAllowReport={isAllowReport} />
+                        <FormScanButtonComponent socketInitStatus={this.props.socketInitStatus} socketScanData={this.handleRequestScan} socketSaveReport={this.handleSaveReport} socketStopScanData={this.handleStopScan}  isProcessing={isProcessing} isAllowReport={isAllowReport} />
                     </form>
                 </div>
             </div>
@@ -302,13 +269,10 @@ class AccountantFormScanContainer extends Component {
 
 const mapStateToProps = state => {
     return {
-        isSocketInitSuccess : state.AccountantReducer.isSocketInitSuccess,
-        accountant_request_type : state.AccountantReducer.request_type,
-        accountant_full_payload : state.AccountantReducer.full_payload,
-        accountant_payload : state.AccountantReducer.payload,
-        isCheckMember : state.AccountantToggleReducer.isCheckMember || [],
-        isCheckBankerAccount : state.AccountantToggleReducer.isCheckBankerAccount,
-        payloadBankerAccount : state.AccountantScanReducer.payloadBankerAccount
+        socketInitStatus : state.AccountantReducer.socketInitStatus,
+        member : state.AccountantReducer.member,
+        banker : state.AccountantReducer.banker,
+        bankerAccount : state.AccountantReducer.bankerAccount,
     }
 }
 

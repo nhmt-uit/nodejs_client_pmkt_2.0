@@ -107,8 +107,7 @@ class ResetSecurePassword extends Component {
 
     handleSkip() {
         CookieService.set('byPassDashboard', true);
-
-        this.forceUpdate();
+        window.location.href = RoutesService.getPath('ADMIN', 'DASHBOARD')
     }
 
     render() {

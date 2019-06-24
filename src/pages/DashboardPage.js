@@ -1,21 +1,13 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
-
-import { QuickActivitiesContainer, PanelAlert } from "my-containers/dashboard"
-
-import { CookieService } from 'my-utils/core';
-import { RoutesService } from 'my-routes';
 import {compose} from "redux/es/redux";
 import {withTranslation} from "react-i18next";
+
+import { QuickActivitiesContainer, PanelAlert } from "my-containers/dashboard"
 
 class DashboardPage extends Component {
     
     render() {
         const { t } = this.props;
-
-        if (!CookieService.get('isLogin')) {
-            return <Redirect to={RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'login' })} />
-        }
 
         return (
             <section>

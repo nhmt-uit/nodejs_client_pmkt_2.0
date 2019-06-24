@@ -49,11 +49,9 @@ class Header extends Component {
                             </Link>
                             <div className="menu-toggler sidebar-toggler"><span /></div>
                         </div>
-                        <Link to={RoutesService.getPath('ADMIN', 'DASHBOARD')} className="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse" />
+                        <a className="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse"><span></span></a>
                         {/*=========================================*/}
-                        <div>
-                            <InfoUserContainer/>
-                        </div>
+                        <InfoUserContainer/>
                         {/*=========================================*/}
                         <div className="top-menu">
                             <ul className="nav navbar-nav pull-right">
@@ -74,12 +72,12 @@ class Header extends Component {
                                             <ul className="dropdown-menu-list scroller" data-handle-color="#637283">
                                                 <li>
                                                     <a onClick={this.handleChangeLanguage('en')} className="padding-tb-10-important text-uppercase text-center padding-">
-                                                        {(lang && lang.toLowerCase() === 'en') ? <i className="fa fa-check"/> : ''}&nbsp&nbsp{t('english')}
+                                                        {(lang && lang.toLowerCase() === 'en') ? <i className="fa fa-check"/> : ''}&nbsp;&nbsp;{t('english')}
                                                     </a>
                                                 </li>
                                                 <li>
                                                     <a onClick={this.handleChangeLanguage('vi')} className="padding-tb-10-important text-uppercase text-center">
-                                                        {(lang && lang.toLowerCase() === 'vi') ? <i className="fa fa-check"/> : ''}&nbsp&nbsp{t('viet nam')}
+                                                        {(lang && lang.toLowerCase() === 'vi') ? <i className="fa fa-check"/> : ''}&nbsp;&nbsp;{t('viet nam')}
                                                     </a>
                                                 </li>
                                             </ul>
@@ -133,7 +131,7 @@ class Header extends Component {
 
                 {/* Modal Banker */}
                 <Modal isOpen={this.state.isOpenModalBaner} toggle={this.toggleModalBanker} scrollable={true}>
-                    <ModalHeader toggle={this.toggleModalBanker} ><i class="icon-social-dribbble font-green"></i><span class="caption-subject font-green bold uppercase"> {t("Company")}</span></ModalHeader>
+                    <ModalHeader toggle={this.toggleModalBanker} ><i className="icon-social-dribbble font-green"></i><span className="caption-subject font-green bold uppercase"> {t("Company")}</span></ModalHeader>
                     <ModalBody>
                         <BankerListContainer />
                     </ModalBody>

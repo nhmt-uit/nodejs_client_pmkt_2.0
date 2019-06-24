@@ -15,7 +15,7 @@ class BankerAccountProcessingComponent extends Component {
         const { bankerAccounts } = this.props
         if (_isEmpty(bankerAccounts)) return false
         return (
-            <div className="note note-success row">
+            <div className="note note-success row" style={{maxHeight: '400px', overflowY: 'auto'}}>
                 {this.renderBankerAccount()}
             </div>
         );

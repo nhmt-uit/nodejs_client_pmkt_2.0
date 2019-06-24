@@ -116,11 +116,9 @@ class SecureCodeWidget extends Component {
 
         return (
             <div className="login">
-                <div className="content">
+                <div className="content" style={{width: "420px"}}>
                     <div className="logo">
-                        <a href="index.html">
                             <img src="/assets/images/logo.png" alt="logo vw3" />
-                        </a>
                     </div>
                         <h3 className="form-title font-green">{t("Please insert your security code")}</h3>
                         <div className="row">
