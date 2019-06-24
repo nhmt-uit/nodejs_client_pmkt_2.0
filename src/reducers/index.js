@@ -12,12 +12,18 @@ import ChangeSecureCodeReducer from './systems/ChangeSecureCodeReducer'
 import AlertReducer from './systems/AlertReducer';
 import ReportReducer from './ReportReducer';
 import AccountReducer from './AccountReducer';
+import ReportDetailReducer from "./report/ReportDetailReducer";
+import TransactionReducer from "./report/TransactionReducer";
 
 const appReducers = combineReducers({
     // Redux form reducer
     form: formReducer,
     banker: BankerReducer,
     alert: AlertReducer,
+    report_detail: ReportDetailReducer,
+    all_transaction: TransactionReducer,
+    transaction: TransactionReducer,
+    // type_of_money: TransactionReducer,
 
     // System reducers
     LanguageReducer,

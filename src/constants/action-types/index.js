@@ -8,6 +8,8 @@ import * as ChangeSecureCodeActionType from './ChangeSecureCodeActionType'
 import * as AlertActionType from './AlertActionType'
 import * as ReportActionType from './ReportActionType'
 import * as AccountActionType from './AccountActionType'
+import * as ReportDetailActionType from './ReportDetailActionType'
+import * as TransactionActionType from './TransactionActionType'
 
 export {
     LanguageActionType,
@@ -19,5 +21,7 @@ export {
     ChangeSecureCodeActionType,
     AlertActionType,
     ReportActionType,
-    AccountActionType
+    AccountActionType,
+    ReportDetailActionType,
+    TransactionActionType,
 }
