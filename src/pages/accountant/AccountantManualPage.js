@@ -28,7 +28,7 @@ class AccountantManualPage extends Component {
                 <div key={index} className="col-xs-4 col-md-4">
                     <a href={item.name.toLowerCase()+ '/login'}>
                         <div className="widget-thumb margin-bottom-20 bordered">
-                            <div className="widget-thumb-wrap" style={{textAlign: "center"}}>
+                            <div className="widget-thumb-wrap text-center">
                                 <img src={"/assets" + url} alt={item.name} title={item.name} style={{height:33, width:"auto"}}/>
                             </div>
                         </div>

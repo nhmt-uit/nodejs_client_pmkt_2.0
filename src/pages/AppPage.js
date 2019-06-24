@@ -24,7 +24,7 @@ const RenderComponent = () => {
 
 class AppPage extends BaseComponent {
 	componentDidMount() {
-		this.props.changeLanguage();
+		// this.props.changeLanguage();
 	}
 
 	render() {

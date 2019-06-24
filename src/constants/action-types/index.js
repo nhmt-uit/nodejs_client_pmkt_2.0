@@ -6,6 +6,8 @@ import * as BankerActionType from './BankerActionType';
 import * as ChangePasswordActionType from './ChangePasswordActionType';
 import * as ChangeSecureCodeActionType from './ChangeSecureCodeActionType';
 import * as AlertActionType from './AlertActionType';
+import * as ReportDetailActionType from './ReportDetailActionType'
+import * as TransactionActionType from './TransactionActionType'
 
 export {
     LanguageActionType,
@@ -16,4 +18,6 @@ export {
     ChangePasswordActionType,
     ChangeSecureCodeActionType,
     AlertActionType,
+    ReportDetailActionType,
+    TransactionActionType,
 }

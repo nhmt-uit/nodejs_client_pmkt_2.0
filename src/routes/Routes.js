@@ -3,6 +3,7 @@ import { LoginPage, SecureCodePage, ResetSecurePasswordPage } from 'my-pages/aut
 import { ChangePasswordPage, ChangePassword2Page, ChangeSecureCodePage } from 'my-pages/navigation';
 
 import { AccountantListPage, AccountantManualPage } from 'my-pages/accountant';
+import ReportDetail from 'my-containers/report/ReportDetail'
 import RoutesService from './RoutesService'
 
 const Routes = [
@@ -56,6 +57,12 @@ const Routes = [
 		path: RoutesService.getPath('ADMIN', 'CHANGE_SECURE_CODE'),
 		exact: true,
 		component: ChangeSecureCodePage,
+	},
+
+	{
+		path: RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT'),
+		exact: true,
+		component: ReportDetail,
 	},
 	{
 		path: '*',

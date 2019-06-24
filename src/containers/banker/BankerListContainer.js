@@ -21,6 +21,7 @@ class BankerListContainer extends React.Component{
             return null;
         }
         var List = DATA.res.data.List;
+        console.log("LIST", List)
         return(
             <div>
                 <div className="col-xs-12 portlet light bordered">

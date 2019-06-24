@@ -15,7 +15,14 @@ const listAdminRoutes = [
     /*==========================================================================*/
     { name: "ACCOUNTANT_MANUAL", path: "/accountant/manual", language: "en"},
     /*==========================================================================*/
-    { name: "ACCOUNTANT_REPORT", path: "/accountant/report", language: "en"},
+    { name: "ACCOUNTANT_REPORT", path: "/accountant/report_detail_template/:chuky_id?", language: "en"},
+    /*==========================================================================*/
+
+
+    /*==========================================================================*/
+    // {name: "REPORT_DETAIL", path: "/report_detail_template/:chuky_id?", language: "en"},
+    /*==========================================================================*/
+
 
     /*==========================================================================*/
     { name: "MANAGE_DASHBOARD", path: "/manage", language: "en"},

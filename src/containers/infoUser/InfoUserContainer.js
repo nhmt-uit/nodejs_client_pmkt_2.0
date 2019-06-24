@@ -13,8 +13,9 @@ class InfoUserContainer extends Component {
         return (
             <div>
                 <div className="col-xs-4">
-                    <div className="font-white bold"><span>{t("Hello:")} </span><span> {username} </span></div>
-                    <div className="font-white bold"><span>{t("Expires day:")} </span><span> {expires} </span></div>
+                    <div className="font-white bold"><span>{t("Hello: ")} </span><span> {username} </span></div>
+                    <div className="font-white bold"><span>{t
+                    ("Expires day: ")} </span><span> {expires} </span></div>
                 </div>
             </div>
         );
