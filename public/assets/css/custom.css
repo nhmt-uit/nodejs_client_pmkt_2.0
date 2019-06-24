@@ -1,6 +1,15 @@
 html {
   font-size: 15px;
 }
+@media (min-width: 992px) {
+  .page-content-wrapper .page-content {
+      margin-left: 195px;
+  }
+  .page-sidebar {
+    width: 195px;
+  }
+}
+
 .zopim{display: none}
 .bg-default{background-color: #f2f2f2 !important;color: #333 !important;}
 .bg-success{background-color: #dff0d8 !important;}
@@ -267,3 +276,5 @@ html {
 .tabs-reversed > li.title-accountant a {
     padding-left: unset;
 }
+
+.tbl-scan-result td, .tbl-scan-result th {font-size: 12px}
