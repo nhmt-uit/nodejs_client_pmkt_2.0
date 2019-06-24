@@ -12,7 +12,7 @@ import {AccountantBankerAccountResultRowContainer} from 'my-containers/accountan
 class AccountantBankerAccountResultContainer extends Component {
 
     handleNestedDataAccountant = (item, parent = null, level = 0) => {
-        level = _isEmpty(parent) ? 0 : level+1
+        level = _isEmpty(parent) ? 0 : level++
         return item.map((node, idx) => {
             return (
                 <>

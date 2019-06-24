@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { get as _get, cloneDeep } from 'lodash';
 
-import { getCyclePage } from 'my-actions/ReportAction';
+import { getCyclePage, getReport } from 'my-actions/ReportAction';
 import { LoadingComponent, PaginationComponent } from 'my-components';
 import { ReportService } from 'my-services';
 
@@ -25,6 +25,12 @@ class ReportListContainer extends Component {
             cycleChosen: '',
             cycleChosenSelect: '',
             isOpenModal: false,
+            delName: '',
+            delValue: {
+                chuky_id: '',
+                acc_name: '',
+            },
+            isOpenDelModal: false,
         };
     }
 
@@ -42,7 +48,7 @@ class ReportListContainer extends Component {
         this.setState({ collapse });
     };
 
-    recursiveItem(item, id) {
+    recursiveItem(item, id, isExported = false) {
         const collapse = this.state.collapse;
 
         if (!item.child) {
@@ -59,7 +65,10 @@ class ReportListContainer extends Component {
                     <div key={key} className="margin-top-15">
                         <div className="margin-top-10 margin-bottom-10">
                             <a href="https://google.com" target="_blank">{index + 1} - {child.name}</a>
-                            <span className="icon-close float-right color-red" />
+                            { isExported
+                                ? ''
+                                : <span className="icon-close float-right color-red cursor-pointer" onClick={this.toggleDelModal(child.name, { chuky_id: id, acc_name: child.name })} />
+                            }
                         </div>
                     </div>
                 ) : '';
@@ -72,7 +81,7 @@ class ReportListContainer extends Component {
             const isOpen = !!collapse[key];
             const collapseElement = isOpen ? (
                 <div className="margin-top-15 margin-bottom-15" style={{ marginLeft: '25px' }}>
-                    { this.recursiveItem(child, id) }
+                    { this.recursiveItem(child, id, isExported) }
                 </div>
             ) : '';
 
@@ -100,7 +109,7 @@ class ReportListContainer extends Component {
         const collapse = this.state.collapse;
         const collapseElement = !!collapse[cycle.id] ? (
             <div className="margin-top-15" style={{ marginLeft: '25px' }}>
-                {this.recursiveItem(cycle, cycle.id)}
+                {this.recursiveItem(cycle, cycle.id, cycle.is_exported)}
             </div>
         ) : '';
 
@@ -112,14 +121,14 @@ class ReportListContainer extends Component {
                             ? <i className="fa fa-minus cursor-pointer color-grey" onClick={this.toggle(cycle.id)} />
                             : <i className="fa fa-plus cursor-pointer color-grey" onClick={this.toggle(cycle.id)} />
                     }
-                    &nbsp;&nbsp;<a href="https://google.com" target="_blank">{cycle.name}</a>
+                    &nbsp;&nbsp;<a href="#" onClick={this.handleGetReport(cycle.id)}>{cycle.name}</a>
                     <span className="float-right" >
                         {
                             cycle.is_exported
                                 ? <i className="fa fa-check-circle font-green" />
-                                : <i className="fa fa-exchange font-green cursor-pointer" onClick={() => this.toggleModal(cycle.id)} />
+                                : <i className="fa fa-exchange font-green cursor-pointer" onClick={this.toggleModal(cycle.id)} />
                         }
-                        &nbsp;&nbsp;<span className="icon-close color-red" />
+                        &nbsp;&nbsp;<span className="icon-close color-red cursor-pointer" onClick={this.toggleDelModal(cycle.name, { chuky_id: cycle.id, acc_name: '' })} />
                     </span>
 
                     { collapseElement }
@@ -139,13 +148,26 @@ class ReportListContainer extends Component {
         });
     };
 
-    toggleModal = (id) => {
-        const state = this.state;
+    toggleModal = (id) => _ => {
+        const state = Object.assign({}, this.state);
 
         state.isOpenModal = !state.isOpenModal;
         state.cycleChosen = typeof id === 'string' ? id: state.cycleChosen;
 
         this.setState(state)
+    };
+
+    toggleDelModal = (name, value) => () => {
+        const newState = Object.assign({}, this.state);
+
+        if (name && value) {
+            newState.delName = name;
+            newState.delValue = value;
+        }
+
+        newState.isOpenDelModal = !newState.isOpenDelModal;
+
+        this.setState(newState);
     };
 
     handleCloseCycle = _ => {
@@ -156,9 +178,20 @@ class ReportListContainer extends Component {
 
         ReportService.closeCycle(params).then(_ => {
             const { currentPage, itemPerPage } = this.state;
-            this.props.getCyclePage({ currentPage, itemPerPage  });
-            this.toggleModal()
 
+            this.setState({ isOpenModal: !this.state.isOpenModal }, () => {
+                this.props.getCyclePage({ currentPage, itemPerPage });
+            });
+        })
+    };
+
+    handleDelCycle = _ => {
+        ReportService.delCycle(this.state.delValue).then(_ => {
+            const { currentPage, itemPerPage } = this.state;
+
+            this.setState({ isOpenDelModal: !this.state.isOpenDelModal }, () => {
+                this.props.getCyclePage({ currentPage, itemPerPage });
+            })
         })
     };
 
@@ -166,6 +199,10 @@ class ReportListContainer extends Component {
         this.setState({
             cycleChosenSelect: item.value,
         });
+    };
+
+    handleGetReport = id => () => {
+        this.props.getReport({ chuky_id: id });
     };
 
     renderModal() {
@@ -182,8 +219,8 @@ class ReportListContainer extends Component {
         });
 
         return (
-            <Modal isOpen={this.state.isOpenModal} toggle={this.toggleModal}>
-                <ModalHeader toggle={this.toggleModal} className="text-uppercase">
+            <Modal isOpen={this.state.isOpenModal} toggle={this.toggleModal()}>
+                <ModalHeader toggle={this.toggleModal()} className="text-uppercase">
                     <strong>
                         {t('Select cycle')}
                     </strong>
@@ -201,7 +238,29 @@ class ReportListContainer extends Component {
                 </ModalBody>
                 <ModalFooter>
                     <Button className="bg-green font-white" onClick={this.handleCloseCycle}>{t('save')}</Button>{' '}
-                    <Button color="secondary" onClick={this.toggleModal}>{t('cancel')}</Button>
+                    <Button color="secondary" onClick={this.toggleModal()}>{t('cancel')}</Button>
+                </ModalFooter>
+            </Modal>
+        );
+    }
+
+    renderModalDel() {
+        const t = this.props.t;
+        const { isOpenDelModal, delName } = this.state;
+
+        return (
+            <Modal isOpen={this.state.isOpenDelModal} toggle={this.toggleDelModal()}>
+                <ModalHeader toggle={this.toggleDelModal()} className="text-uppercase">
+                    <strong>
+                        {t('Confirm')}
+                    </strong>
+                </ModalHeader>
+                <ModalBody>
+                    {t('Are you sure to delete ')} <span className="font-green">{ delName }</span> ?
+                </ModalBody>
+                <ModalFooter>
+                    <Button className="bg-red font-white" onClick={this.handleDelCycle}>{t('save')}</Button>{' '}
+                    <Button color="secondary" onClick={this.toggleDelModal()}>{t('cancel')}</Button>
                 </ModalFooter>
             </Modal>
         );
@@ -256,6 +315,7 @@ class ReportListContainer extends Component {
                     </div>
                 </div>
                 {this.renderModal()}
+                {this.renderModalDel()}
             </div>
         );
     }
@@ -271,6 +331,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         getCyclePage: pagination => dispatch(getCyclePage(pagination)),
+        getReport: post => dispatch(getReport(post)),
     };
 };
 

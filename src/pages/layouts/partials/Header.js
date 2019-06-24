@@ -19,25 +19,26 @@ import { AuthService } from 'my-services/systems'
 class Header extends Component {
     state = {
         isOpenModalBaner: false
-    }
+    };
 
     handleLogout = async _ => {
-        await AuthService.logout()
+        await AuthService.logout();
+
         window.location.reload()
-    }
+    };
 
     handleChangeLanguage = type => () => {
         CookieService.set('lang', type)
         return this.props.changeLanguage(type)
-    }
+    };
 
     toggleModalBanker = _ => {
         this.setState({ isOpenModalBaner: !this.state.isOpenModalBaner })
-    }
+    };
 
     render() {
-        const lang = CookieService.get('lang')
-        const { t } = this.props
+        const lang = CookieService.get('lang');
+        const { t } = this.props;
 
         return (
             <div>
@@ -148,7 +149,7 @@ const mapDispatchToProps = dispatch => {
     return {
         changeLanguage: type => dispatch(changeLanguage(type)),
     }
-}
+};
 
 export default compose(
     connect(null, mapDispatchToProps),
