@@ -2,10 +2,10 @@ import DashboardPage from 'my-pages/DashboardPage';
 import { LoginPage, SecureCodePage, ResetSecurePasswordPage } from 'my-pages/auth';
 import { ChangePasswordPage, ChangePassword2Page, ChangeSecureCodePage } from 'my-pages/navigation';
 
+import RoutesService from './RoutesService'
 import { AccountantListPage, AccountantManualPage } from 'my-pages/accountant';
 import { ReportPage } from 'my-pages/report';
 import ReportDetail from 'my-containers/report/ReportDetail'
-import RoutesService from './RoutesService'
 
 const Routes = [
 	{
@@ -64,9 +64,8 @@ const Routes = [
 		exact: true,
 		component: ChangeSecureCodePage,
 	},
-
 	{
-		path: RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT'),
+		path: RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT_DETAIL'),
 		exact: true,
 		component: ReportDetail,
 	},

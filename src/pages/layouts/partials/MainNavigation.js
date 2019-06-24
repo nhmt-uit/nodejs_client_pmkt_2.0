@@ -10,7 +10,7 @@ const menus = [
         sub_menus: [
             { to: RoutesService.getPath('ADMIN', 'ACCOUNTANT_LIST'), exact: true, name: 'Accountant' },
             { to: RoutesService.getPath('ADMIN', 'ACCOUNTANT_MANUAL'), exact: true, name: 'Accountant Manual' },
-            { to: RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT'), exact: true, name: 'Report' },
+            { to: RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT'), exact: false, name: 'Report' },
         ],
     },
     { to: RoutesService.getPath('ADMIN', 'MANAGE_DASHBOARD'), exact: false, name: 'Manage', icon: 'fa fa-gears',
