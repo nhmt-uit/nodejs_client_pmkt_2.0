@@ -6,7 +6,7 @@ import 'my-styles/reactstrap-modal.css'
 import { AccountService } from 'my-services/account'
 
 class ModalDeleteAccountContainer extends Component {
-    handleDeleteAccount = async _ => {
+    handleDelete = async _ => {
         await AccountService.deleteAccount(this.props.account.id)
         if (this.props.callback) this.props.callback(this.props.account)
         this.props.toggle()
@@ -22,7 +22,7 @@ class ModalDeleteAccountContainer extends Component {
                     {t("confirm delete {{item}}", {item: account ? account.acc_name : null })}
                 </ModalBody>
                 <ModalFooter>
-                    <Button color="btn btn-default green" onClick={this.handleDeleteAccount}>{t("confirm")}</Button>{' '}
+                    <Button color="btn btn-default green" onClick={this.handleDelete}>{t("confirm")}</Button>{' '}
                     <Button color="btn btn-default red" onClick={toggle}>{t("Cancel")}</Button>
                 </ModalFooter>
             </Modal>

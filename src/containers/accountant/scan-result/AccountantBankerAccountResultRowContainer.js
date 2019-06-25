@@ -6,10 +6,22 @@ import { isEmpty as _isEmpty, forEach as _forEach, concat as _concat } from 'lod
 import uuidv4 from 'uuid/v4'
 
 import { Helpers } from 'my-utils'
+import { toggleModalDeleteFormula } from 'my-actions/AccountantAction';
 
 
 class AccountantBankerAccountResultRowContainer extends Component {
-    calcRowSpan = _ => {
+    
+    handleToggleModalDeleteFormula = formulaDetail => {
+        
+        this.props.toggleModalDeleteFormula()
+    }
+    
+    /*
+    |--------------------------------------------------------------------------
+    | Calculate rowspan column username
+    |--------------------------------------------------------------------------
+    */
+    calcRowSpanUsername = _ => {
         const { item } = this.props
         let col_username = 0
         item.reportAccountant.map(obj => {
@@ -19,87 +31,113 @@ class AccountantBankerAccountResultRowContainer extends Component {
     }
     /*
     |--------------------------------------------------------------------------
-    | Generate dynamic column
-    | turnover, gross_comm, member_comm, win_loss, company, ma_total
-    |--------------------------------------------------------------------------
-    */
-    generateDynamicRow = _ => {
-        const { item } = this.props
-        let xhtml = []
-        item.reportAccountant.map(obj => {
-            let rowSpan = obj.resultList.length > 0 ? obj.resultList.length : 1
-            xhtml.push(<td key={uuidv4()} rowSpan={rowSpan}>{obj.reportType.toUpperCase()}</td>)
-            _forEach(obj.reportData, value => {
-                xhtml.push(<td key={uuidv4()} rowSpan={rowSpan} className="text-right">{value}</td>)
-            })
-        })
-        return xhtml
-    }
-
-    /*
-    |--------------------------------------------------------------------------
     | Generate formula column
     |--------------------------------------------------------------------------
     */
     generateRowData = _ => {
-        const { item, t } = this.props
+        const { item, t, dataFieldList, scanData, bankerAccountId } = this.props
         let xhtml = []
-
+        let final_xhtml = []
+        let tbl_col_username = []
+        
         //generate username column
-        const col_username = this.calcRowSpan()
-        xhtml.push(<td rowSpan={col_username}>
-                    <span className={`spacing-${item.level}`}></span>
-                    {!_isEmpty(item.child) ? (
-                        <>
-                        <i className="fa fa-chevron-right" />
-                        <span className="spacing-0" />
-                        </>
-                    ): <span className="placeholder-parent" />}
-                    <b>{ item.username }</b>
-                </td>)
+        const col_username = this.calcRowSpanUsername()
+        tbl_col_username.push(<td key={uuidv4()}  rowSpan={col_username}>
+                                <span className={`spacing-${item.level}`}></span>
+                                {!_isEmpty(item.child) ? (
+                                    <>
+                                    <i className="fa fa-chevron-right" />
+                                    <span className="spacing-0" />
+                                    </>
+                                ): <span className="placeholder-parent" />}
+                                <b>{ item.username }</b>
+                            </td>)
 
-
+    
+        let idxFormula = 0
         item.reportAccountant.map(obj => {
+            let idxDynamic = 0
             //Generate dynamic data column
-            let rowSpan = obj.resultList.length > 0 ? obj.resultList.length : 1
-            xhtml.push(<td key={uuidv4()} rowSpan={rowSpan}>{obj.reportType.toUpperCase()}</td>)
-            _forEach(obj.reportData, value => {
-                xhtml.push(<td key={uuidv4()} rowSpan={rowSpan} className="text-right">{value}</td>)
+            let rowSpanColDynamic = obj.resultList.length > 0 ? obj.resultList.length : 1
+            let tbl_col_dynamic = []
+            tbl_col_dynamic.push(<td key={uuidv4()} rowSpan={rowSpanColDynamic}>{obj.reportType.toUpperCase()}</td>)
+            let dynamicColmn = dataFieldList.map(key => {
+                return !_isEmpty(obj.reportData[key]) ? <td key={uuidv4()} rowSpan={rowSpanColDynamic} className="text-right">{Helpers.formatMoney(obj.reportData[key], 0)}</td> : null
             })
+            tbl_col_dynamic.push(dynamicColmn)
 
             //Generate formula column
             if(item.noFormula) {
-                xhtml.push(<td key={uuidv4()}>{t("Not have formula yet")}</td>)
-                xhtml.push(<td key={uuidv4()}></td>) // Column Member
-                xhtml.push(<td key={uuidv4()}></td>) // Column Result
-                xhtml.push(<td key={uuidv4()}></td>) // Column Currency
-                xhtml.push(<td key={uuidv4()} className="text-center font-red-sunglo"><i className="fa fa-times-circle" /></td>) // Column +/- Formula (delete)
-                xhtml.push(<td key={uuidv4()} className="text-center font-green-jungle"><i className="fa fa-plus-circle" /></td>) // Column +/- Formula (add)
+                idxFormula++
+                idxDynamic++
+                if (idxDynamic > rowSpanColDynamic ) idxDynamic = 1
+                let tbl_col_formula = []
+                tbl_col_formula.push(
+                    <>
+                    <td key={uuidv4()}>{t("Not have formula yet")}</td>
+                    <td key={uuidv4()}></td> {/* // Column Member */}
+                    <td key={uuidv4()}></td> {/* // Column Result */}
+                    <td key={uuidv4()}></td> {/* // Column Currency */}
+                    <td key={uuidv4()} className="text-center" width="45px"></td> {/* // Column +/- Formula (delete) */}
+                    <td key={uuidv4()} className="text-center" width="45px"><a href="#/" className="font-green-jungle"><i className="fa fa-plus-circle" /></a></td> {/* // Column +/- Formula (add) */}
+                    </>
+                )
+                
+                xhtml.push(
+                    <tr key={uuidv4()}>
+                        {idxFormula === 1 ? tbl_col_username : null}
+                        {idxDynamic === 1 ? tbl_col_dynamic : null}
+                        {tbl_col_formula}
+                    </tr>
+                )
+
             } else {
                 obj.resultList.map(formula => {
+                    // increase index
+                    idxFormula++
+                    idxDynamic++
+                    if (idxDynamic > rowSpanColDynamic ) idxDynamic = 1
                     let resultClass = formula.valueRounded > 0 ? 'font-blue-steel' : 'font-red'
-                    xhtml.push(
+                    let tbl_col_formula = []
+
+                    let objToggleModalDeleteFomula = {bankerAccountId: bankerAccountId, accInfo: item.accInfo, formulaDetail: formula, scanData: scanData}
+
+                    tbl_col_formula.push(
                         <>
-                        <td key={uuidv4()} className={formula.PRText}>{formula.formulaName}</td> {/* // Column Formula Name */}
-                        <td key={uuidv4()} >{formula.memberName.toUpperCase()}</td> {/* // Column Member */}
+                        <td key={uuidv4()} className={formula.PRText}>{Helpers.formatFormulaName(formula.formulaName)}</td> {/* // Column Formula Name */}
+                        <td key={uuidv4()} ><b>{formula.memberName.toUpperCase()}</b></td> {/* // Column Member */}
                         <td key={uuidv4()} className={resultClass + " text-right"} >{Helpers.formatMoney(formula.valueRounded, 0)}</td> {/* // Column Result */}
                         <td key={uuidv4()} className={resultClass}>{formula.currencyName}</td> {/* // Column Currency */}
-                        <td key={uuidv4()} className="text-center font-red-sunglo"><i className="fa fa-times-circle" /></td> {/* // Column +/- Formula (delete) */}
-                        <td key={uuidv4()} className="text-center font-green-jungle"><i className="fa fa-plus-circle" /></td> {/* // Column +/- Formula (add) */}
+                        <td key={uuidv4()} className="text-center" width="45px"><a href="#/" onClick={_ => this.props.toggleModalDeleteFormula(objToggleModalDeleteFomula)} className="font-red-sunglo"><i className="fa fa-times-circle" /></a></td> {/* // Column +/- Formula (delete) */}
+                        {idxDynamic === 1 ? <td key={uuidv4()} className="text-center" width="45px" rowSpan={rowSpanColDynamic}><a href="#/" className="font-green-jungle"><i className="fa fa-plus-circle" /></a></td> : null} {/* // Column +/- Formula (add) */}
                         </>
+                    )
+
+                    xhtml.push(
+                        <tr key={uuidv4()}>
+                            {idxFormula === 1 ? tbl_col_username : null}
+                            {idxDynamic === 1 ? tbl_col_dynamic : null}
+                            {tbl_col_formula}
+                        </tr>
                     )
                 })
             }
+
+            // Generate final html <tbody><tr><td></td></tr></tbody>
+            // final_xhtml.push(xhtml)
         })
-        return xhtml
+        return (
+            <tbody key={uuidv4()}>
+                {xhtml}
+            </tbody>
+        )
     }
     
     render() {
         const { item } = this.props
         return (
-            <tr>
-            {this.generateRowData()}
-            </tr>
+            // <tr>{this.generateRowData()}</tr>
+            this.generateRowData()
         )
     }
 }
@@ -108,13 +146,13 @@ class AccountantBankerAccountResultRowContainer extends Component {
 
 const mapStateToProps = state => {
     return {
-
+        
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-
+        toggleModalDeleteFormula: (params) => {dispatch(toggleModalDeleteFormula(params))},
     }
 };
 

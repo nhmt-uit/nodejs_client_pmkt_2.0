@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { withTranslation } from 'react-i18next'
 import { has as _has, isEmpty as _isEmpty } from 'lodash'
 
-import { checkBankerAccount, collapseBanker } from 'my-actions/AccountantAction';
+import { checkBankerAccount, collapseBanker, toggleShowAllFormula } from 'my-actions/AccountantAction';
 
 
 class AccountantListBankerUtilContainer extends Component {
@@ -24,7 +24,7 @@ class AccountantListBankerUtilContainer extends Component {
                 </div>
                 <div className="form-group col-md-8 text-right">
                     <label className="mt-checkbox uppercase" style={{marginRight: '50px'}}>
-                        <input type="checkbox" onChange={_ => null} /> {t("show all")}
+                        <input type="checkbox" onChange={this.props.toggleShowAllFormula} checked={this.props.isShowAllFormula} /> {t("show all")}
                         <span></span>
                     </label>
                     <a href="#/" type="submit" className="btn btn-default red" onClick={_ => this.props.checkBankerAccount('check_all_error')} > {t("Select error accounts")}</a>
@@ -42,6 +42,7 @@ const mapStateToProps = state => {
     return {
         socketInitStatus : state.AccountantReducer.socketInitStatus,
         banker : state.AccountantReducer.banker,
+        isShowAllFormula : state.AccountantReducer.isShowAllFormula,
     }
 }
 
@@ -49,6 +50,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         collapseBanker: (type) => {dispatch(collapseBanker(type))},
         checkBankerAccount: (type_check, params) => {dispatch(checkBankerAccount(type_check, params))},
+        toggleShowAllFormula: _ => {dispatch(toggleShowAllFormula())},
     }
 };
 

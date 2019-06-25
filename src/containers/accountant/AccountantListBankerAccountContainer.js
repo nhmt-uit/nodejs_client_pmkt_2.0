@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { withTranslation } from 'react-i18next'
 import { isEmpty as _isEmpty } from 'lodash'
 import LazyLoad from 'react-lazyload';
+import uuidv4 from 'uuid/v4'
 
 import { BankerAccountStatusIconComponent } from 'my-components/accountant';
 import { checkBankerAccount } from 'my-actions/AccountantAction';
@@ -14,7 +15,7 @@ class AccountantListBankerAccountContainer extends Component {
         return this.props.bankerAccount.map((item, idx) => {
             if (item.banker !== this.props.bankerId) return false
             return (
-                <div key={idx} className="panel-group accordion">
+                <div key={uuidv4()} className="panel-group accordion">
                     <div className="panel panel-default">
                         <div className="panel-heading">
                             <h4 className="panel-title">

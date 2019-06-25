@@ -21,7 +21,6 @@ const bankerIsSub = ['s1288','hk1119']
 
 class FormAccountContainer extends Component {
     componentWillMount() {
-        console.log(this.props.account)
         this.props.requestInitFormData(this.props.account.id)
         this.props.initialize({...this.props.initialValues,
             id: this.props.account.id,

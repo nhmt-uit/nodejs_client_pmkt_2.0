@@ -67,4 +67,12 @@ export function formatMoney(amount, decimalCount = 2, decimal = ".", thousands =
     } catch (e) {
         console.log(e)
     }
-};
+}
+
+export function formatFormulaName(formulaName) {
+    try {
+        return formulaName.replace(/^([^-]*-)/gi, "")
+    } catch (e) {
+        console.log(e)
+    }
+}

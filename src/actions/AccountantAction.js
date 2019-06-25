@@ -170,7 +170,8 @@ export const socketSaveReport = params => {
 
 /*
 |--------------------------------------------------------------------------
-| Handle call socket save report
+| Handle call socket reload banker account info
+| @input: bankerAccountId & scanData
 |--------------------------------------------------------------------------
 */
 export const socketReloadBankerAccountInfo = params => {
@@ -185,8 +186,34 @@ export const socketReloadBankerAccountInfo = params => {
                 });
             }
         })
-        
         SocketService.send('reloadAccInfo', {id: params.id})
+    }
+}
+/*
+|--------------------------------------------------------------------------
+| Handle call socket reload result scan based on banker account
+| @input: bankerAccountId & scanData
+|--------------------------------------------------------------------------
+*/
+export const socketGetReport = params => {
+    return (dispatch) => {
+        EventsService.on('accountant_get_report_banker_account', res => {
+            if (res) {
+                // Unscrubscripe chanel 'accountant_init' when finish & disconnect socket
+                if (res.type === "resolve") {
+                    EventsService.removeAllListeners('accountant_get_report_banker_account')
+                }
+
+                // Dispatch data to reducer
+                dispatch({
+                    type: AccountantActionType.ACCOUNTANT_SOCKET_GET_REPORT_BANKER_ACCOUNT,
+                    full_payload: res,
+                    payload: res.data,
+                    uuid2AccId: res.uuid2AccId
+                });
+            }
+        })
+        SocketService.send('get_report', {id: params.id, scanData: params.scanData})
     }
 }
 
@@ -254,4 +281,29 @@ export const deleteBankerAccount = item => {
             item: item,
         });
     }
+}
+
+export const toggleModalDeleteFormula = params => {
+    return (dispatch) => {
+        dispatch({
+            type: AccountantActionType.ACCOUNTANT_TOGGLE_MODAL_DELETE_FORMULA,
+            payloadDeleteFormula: params,
+        });
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Filter result with formula
+|--------------------------------------------------------------------------
+*/
+export const toggleShowAllFormula = (type, bankerId) => {
+    // Dispatch toggle banker
+   return (dispatch) => {
+       dispatch({
+           type: AccountantActionType.ACCOUNTANT_TOGGLE_SHOW_ALL_FORMULA,
+           type_collapse: type,
+           bankerId: bankerId
+       });
+   }
 }

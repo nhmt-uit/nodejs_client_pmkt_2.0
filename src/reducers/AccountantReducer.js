@@ -9,7 +9,12 @@ let defaultState = {
 	banker: [],
 	bankerAccount: [],
 	member: [],
-	bankerAccountByMember: []
+	bankerAccountByMember: [],
+
+	// Handel delete formula after scan
+	isShowAllFormula: true,
+	isOpenModalDeleteFormula: false,
+	payloadDeleteFormula: {}
 }
 
 export const AccountantReducer = (state = defaultState, action) => {
@@ -148,12 +153,23 @@ export const AccountantReducer = (state = defaultState, action) => {
 			if(newBankerAccount.findIndex((obj => obj.banker === action.item.banker)) === -1) newBanker = newBanker.filter(item => item.id !== action.item.banker)
 			return {...state, banker: newBanker, bankerAccount: newBankerAccount}
 		case AccountantActionType.ACCOUNTANT_SOCKET_RELOAD_BANKER_ACCOUNT_INFO:
-				var objIndex = newBankerAccount.findIndex((obj => obj.id === action.payload.id))
-				newBankerAccount[objIndex] = {...newBankerAccount[objIndex], ...action.payload}
-				newBankerAccount[objIndex].type = null
-				newBankerAccount[objIndex].message = null
-				newBankerAccount[objIndex].data = null
-				return {...state, bankerAccount: newBankerAccount}
+			var objIndex = newBankerAccount.findIndex((obj => obj.id === action.payload.id))
+			newBankerAccount[objIndex] = {...newBankerAccount[objIndex], ...action.payload}
+			newBankerAccount[objIndex].type = null
+			newBankerAccount[objIndex].message = null
+			newBankerAccount[objIndex].data = null
+			return {...state, bankerAccount: newBankerAccount}
+		case AccountantActionType.ACCOUNTANT_SOCKET_GET_REPORT_BANKER_ACCOUNT:
+			let bankerAccountId = action.uuid2AccId[action.full_payload.uuid]
+			if(!_isEmpty(bankerAccountId)) {
+				var objIndex = newBankerAccount.findIndex((obj => obj.id === bankerAccountId))
+				newBankerAccount[objIndex].data = {...newBankerAccount[objIndex].data, ...action.payload}
+			}
+			return {...state, bankerAccount: newBankerAccount}
+		case AccountantActionType.ACCOUNTANT_TOGGLE_SHOW_ALL_FORMULA:
+			return {...state, isShowAllFormula: !state.isShowAllFormula}
+		case AccountantActionType.ACCOUNTANT_TOGGLE_MODAL_DELETE_FORMULA:
+			return {...state, isOpenModalDeleteFormula: !state.isOpenModalDeleteFormula, payloadDeleteFormula: action.payloadDeleteFormula}
 		default:
 			return {...state}
 	}
