@@ -10,7 +10,7 @@ import * as ReportActionType from './ReportActionType'
 import * as AccountActionType from './AccountActionType'
 import * as ReportDetailActionType from './ReportDetailActionType'
 import * as TransactionActionType from './TransactionActionType'
-
+import * as MemberActionType from './MemberActionType'
 export {
     LanguageActionType,
     AuthActionType,
@@ -24,4 +24,5 @@ export {
     AccountActionType,
     ReportDetailActionType,
     TransactionActionType,
+    MemberActionType,
 }

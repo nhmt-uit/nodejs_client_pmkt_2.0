@@ -5,6 +5,7 @@ import {reduxForm} from "redux-form";
 import {connect} from "react-redux";
 import {isEmpty} from 'lodash'
 
+import { Helpers } from 'my-utils'
 import { getAllTransaction} from "my-actions/report/TransactionAction";
 
 class ListOfTransaction extends Component {
@@ -18,7 +19,7 @@ class ListOfTransaction extends Component {
             return null;
         }
         var List = DATA.res.data.List.result;
-        console.log("LIST ALL TRANSACTION", List)
+        // console.log("LIST ALL TRANSACTION", List)
         return (
             <div>
                 <div className="table-scrollable">
@@ -51,8 +52,8 @@ class ListOfTransaction extends Component {
                                 return <tr key={index}>
                                     <td className="text-center"> {index + 1} </td>
                                     <td className="text-center uppercase"> {item.customer_name} </td>
-                                    <td className="text-right"> {addCommas(VND)} </td>
-                                    <td className="text-right"> {addCommas(USD)} </td>
+                                    <td className="text-right"> {Helpers.formatMoney(VND,0)} </td>
+                                    <td className="text-right"> {Helpers.formatMoney(USD,0)} </td>
                                     <td className="text-center font-dark"> {item.transaction_type} </td>
                                     <td className="text-center"> {item.note} </td>
                                     <td className="text-center"> {item.created} </td>
@@ -67,18 +68,6 @@ class ListOfTransaction extends Component {
             </div>
         );
     }
-}
-
-function addCommas(nStr) {
-    nStr += '';
-    var x = nStr.split('.');
-    var x1 = x[0];
-    var x2 = x.length > 1 ? '.' + x[1] : '';
-    var rgx = /(\d+)(\d{3})/;
-    while (rgx.test(x1)) {
-        x1 = x1.replace(rgx, '$1' + ',' + '$2');
-    }
-    return x1 + x2;
 }
 
 const mapStateToProps = state => {
