@@ -80,8 +80,9 @@ export const closeCycle = (chuky) => {
 /**
  * @description Get report
  * @param {Object} post - include {String} chuky_id
+ * @param {Object} itemActive - include cycle or account or banker
  * */
-export const getReport = (post) => {
+export const getReport = (post, itemActive) => {
     return dispatch => {
         dispatch({
             type: ReportActionType.GET_REPORT,
@@ -92,7 +93,7 @@ export const getReport = (post) => {
                 if (res.status) {
                     dispatch({
                         type: ReportActionType.GET_REPORT_SUCCESS,
-                        payload: res.res || {},
+                        payload: { res: res.res, itemActive } || {},
                     });
                 } else {
                     dispatch({

@@ -16,7 +16,7 @@ const listAdminRoutes = [
     { name: "ACCOUNTANT_MANUAL", path: "/accountant/manual", language: "en"},
     /*==========================================================================*/
     { name: "ACCOUNTANT_REPORT", path: "/accountant/report", language: "en"},
-    { name: "ACCOUNTANT_REPORT_DETAIL", path: "/accountant/report/detail_template/:chuky_id?", language: "en"},
+    { name: "ACCOUNTANT_REPORT_DETAIL", path: "/accountant/report/detail_template/:chuky_id", language: "en"},
     /*==========================================================================*/
 
 

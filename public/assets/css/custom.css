@@ -273,8 +273,13 @@ html {
     float: left;
 }
 
+.tabs-reversed > li.title-accountant:hover {
+    border: none;
+}
+
 .tabs-reversed > li.title-accountant a {
     padding-left: unset;
+    cursor: auto;
 }
 
 .tbl-scan-result td, .tbl-scan-result th {font-size: 12px}

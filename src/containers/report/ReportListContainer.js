@@ -13,6 +13,7 @@ import { get as _get, cloneDeep } from 'lodash';
 import { getCyclePage, getReport } from 'my-actions/ReportAction';
 import { LoadingComponent, PaginationComponent } from 'my-components';
 import { ReportService } from 'my-services';
+import { CookieService } from 'my-utils/core';
 
 class ReportListContainer extends Component {
     constructor(props) {
@@ -121,7 +122,7 @@ class ReportListContainer extends Component {
                             ? <i className="fa fa-minus cursor-pointer color-grey" onClick={this.toggle(cycle.id)} />
                             : <i className="fa fa-plus cursor-pointer color-grey" onClick={this.toggle(cycle.id)} />
                     }
-                    &nbsp;&nbsp;<a href="#" onClick={this.handleGetReport(cycle.id)}>{cycle.name}</a>
+                    &nbsp;&nbsp;<a href="#" onClick={this.handleGetReport(cycle.id, cycle)}>{cycle.name}</a>
                     <span className="float-right" >
                         {
                             cycle.is_exported
@@ -201,8 +202,8 @@ class ReportListContainer extends Component {
         });
     };
 
-    handleGetReport = id => () => {
-        this.props.getReport({ chuky_id: id });
+    handleGetReport = (id, itemActive) => () => {
+        this.props.getReport({ chuky_id: id }, itemActive);
     };
 
     renderModal() {
@@ -270,6 +271,13 @@ class ReportListContainer extends Component {
         const { t, cyclePage, isFetching } = this.props;
         const { itemPerPage, currentPage } = this.state;
         const cycleList = cyclePage.data || {};
+        const roles = CookieService.get('roles');
+        const btnAdd =
+            (Number(roles) === 11 || Number(roles) === 12)
+                ? null
+                : (<div className="actions">
+                    <button className="btn btn-danger">{t('Add')}</button>
+                </div>);
 
         if (isFetching) {
             return (
@@ -278,9 +286,7 @@ class ReportListContainer extends Component {
                         <div className="caption">
                             <span className="caption-subject font-green sbold uppercase">{t('report')}</span>
                         </div>
-                        <div className="actions">
-                            <button className="btn btn-danger">{t('Add')}</button>
-                        </div>
+                        {btnAdd}
                     </div>
                     <div className="portlet-body" style={{ minHeight: '60px' }}>
                         <LoadingComponent />
@@ -331,7 +337,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         getCyclePage: pagination => dispatch(getCyclePage(pagination)),
-        getReport: post => dispatch(getReport(post)),
+        getReport: (post, itemActive) => dispatch(getReport(post, itemActive)),
     };
 };
 
