@@ -14,6 +14,7 @@ import ReportReducer from './ReportReducer';
 import AccountReducer from './AccountReducer';
 import ReportDetailReducer from "./report/ReportDetailReducer";
 import TransactionReducer from "./report/TransactionReducer";
+import MemberReducer from "./member/MemberReducer";
 
 const appReducers = combineReducers({
     // Redux form reducer
@@ -23,6 +24,7 @@ const appReducers = combineReducers({
     report_detail: ReportDetailReducer,
     all_transaction: TransactionReducer,
     transaction: TransactionReducer,
+    member: MemberReducer,
     // type_of_money: TransactionReducer,
 
     // System reducers

@@ -6,11 +6,14 @@ import {withTranslation} from "react-i18next";
 import { getReportDetail} from "my-actions/report/ReportDetailAction";
 import {isEmpty} from "lodash";
 
+import { Helpers } from 'my-utils'
 import { AuthService } from 'my-services/systems'
 
 class ReportDetail extends Component {
     componentWillMount() {
-        this.props.getReportDetail()
+        var chuky_id = window.location.pathname.split('/')[4];
+        // console.log(window.location.pathname);
+        this.props.getReportDetail(chuky_id)
     }
 
     render() {
@@ -142,12 +145,12 @@ class ReportDetail extends Component {
                                     <td className="text-center font-dark uppercase"> { item.book_type === "ALL" ? <span className="font-red bold uppercase"> {item.book_type} </span> : <span> {item.book_type} </span> } </td>
                                     <td className="text-center font-dark uppercase"> {item.account} </td>
                                     <td className="text-right"> {
-                                        item.VND < 0 ? <span className="font-red"> {addCommas(item.VND)} </span> : <span className="font-green"> {addCommas(item.VND)} </span>
+                                        item.VND < 0 ? <span className="font-red"> {Helpers.formatMoney(item.VND,0)} </span> : <span className="font-green"> {Helpers.formatMoney(item.VND,0)} </span>
                                     }
                                     </td>
 
                                     <td className="text-right"> {
-                                        item.USD < 0 ? <span className="font-red"> {addCommas(item.USD)} </span> : <span className="font-green"> {addCommas(item.USD)} </span>
+                                        item.USD < 0 ? <span className="font-red"> {Helpers.formatMoney(item.USD,0)} </span> : <span className="font-green"> {Helpers.formatMoney(item.USD,0)} </span>
                                     } </td>
 
                                     <td className="text-right"> 0 </td>
@@ -161,18 +164,6 @@ class ReportDetail extends Component {
             </div>
         )
     }
-}
-
-function addCommas(nStr) {
-    nStr += '';
-    var x = nStr.split('.');
-    var x1 = x[0];
-    var x2 = x.length > 1 ? '.' + x[1] : '';
-    var rgx = /(\d+)(\d{3})/;
-    while (rgx.test(x1)) {
-        x1 = x1.replace(rgx, '$1' + ',' + '$2');
-    }
-    return x1 + x2;
 }
 
 const mapStateToProps = state => {

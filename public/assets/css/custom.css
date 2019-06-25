@@ -10,7 +10,7 @@ html {
   }
 }
 
-.zopim{display: none}
+.zopim{display: none !important;}
 .bg-default{background-color: #f2f2f2 !important;color: #333 !important;}
 .bg-success{background-color: #dff0d8 !important;}
 .bg-danger{background-color: #f2dede !important;}
@@ -282,4 +282,81 @@ html {
     cursor: auto;
 }
 
-.tbl-scan-result td, .tbl-scan-result th {font-size: 12px}
+.tbl-scan-result td, .tbl-scan-result th {font-size: 12px; vertical-align: middle !important;}
+
+.tbl-scan-result tbody:hover td[rowspan], .tbl-scan-result tr:hover td {
+  background-color: rgba(0,0,0,.075) !important;
+}
+
+.tbl-scan-result {
+  /* animation: fadein 1.5s;
+  -moz-animation: fadein 1.5s;
+  -webkit-animation: fadein 1.5s;
+  -o-animation: fadein 1.5s; */
+}
+
+@keyframes fadein {
+  from {
+      opacity:0;
+  }
+  to {
+      opacity:1;
+  }
+}
+@-moz-keyframes fadein { /* Firefox */
+  from {
+      opacity:0;
+  }
+  to {
+      opacity:1;
+  }
+}
+@-webkit-keyframes fadein { /* Safari and Chrome */
+  from {
+      opacity:0;
+  }
+  to {
+      opacity:1;
+  }
+}
+@-o-keyframes fadein { /* Opera */
+  from {
+      opacity:0;
+  }
+  to {
+      opacity: 1;
+  }
+}
+
+.list-banker-account.sportsbook .rec {
+  background: #e48c7a !important;
+  color: #ffffff !important;
+}
+.list-banker-account.sportsbook .pay {
+  background: #e47c79 !important;
+  color: #ffffff !important;
+}
+.list-banker-account.casino .rec {
+  background: #eeba70 !important;
+  color: #ffffff !important;
+}
+.list-banker-account.casino .pay {
+  background: #f09a93 !important;
+  color: #ffffff !important;
+}
+.list-banker-account.loto .rec {
+  background: #d7584d !important;
+  color: #ffffff !important;
+}
+.list-banker-account.loto .pay {
+  background: #d78aa3 !important;
+  color: #ffffff !important;
+}
+.list-banker-account.other .rec {
+  background: #9b609a !important;
+  color: #ffffff !important;
+}
+.list-banker-account.other .pay {
+  background: #a54b74 !important;
+  color: #ffffff !important;
+}

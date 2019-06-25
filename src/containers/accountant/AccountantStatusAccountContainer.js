@@ -72,7 +72,7 @@ class AccountantStatusAccountContainer extends Component {
             <>
                 <BankerAccountProcessingComponent bankerAccounts={this.bankerAccountProcessing} />
                 <div className="row">
-                    <BankerAccountEmptyComponent isOpenModal={this.state.isOpenModal} toggleModal={this.toggleModal} bankerAccounts={this.bankerAccountEmpty} />
+                    <BankerAccountEmptyComponent isOpenModal={this.state.isOpenModal} toggleModal={(type, bankerAccount) => this.toggleModal(type, bankerAccount)} bankerAccounts={this.bankerAccountEmpty} />
                     <BankerAccountErrorComponent isOpenModal={this.state.isOpenModal} toggleModal={(type, bankerAccount) => this.toggleModal(type, bankerAccount)} bankerAccounts={this.bankerAccountError} />
                 </div>
                 {/* Modal Area */}

@@ -32,6 +32,27 @@ class AccountantService {
 
         return payload
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Describe dynamic column table scan result
+    |--------------------------------------------------------------------------
+    */
+    getDynamicColumn() {
+        return [
+            {key: 'turnover', value: 'Turn over'},
+            {key: 'turnoverTT', value: 'TurnoverTT'},
+            {key: 'net_turnover', value: 'Net Turn over'},
+            {key: 'gross_comm', value: 'Gross Comm'},
+            {key: 'member_comm', value: 'MemberComm'},
+            {key: 'win_loss', value: 'Win lose'},
+            {key: 'company', value: 'Company'},
+            {key: 'ma_total', value: 'Total code'},
+            {key: 'payout', value: 'Payout'},
+            {key: 'master_total', value: 'master_total'},
+            {key: 'outstanding', value: 'outstanding'},
+        ]
+    }
 }
 
 export default new AccountantService()

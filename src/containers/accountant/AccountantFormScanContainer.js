@@ -6,7 +6,7 @@ import moment  from 'moment'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css"
 import MultiSelect from "@khanacademy/react-multi-select";
-import { join, filter, isEmpty as _isEmpty, map as _map, get as _get } from 'lodash'
+import { join, filter, isEmpty as _isEmpty, map as _map } from 'lodash'
 import { withRouter } from 'react-router-dom';
 
 

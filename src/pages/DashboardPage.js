@@ -5,6 +5,7 @@ import {withTranslation} from "react-i18next";
 // import ListOfTransaction from "my-containers/report/transaction/ListOfTransaction";
 
 import { QuickActivitiesContainer, PanelAlert } from "my-containers/dashboard"
+import TransactionPage from "./report/transaction/TransactionPage";
 
 class DashboardPage extends Component {
     
@@ -15,6 +16,7 @@ class DashboardPage extends Component {
             <section>
                 {/*<ListOfTransaction/>*/}
                 {/*<CreateTransaction/>*/}
+                <TransactionPage/>
                 <QuickActivitiesContainer />
                 <div className="row widget-row">
                     <div className="col-md-3">

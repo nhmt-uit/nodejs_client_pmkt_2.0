@@ -37,6 +37,7 @@ class SocketService {
     send(event, args, uuid) {
         let _uuid = uuid || uuidv4()
         this.listUUID2Event[_uuid] = event
+        
         this.socket.send({___Send: true, event: event, uuid: _uuid, args: [args]})
 
         switch (event) {
@@ -46,6 +47,9 @@ class SocketService {
             break
             case "scan":
                 // Map uuid & account_id
+            break
+            case "get_report":
+                this.listUUID2AccID[_uuid] = args.id
             break
             default: break
         }
@@ -73,6 +77,9 @@ class SocketService {
                     EventsService.emit('accountant_reload_banker_account_info', msg)
                 break
                 case "get_report":
+                    //Emit chanel when receive data of bankerACcount
+                    if(msg.data.hasOwnProperty("accountant") && msg.data.hasOwnProperty("dataFieldList") && msg.data.hasOwnProperty("formulaFieldList"))
+                        EventsService.emit('accountant_get_report_banker_account', {...msg, uuid2AccId: this.listUUID2AccID})
                 break
                 case "get_member":
                 break
@@ -88,6 +95,7 @@ class SocketService {
         EventsService.removeAllListeners('accountant_scan_reject')
         EventsService.removeAllListeners('accountant_scan_resolve')
         EventsService.removeAllListeners('accountant_reload_banker_account_info')
+        EventsService.removeAllListeners('accountant_get_report_banker_account')
         // EventsService.removeAllListeners('accountant_scan_stop')
     }
 

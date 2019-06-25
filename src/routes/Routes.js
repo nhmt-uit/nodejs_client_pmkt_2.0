@@ -4,8 +4,7 @@ import { ChangePasswordPage, ChangePassword2Page, ChangeSecureCodePage } from 'm
 
 import RoutesService from './RoutesService'
 import { AccountantListPage, AccountantManualPage } from 'my-pages/accountant';
-import { ReportPage } from 'my-pages/report';
-import ReportDetail from 'my-containers/report/ReportDetail'
+import { ReportPage, ReportDetailPage } from 'my-pages/report';
 
 const Routes = [
 	{
@@ -67,7 +66,7 @@ const Routes = [
 	{
 		path: RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT_DETAIL'),
 		exact: true,
-		component: ReportDetail,
+		component: ReportDetailPage,
 	},
 	{
 		path: '*',
