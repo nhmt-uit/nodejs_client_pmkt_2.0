@@ -23,8 +23,7 @@ class MemberContainer extends Component {
         var OptionMember = ListMember.map(function (item) {
             return(
                 <label key={item.id} className="mt-radio mt-radio-outline">
-                    <input type="radio" name={item.name} id={item.name} value={item.name}
-                           checked={this.state.selectedMoney === item.name} onChange={this.handleMoneyChange}/>
+                    <input type="radio" name={item.name} id={item.name} value={item.name}/>
                     {item.name}
                     <span></span>
                 </label>
@@ -34,7 +33,7 @@ class MemberContainer extends Component {
         return (
             <div>
                 <div className="col-md-8">
-                    <select value={this.state.selectedCycle} onChange={this.handleCycleChange}>
+                    <select>
                         <option value="Select cycle"> Select cycle </option>
                         {OptionMember}
                     </select>
@@ -43,7 +42,8 @@ class MemberContainer extends Component {
         );
     }
 }
-
+//checked={this.state.selectedMoney === item.name} onChange={this.handleMoneyChange}
+// value={this.state.selectedCycle} onChange={this.handleCycleChange}
 const mapStateToProps = state => {
     let initialValues = {};
     if(state.form.member){
