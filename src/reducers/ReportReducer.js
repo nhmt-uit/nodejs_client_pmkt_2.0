@@ -6,6 +6,7 @@ let defaultState = {
     cyclePage: {},
     isFetching: false,
     isFetchingReport: false,
+    itemActive: ''
 };
 
 const ReportReducer = (state = defaultState, action) => {
@@ -25,7 +26,7 @@ const ReportReducer = (state = defaultState, action) => {
         case ReportActionType.GET_REPORT:
             return {...state, isFetchingReport: true, errors: {}};
         case ReportActionType.GET_REPORT_SUCCESS:
-            return {...state, ...action.payload, isFetchingReport: false, errors: {}};
+            return {...state, ...action.payload.res, isFetchingReport: false, itemActive: action.payload.itemActive, errors: {}};
         case ReportActionType.GET_REPORT_FAIL:
             return {...state, isFetchingReport: false, errors: action.payload};
 
