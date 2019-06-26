@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import {compose} from "redux/es/redux";
 import {withTranslation} from "react-i18next";
-// import CreateTransaction from "my-containers/report/transaction/CreateTransaction";
-// import ListOfTransaction from "my-containers/report/transaction/ListOfTransaction";
 
 import { QuickActivitiesContainer, PanelAlert } from "my-containers/dashboard"
-import TransactionPage from "./report/transaction/TransactionPage";
 
 class DashboardPage extends Component {
     
@@ -14,9 +11,6 @@ class DashboardPage extends Component {
 
         return (
             <section>
-                {/*<ListOfTransaction/>*/}
-                {/*<CreateTransaction/>*/}
-                <TransactionPage/>
                 <QuickActivitiesContainer />
                 <div className="row widget-row">
                     <div className="col-md-3">

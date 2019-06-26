@@ -72,10 +72,10 @@ class ListOfTransaction extends Component {
 
 const mapStateToProps = state => {
     let initialValues = {};
-    if(state.form.all_transaction){
-        initialValues = state.form.all_transaction.values;
+    if(state.form.transaction){
+        initialValues = state.form.transaction.values;
     }
-    return {initialValues, auth: state.AuthReducer, allTransaction: state.all_transaction}
+    return {initialValues, auth: state.AuthReducer, allTransaction: state.transaction}
 }
 
 const mapDispatchToProps = (dispatch) => {
@@ -85,7 +85,7 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 export default compose(
-    reduxForm({form: 'all_transaction'}),
+    reduxForm({form: 'transaction'}),
     connect(mapStateToProps, mapDispatchToProps),
     withTranslation(),
 )(ListOfTransaction);

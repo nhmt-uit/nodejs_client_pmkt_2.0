@@ -22,7 +22,6 @@ const appReducers = combineReducers({
     banker: BankerReducer,
     alert: AlertReducer,
     report_detail: ReportDetailReducer,
-    all_transaction: TransactionReducer,
     transaction: TransactionReducer,
     member: MemberReducer,
     // type_of_money: TransactionReducer,

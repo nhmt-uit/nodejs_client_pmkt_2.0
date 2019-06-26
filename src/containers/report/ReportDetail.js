@@ -4,7 +4,7 @@ import {reduxForm} from "redux-form";
 import {connect} from "react-redux";
 import {withTranslation} from "react-i18next";
 import { getReportDetail} from "my-actions/report/ReportDetailAction";
-import {isEmpty, keyBy} from "lodash";
+import {isEmpty, keyBy, sortBy} from "lodash";
 
 import { Helpers } from 'my-utils'
 import { AuthService } from 'my-services/systems'
@@ -25,11 +25,12 @@ class ReportDetail extends Component {
         }
         var List = DATA.res.data;
         List = Object.entries(List);
+        //Sort Member by username
+        List = sortBy(List, [function(o) { return o[1].name;}]);
         //Khai bao mang chua tbody
         var arr = [];
         var DV_Tiente = DATA.res.currencyMap;
         var DV_Tiente_Map = keyBy(DV_Tiente, 'dv_tien_te_id')
-
 
         List.forEach(function (items, index) {
             index = index + 1;
@@ -152,12 +153,12 @@ class ReportDetail extends Component {
                                     <td className="text-center font-dark uppercase"> { item.book_type === "ALL" ? <span className="font-red bold uppercase"> {item.book_type} </span> : <span> {item.book_type} </span> } </td>
                                     <td className="text-center font-dark uppercase"> {item.account} </td>
                                     <td className="text-right"> {
-                                        item.VND < 0 ? <span className="font-red"> {Helpers.formatMoney(item.VND,0)} </span> : <span className="font-green"> {Helpers.formatMoney(item.VND,0)} </span>
+                                        item.VND < 0 ? <span className="font-red"> {Helpers.formatMoney(item.VND,0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney(item.VND,0)} </span>
                                     }
                                     </td>
 
                                     <td className="text-right"> {
-                                        item.USD < 0 ? <span className="font-red"> {Helpers.formatMoney(item.USD,0)} </span> : <span className="font-green"> {Helpers.formatMoney(item.USD,0)} </span>
+                                        item.USD < 0 ? <span className="font-red"> {Helpers.formatMoney(item.USD,0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney(item.USD,0)} </span>
                                     } </td>
 
                                     <td className="text-right"> 0 </td>
