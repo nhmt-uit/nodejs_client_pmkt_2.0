@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
 // System Reducers
+import AppReducer from './systems/AppReducer';
 import LanguageReducer from './systems/LanguageReducer';
 import AuthReducer from './systems/AuthReducer';
 import AccountantReducer from './AccountantReducer';
@@ -28,6 +29,7 @@ const appReducers = combineReducers({
     // type_of_money: TransactionReducer,
 
     // System reducers
+    AppReducer,
     LanguageReducer,
     AuthReducer,
 

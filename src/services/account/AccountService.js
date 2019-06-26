@@ -4,6 +4,10 @@ import { BaseService, HttpService} from 'my-utils/core'
 class AccountService extends BaseService {
     serviceUrl = `${AppConfig.API_URL}/account`
 
+    getMember() {
+        return HttpService.post(`${this.serviceUrl}`)
+    }
+
     deleteAccount(id) {
         const payload = {id: id}
         return HttpService.post(`${this.serviceUrl}/delete_account`, payload)

@@ -13,7 +13,7 @@ class DashboardPage extends Component {
         const { t } = this.props;
 
         return (
-            <section>
+            <>
                 {/*<ListOfTransaction/>*/}
                 {/*<CreateTransaction/>*/}
                 <TransactionPage/>
@@ -73,7 +73,7 @@ class DashboardPage extends Component {
                     </div>
                 </div>
                 <PanelAlert/>
-            </section>
+            </>
         );
     }
 }

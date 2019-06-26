@@ -3,7 +3,7 @@ import { compose } from 'redux'
 import { connect } from 'react-redux'
 import { withTranslation } from 'react-i18next'
 import { Table } from 'react-bootstrap'
-import { isEmpty as _isEmpty, uniq as _uniq} from 'lodash'
+import { isEmpty as _isEmpty, uniq as _uniq, cloneDeep as _cloneDeep, isEqual as _isEqual} from 'lodash'
 import uuidv4 from 'uuid/v4'
 
 import {AccountantBankerAccountResultRowContainer, ModalDeleteFormulaContainer} from 'my-containers/accountant'
@@ -11,28 +11,43 @@ import {AccountantService} from 'my-services/account'
 
 
 class AccountantBankerAccountResultContainer extends Component {
+    shouldComponentUpdate(newProps, newState) {
+        if(!_isEqual(newProps.isShowAllFormula, this.props.isShowAllFormula)
+            || !_isEqual(newProps.isFullScreen, this.props.isFullScreen)
+            )
+            return true
+        return false;
+    }
 
     componentWillMount() {
         this.dynamicColumn = AccountantService.getDynamicColumn()
     }
 
-    handleNestedDataAccountant = (item) => {
+    handleNestedDataAccountant = (item, parent) => {
         const isShowAllFormula = this.props.isShowAllFormula
-        const bankerAccountId = this.props.payload.id
-        const dataFieldList = this.props.payload.dataFieldList
-        const scanData = this.props.payload.scanData
         
-        return item.map(node => {
-            console.log(node, this.handleNestedChedkHasFormula(node))
+        return item.map((node, idx) => {
             return (
                 <>
                     {(isShowAllFormula === false && this.handleNestedChedkHasFormula(node)) || (isShowAllFormula) ?
-                        <AccountantBankerAccountResultRowContainer key={uuidv4()} item={node} dataFieldList={dataFieldList} scanData={scanData} bankerAccountId={bankerAccountId} />
+                        <AccountantBankerAccountResultRowContainer key={uuidv4()} parent={parent} item={node} bankerAccount={this.props.payload} bankerAccountType={this.props.bankerAccountType} />
                         : null
                     }
-                    {node.child.length === 0 ? null : this.handleNestedDataAccountant(node.child)}
+                    {node.child.length === 0 || (typeof node.isShowChild !== "undefined" && node.isShowChild === false) ? null : this.handleNestedDataAccountant(node.child, node)}
                 </>
             )
+        })
+    }
+
+    handleProcessDataWhenActiveFilterNoFormula = (item) => {
+        const isShowAllFormula = this.props.isShowAllFormula
+        if (_isEmpty(item)) return
+        return item.map(node => {
+            if(_uniq(node.child.map(node => this.handleNestedChedkHasFormula(node))).indexOf(true) === -1) {
+                node.child = []
+            }
+            this.handleProcessDataWhenActiveFilterNoFormula(node.child)
+            return node
         })
     }
 
@@ -57,10 +72,10 @@ class AccountantBankerAccountResultContainer extends Component {
     }
 
     render() {
-        
-        const { t, payload } = this.props
+        const { t, payload, isFullScreen, isShowAllFormula } = this.props
         const dataFieldList = payload.dataFieldList
-        const accountant = payload.accountant
+        const accountant = isShowAllFormula === false ? this.handleProcessDataWhenActiveFilterNoFormula(_cloneDeep(payload.accountant)) : _cloneDeep(payload.accountant)
+        
         return (
             <Table responsive striped bordered condensed className="tbl-scan-result">
                 <thead>
@@ -72,10 +87,10 @@ class AccountantBankerAccountResultContainer extends Component {
                         {/* dynamic data */}
                         <th>{t("Formula")}</th>
                         {/* Hidden Column */}
-                        {/* <th>{t("lock out")}</th>
-                        <th>{t("Ratio")}</th>
-                        <th>{t("Price")}</th>
-                        <th>{t("Pay/Rec")}</th> */}
+                        {isFullScreen ? <th>{t("lock out")}</th> : null}
+                        {isFullScreen ? <th>{t("Ratio")}</th> : null}
+                        {isFullScreen ? <th>{t("Price")}</th> : null}
+                        {isFullScreen ? <th>{t("Pay/Rec")}</th> : null}
                         {/* Hidden Column */}
                         <th>{t("Member")}</th>
                         <th>{t("Result")}</th>
@@ -94,6 +109,7 @@ class AccountantBankerAccountResultContainer extends Component {
 const mapStateToProps = state => {
     return {
         isShowAllFormula : state.AccountantReducer.isShowAllFormula,
+        isFullScreen : state.AppReducer.isFullScreen,
     }
 }
 

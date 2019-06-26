@@ -6,7 +6,7 @@ import moment  from 'moment'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css"
 import MultiSelect from "@khanacademy/react-multi-select";
-import { join, filter, isEmpty as _isEmpty, map as _map } from 'lodash'
+import { join, filter, isEmpty as _isEmpty, map as _map, isEqual as _isEqual } from 'lodash'
 import { withRouter } from 'react-router-dom';
 
 
@@ -14,6 +14,7 @@ import { AppConfig } from 'my-constants'
 import BootstrapInputIcon from 'my-utils/components/date-picker/BootstrapInputIcon'
 import { FormScanButtonComponent, FormScanGroupDateComponent } from 'my-components/accountant'
 import { socketInitData, socketScanData, socketStopScanData, socketSaveReport, checkBankerAccount } from 'my-actions/AccountantAction';
+import { toggleFullScreen } from 'my-actions/systems/AppAction';
 import { SocketService } from 'my-utils/core';
 import { RoutesService } from 'my-routes'
 
@@ -30,6 +31,21 @@ class AccountantFormScanContainer extends Component {
         typeGroupDate: 'today',
         from_date: new Date(),
         to_date: new Date()
+    }
+
+    shouldComponentUpdate(newProps, newState) {
+        if(!_isEqual(newProps.socketInitStatus, this.props.socketInitStatus)
+            || !_isEqual(newProps.member, this.props.member)
+            || !_isEqual(newProps.banker, this.props.banker)
+            || !_isEqual(newProps.bankerAccount, this.props.bankerAccount)
+            || !_isEqual(newProps.isFullScreen, this.props.isFullScreen)
+            || !_isEqual(newState.typeGroupDate, this.state.typeGroupDate)
+            || !_isEqual(newState.from_date, this.state.from_date)
+            || !_isEqual(newState.typeGroupDate, this.state.typeGroupDate)
+            || !_isEqual(newState.to_date, this.state.to_date)
+            )
+            return true
+        return false;
     }
 
     componentDidMount() {
@@ -166,7 +182,7 @@ class AccountantFormScanContainer extends Component {
     )
     
     renderValue = (selected, options) => {
-        let label = 'Select the member'
+        let label = 'Select member'
         if (selected.length) {
             let labels = []
             for (let x in selected) {
@@ -205,7 +221,7 @@ class AccountantFormScanContainer extends Component {
             if(label.search(filter) !== -1) return item
         })
     }
-    
+
     render() {
         const { t } = this.props
 
@@ -216,19 +232,24 @@ class AccountantFormScanContainer extends Component {
         return (
             <div className="portlet light bordered">
                 <div className="portlet-title">
-                    <div className="caption font-red-sunglo"><span className="caption-subject bold uppercase">{t("Accountant")}</span></div>
-                    <div className="tools"><span className="collapse"> </span></div>
+                    <div className="caption font-red-sunglo"><span className="caption-subject bold uppercase">Accountant</span></div>
+                    <div className="actions">
+                        <a className="btn btn-default btn-fullscreen" href="javascript:;" onClick={this.props.toggleFullScreen}>
+                            <i className={this.props.isFullScreen ? "fa fa-compress" : "fa fa-expand"} />
+                            {this.props.isFullScreen ? "Exit Full Screen" : "Full Screen"}
+                        </a>
+                    </div>
                 </div>
                 <div className="portlet-body form">
                     <form className="form-inline">
                         <div className="form-group input-xlarge">
                             <div className="mt-radio-inline">
                                 <label className="mt-radio">
-                                    <input type="radio" name="optionsRadios"  /> {t("All")}
+                                    <input type="radio" name="optionsRadios"  /> All
                                     <span></span>
                                 </label>
                                 <label className="mt-radio">
-                                    <input type="radio" name="optionsRadios"  /> {t("SB & CSN & GAMES-XS & RACING & ESB")}
+                                    <input type="radio" name="optionsRadios"  /> SB & CSN & GAMES-XS & RACING & ESB
                                     <span></span>
                                 </label>
                             </div>
@@ -273,6 +294,7 @@ const mapStateToProps = state => {
         member : state.AccountantReducer.member,
         banker : state.AccountantReducer.banker,
         bankerAccount : state.AccountantReducer.bankerAccount,
+        isFullScreen : state.AppReducer.isFullScreen
     }
 }
 
@@ -283,12 +305,9 @@ const mapDispatchToProps = (dispatch) => {
         socketStopScanData: bankerAccount => {dispatch(socketStopScanData(bankerAccount))},
         socketSaveReport: bankerAccount => {dispatch(socketSaveReport(bankerAccount))},
         checkBankerAccount: (type_check, params) => {dispatch(checkBankerAccount(type_check, params))},
+        toggleFullScreen: _ => {dispatch(toggleFullScreen())},
     }
 };
 
-export default compose(
-    connect(mapStateToProps, mapDispatchToProps),
-    withTranslation(),
-    withRouter
-)(AccountantFormScanContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(AccountantFormScanContainer);
 

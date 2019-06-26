@@ -355,3 +355,13 @@ html {
   background: #a54b74 !important;
   color: #ffffff !important;
 }
+
+.page-header.navbar .top-menu .navbar-nav>li.dropdown>.dropdown-toggle:last-child{padding-right: 10px;}
+
+/* Full screen */
+.btn-fullscreen i.fa {margin-right: 5px}
+.full-screen .page-header, .full-screen .page-sidebar-wrapper {display: none}
+.full-screen .page-container {margin-top: 0px}
+@media (min-width: 992px) {
+  .full-screen .page-content-wrapper .page-content { margin-left: 0px;}
+}

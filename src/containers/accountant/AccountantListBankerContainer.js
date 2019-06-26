@@ -3,13 +3,22 @@ import { compose } from 'redux'
 import { connect } from 'react-redux'
 import { withTranslation } from 'react-i18next'
 import { Collapse } from 'reactstrap'
-import { isEmpty as _isEmpty } from 'lodash'
+import { isEmpty as _isEmpty, isEqual as _isEqual } from 'lodash'
 import { collapseBanker, checkBanker, checkBankerAccount } from 'my-actions/AccountantAction';
 import { LoadingComponent } from 'my-components';
-import { AccountantListBankerAccountContainer, ModalDeleteFormulaContainer } from 'my-containers/accountant';
+import { AccountantListBankerAccountContainer, ModalDeleteFormulaContainer, ModalFormFormulaContainer } from 'my-containers/accountant';
 
 class AccountantListBankerContainer extends Component {
+    shouldComponentUpdate(newProps, newState) {
+        if(!_isEqual(newProps.socketInitStatus, this.props.socketInitStatus)
+            || !_isEqual(newProps.banker, this.props.banker)
+            )
+            return true
+        return false;
+    }
+
     render() {
+        console.log("render lis banker")
         if (this.props.socketInitStatus !== "finish" && _isEmpty(this.props.banker)) return <LoadingComponent />
         return (
             <>
@@ -36,6 +45,7 @@ class AccountantListBankerContainer extends Component {
             }
             {/* Modal Delete Formular */}
             <ModalDeleteFormulaContainer />
+            <ModalFormFormulaContainer />
             </>
         )
     }
@@ -46,8 +56,7 @@ class AccountantListBankerContainer extends Component {
 const mapStateToProps = state => {
     return {
         socketInitStatus : state.AccountantReducer.socketInitStatus,
-        banker : state.AccountantReducer.banker,
-        bankerAccount : state.AccountantReducer.bankerAccount
+        banker : state.AccountantReducer.banker
     }
 }
 

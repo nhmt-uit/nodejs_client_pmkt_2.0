@@ -3,12 +3,21 @@ import React, { Component } from 'react';
 import { compose } from 'redux'
 import { connect } from 'react-redux'
 import { withTranslation } from 'react-i18next'
-import { has as _has, isEmpty as _isEmpty } from 'lodash'
+import { has as _has, isEmpty as _isEmpty, isEqual as _isEqual } from 'lodash'
 
 import { checkBankerAccount, collapseBanker, toggleShowAllFormula } from 'my-actions/AccountantAction';
 
 
 class AccountantListBankerUtilContainer extends Component {
+    shouldComponentUpdate(newProps, newState) {
+        if(!_isEqual(newProps.socketInitStatus, this.props.socketInitStatus)
+            || !_isEqual(newProps.banker, this.props.banker)
+            || !_isEqual(newProps.isShowAllFormula, this.props.isShowAllFormula)
+            )
+            return true
+        return false;
+    }
+
     render() {
         const { t } = this.props
         if (this.props.socketInitStatus !== "finish") return null

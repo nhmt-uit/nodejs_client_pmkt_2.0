@@ -2,10 +2,10 @@ import React, { Component } from 'react'
 
 class BankerAccountStatusIconComponent extends Component {
     render() {
-        const {bankerAccountType} = this.props
-        let xhtml = null
-        if(!bankerAccountType) return xhtml
+        const bankerAccountType = this.props.bankerAccountType
+        if(!bankerAccountType) return null
         
+        let xhtml
         switch (bankerAccountType) {
             case "notify" :
                 xhtml = <i className="fa fa-spinner font-yellow-soft spinner-animate" />
@@ -20,11 +20,12 @@ class BankerAccountStatusIconComponent extends Component {
             default: break
         }
 
-
         return (
             xhtml
         )
     }
 }
+
+
 
 export default BankerAccountStatusIconComponent

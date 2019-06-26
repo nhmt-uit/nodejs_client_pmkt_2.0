@@ -1,4 +1,4 @@
-import { map as _map, isEmpty as _isEmpty, get as _get, uniq as _uniq, difference as _difference } from 'lodash'
+import { map as _map, isEmpty as _isEmpty, get as _get, uniq as _uniq, difference as _difference, cloneDeep as _cloneDeep } from 'lodash'
 import { AccountantActionType } from 'my-constants/action-types'
 
 let defaultState = {
@@ -18,10 +18,10 @@ let defaultState = {
 }
 
 export const AccountantReducer = (state = defaultState, action) => {
-	let newMember = [...state.member]
-	let newBanker = [...state.banker]
-	let newBankerAccount = [...state.bankerAccount]
-	let newBankerAccountByMember = [...state.bankerAccountByMember]
+	let newMember = _cloneDeep(state.member)
+	let newBanker = _cloneDeep(state.banker)
+	let newBankerAccount = _cloneDeep(state.bankerAccount)
+	let newBankerAccountByMember = _cloneDeep(state.bankerAccountByMember)
 	switch(action.type){
 		case AccountantActionType.ACCOUNTANT_SOCKET_INIT_DATA:
 			let socketInitStatus = 'inprogress'
@@ -112,6 +112,12 @@ export const AccountantReducer = (state = defaultState, action) => {
 				newBanker.map(item => {item.collapse = true})
 			}
 			return {...state, banker: newBanker}
+		case AccountantActionType.ACCOUNTANT_COLLAPSE_BANKER_ACCOUNT:
+			var objIndex = newBankerAccount.findIndex((obj => obj.id === action.bankerAccountId))
+			if (objIndex !== -1){
+				newBankerAccount[objIndex].collapse = !newBankerAccount[objIndex].collapse
+			}
+			return {...state, bankerAccount: newBankerAccount}
 		/*
 		|--------------------------------------------------------------------------
 		| Scan Data
@@ -120,31 +126,39 @@ export const AccountantReducer = (state = defaultState, action) => {
 		case AccountantActionType.ACCOUNTANT_SOCKET_SCAN_DATA_START:
 			for(let x in action.payload) {
 				var objIndex = newBankerAccount.findIndex((obj => obj.id === action.payload[x]))
-				newBankerAccount[objIndex].type = "notify"
-				newBankerAccount[objIndex].message = "Sending request"
-				newBankerAccount[objIndex].uuid = x
+				if (objIndex !== -1) {
+					newBankerAccount[objIndex].type = "notify"
+					newBankerAccount[objIndex].message = "Sending request"
+					newBankerAccount[objIndex].uuid = x
+				}
 			}
 			return {...state, bankerAccount: newBankerAccount}
 		case AccountantActionType.ACCOUNTANT_SOCKET_SCAN_DATA_NOTIFY:
 			var objIndex = newBankerAccount.findIndex((obj => obj.uuid === action.full_payload.uuid))
-			newBankerAccount[objIndex].message = _get(action, 'full_payload.data.message')
+			if (objIndex !== -1) newBankerAccount[objIndex].message = _get(action, 'full_payload.data.message')
 			return {...state, bankerAccount: newBankerAccount}
 		case AccountantActionType.ACCOUNTANT_SOCKET_SCAN_DATA_REJECT:
 			var objIndex = newBankerAccount.findIndex((obj => obj.uuid === action.full_payload.uuid))
-			newBankerAccount[objIndex].type = "reject"
-			newBankerAccount[objIndex].message = _get(action, 'full_payload.data.message')
+			if (objIndex !== -1) {
+				newBankerAccount[objIndex].type = "reject"
+				newBankerAccount[objIndex].message = _get(action, 'full_payload.data.message')
+			}
 			return {...state, bankerAccount: newBankerAccount}
 		case AccountantActionType.ACCOUNTANT_SOCKET_SCAN_DATA_RESOLVE:
 			var objIndex = newBankerAccount.findIndex((obj => obj.uuid === action.full_payload.uuid))
-			newBankerAccount[objIndex].type = "resolve"
-			newBankerAccount[objIndex].message = null
-			newBankerAccount[objIndex].data = action.full_payload.data
+			if (objIndex !== -1) {
+				newBankerAccount[objIndex].type = "resolve"
+				newBankerAccount[objIndex].message = null
+				newBankerAccount[objIndex].data = action.full_payload.data
+			}
 			return {...state, bankerAccount: newBankerAccount}
 		case AccountantActionType.ACCOUNTANT_SOCKET_SCAN_DATA_STOP:
 			for(let x of action.bankerAccountIds) {
 				var objIndex = newBankerAccount.findIndex((obj => obj.id === x))
-				newBankerAccount[objIndex].type = "stop"
-				newBankerAccount[objIndex].message = "Stopped"
+				if (objIndex !== -1) {
+					newBankerAccount[objIndex].type = "stop"
+					newBankerAccount[objIndex].message = "Stopped"
+				}
 			}
 			return {...state, bankerAccount: newBankerAccount}
 		case AccountantActionType.ACCOUNTANT_DELETE_BANKER_ACCOUNT:
@@ -154,26 +168,48 @@ export const AccountantReducer = (state = defaultState, action) => {
 			return {...state, banker: newBanker, bankerAccount: newBankerAccount}
 		case AccountantActionType.ACCOUNTANT_SOCKET_RELOAD_BANKER_ACCOUNT_INFO:
 			var objIndex = newBankerAccount.findIndex((obj => obj.id === action.payload.id))
-			newBankerAccount[objIndex] = {...newBankerAccount[objIndex], ...action.payload}
-			newBankerAccount[objIndex].type = null
-			newBankerAccount[objIndex].message = null
-			newBankerAccount[objIndex].data = null
+			if (objIndex !== -1) {
+				newBankerAccount[objIndex] = {...newBankerAccount[objIndex], ...action.payload}
+				newBankerAccount[objIndex].type = null
+				newBankerAccount[objIndex].message = null
+				newBankerAccount[objIndex].data = null
+			}
 			return {...state, bankerAccount: newBankerAccount}
 		case AccountantActionType.ACCOUNTANT_SOCKET_GET_REPORT_BANKER_ACCOUNT:
 			let bankerAccountId = action.uuid2AccId[action.full_payload.uuid]
 			if(!_isEmpty(bankerAccountId)) {
 				var objIndex = newBankerAccount.findIndex((obj => obj.id === bankerAccountId))
-				newBankerAccount[objIndex].data = {...newBankerAccount[objIndex].data, ...action.payload}
+				if (objIndex !== -1) newBankerAccount[objIndex].data = {...newBankerAccount[objIndex].data, ...action.payload}
 			}
 			return {...state, bankerAccount: newBankerAccount}
 		case AccountantActionType.ACCOUNTANT_TOGGLE_SHOW_ALL_FORMULA:
 			return {...state, isShowAllFormula: !state.isShowAllFormula}
 		case AccountantActionType.ACCOUNTANT_TOGGLE_MODAL_DELETE_FORMULA:
 			return {...state, isOpenModalDeleteFormula: !state.isOpenModalDeleteFormula, payloadDeleteFormula: action.payloadDeleteFormula}
+		case AccountantActionType.ACCOUNTANT_TOGGLE_SHOW_HIDE_BANKER_ACCOUNT_CHILD:
+			var objIndex = newBankerAccount.findIndex((obj => obj.id === action.bankerAccountId))
+			if (objIndex !== -1){
+				newBankerAccount[objIndex].data.accountant = handleProcessDataWhenToggleShowHideChild(newBankerAccount[objIndex].data.accountant, action.username)
+			}
+			return {...state, bankerAccount: newBankerAccount}
 		default:
 			return {...state}
 	}
 }
+
+
+function handleProcessDataWhenToggleShowHideChild(accountant, username) {
+	if (_isEmpty(accountant)) return
+	return accountant.map(node => {
+		if(node.username === username) {
+			node.isShowChild = (typeof node.isShowChild === "undefined") ? false : !node.isShowChild
+			return node
+		}
+		handleProcessDataWhenToggleShowHideChild(node.child, username)
+		return node
+	})
+}
+
 
 //reference function
 function toggleBanker(banker, bankerAccount, bankerAccountChecked, bankerId) {

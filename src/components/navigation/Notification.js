@@ -4,17 +4,25 @@ import { compose } from 'redux';
 import { withTranslation } from 'react-i18next';
 import { get } from 'lodash';
 import { Link } from 'react-router-dom';
+import { isEqual as _isEqual } from 'lodash'
 
 import { RoutesService } from 'my-routes';
 import { getMsg, getFriend } from 'my-actions/systems/NotificationAction';
 
 class Notification extends Component {
+    shouldComponentUpdate(newProps, newState) {
+        if(!_isEqual(newProps.notification, this.props.notification))
+            return true
+        return false;
+    }
+
     componentDidMount() {
         this.props.getMsg();
         this.props.getFriend();
     }
 
     render() {
+        console.log("redner")
         const notification = this.props.notification;
         const count = get(notification, 'msg.acc', 0);
 

@@ -1,3 +1,4 @@
+import * as AppActionType from './AppActionType'
 import * as LanguageActionType from './LanguageActionType'
 import * as AuthActionType from './AuthActionType'
 import * as AccountantActionType from './AccountantActionType'
@@ -12,6 +13,7 @@ import * as ReportDetailActionType from './ReportDetailActionType'
 import * as TransactionActionType from './TransactionActionType'
 import * as MemberActionType from './MemberActionType'
 export {
+    AppActionType,
     LanguageActionType,
     AuthActionType,
     AccountantActionType,

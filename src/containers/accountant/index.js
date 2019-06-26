@@ -6,6 +6,7 @@ import AccountantListBankerUtilContainer from './AccountantListBankerUtilContain
 import AccountantBankerAccountResultContainer from './scan-result/AccountantBankerAccountResultContainer'
 import AccountantBankerAccountResultRowContainer from './scan-result/AccountantBankerAccountResultRowContainer'
 import ModalDeleteFormulaContainer from './scan-result/ModalDeleteFormulaContainer'
+import ModalFormFormulaContainer from './scan-result/ModalFormFormulaContainer'
 
 export {
     AccountantFormScanContainer,
@@ -15,5 +16,5 @@ export {
     AccountantStatusAccountContainer,
     AccountantBankerAccountResultContainer,
     AccountantBankerAccountResultRowContainer,
-    ModalDeleteFormulaContainer,
+    ModalDeleteFormulaContainer, ModalFormFormulaContainer
 }

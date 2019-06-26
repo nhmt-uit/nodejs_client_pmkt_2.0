@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { compose } from 'redux'
 import { connect } from 'react-redux'
 import { withTranslation } from 'react-i18next'
-import { get as _get, map as _map, isEmpty as _isEmpty} from 'lodash'
+import { get as _get, map as _map, isEmpty as _isEmpty, isEqual as _isEqual} from 'lodash'
 
 import { BankerAccountErrorComponent, BankerAccountEmptyComponent, BankerAccountProcessingComponent } from 'my-components/accountant'
 import { ModalDeleteAccountContainer, ModalFormAccountContainer } from 'my-containers/account'
@@ -14,6 +14,16 @@ class AccountantStatusAccountContainer extends Component {
         modal: false,
         selectedItem: null
     };
+    shouldComponentUpdate(newProps, newState) {
+        if(!_isEqual(newProps.bankerAccount, this.props.bankerAccount)
+            || !_isEqual(newState.typeModal, this.state.typeModal)
+            || !_isEqual(newState.modal, this.state.modal)
+            || !_isEqual(newState.selectedItem, this.state.selectedItem)
+            )
+            return true
+        return false;
+    }
+
     /*
     |--------------------------------------------------------------------------
     | type: notify, reject
@@ -71,13 +81,13 @@ class AccountantStatusAccountContainer extends Component {
         return (
             <>
                 <BankerAccountProcessingComponent bankerAccounts={this.bankerAccountProcessing} />
-                <div className="row">
+                {/* <div className="row">
                     <BankerAccountEmptyComponent isOpenModal={this.state.isOpenModal} toggleModal={(type, bankerAccount) => this.toggleModal(type, bankerAccount)} bankerAccounts={this.bankerAccountEmpty} />
                     <BankerAccountErrorComponent isOpenModal={this.state.isOpenModal} toggleModal={(type, bankerAccount) => this.toggleModal(type, bankerAccount)} bankerAccounts={this.bankerAccountError} />
-                </div>
+                </div> */}
                 {/* Modal Area */}
-                <ModalDeleteAccountContainer isOpen={this.state.typeModal === "delete" && this.state.isOpenModal} toggle={this.toggleModal} account={this.state.selectedItem} callback={this.handleFinishDelete} />
-                <ModalFormAccountContainer isOpen={this.state.typeModal === "update" && this.state.isOpenModal} toggle={this.toggleModal} account={this.state.selectedItem} formType="update" />
+                {/* <ModalDeleteAccountContainer isOpen={this.state.typeModal === "delete" && this.state.isOpenModal} toggle={this.toggleModal} account={this.state.selectedItem} callback={this.handleFinishDelete} />
+                <ModalFormAccountContainer isOpen={this.state.typeModal === "update" && this.state.isOpenModal} toggle={this.toggleModal} account={this.state.selectedItem} formType="update" /> */}
             </>
         );
     }

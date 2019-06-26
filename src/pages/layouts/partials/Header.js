@@ -41,7 +41,7 @@ class Header extends Component {
         const { t } = this.props;
 
         return (
-            <div>
+            <>
                 <div className="page-header navbar navbar-fixed-top">
                     <div className="page-header-inner ">
                         <div className="page-logo">
@@ -140,7 +140,7 @@ class Header extends Component {
                         <Button color="secondary" onClick={this.toggleModalBanker}> {t("Close")}</Button>
                     </ModalFooter>
                 </Modal>
-            </div>
+            </>
         )
     }
 }

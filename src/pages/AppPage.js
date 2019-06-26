@@ -43,10 +43,10 @@ class AppPage extends BaseComponent {
 		const pathname = window.location.pathname;
 		if(!isLogin && !pathname.match(/\/auth\/login/i)) return null
 		return (
-			<section>
+			<>
 				<RenderComponent />
 				<Loading />
-			</section>
+			</>
 		);
 	}
 }

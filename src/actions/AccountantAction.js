@@ -234,6 +234,17 @@ export const collapseBanker = (type, bankerId) => {
     }
 }
 
+
+export const collapseBankerAccount = (bankerAccountId) => {
+    // Dispatch toggle banker
+   return (dispatch) => {
+       dispatch({
+           type: AccountantActionType.ACCOUNTANT_COLLAPSE_BANKER_ACCOUNT,
+           bankerAccountId: bankerAccountId
+       });
+   }
+}
+
 /*
 |--------------------------------------------------------------------------
 | Handle Toogle toggle check banker
@@ -299,11 +310,21 @@ export const toggleModalDeleteFormula = params => {
 */
 export const toggleShowAllFormula = (type, bankerId) => {
     // Dispatch toggle banker
-   return (dispatch) => {
+    return (dispatch) => {
        dispatch({
            type: AccountantActionType.ACCOUNTANT_TOGGLE_SHOW_ALL_FORMULA,
            type_collapse: type,
            bankerId: bankerId
        });
    }
+}
+
+export const toggleShowHideBankerAccountChild = params => {
+    return (dispatch) => {
+        dispatch({
+            type: AccountantActionType.ACCOUNTANT_TOGGLE_SHOW_HIDE_BANKER_ACCOUNT_CHILD,
+            bankerAccountId: _get(params, 'bankerAccountId', null),
+            username: _get(params, 'username', [])
+        });
+    }
 }
