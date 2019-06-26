@@ -284,7 +284,7 @@ class ReportListContainer extends Component {
                 <div className="portlet light bordered">
                     <div className="portlet-title">
                         <div className="caption">
-                            <span className="caption-subject font-green sbold uppercase">{t('report')}</span>
+                            <span className="caption-subject font-red bold uppercase">{t('report')}</span>
                         </div>
                         {btnAdd}
                     </div>
@@ -299,7 +299,7 @@ class ReportListContainer extends Component {
             <div className="portlet light bordered">
                 <div className="portlet-title">
                     <div className="caption">
-                        <span className="caption-subject font-green sbold uppercase">{t('report')}</span>
+                        <span className="caption-subject font-red bold uppercase">{t('report')}</span>
                     </div>
                     <div className="actions">
                         <button className="btn btn-danger">{t('Add')}</button>
