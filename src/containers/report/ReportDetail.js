@@ -4,7 +4,7 @@ import {reduxForm} from "redux-form";
 import {connect} from "react-redux";
 import {withTranslation} from "react-i18next";
 import { getReportDetail} from "my-actions/report/ReportDetailAction";
-import {isEmpty} from "lodash";
+import {isEmpty, keyBy} from "lodash";
 
 import { Helpers } from 'my-utils'
 import { AuthService } from 'my-services/systems'
@@ -25,9 +25,11 @@ class ReportDetail extends Component {
         }
         var List = DATA.res.data;
         List = Object.entries(List);
-        console.log("LIST :", List)
         //Khai bao mang chua tbody
         var arr = [];
+        var DV_Tiente = DATA.res.currencyMap;
+        var DV_Tiente_Map = keyBy(DV_Tiente, 'dv_tien_te_id')
+
 
         List.forEach(function (items, index) {
             index = index + 1;
@@ -48,12 +50,15 @@ class ReportDetail extends Component {
                     Money = item[1][1].total;
                     Money = Object.entries(Money);
                     Money.forEach(function(item) {
-                        if(item[1].id === "56a9e8f219ba3b81be8c58e9"){
+                        var typeOfMoney = DV_Tiente_Map[item[1].id].dv_tien_te
+                        if(typeOfMoney == 'VND'){
                             VND = item[1].result
                         }
-                        if(item[1].id === "56a9e8f219ba3b81be8c58e8"){
+                        if(typeOfMoney == 'USD') {
                             USD = item[1].result
-                        }})
+                        }
+
+                    })
 
                     arr.push({
                         index: index,
@@ -73,10 +78,11 @@ class ReportDetail extends Component {
                         var Money = item[1].total;
                         Money = Object.entries(Money);
                         Money.forEach(function (item) {
-                            if(item[1].id === "56a9e8f219ba3b81be8c58e9"){
+                            var typeOfMoney = DV_Tiente_Map[item[1].id].dv_tien_te
+                            if(typeOfMoney == 'VND'){
                                 VND = item[1].result
                             }
-                            if(item[1].id === "56a9e8f219ba3b81be8c58e8"){
+                            if(typeOfMoney == 'USD'){
                                 USD = item[1].result
                             }});
                         arr.push({
@@ -95,10 +101,11 @@ class ReportDetail extends Component {
                             Money = item[1].total;
                             Money = Object.entries(Money);
                             Money.forEach(function (item) {
-                                if(item[1].id === "56a9e8f219ba3b81be8c58e9"){
+                                var typeOfMoney = DV_Tiente_Map[item[1].id].dv_tien_te
+                                if(typeOfMoney == 'VND'){
                                     VND = item[1].result
                                 }
-                                if(item[1].id === "56a9e8f219ba3b81be8c58e8"){
+                                if(typeOfMoney == 'USD'){
                                     USD = item[1].result
                                 }})
                             arr.push({
