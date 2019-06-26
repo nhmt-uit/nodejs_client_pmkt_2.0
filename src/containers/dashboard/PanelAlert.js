@@ -1,11 +1,9 @@
 import React, {Component} from 'react';
-import {withTranslation} from "react-i18next";
-import {compose} from "redux";
 import {connect} from "react-redux";
-import {reduxForm} from "redux-form";
+import { get as _get, isEmpty as _isEmpty} from 'lodash'
 
 import {getAlert} from "my-actions/systems/AlertAction";
-import { isEmpty} from 'lodash'
+import { TransComponent } from 'my-components'
 
 class PanelAlert extends Component{
     componentWillMount() {
@@ -13,10 +11,8 @@ class PanelAlert extends Component{
     }
 
     render() {
-        const { t } = this.props;
-        var DATA = {};
-        DATA = this.props.alert.payload;
-        if(isEmpty(DATA)){
+        const DATA = _get(this.props, "alert.payload")
+        if(_isEmpty(DATA)){
             return null;
         }
         var List = DATA.res.data;
@@ -27,17 +23,17 @@ class PanelAlert extends Component{
                         <div className="portlet-title">
                             <div className="col-xs-9 caption">
                                 <i className="icon-social-dribbble font-green hide"></i>
-                                <span className="caption-subject font-dark bold uppercase"> {t("Overview")} </span>
+                                <span className="caption-subject font-dark bold uppercase"> <TransComponent i18nKey="Overview" /></span>
                             </div>
                             <div>
                                 <ul className="col-xs-3 nav nav-tabs">
                                     <li>
                                         <i className="fa fa-minus font-green-haze"></i>
-                                        <span> {t("Turnover")} </span>
+                                        <span> <TransComponent i18nKey="Turnover" /></span>
                                     </li>
                                     <li>
                                         <i className="fa fa-minus font-yellow-casablanca"></i>
-                                        <span> {t("Tickets")} </span>
+                                        <span> <TransComponent i18nKey="Tickets" /></span>
                                     </li>
                                 </ul>
                             </div>
@@ -54,7 +50,7 @@ class PanelAlert extends Component{
                         <div className="portlet-title">
                             <div className="caption">
                                 <i className="icon-social-dribbble font-green hide"></i>
-                                <span className="caption-subject font-dark bold uppercase"> {t("Alert")} </span>
+                                <span className="caption-subject font-dark bold uppercase"> <TransComponent i18nKey="Alert" /></span>
                             </div>
                         </div>
                         <div className="portlet-body table-scrollable" style={{maxHeight:"400px", overflowY: 'scroll'}}>
@@ -91,13 +87,6 @@ class PanelAlert extends Component{
     }
 }
 
-const mapStateToProps = state => {
-    let initialValues = {};
-    if(state.form.alert) {
-        initialValues = state.form.alert.values;
-    }
-    return {initialValues, auth: state.AuthReducer, alert: state.alert}
-};
 
 const mapDispatchToProps = (dispatch) => {
     return {
@@ -105,8 +94,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 };
 
-export default compose(
-    reduxForm({form: 'alert'}),
-    connect(mapStateToProps, mapDispatchToProps),
-    withTranslation()
-)(PanelAlert);
+export default connect(null, mapDispatchToProps)(PanelAlert)

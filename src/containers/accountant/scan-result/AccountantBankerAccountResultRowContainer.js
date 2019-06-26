@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import { compose } from 'redux'
 import { connect } from 'react-redux'
-import { withTranslation } from 'react-i18next'
 import { isEmpty as _isEmpty, forEach as _forEach, concat as _concat } from 'lodash'
 import uuidv4 from 'uuid/v4'
 
 import { Helpers } from 'my-utils'
-import { toggleModalDeleteFormula, socketScanData, toggleShowHideBankerAccountChild } from 'my-actions/AccountantAction';
+import { toggleModalDeleteFormula, socketScanData, toggleShowHideBankerAccountChild } from 'my-actions/AccountantAction'
+import { TransComponent } from 'my-components'
 
 
 class AccountantBankerAccountResultRowContainer extends Component {
@@ -51,7 +50,7 @@ class AccountantBankerAccountResultRowContainer extends Component {
     |--------------------------------------------------------------------------
     */
     generateRowData = _ => {
-        const { item, t } = this.props
+        const { item } = this.props
         const { dataFieldList, scanData } = this.props.bankerAccount
         const bankerAccountId = this.props.bankerAccount.id
         
@@ -100,7 +99,7 @@ class AccountantBankerAccountResultRowContainer extends Component {
 
                 tbl_col_formula.push(
                     <>
-                    <td key={uuidv4()}>{t("Not have formula yet")}</td>
+                    <td key={uuidv4()}><TransComponent i18nKey="Not have formula yet" /></td>
                     
                     
 
@@ -187,7 +186,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 };
 
-export default compose(
-    connect(mapStateToProps, mapDispatchToProps),
-    withTranslation()
-)(AccountantBankerAccountResultRowContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(AccountantBankerAccountResultRowContainer);

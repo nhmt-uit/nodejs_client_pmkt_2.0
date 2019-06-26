@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withTranslation } from "react-i18next";
 import { get as _get } from 'lodash';
 
 import { FormWithReduxForm } from 'my-components/navigation';
 import { saveSecureCode, toggleNotify } from 'my-actions/systems/ChangeSecureCodeAction';
+import { TransComponent } from 'my-components'
 
 class ChangeSecureCodeContainer extends Component {
     data = [
@@ -35,7 +35,7 @@ class ChangeSecureCodeContainer extends Component {
     };
 
     render() {
-        const { dataStore, t } = this.props;
+        const { dataStore } = this.props;
         const isReset = dataStore.status;
 
         return (
@@ -50,7 +50,7 @@ class ChangeSecureCodeContainer extends Component {
                 err={dataStore.errors || {}}
                 success={{
                     status: dataStore.status || false,
-                    msg: t('Change secure code successfully')
+                    msg: <TransComponent i18nKey="Change secure code successfully" />
                 }}
             />
         );
@@ -72,5 +72,4 @@ const mapDispatchToProps = dispatch => {
 
 export default compose(
     connect(mapStateToProps, mapDispatchToProps),
-    withTranslation(),
 )(ChangeSecureCodeContainer);

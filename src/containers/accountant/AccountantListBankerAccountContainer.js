@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { compose } from 'redux'
 import { connect } from 'react-redux'
-import { withTranslation } from 'react-i18next'
 import { isEmpty as _isEmpty, isEqual as _isEqual } from 'lodash'
 import LazyLoad from 'react-lazyload';
 import uuidv4 from 'uuid/v4'
@@ -45,11 +44,11 @@ class AccountantListBankerAccountContainer extends Component {
                             </h4>
                         </div>
                         { !_isEmpty(item.data) && item.collapse ? (
-                            // <LazyLoad>
+                            <LazyLoad>
                                 <div className="panel-body bootstrap-table">
                                     <AccountantBankerAccountResultContainer payload={item.data} bankerAccountType={item.type} />
                                 </div>
-                            // </LazyLoad>
+                            </LazyLoad>
                         ) : null }
                     </div>
                 </div>
@@ -73,7 +72,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 };
 
-export default compose(
-    connect(mapStateToProps, mapDispatchToProps),
-    withTranslation()
-)(AccountantListBankerAccountContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(AccountantListBankerAccountContainer)

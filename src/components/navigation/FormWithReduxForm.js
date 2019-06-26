@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { reduxForm, Field } from "redux-form";
-import { withTranslation } from "react-i18next";
 import $ from 'jquery';
 import {
     get as _get,
@@ -11,6 +10,7 @@ import {
 } from 'lodash';
 
 import { renderTextField } from 'my-utils/components/redux-form/render-ui-core'
+import { TransComponent } from 'my-components'
 
 const propTypes = {
     storeName: PropTypes.string,
@@ -60,7 +60,7 @@ class FormWithReduxForm extends Component {
     };
 
     renderForm() {
-        const {data, t, err, success, handleSubmit} = this.props;
+        const {data, err, success, handleSubmit} = this.props;
 
         return (
             <form className="form-horizontal" onSubmit={handleSubmit(this.handleSubmit)}>
@@ -70,14 +70,14 @@ class FormWithReduxForm extends Component {
                             <div className="alert alert-danger display-hide alert-err">
                                 {
                                     err.status || false
-                                        ? <span> {t(err.error_description || '')} </span>
+                                        ? <span> <TransComponent i18nKey={err.error_description || ''} /> </span>
                                         : null
                                 }
                             </div>
                             <div className="alert alert-success display-hide alert-succ">
                                 {
                                     success.status || false
-                                        ? <span> {t(success.msg || '')} </span>
+                                        ? <span> <TransComponent i18nKey={success.msg || ''} /> </span>
                                         : null
                                 }
                             </div>
@@ -107,7 +107,7 @@ class FormWithReduxForm extends Component {
                     }
                     <div className="form-group">
                         <div className="col-md-offset-3 col-md-9">
-                            <button disabled={_get(this.props, 'form.syncErrors', false)} type="submit" className="col-md-12 btn red">{t('Save')}</button>
+                            <button disabled={_get(this.props, 'form.syncErrors', false)} type="submit" className="col-md-12 btn red"><TransComponent i18nKey='Save' /></button>
                             &nbsp;&nbsp;
                         </div>
                     </div>
@@ -117,7 +117,7 @@ class FormWithReduxForm extends Component {
     }
 
     render() {
-        const { t, err, isShowNotify } = this.props;
+        const { err, isShowNotify } = this.props;
 
         if (isShowNotify) {
             const classVisible = err.status ? 'alert-err' : 'alert-succ';
@@ -137,7 +137,7 @@ class FormWithReduxForm extends Component {
                     <div className="portlet-title">
                         <div className="caption font-red-sunglo">
                             <i className="icon-lock font-red-sunglo" />
-                            <span className="caption-subject bold uppercase">{t(this.props.title)}</span>
+                            <span className="caption-subject bold uppercase"><TransComponent i18nKey={this.props.title} /> </span>
                         </div>
                     </div>
                     <div className="portlet-body form">
@@ -166,5 +166,4 @@ export default compose(
         form: 'form_navigation',
     }),
     connect(mapStateToProps, null),
-    withTranslation(),
 )(FormWithReduxForm)

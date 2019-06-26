@@ -1,11 +1,10 @@
 
 import React, { Component } from 'react';
-import { compose } from 'redux'
 import { connect } from 'react-redux'
-import { withTranslation } from 'react-i18next'
 import { has as _has, isEmpty as _isEmpty, isEqual as _isEqual } from 'lodash'
 
 import { checkBankerAccount, collapseBanker, toggleShowAllFormula } from 'my-actions/AccountantAction';
+import { TransComponent } from 'my-components'
 
 
 class AccountantListBankerUtilContainer extends Component {
@@ -19,7 +18,6 @@ class AccountantListBankerUtilContainer extends Component {
     }
 
     render() {
-        const { t } = this.props
         if (this.props.socketInitStatus !== "finish") return null
         const isCheckAll = _isEmpty(this.props.banker.filter(item => !item.checked)) ? true : false
         const isCollapseAll = _isEmpty(this.props.banker.filter(item => !item.collapse)) ? true : false
@@ -27,17 +25,17 @@ class AccountantListBankerUtilContainer extends Component {
             <div className="row">
                 <div className="form-group col-md-4 col-sm-4">
                     <label className="mt-checkbox uppercase">
-                        <input type="checkbox" onChange={_ => this.props.checkBankerAccount('check_all', {isCheckAll: !isCheckAll})} checked={isCheckAll} /> {t("Select All")}
+                        <input type="checkbox" onChange={_ => this.props.checkBankerAccount('check_all', {isCheckAll: !isCheckAll})} checked={isCheckAll} /> <TransComponent i18nKey="Select All" />
                         <span></span>
                     </label>
                 </div>
                 <div className="form-group col-md-8 text-right">
                     <label className="mt-checkbox uppercase" style={{marginRight: '50px'}}>
-                        <input type="checkbox" onChange={this.props.toggleShowAllFormula} checked={this.props.isShowAllFormula} /> {t("show all")}
+                        <input type="checkbox" onChange={this.props.toggleShowAllFormula} checked={this.props.isShowAllFormula} /> <TransComponent i18nKey="show all" />
                         <span></span>
                     </label>
-                    <a href="#/" type="submit" className="btn btn-default red" onClick={_ => this.props.checkBankerAccount('check_all_error')} > {t("Select error accounts")}</a>
-                    <a href="#/" type="submit" className="btn btn-default red" onClick={_ => this.props.collapseBanker(isCollapseAll ? "close_all" : "open_all")} > {t(isCollapseAll ? "Close all" : "Open all")}</a>
+                    <a href="#/" type="submit" className="btn btn-default red" onClick={_ => this.props.checkBankerAccount('check_all_error')} > <TransComponent i18nKey="Select error accounts" /></a>
+                    <a href="#/" type="submit" className="btn btn-default red" onClick={_ => this.props.collapseBanker(isCollapseAll ? "close_all" : "open_all")} > <TransComponent i18nKey={isCollapseAll ? "Close all" : "Open all"} /> </a>
                 </div>
                 <div className="clearfix"></div>
             </div>
@@ -63,7 +61,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 };
 
-export default compose(
-    connect(mapStateToProps, mapDispatchToProps),
-    withTranslation()
-)(AccountantListBankerUtilContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(AccountantListBankerUtilContainer);

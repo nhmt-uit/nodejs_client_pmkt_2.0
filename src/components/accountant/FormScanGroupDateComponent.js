@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { compose } from 'redux'
-import { withTranslation } from 'react-i18next'
+
+import { TransComponent } from 'my-components'
 
 const groupDateType = [
     {value: 'today', label: 'Today'},
@@ -12,12 +12,13 @@ const groupDateType = [
 class FormScanGroupDateComponent extends Component {
     render() {
         
-        const { t, changeGroupDate, typeGroupDate } = this.props
+        const { changeGroupDate, typeGroupDate } = this.props
 
         const groupDateTypeXhtml = groupDateType.map((item, index) => {
             return (
                 <label key={index} className="mt-radio">
-                    <input type="radio" name="optionsRadios" onChange={() => changeGroupDate(item.value)} checked={typeGroupDate === item.value} /> {t(item.label)}
+                    <input type="radio" name="optionsRadios" onChange={() => changeGroupDate(item.value)} checked={typeGroupDate === item.value} />
+                    <TransComponent i18nKey={item.label} />
                     <span></span>
                 </label>
             )
@@ -32,6 +33,4 @@ class FormScanGroupDateComponent extends Component {
     }
 }
 
-export default compose(
-    withTranslation()
-)(FormScanGroupDateComponent)
+export default FormScanGroupDateComponent

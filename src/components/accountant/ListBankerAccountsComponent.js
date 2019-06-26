@@ -1,12 +1,9 @@
 import React, { Component } from 'react'
-import { compose } from 'redux'
-import { withTranslation } from 'react-i18next'
 
 class ListBankerAccountsComponent extends Component {
     render() {
         let xhtml = null
         const { bankerAccounts } = this.props
-        console.log(bankerAccounts)
         if (bankerAccounts) {
             xhtml = bankerAccounts.map((account, idx) => {
                 return (
@@ -33,6 +30,4 @@ class ListBankerAccountsComponent extends Component {
     }
 }
 
-export default compose(
-    withTranslation()
-)(ListBankerAccountsComponent)
+export default ListBankerAccountsComponent

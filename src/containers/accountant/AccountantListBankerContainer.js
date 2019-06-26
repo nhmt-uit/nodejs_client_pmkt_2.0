@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { compose } from 'redux'
 import { connect } from 'react-redux'
-import { withTranslation } from 'react-i18next'
 import { Collapse } from 'reactstrap'
 import { isEmpty as _isEmpty, isEqual as _isEqual } from 'lodash'
 import { collapseBanker, checkBanker, checkBankerAccount } from 'my-actions/AccountantAction';
@@ -18,7 +16,6 @@ class AccountantListBankerContainer extends Component {
     }
 
     render() {
-        console.log("render lis banker")
         if (this.props.socketInitStatus !== "finish" && _isEmpty(this.props.banker)) return <LoadingComponent />
         return (
             <>
@@ -68,7 +65,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 };
 
-export default compose(
-    connect(mapStateToProps, mapDispatchToProps),
-    withTranslation()
-)(AccountantListBankerContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(AccountantListBankerContainer);

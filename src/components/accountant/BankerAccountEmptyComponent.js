@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { withTranslation } from 'react-i18next'
 import { isEmpty as _isEmpty} from 'lodash'
+
+import { TransComponent } from 'my-components'
 
 class BankerAccountEmptyComponent extends Component {
     state = {
@@ -46,7 +47,7 @@ class BankerAccountEmptyComponent extends Component {
             <div className="col-md-6">
                 <div className="portlet box">
                     <div className="portlet-title bg-default">
-                        <div className="caption">{t("Empty data account")}</div>
+                        <div className="caption"><TransComponent i18nKey="Empty data account" /></div>
                         <div className="tools">
                             <a href="#/" title="" onClick={_ => this.handleControl("edit")}>
                                 {this.state.isUpdate ? <i className="fa fa-close"></i> : <i className="fa fa-pencil"></i> }
@@ -67,4 +68,4 @@ class BankerAccountEmptyComponent extends Component {
     }
 }
 
-export default withTranslation()(BankerAccountEmptyComponent);
+export default BankerAccountEmptyComponent

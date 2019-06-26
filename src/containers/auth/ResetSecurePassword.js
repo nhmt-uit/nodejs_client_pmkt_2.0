@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import { withTranslation } from 'react-i18next';
 import {Field, reduxForm, SubmissionError} from "redux-form";
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -10,6 +9,7 @@ import $ from 'jquery';
 import { resetSecurePassword } from 'my-actions/systems/AuthAction';
 import { RoutesService } from 'my-routes';
 import { CookieService } from 'my-utils/core';
+import { TransComponent } from 'my-components'
 
 class ResetSecurePassword extends Component {
     constructor(props) {
@@ -34,44 +34,44 @@ class ResetSecurePassword extends Component {
         });
     }
 
-    renderAnnouncement(t) {
+    renderAnnouncement() {
         return (
             <div className="div-top-center">
                 <div className="content" style={{ padding: '1rem 2rem' }} >
                     <h3 className="text-center text-uppercase text-red">
-                        <strong>{t('announcement')}</strong>
+                        <strong><TransComponent i18nKey="announcement" /></strong>
                     </h3>
-                    <p>{t('Vietwin\'s accounting software has been updated secondary password function, please read carefully the content as below')}</p>
+                    <p><TransComponent i18nKey="Vietwin's accounting software has been updated secondary password function, please read carefully the content as below" /></p>
                     <hr/>
                     <ul className="ul-announcement">
                         <li className="text-red">
-                            <strong><span className="glyphicon glyphicon-pushpin" />&nbsp;{t('creating secondary password "new secondary password is not duplicated main password"')}</strong>
+                            <strong><span className="glyphicon glyphicon-pushpin" />&nbsp;<TransComponent i18nKey='creating secondary password "new secondary password is not duplicated main password"' /></strong>
                         </li>
                         <li className="text-red">
-                            <strong><span className="glyphicon glyphicon-pushpin" />&nbsp;{t('when creating secondary password for vietwin\'s accounting software')}</strong>
+                            <strong><span className="glyphicon glyphicon-pushpin" />&nbsp;<TransComponent i18nKey="when creating secondary password for vietwin's accounting software" /></strong>
                         </li>
                         <li>
-                            <span className="glyphicon glyphicon-circle-arrow-right" />&nbsp;{t(`if log in to the software with secondary password, the interface only displays the homepage and the
+                            <span className="glyphicon glyphicon-circle-arrow-right" />&nbsp;<TransComponent i18nKey={`if log in to the software with secondary password, the interface only displays the homepage and the
                              functions will be disabled. after logging into secondary password but still try
-                              to log in with the main password, the functions are still disabled. to reopen, please contact customer service department for assistance.`)}
+                              to log in with the main password, the functions are still disabled. to reopen, please contact customer service department for assistance.`} />
                         </li>
                         <li className="text-red">
-                            <strong><span className="glyphicon glyphicon-alert" />&nbsp;{t('recommendations')}</strong>
+                            <strong><span className="glyphicon glyphicon-alert" />&nbsp;<TransComponent i18nKey="recommendations" /></strong>
                         </li>
                         <li>
-                            <span className="glyphicon glyphicon-circle-arrow-right" />&nbsp;{t('use only secondary password in an urgent case - eg: having security problems and required to log in, ...')}
+                            <span className="glyphicon glyphicon-circle-arrow-right" />&nbsp;<TransComponent i18nKey="use only secondary password in an urgent case - eg: having security problems and required to log in, ..." />
                         </li>
                         <li>
-                            <span className="glyphicon glyphicon-circle-arrow-right" />&nbsp;{t('the verification and reopening process will take a long time, so please don\'t try logging in for testing the function.')}
+                            <span className="glyphicon glyphicon-circle-arrow-right" />&nbsp;<TransComponent i18nKey="the verification and reopening process will take a long time, so please don't try logging in for testing the function." />
                         </li>
                         <li className="text-primary">
-                            {t('Note from july 1, 2019, all accounts of accounting software are required to register by using the secondary password.')}
+                            <TransComponent i18nKey="Note from july 1, 2019, all accounts of accounting software are required to register by using the secondary password." />
                         </li>
                         <li>
-                            <em>{t('If have any questions, please contact customer service department for answers.')}</em>
+                            <em><TransComponent i18nKey="If have any questions, please contact customer service department for answers." /></em>
                         </li>
                     </ul>
-                    <p className='text-center'><button onClick={this.changeAcceptStatus.bind(this, true)} className="btn btn-primary red btn-announcement">{t('i accept')}</button></p>
+                    <p className='text-center'><button onClick={this.changeAcceptStatus.bind(this, true)} className="btn btn-primary red btn-announcement"><TransComponent i18nKey="i accept" /></button></p>
                 </div>
             </div>
         );
@@ -111,7 +111,7 @@ class ResetSecurePassword extends Component {
     }
 
     render() {
-        const { t, handleSubmit, submitting, error, auth } = this.props;
+        const { handleSubmit, submitting, error, auth } = this.props;
 
         if (Number(CookieService.get('needChangeSecurePassword')) === 0 && this.state.isAccept) {
             this.handleSkip();
@@ -122,7 +122,7 @@ class ResetSecurePassword extends Component {
         }
 
         if (!this.state.isAccept) {
-            return this.renderAnnouncement(t);
+            return this.renderAnnouncement();
         }
 
         if (error || get(auth, 'errors.error_description', null)) {
@@ -140,12 +140,12 @@ class ResetSecurePassword extends Component {
                         </a>
                     </div>
                     <form className="login-form" onSubmit={handleSubmit(this.validateForm.bind(this))}>
-                        <h3 className="form-title font-red">{t("Update secure password")}</h3>
+                        <h3 className="form-title font-red"><TransComponent i18nKey="Update secure password" /></h3>
                         <div className="alert alert-danger display-hide">
                             {
                                 get(this.props.auth, 'errors.error_description', null)
-                                    ? <span> {t(this.props.auth.errors.error_description)} </span>
-                                    : this.props.error && <span>{t(this.props.error)}</span>
+                                    ? <span> <TransComponent i18nKey={this.props.auth.errors.error_description} /> </span>
+                                    : this.props.error && <span><TransComponent i18nKey={this.props.error} /></span>
                             }
                         </div>
                         <div className="form-group">
@@ -155,7 +155,7 @@ class ResetSecurePassword extends Component {
                                 component={this.renderField}
                                 className="form-control form-control-solid placeholder-no-fix"
                                 autoComplete="off"
-                                placeholder={t("Insert new secure password")}
+                                placeholder={<TransComponent i18nKey="Insert new secure password" />}
                             />
                         </div>
                         <div className="form-group">
@@ -165,13 +165,13 @@ class ResetSecurePassword extends Component {
                                 component={this.renderField}
                                 className="form-control form-control-solid placeholder-no-fix"
                                 autoComplete="off"
-                                placeholder={t("Confirm new secure password")}
+                                placeholder={<TransComponent i18nKey="Confirm new secure password" />}
                             />
                         </div>
                         <div className="form-actions text-center">
-                            <button type="submit" disabled={submitting} className="btn red uppercase">{t("Continue")}</button>
+                            <button type="submit" disabled={submitting} className="btn red uppercase"><TransComponent i18nKey="Continue" /></button>
                             &nbsp;&nbsp;&nbsp;
-                            <button disabled={submitting} onClick={this.handleSkip.bind(this)} className="btn red uppercase">{t("Skip")}</button>
+                            <button disabled={submitting} onClick={this.handleSkip.bind(this)} className="btn red uppercase"><TransComponent i18nKey="Skip" /></button>
                         </div>
                     </form>
                 </div>
@@ -196,5 +196,4 @@ const mapDispatchToProps = dispatch => {
 export default compose(
     reduxForm({form: 'form_secure_password'}),
     connect(mapStateToProps, mapDispatchToProps),
-    withTranslation()
 )(ResetSecurePassword);

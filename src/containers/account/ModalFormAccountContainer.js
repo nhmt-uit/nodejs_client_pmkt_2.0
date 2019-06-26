@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
-import { withTranslation } from 'react-i18next'
 import { get as _get } from 'lodash'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
 import 'my-styles/reactstrap-modal.css'
@@ -9,11 +8,12 @@ import 'my-styles/reactstrap-modal.css'
 import FormAccountContainer from './FormAccountContainer'
 import { saveAccount } from 'my-actions/AccountAction'
 import { socketReloadBankerAccountInfo } from 'my-actions/AccountantAction'
+import { TransComponent } from 'my-components'
 
 class ModalFormAccountContainer extends Component {
     modalTitle = ''
     componentDidMount() {
-        if(this.props.formType === "update") this.modalTitle = this.props.t("Update account")
+        if(this.props.formType === "update") this.modalTitle = <TransComponent i18nKey="Update account" />
     }
 
     /*
@@ -41,7 +41,7 @@ class ModalFormAccountContainer extends Component {
     }
 
     render() {
-        const { t, isOpen, toggle, account } = this.props
+        const { isOpen, toggle, account } = this.props
         
         return (
             <Modal isOpen={isOpen} toggle={toggle} scrollable={true}>
@@ -50,8 +50,8 @@ class ModalFormAccountContainer extends Component {
                     <FormAccountContainer account={account} />
                 </ModalBody>
                 <ModalFooter>
-                    <Button color="btn btn-default green" onClick={this.handleSaveFormData}>{t("Save")}</Button>{' '}
-                    <Button color="btn btn-default red" onClick={toggle}>{t("Cancel")}</Button>
+                    <Button color="btn btn-default green" onClick={this.handleSaveFormData}><TransComponent i18nKey="Save" /></Button>{' '}
+                    <Button color="btn btn-default red" onClick={toggle}><TransComponent i18nKey="Cancel" /></Button>
                 </ModalFooter>
             </Modal>
         )
@@ -73,5 +73,4 @@ const mapDispatchToProps = (dispatch) => {
 
 export default compose(
     connect(mapStateToProps, mapDispatchToProps),
-    withTranslation()
 )(ModalFormAccountContainer);

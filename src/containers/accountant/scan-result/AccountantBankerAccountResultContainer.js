@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
-import { compose } from 'redux'
 import { connect } from 'react-redux'
-import { withTranslation } from 'react-i18next'
 import { Table } from 'react-bootstrap'
 import { isEmpty as _isEmpty, uniq as _uniq, cloneDeep as _cloneDeep, isEqual as _isEqual} from 'lodash'
 import uuidv4 from 'uuid/v4'
 
 import {AccountantBankerAccountResultRowContainer, ModalDeleteFormulaContainer} from 'my-containers/accountant'
 import {AccountantService} from 'my-services/account'
+import { TransComponent } from 'my-components'
 
 
 class AccountantBankerAccountResultContainer extends Component {
@@ -67,12 +66,12 @@ class AccountantBankerAccountResultContainer extends Component {
         const dataFieldList = this.props.payload.dataFieldList
         return dataFieldList.map(key => {
             let finded = this.dynamicColumn.find(item => item.key === key)
-            return (typeof finded !== "undefined") ? <th key={uuidv4()}>{this.props.t(finded.value)}</th> : null
+            return (typeof finded !== "undefined") ? <th key={uuidv4()}><TransComponent i18nKey={finded.value} /></th> : null
         })
     }
 
     render() {
-        const { t, payload, isFullScreen, isShowAllFormula } = this.props
+        const { payload, isFullScreen, isShowAllFormula } = this.props
         const dataFieldList = payload.dataFieldList
         const accountant = isShowAllFormula === false ? this.handleProcessDataWhenActiveFilterNoFormula(_cloneDeep(payload.accountant)) : _cloneDeep(payload.accountant)
         
@@ -80,22 +79,22 @@ class AccountantBankerAccountResultContainer extends Component {
             <Table responsive striped bordered condensed className="tbl-scan-result">
                 <thead>
                     <tr>
-                        <th width="15%">{t("Account")}</th>
-                        <th>{t("Report Type")}</th>
+                        <th width="15%"><TransComponent i18nKey="Account" /></th>
+                        <th><TransComponent i18nKey="Report Type" /></th>
                         {/* dynamic data */}
                         {this.generateDynamicColumn()}
                         {/* dynamic data */}
-                        <th>{t("Formula")}</th>
+                        <th><TransComponent i18nKey="Formula" /></th>
                         {/* Hidden Column */}
-                        {isFullScreen ? <th>{t("lock out")}</th> : null}
-                        {isFullScreen ? <th>{t("Ratio")}</th> : null}
-                        {isFullScreen ? <th>{t("Price")}</th> : null}
-                        {isFullScreen ? <th>{t("Pay/Rec")}</th> : null}
+                        {isFullScreen ? <th><TransComponent i18nKey="lock out" /></th> : null}
+                        {isFullScreen ? <th><TransComponent i18nKey="Ratio" /></th> : null}
+                        {isFullScreen ? <th><TransComponent i18nKey="Price" /></th> : null}
+                        {isFullScreen ? <th><TransComponent i18nKey="Pay/Rec" /></th> : null}
                         {/* Hidden Column */}
-                        <th>{t("Member")}</th>
-                        <th>{t("Result")}</th>
-                        <th>{t("Currency")}</th>
-                        <th colSpan="2">{t("+/- Formula")}</th>
+                        <th><TransComponent i18nKey="Member" /></th>
+                        <th><TransComponent i18nKey="Result" /></th>
+                        <th><TransComponent i18nKey="Currency" /></th>
+                        <th colSpan="2"><TransComponent i18nKey="+/- Formula" /> </th>
                     </tr>
                 </thead>
                 { !_isEmpty(accountant) ? this.handleNestedDataAccountant(accountant) : null }
@@ -119,7 +118,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 };
 
-export default compose(
-    connect(mapStateToProps, mapDispatchToProps),
-    withTranslation()
-)(AccountantBankerAccountResultContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(AccountantBankerAccountResultContainer);

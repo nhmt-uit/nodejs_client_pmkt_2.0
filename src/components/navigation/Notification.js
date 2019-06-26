@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { withTranslation } from 'react-i18next';
 import { get } from 'lodash';
 import { Link } from 'react-router-dom';
 import { isEqual as _isEqual } from 'lodash'
 
 import { RoutesService } from 'my-routes';
 import { getMsg, getFriend } from 'my-actions/systems/NotificationAction';
+import { TransComponent } from 'my-components'
 
 class Notification extends Component {
     shouldComponentUpdate(newProps, newState) {
@@ -51,7 +51,8 @@ class Notification extends Component {
                                         <li>
                                             <Link to={RoutesService.getPath('ADMIN', 'ACCOUNT')}>
                                                 <span className="details">
-                                                {this.props.t(`Have ${count} sub account need to be updated`)}</span>
+                                                    <TransComponent i18nKey={`Have ${count} sub account need to be updated`} />
+                                                </span>
                                             </Link>
                                         </li>
                                     )
@@ -79,6 +80,5 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default compose(
-    withTranslation(),
     connect(mapStateToProps, mapDispatchToProps),
 )(Notification);

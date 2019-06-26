@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { withTranslation } from 'react-i18next'
 
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import 'my-styles/reactstrap-modal.css'
 import { AccountService } from 'my-services/account'
+import { TransComponent } from 'my-components'
 
 class ModalDeleteAccountContainer extends Component {
     handleDelete = async _ => {
@@ -13,21 +13,21 @@ class ModalDeleteAccountContainer extends Component {
     }
 
     render() {
-        const { t, isOpen, toggle, account } = this.props
+        const { isOpen, toggle, account } = this.props
         
         return (
             <Modal isOpen={isOpen} toggle={toggle}>
-                <ModalHeader toggle={toggle}>{t("confirm")}</ModalHeader>
+                <ModalHeader toggle={toggle}><TransComponent i18nKey="Confirm" /></ModalHeader>
                 <ModalBody>
-                    {t("confirm delete {{item}}", {item: account ? account.acc_name : null })}
+                    <TransComponent i18nKey="confirm delete {{item}}" i18nObj={{item: account ? account.acc_name : null }} />
                 </ModalBody>
                 <ModalFooter>
-                    <Button color="btn btn-default green" onClick={this.handleDelete}>{t("confirm")}</Button>{' '}
-                    <Button color="btn btn-default red" onClick={toggle}>{t("Cancel")}</Button>
+                    <Button color="btn btn-default green" onClick={this.handleDelete}><TransComponent i18nKey="Confirm" /></Button>{' '}
+                    <Button color="btn btn-default red" onClick={toggle}><TransComponent i18nKey="Cancel" /></Button>
                 </ModalFooter>
             </Modal>
         );
     }
 }
 
-export default withTranslation()(ModalDeleteAccountContainer);
+export default ModalDeleteAccountContainer

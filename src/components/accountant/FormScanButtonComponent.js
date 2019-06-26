@@ -1,24 +1,23 @@
 import React, { Component } from 'react'
 import { compose } from 'redux'
-import { withTranslation } from 'react-i18next'
+
+import { TransComponent } from 'my-components'
 
 class FormScanButtonComponent extends Component {
 
     render() {
-        const { t, socketScanData, socketStopScanData, socketSaveReport, socketInitStatus, isProcessing, isAllowReport } = this.props
+        const { socketScanData, socketStopScanData, socketSaveReport, socketInitStatus, isProcessing, isAllowReport } = this.props
         if(socketInitStatus !== "finish") return false
         return (
             <div className="form-group">
-                {!isProcessing ? <a href="#/" className="btn btn-default red" onClick={socketScanData}>{t("Scan")}</a> : null}
-                {isProcessing ? <a href="#/" className="btn btn-default grey" onClick={socketStopScanData}>{t("Stop")}</a> : null}
+                {!isProcessing ? <a href="#/" className="btn btn-default red" onClick={socketScanData}><TransComponent i18nKey="Scan" /></a> : null}
+                {isProcessing ? <a href="#/" className="btn btn-default grey" onClick={socketStopScanData}><TransComponent i18nKey="Stop" /></a> : null}
                 {/* <button type="submit" className="btn btn-default grey">{t("Sign Out")}</button> */}
-                {isAllowReport ? <a href="#/" type="submit" className="btn btn-default red" onClick={socketSaveReport}>{t("Save report")}</a> : null}
-                {isAllowReport ? <a href="#/" type="submit" className="btn btn-default red">{t("export to csv")}</a> : null}
+                {isAllowReport ? <a href="#/" type="submit" className="btn btn-default red" onClick={socketSaveReport}><TransComponent i18nKey="Save report" /></a> : null}
+                {isAllowReport ? <a href="#/" type="submit" className="btn btn-default red"><TransComponent i18nKey="export to csv" /></a> : null}
             </div>
         )
     }
 }
 
-export default compose(
-    withTranslation()
-)(FormScanButtonComponent)
+export default FormScanButtonComponent

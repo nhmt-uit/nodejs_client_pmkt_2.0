@@ -1,5 +1,4 @@
 import React from 'react';
-import { withTranslation } from 'react-i18next';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom'
@@ -12,11 +11,11 @@ import { changeLanguage } from 'my-actions/systems/LanguageAction';
 import { login } from 'my-actions/systems/AuthAction';
 import { RoutesService } from 'my-routes';
 import { AppConfig } from "my-constants"
+import { TransComponent } from 'my-components'
 
 class FormLoginContainer extends React.Component {
     constructor(props) {
         super(props);
-
         this.props.initialize({ ...(this.props.initialValues || {}), lang_code: AppConfig.DEFAULT_LANG });
     }
 
@@ -36,7 +35,7 @@ class FormLoginContainer extends React.Component {
     }
 
     render() {
-        const { t, auth } = this.props;
+        const { auth } = this.props;
         if (auth.login_status) {
             $('div.alert').fadeIn();
 
@@ -59,31 +58,31 @@ class FormLoginContainer extends React.Component {
                         </a>
                     </div>
                     <form className="login-form" onSubmit={this.handleSubmit} onKeyDown={this.handleKeyDown.bind(this)}>
-                        <h3 className="form-title font-red">{t("Login to VW3 Application")}</h3>
+                        <h3 className="form-title font-red"><TransComponent i18nKey="Login to VW3 Application" /></h3>
                         <div className="alert alert-danger display-hide">
                             <button className="close" data-close="alert" />
-                            <span> {t(this.props.auth.errors.error_description)} </span>
+                            <span> <TransComponent i18nKey={this.props.auth.errors.error_description} /> </span>
                         </div>
                         <div className="form-group">
-                            <label className="control-label visible-ie8 visible-ie9">{t("Username")}</label>
+                            <label className="control-label visible-ie8 visible-ie9"><TransComponent i18nKey="Username" /></label>
                             <Field
                                 name="username"
                                 type="text"
                                 component="input"
                                 className="form-control form-control-solid placeholder-no-fix"
                                 autoComplete="off"
-                                placeholder={t("Username")}
+                                placeholder={<TransComponent i18nKey="Username" />}
                             />
                         </div>
                         <div className="form-group">
-                            <label className="control-label visible-ie8 visible-ie9">{t("Password")}</label>
+                            <label className="control-label visible-ie8 visible-ie9"><TransComponent i18nKey="Password" /></label>
                             <Field
                                 name="password"
                                 type="password"
                                 component="input"
                                 className="form-control form-control-solid placeholder-no-fix"
                                 autoComplete="off"
-                                placeholder={t("Password")}
+                                placeholder={<TransComponent i18nKey="Password" />}
                             />
                         </div>
                         <div className="form-group">
@@ -93,7 +92,7 @@ class FormLoginContainer extends React.Component {
                             </Field>
                         </div>
                         <div className="form-actions text-center">
-                            <button type="submit" className="btn red uppercase">{t("Login")}</button>
+                            <button type="submit" className="btn red uppercase"><TransComponent i18nKey="Login" /></button>
                         </div>
                     </form>
                 </div>
@@ -120,5 +119,4 @@ const mapDispatchToProps = (dispatch) => {
 export default compose(
     reduxForm({form: 'form_login'}),
     connect(mapStateToProps, mapDispatchToProps),
-    withTranslation()
 )(FormLoginContainer);

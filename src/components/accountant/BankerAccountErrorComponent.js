@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { withTranslation } from 'react-i18next'
 import { isEmpty as _isEmpty} from 'lodash'
+
+import { TransComponent } from 'my-components'
 
 class BankerAccountErrorComponent extends Component {
     state = {
@@ -34,7 +35,7 @@ class BankerAccountErrorComponent extends Component {
                         <b className="uppercase">{item.acc_name} : </b>
                         {this.state.isUpdate || this.state.isDelete ? <span></span> : null}
                     </label>
-                    {t(item.message)}
+                    <TransComponent i18nKey={item.message} />
                 </div>
             )
         })
@@ -47,7 +48,7 @@ class BankerAccountErrorComponent extends Component {
             <div className="col-md-6">
                 <div className="portlet box">
                     <div className="portlet-title bg-default">
-                        <div className="caption">{t("Error account")}</div>
+                        <div className="caption"><TransComponent i18nKey="Error account" /></div>
                         <div className="tools">
                             <a href="#/" title="" onClick={_ => this.handleControl("edit")}>
                                 {this.state.isUpdate ? <i className="fa fa-close"></i> : <i className="fa fa-pencil"></i> }
@@ -68,4 +69,4 @@ class BankerAccountErrorComponent extends Component {
     }
 }
 
-export default withTranslation()(BankerAccountErrorComponent);
+export default BankerAccountErrorComponent;

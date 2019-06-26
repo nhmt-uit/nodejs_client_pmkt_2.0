@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import { withTranslation } from 'react-i18next'
-import { compose } from 'redux'
 import { connect } from 'react-redux'
 import {get as _get} from 'lodash'
 
@@ -9,6 +7,7 @@ import 'my-styles/reactstrap-modal.css'
 import { FormulaService } from 'my-services/formula'
 import { toggleModalDeleteFormula, socketGetReport } from 'my-actions/AccountantAction'
 import { Helpers} from 'my-utils'
+import { TransComponent } from 'my-components'
 
 class ModalDeleteFormulaContainer extends Component {
     handleDelete = async _ => {
@@ -23,20 +22,20 @@ class ModalDeleteFormulaContainer extends Component {
     }
 
     render() {
-        const { t, isOpenModalDeleteFormula, payloadDeleteFormula } = this.props
+        const { isOpenModalDeleteFormula, payloadDeleteFormula } = this.props
         const formulaID = _get(payloadDeleteFormula, 'formulaDetail.ctt_id')
         const formulaName = Helpers.formatFormulaName(_get(payloadDeleteFormula, 'formulaDetail.formulaName', ''))
         const formulaMember = _get(payloadDeleteFormula, 'formulaDetail.memberName', '').toUpperCase()
         
         return (
             <Modal isOpen={isOpenModalDeleteFormula} toggle={this.props.toggleModalDeleteFormula}>
-                <ModalHeader toggle={this.props.toggleModalDeleteFormula}>{t("confirm")}</ModalHeader>
+                <ModalHeader toggle={this.props.toggleModalDeleteFormula}><TransComponent i18nKey="confirm" /></ModalHeader>
                 <ModalBody>
-                    {t("are you sure unlink formula {{formulaname}} and member {{membername}}", {formulaname: formulaName, membername: formulaMember})}
+                <TransComponent i18nKey="are you sure unlink formula {{formulaname}} and member {{membername}}" i18nObj={{formulaname: formulaName, membername: formulaMember}} />
                 </ModalBody>
                 <ModalFooter>
-                    <Button color="btn btn-default green" onClick={this.handleDelete}>{t("confirm")}</Button>{' '}
-                    <Button color="btn btn-default red" onClick={this.props.toggleModalDeleteFormula}>{t("Cancel")}</Button>
+                    <Button color="btn btn-default green" onClick={this.handleDelete}><TransComponent i18nKey="confirm" /></Button>{' '}
+                    <Button color="btn btn-default red" onClick={this.props.toggleModalDeleteFormula}><TransComponent i18nKey="Cancel" /></Button>
                 </ModalFooter>
             </Modal>
         );
@@ -57,7 +56,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 };
 
-export default compose(
-    connect(mapStateToProps, mapDispatchToProps),
-    withTranslation()
-)(ModalDeleteFormulaContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(ModalDeleteFormulaContainer);

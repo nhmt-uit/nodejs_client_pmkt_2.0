@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { compose } from 'redux'
 import { connect } from 'react-redux'
-import { withTranslation } from 'react-i18next'
 import { get as _get, map as _map, isEmpty as _isEmpty, isEqual as _isEqual} from 'lodash'
 
 import { BankerAccountErrorComponent, BankerAccountEmptyComponent, BankerAccountProcessingComponent } from 'my-components/accountant'
@@ -106,7 +104,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 };
 
-export default compose(
-    connect(mapStateToProps, mapDispatchToProps),
-    withTranslation()
-)(AccountantStatusAccountContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(AccountantStatusAccountContainer);

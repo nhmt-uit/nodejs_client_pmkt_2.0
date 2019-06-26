@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
-import { withTranslation } from 'react-i18next'
 import Select from 'react-select';
 import { Field, reduxForm } from 'redux-form';
 import { get as _get, isEmpty as _isEmpty } from 'lodash'
 
 import { requestInitFormData } from 'my-actions/AccountAction'
+import { TransComponent } from 'my-components'
 
 
 const formatGroupLabel = data => (
@@ -49,9 +49,8 @@ class FormAccountContainer extends Component {
     }
 
     render() {
-        const { t } = this.props
         const optBanker = this.props.optBanker
-        const optAccountBelong = [{value: "root", label: t("Is root account").toUpperCase()}].concat(this.props.optAccountBelong.filter(item => item.value === this.props.initialValues.company))
+        const optAccountBelong = [{value: "root", label: <TransComponent i18nKey="Is root account" toUpperCase />}].concat(this.props.optAccountBelong.filter(item => item.value === this.props.initialValues.company))
 
         const selectedBanker = optBanker.filter(item => item.value === this.props.initialValues.company)
         const belong_account = this.props.initialValues.belong_account ? this.props.initialValues.belong_account : "root"
@@ -65,7 +64,7 @@ class FormAccountContainer extends Component {
             <form>
                 <div className="form-body">
                     <div className="form-group">
-                        <label>{t("Company")}</label>
+                        <label><TransComponent i18nKey="Company" /></label>
                         <Select
                             className="basic-single"
                             classNamePrefix="select"
@@ -73,13 +72,13 @@ class FormAccountContainer extends Component {
                             isDisabled={isDisabledBasedOneAccountBelong}
                             value={selectedBanker}
                             isSearchable={true}
-                            placeholder={t('choose')}
+                            placeholder={<TransComponent i18nKey="choose" />}
                             onChange={this.handleChangeBanker}
                             options={optBanker}
                         />
                     </div>
                     <div className="form-group">
-                        <label>{t("Account name")}</label>
+                        <label><TransComponent i18nKey="Account name" /></label>
                         <Field
                             name="acc_name"
                             type="text"
@@ -90,14 +89,14 @@ class FormAccountContainer extends Component {
                         />
                     </div>
                     <div className="form-group">
-                        <label>{t("Belong to account")}</label>
+                        <label><TransComponent i18nKey="Belong to account" /></label>
                         <Select
                             className="basic-single"
                             classNamePrefix="select"
                             name="belong_account"
                             value={selectedAccountBelong}
                             isSearchable={true}
-                            placeholder={t('choose')}
+                            placeholder={<TransComponent i18nKey="choose" />}
                             onChange={this.handleChangeBelongAcc}
                             options={optAccountBelong}
                             formatGroupLabel={formatGroupLabel}
@@ -107,7 +106,7 @@ class FormAccountContainer extends Component {
                     { belong_account === "root" ? (
                         <>
                             <div className="form-group">
-                                <label>{t("Login User")}</label>
+                                <label><TransComponent i18nKey="Login User" /></label>
                                 <Field
                                     name="sub_user"
                                     type="text"
@@ -117,7 +116,7 @@ class FormAccountContainer extends Component {
                                 />
                             </div>
                             <div className="form-group">
-                                <label>{t("Sub password")}</label>
+                                <label><TransComponent i18nKey="Sub password" /></label>
                                 <Field
                                     name="sub_pass"
                                     type="password"
@@ -129,7 +128,7 @@ class FormAccountContainer extends Component {
                             {
                             _get(selectedBanker[0], 'need_security', false) ? (
                                 <div className="form-group">
-                                    <label>{t("Secure code")}</label>
+                                    <label><TransComponent i18nKey="Secure code" /></label>
                                     <Field
                                         name="sub_code"
                                         type="text"
@@ -141,7 +140,7 @@ class FormAccountContainer extends Component {
                             ) : null
                             }
                             <div className="form-group">
-                                <label>{t("Note")}</label>
+                                <label><TransComponent i18nKey="Note" /></label>
                                 <Field
                                     name="note"
                                     type="text"
@@ -153,28 +152,28 @@ class FormAccountContainer extends Component {
                             { _isEmpty(selectedBanker.filter(item => bankerIsSub.indexOf(item.label.toLowerCase()) === -1)) ? (
                                 <>
                                     <div className="form-group">
-                                        <label>{t("The number of log")}</label>
+                                        <label><TransComponent i18nKey="The number of log" /></label>
                                         <Select
                                             className="basic-single"
                                             classNamePrefix="select"
                                             name="is_banker_sub"
                                             value={selectedIsSub}
                                             isSearchable={true}
-                                            placeholder={t('choose')}
+                                            placeholder={<TransComponent i18nKey="choose" />}
                                             onChange={this.handleChangeIsSub}
                                             options={optIsSub}
                                             menuPosition="fixed"
                                         />
                                     </div>
                                     <div className="form-group">
-                                        <label>{t("Permission")}</label>
+                                        <label><TransComponent i18nKey="Permission" /></label>
                                         <Select
                                             className="basic-single"
                                             classNamePrefix="select"
                                             name="is_banker_sub"
                                             value={selectedIsSub}
                                             isSearchable={true}
-                                            placeholder={t('choose')}
+                                            placeholder={<TransComponent i18nKey="choose" />}
                                             onChange={this.handleChangeIsSub}
                                             options={optIsSub}
                                             menuPosition="fixed"
@@ -185,7 +184,7 @@ class FormAccountContainer extends Component {
                         </>
                     ) : null }
                     <div className="form-group">
-                        <label>{t("Is Active")}</label>
+                        <label><TransComponent i18nKey="Is Active" /></label>
                         <Select
                             className="basic-single"
                             classNamePrefix="select"
@@ -222,5 +221,4 @@ const mapDispatchToProps = (dispatch) => {
 export default compose(
     reduxForm({form: 'form_account'}),
     connect(mapStateToProps, mapDispatchToProps),
-    withTranslation()
 )(FormAccountContainer);

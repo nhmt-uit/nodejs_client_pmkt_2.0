@@ -1,13 +1,10 @@
 import React, { Component } from 'react'
-import { compose } from 'redux'
 import { connect } from 'react-redux'
-import { withTranslation } from 'react-i18next'
 import moment  from 'moment'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css"
 import MultiSelect from "@khanacademy/react-multi-select";
 import { join, filter, isEmpty as _isEmpty, map as _map, isEqual as _isEqual } from 'lodash'
-import { withRouter } from 'react-router-dom';
 
 
 import { AppConfig } from 'my-constants'
@@ -17,6 +14,7 @@ import { socketInitData, socketScanData, socketStopScanData, socketSaveReport, c
 import { toggleFullScreen } from 'my-actions/systems/AppAction';
 import { SocketService } from 'my-utils/core';
 import { RoutesService } from 'my-routes'
+import { TransComponent } from 'my-components'
 
 
 const today = moment().format('YYYY-MM-DD')
@@ -223,7 +221,6 @@ class AccountantFormScanContainer extends Component {
     }
 
     render() {
-        const { t } = this.props
 
         const { from_date, to_date, typeGroupDate } = this.state
         const selectChecked = this.handleIsCheckMember()
@@ -232,11 +229,11 @@ class AccountantFormScanContainer extends Component {
         return (
             <div className="portlet light bordered">
                 <div className="portlet-title">
-                    <div className="caption font-red-sunglo"><span className="caption-subject bold uppercase">Accountant</span></div>
+                    <div className="caption font-red-sunglo"><span className="caption-subject bold uppercase"><TransComponent i18nKey="Accountant" /></span></div>
                     <div className="actions">
                         <a className="btn btn-default btn-fullscreen" href="javascript:;" onClick={this.props.toggleFullScreen}>
                             <i className={this.props.isFullScreen ? "fa fa-compress" : "fa fa-expand"} />
-                            {this.props.isFullScreen ? "Exit Full Screen" : "Full Screen"}
+                            {this.props.isFullScreen ? <TransComponent i18nKey="Exit Full Screen" /> : <TransComponent i18nKey="Full Screen" />}
                         </a>
                     </div>
                 </div>

@@ -2,7 +2,6 @@ import React from "react";
 import {compose} from "redux";
 import {reduxForm} from "redux-form";
 import {connect} from "react-redux";
-import {withTranslation} from "react-i18next";
 import { getBanker } from "my-actions/banker/BankerAction";
 
 import { isEmpty} from 'lodash'
@@ -66,5 +65,4 @@ const mapDispatchToProps = (dispatch) => {
 export default compose(
     reduxForm({form: 'banker'}),
     connect(mapStateToProps, mapDispatchToProps),
-    withTranslation(),
 )(BankerListContainer);
