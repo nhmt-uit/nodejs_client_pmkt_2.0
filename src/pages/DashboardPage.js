@@ -10,7 +10,7 @@ class DashboardPage extends Component {
         const { t } = this.props;
 
         return (
-            <section>
+            <>
                 <QuickActivitiesContainer />
                 <div className="row widget-row">
                     <div className="col-md-3">
