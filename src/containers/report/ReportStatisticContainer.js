@@ -9,13 +9,9 @@ import {
     get as _get
 } from 'lodash';
 
-import {
-    getReport,
-    getReportByBanker,
-    getReportByMember
-} from 'my-actions/ReportAction';
 import { Helpers } from 'my-utils';
 import { LoadingComponent } from 'my-components';
+import { ReportByMember } from 'my-components/report';
 import { CookieService } from 'my-utils/core';
 import { RoutesService } from 'my-routes';
 
@@ -28,8 +24,6 @@ class ReportStatisticContainer extends Component {
             tabBookActive: -1,
         };
     }
-
-    books = [];
 
     changeState = (obj, cb) => _ => {
         this.setState(
@@ -75,15 +69,73 @@ class ReportStatisticContainer extends Component {
         );
     }
 
+    renderTabReportContent(type, isActive) {
+        const classActive = isActive ? 'active' : '';
+        const { itemActive = {}, books = [], reportType = 'cycle' } = this.props.reportStore;
+        const t = this.props.t;
+        const hasReportDetailFeature = Number(CookieService.get('hasReportDetailFeature'));
+        const bookTabElm = type === 'accounting' ? this.renderBookTabs('accounting') : this.renderBookTabs('synthesis');
+
+        return (
+            <div className={`tab-pane ${classActive}`} id={`tab_${type}`}>
+                <div className="row">
+                    <div className="col-md-12">
+                        <div className="tabbable-line tabbable-custom-profile">
+                            <ul className="nav nav-tabs tabs-reversed">
+                                <li className="title-accountant"><a href="javascript:;">{ itemActive.name || '' }</a></li>
+                                {
+                                    (type === 'accounting' && hasReportDetailFeature === 1)
+                                        ? <li className="title-accountant">
+                                            <button
+                                                onClick={() => window.open(RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT_DETAIL', { chuky_id: itemActive.id }), '_blank')}
+                                                className="btn btn-danger btn-circle"
+                                            >
+                                                {t('Show detail')}
+                                            </button>
+                                        </li>
+                                        : ''
+                                }
+                                {bookTabElm}
+                            </ul>
+                            <div className="tab-content">
+                                {
+                                    type === 'accounting'
+                                        ? (
+                                            <>
+                                                { reportType === 'banker' ? this.renderBookTabContent('accounting', 'banker', true) : this.renderBookTabContent('accounting', -1, true) }
+                                                {
+                                                    books.map(item => this.renderBookTabContent('accounting', item.id))
+                                                }
+                                            </>
+                                        )
+                                        : (
+                                            <>
+                                                {this.renderBookTabContent('synthesis', 'tab_synthesis_all', true)}
+                                                {this.renderBookTabContent('synthesis', 'tab_synthesis_1')}
+                                                {this.renderBookTabContent('synthesis', 'tab_synthesis_2')}
+                                                {this.renderBookTabContent('synthesis', 'tab_synthesis_3')}
+                                                {this.renderBookTabContent('synthesis', 'tab_synthesis_4')}
+                                            </>
+                                        )
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     renderBookTabs = (tabReportActive) => {
         const roleMaster = CookieService.get('roles_master');
-        const t = this.props.t;
+        const { t, reportStore } = this.props;
+        const reportType = reportStore.reportType || 'cycle';
 
         let bookElement = [];
 
-        this.books = this.props.reportStore.books || [];
+        let books = this.props.reportStore.books || [];
 
-        this.books = _sortBy(this.books, function (item) {
+        books = _sortBy(books, function (item) {
             if (item.book_name === 'sportsbook') {
                 return -1;
             }
@@ -96,12 +148,24 @@ class ReportStatisticContainer extends Component {
         }).reverse();
 
         if (tabReportActive === 'accounting') {
-            if (Number(roleMaster) !== 1) {
-                bookElement = this.books.map((item, index) => {
+            if (reportType === 'banker') {
+                bookElement = (
+                    <li key={'other'} className="active">
+                        <a className="text-capitalize" href="javascript:;" data-toggle="tab">{t('Other')}</a>
+                    </li>
+                );
+            } else {
+                bookElement = Number(roleMaster) !== 1 ? books.map((item, index) => {
                     return <li key={index}>
-                        <a className="text-capitalize" href={`#tab_${tabReportActive}_${item.id}`} data-toggle="tab">{t(item.book_name)}</a>
+                        <a className="text-capitalize" href={`#${item.id}`} data-toggle="tab">{t(item.book_name)}</a>
                     </li>;
-                })
+                }) : [];
+    
+                bookElement.push(
+                    <li key={'all'} className="active">
+                        <a className="text-capitalize" href={`#-1`} data-toggle="tab">{t('All')}</a>
+                    </li>
+                )
             }
         } else {
             bookElement = [
@@ -116,31 +180,30 @@ class ReportStatisticContainer extends Component {
                 </li>,
                 <li key={3}>
                     <a className="text-capitalize" href={`#tab_${tabReportActive}_1`} data-toggle="tab">{t('Accounting')}</a>
+                </li>,
+                <li key={4} className="active">
+                    <a className="text-capitalize" href={`#tab_${tabReportActive}_all`} data-toggle="tab">{t('All')}</a>
                 </li>
             ];
         }
 
-        return [
-            ...bookElement,
-            <li key={'all'} className="active">
-                <a className="text-capitalize" href={`#tab_${tabReportActive}_all`} data-toggle="tab">{t('All')}</a>
-            </li>
-        ];
+        return bookElement;
     };
 
-    renderBookTabContent = (type, id) => {
+    renderBookTabContent = (type, id, isActive) => {
         const { data = {} } = this.props.reportStore;
         const t = this.props.t;
+        const classActive = isActive ? 'active' : '';
 
         let { currencyMap = [] } = this.props.reportStore;
         let accountingList = _sortBy(_toArray(data), 'name');
 
         accountingList = this.filterAccounting(accountingList, type, id);
-        accountingList = this.parseAccountingToArray(accountingList, type);
+        accountingList = this.parseAccountingToArray(accountingList, type, id);
         currencyMap = _sortBy(currencyMap, 'dv_tien_te').reverse();
 
         return (
-            <div className="tab-pane" id={id} key={id}>
+            <div className={`tab-pane ${classActive}`} id={id} key={id}>
                 <div className="portlet-body">
                     <table className="table table-hover table-light">
                         <thead className="font-red">
@@ -155,17 +218,17 @@ class ReportStatisticContainer extends Component {
                         {
                             Object.keys(accountingList).map((account, index) => {
                                 const accountElm = accountingList[account];
-
+                    
                                 return accountElm.map((elm, ind) => {
                                     let childIcon = '';
                                     let abc = '';
-
+                    
                                     for(let i = 0; i < elm.order; i++) {
                                         childIcon += '===';
                                     }
-
+                    
                                     abc = `${childIcon}${elm.name}`;
-
+                    
                                     return (<tr key={ind} className="cursor-pointer">
                                         <td>{ elm.order > 0 ? '' : index + 1 }</td>
                                         <td>
@@ -177,9 +240,9 @@ class ReportStatisticContainer extends Component {
                                             &nbsp;{ abc }</td>
                                             {
                                                 currencyMap.map((currency, i) => {
-                                                    const value = elm.total[currency.dv_tien_te_id] || 0;
+                                                    const value = elm.total[currency.dv_tien_te_id] ?  elm.total[currency.dv_tien_te_id].result : 0;
                                                     const className = Number(value) < 0 ? 'font-red' : 'font-blue-steel';
-
+                    
                                                     return <td className={className} key={i}>{Helpers.formatMoney(Number(value), 0)}</td>;
                                                 })
                                             }
@@ -194,53 +257,86 @@ class ReportStatisticContainer extends Component {
         );
     };
 
-    parseAccountingToArray(accountingList, tabReportActive) {
+    parseAccountingToArray(accountingList, tabReportActive, tabBookActive) {
         const rs = {};
-        const { tabBookActive } = this.state;
         const mapAccount = (data, id) => {
             data = _cloneDeep(data);
 
             const currentRs = { name: data.name, order: data.level, total: {} };
 
             if (data.level === 4) {
-                currentRs.total[data.dv_tien_te_id] = data.result;
-            } else if (data.level === 0 && tabReportActive === 'accounting') {
-                Object.keys(_get(data, 'child.accounting.total', {})).forEach(elm => {
-                    currentRs.total[elm] = data.child.accounting.total[elm].result;
-                });
+                currentRs.total[data.dv_tien_te_id] = { result: data.result };
             } else {
-                Object.keys(data.total).forEach(elm => {
-                    currentRs.total[elm] = data.total[elm].result;
-                });
+                let total = data.total || {};
+
+                if (data.level === 0 && tabReportActive === 'accounting') {
+                    const childTotalAccounting = _get(data, 'child.accounting', {});
+                    
+                    switch(tabBookActive) {
+                        case 'banker' :
+                            total = _get(childTotalAccounting, `child[${Object.keys(childTotalAccounting.child || {})[0]}].total`, {});
+                            break;
+                        case -1:
+                            total = childTotalAccounting.total || {};
+                            break;
+                        default:
+                            total = _get(childTotalAccounting, `.child[${tabBookActive}].total`, {})
+                    }
+                } 
+
+                currentRs.total = total;
             }
 
             rs[id] = rs[id] || [];
             rs[id].push(currentRs);
 
-            if (data.child) {
-                if (data.level === 0 && tabReportActive === 'accounting') {
-                    if(data.child.accounting && data.child.accounting.child) {
-                        if (tabBookActive === -1) {
-                            Object.keys(data.child.accounting.child).forEach(elm => {
-                                mapAccount(data.child.accounting.child[elm], id);
-                            })
-                        } else {
-                            Object.keys(data.child.accounting.child[tabBookActive].child).forEach(elm => {
-                                mapAccount(data.child.accounting.child[tabBookActive].child[elm], id);
-                            })
-                        }
-                    } else {
-                        delete rs[id];
-                    }
-                } else {
-                    if (tabReportActive === 'synthesis' && data.level === 1) {
+            if (!data.child) {
+                return;
+            }
 
-                    } else {
-                        Object.keys(data.child).forEach(elm => {
-                            mapAccount(data.child[elm], id);
+            const child = data.child;
+
+            /*eslint-disable default-case*/
+            switch(tabReportActive) {
+                case 'accounting':
+                    if (data.level === 0) {
+                        if (!_get(child, 'accounting.child')) {
+                            delete rs[id];
+
+                            return;
+                        }
+
+                        const childAccountingByBanker = child.accounting.child[Object.keys(child.accounting.child)[0]];
+
+                        if (tabBookActive === 'banker' && childAccountingByBanker.child) {
+                            Object.keys(childAccountingByBanker.child).forEach(elm => {
+                                mapAccount(childAccountingByBanker.child[elm], id);
+                            });
+
+                            return;
+                        }
+
+                        const childAccounting = tabBookActive === -1 ? child.accounting.child : child.accounting.child[tabBookActive].child;
+
+                        Object.keys(childAccounting).forEach(elm => {
+                            mapAccount(childAccounting[elm], id);
+                        });
+
+                        return;
+                    }
+
+                    Object.keys(child).forEach(elm => {
+                        mapAccount(child[elm], id);
+                    });
+
+                    break;
+
+                case 'synthesis':
+                    if (data.level === 0) {
+                        Object.keys(child).forEach(elm => {
+                            mapAccount(child[elm], id);
                         })
                     }
-                }
             }
         };
 
@@ -258,7 +354,7 @@ class ReportStatisticContainer extends Component {
             result = accountingList.filter(item => {
                 const currentItem = item.child.accounting;
 
-                return !(tabBookActive !== -1 && !_get(currentItem, `child[${tabBookActive}]`, false));
+                return !(tabBookActive !== 'banker' && tabBookActive !== -1 && !_get(currentItem, `child[${tabBookActive}]`, false));
             });
         } else {
             result = accountingList.filter(item => {
@@ -281,9 +377,25 @@ class ReportStatisticContainer extends Component {
     }
 
     render() {
-        const { currencyMap,isFetchingReport, itemActive } = this.props.reportStore;
-        const t = this.props.t;
-        const hasReportDetailFeature = Number(CookieService.get('hasReportDetailFeature'));
+        const { currencyMap, isFetchingReport, reportType = 'cycle', data } = this.props.reportStore;
+
+        let tabContent = <></>;
+
+        switch(reportType) {
+            case 'cycle': 
+                tabContent = (
+                    <>
+                        {this.renderTabReportContent('accounting', true)}
+                        {this.renderTabReportContent('synthesis')}
+                    </>
+                );
+                break;
+            case 'banker':
+                tabContent = this.renderTabReportContent('accounting', true);
+                break;
+            default:
+                tabContent = <ReportByMember data={data} />
+        }
 
         if (isFetchingReport) {
             return (
@@ -304,67 +416,21 @@ class ReportStatisticContainer extends Component {
                 <div className="portlet-body ">
                     <div className="tabbable-line tabbable-full-width tabbable-report">
                         <ul className="nav nav-tabs">
-                            <li className="active tab-report-detail">
-                                { this.renderTabReport('accounting') }
-                            </li>
-                            <li className="tab-report-detail">
-                                { this.renderTabReport('synthesis') }
-                            </li>
+                            {
+                                reportType === 'cycle'
+                                    ? (
+                                        <>
+                                            <li className="active tab-report-detail">{ this.renderTabReport('accounting') }</li>
+                                            <li className="tab-report-detail">{ this.renderTabReport('synthesis') }</li>
+                                        </>
+                                     )
+                                    : (
+                                        <li className="active tab-report-detail">{ this.renderTabReport('accounting') }</li>
+                                    )
+                            }
                         </ul>
                         <div className="tab-content tab-report-content">
-                            <div className="tab-pane active" id="tab_accounting">
-                                <div className="row">
-                                    <div className="col-md-12">
-                                        <div className="tabbable-line tabbable-custom-profile">
-                                            <ul className="nav nav-tabs tabs-reversed">
-                                                <li className="title-accountant"><a href="javascript:;">{ itemActive.name || '' }</a></li>
-                                                {
-                                                    hasReportDetailFeature === 1
-                                                        ? <li className="title-accountant">
-                                                            <button
-                                                                onClick={() => window.open(RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT_DETAIL', { chuky_id: itemActive.id }), '_blank')}
-                                                                className="btn btn-danger btn-circle"
-                                                            >
-                                                                {t('Show detail')}
-                                                            </button>
-                                                        </li>
-                                                        : ''
-                                                }
-                                                {this.renderBookTabs('accounting')}
-                                            </ul>
-                                            <div className="tab-content">
-                                                { this.renderBookTabContent('accounting', "tab_accounting_all") }
-                                                {
-                                                    this.books.map(item => {
-                                                        return this.renderBookTabContent('accounting', `tab_accounting_${item.id}`);
-                                                    })
-                                                }
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="tab-pane" id="tab_synthesis">
-                                <div className="row">
-                                    <div className="col-md-12">
-                                        <div className="tabbable-line tabbable-custom-profile">
-                                            <ul className="nav nav-tabs tabs-reversed">
-                                                <li className="title-accountant">
-                                                    <a href="javascript:;">{ itemActive.name || '' }</a>
-                                                </li>
-                                                {this.renderBookTabs('synthesis')}
-                                            </ul>
-                                            <div className="tab-content">
-                                                {this.renderBookTabContent('synthesis', 'tab_synthesis_all')}
-                                                {this.renderBookTabContent('synthesis', 'tab_synthesis_1')}
-                                                {this.renderBookTabContent('synthesis', 'tab_synthesis_2')}
-                                                {this.renderBookTabContent('synthesis', 'tab_synthesis_3')}
-                                                {this.renderBookTabContent('synthesis', 'tab_synthesis_4')}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            { tabContent }
                         </div>
                     </div>
                 </div>
@@ -379,15 +445,7 @@ const mapStateToProps = state => {
     };
 };
 
-const mapDispatchToProps = dispatch => {
-    return {
-        getReport: post => dispatch(getReport(post)),
-        getReportByBanker: post => dispatch(getReportByBanker(post)),
-        getReportByMember: post => dispatch(getReportByMember(post)),
-    }
-};
-
 export default compose(
-    connect(mapStateToProps, mapDispatchToProps),
+    connect(mapStateToProps, null),
     withTranslation()
 )(ReportStatisticContainer);

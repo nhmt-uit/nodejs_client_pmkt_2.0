@@ -121,14 +121,18 @@ export const getReport = (post, itemActive) => {
  * @description Get report by banker
  * @param {Object} post - include {String} chuky_id, {String} banker_id
  * */
-export const getReportByBanker = (post) => {
+export const getReportByBanker = (post, itemActive) => {
     return dispatch => {
+        dispatch({
+            type: ReportActionType.GET_REPORT_BY_BANKER,
+        });
+
         return ReportService.getReportByBanker(post)
             .then(res => {
                 if (res.status) {
                     dispatch({
                         type: ReportActionType.GET_REPORT_BY_BANKER_SUCCESS,
-                        payload: res.res || {},
+                        payload: { res: res.res, itemActive } || {},
                     });
                 } else {
                     dispatch({
@@ -156,14 +160,18 @@ export const getReportByBanker = (post) => {
  * @description Get report by member
  * @param {Object} post - include {String} chuky_id, {String} member_name
  * */
-export const getReportByMember = (post) => {
+export const getReportByMember = (post, itemActive) => {
     return dispatch => {
+        dispatch({
+            type: ReportActionType.GET_REPORT_BY_MEMBER,
+        });
+
         return ReportService.getReportByMember(post)
             .then(res => {
                 if (res.status) {
                     dispatch({
                         type: ReportActionType.GET_REPORT_BY_MEMBER_SUCCESS,
-                        payload: res.res || {},
+                        payload: { res: res.res, itemActive } || {},
                     });
                 } else {
                     dispatch({

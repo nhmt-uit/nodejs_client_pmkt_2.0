@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { get as _get, cloneDeep } from 'lodash';
 
-import { getCyclePage, getReport } from 'my-actions/ReportAction';
+import { getCyclePage, getReport, getReportByBanker, getReportByMember } from 'my-actions/ReportAction';
 import { LoadingComponent, PaginationComponent } from 'my-components';
 import { ReportService } from 'my-services';
 import { CookieService } from 'my-utils/core';
@@ -49,7 +49,7 @@ class ReportListContainer extends Component {
         this.setState({ collapse });
     };
 
-    recursiveItem(item, id, isExported = false) {
+    recursiveItem(item, id, itemActive, isExported = false) {
         const collapse = this.state.collapse;
 
         if (!item.child) {
@@ -65,7 +65,7 @@ class ReportListContainer extends Component {
                 return isOpen ? (
                     <div key={key} className="margin-top-15">
                         <div className="margin-top-10 margin-bottom-10">
-                            <a href="https://google.com" target="_blank">{index + 1} - {child.name}</a>
+                            <a href="#" onClick={this.handleGetReport({ chuky_id: id, member_name: child.name }, itemActive, 'member')} >{index + 1} - {child.name}</a>
                             { isExported
                                 ? ''
                                 : <span className="icon-close float-right color-red cursor-pointer" onClick={this.toggleDelModal(child.name, { chuky_id: id, acc_name: child.name })} />
@@ -82,7 +82,7 @@ class ReportListContainer extends Component {
             const isOpen = !!collapse[key];
             const collapseElement = isOpen ? (
                 <div className="margin-top-15 margin-bottom-15" style={{ marginLeft: '25px' }}>
-                    { this.recursiveItem(child, id, isExported) }
+                    { this.recursiveItem(child, id, itemActive, isExported) }
                 </div>
             ) : '';
 
@@ -96,7 +96,7 @@ class ReportListContainer extends Component {
                         &nbsp;&nbsp;
                         {
                             child.level === 3
-                                ? <a href="https://google.com" target="_blank">{child.name}</a>
+                                ? <a href="#" onClick={this.handleGetReport({ chuky_id: id, banker_id: child.id }, itemActive, 'banker')} >{child.name}</a>
                                 : <span>{child.name}</span>
                         }
                         {collapseElement}
@@ -110,7 +110,7 @@ class ReportListContainer extends Component {
         const collapse = this.state.collapse;
         const collapseElement = !!collapse[cycle.id] ? (
             <div className="margin-top-15" style={{ marginLeft: '25px' }}>
-                {this.recursiveItem(cycle, cycle.id, cycle.is_exported)}
+                {this.recursiveItem(cycle, cycle.id, cycle, cycle.is_exported)}
             </div>
         ) : '';
 
@@ -122,7 +122,7 @@ class ReportListContainer extends Component {
                             ? <i className="fa fa-minus cursor-pointer color-grey" onClick={this.toggle(cycle.id)} />
                             : <i className="fa fa-plus cursor-pointer color-grey" onClick={this.toggle(cycle.id)} />
                     }
-                    &nbsp;&nbsp;<a href="#" onClick={this.handleGetReport(cycle.id, cycle)}>{cycle.name}</a>
+                    &nbsp;&nbsp;<a href="#" onClick={this.handleGetReport({ chuky_id: cycle.id }, cycle, 'cycle')}>{cycle.name}</a>
                     <span className="float-right" >
                         {
                             cycle.is_exported
@@ -202,8 +202,17 @@ class ReportListContainer extends Component {
         });
     };
 
-    handleGetReport = (id, itemActive) => () => {
-        this.props.getReport({ chuky_id: id }, itemActive);
+    handleGetReport = (post, itemActive, type) => () => {
+        switch(type) {
+            case 'cycle':
+                this.props.getReport(post, itemActive);
+                break;
+            case 'banker':
+                this.props.getReportByBanker(post, itemActive);
+                break;
+            default:
+                this.props.getReportByMember(post, itemActive);
+        }
     };
 
     renderModal() {
@@ -338,6 +347,8 @@ const mapDispatchToProps = dispatch => {
     return {
         getCyclePage: pagination => dispatch(getCyclePage(pagination)),
         getReport: (post, itemActive) => dispatch(getReport(post, itemActive)),
+        getReportByBanker: (post, itemActive) => dispatch(getReportByBanker(post, itemActive)),
+        getReportByMember: (post, itemActive) => dispatch(getReportByMember(post, itemActive)),
     };
 };
 
