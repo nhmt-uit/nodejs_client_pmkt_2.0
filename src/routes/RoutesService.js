@@ -19,6 +19,8 @@ const listAdminRoutes = [
     /*==========================================================================*/
     { name: "ACCOUNTANT_REPORT_DETAIL", path: "/accountant/report/detail_template/:chuky_id", language: "en"},
     /*==========================================================================*/
+    { name: "ACCOUNTANT_REPORT_TRANSACTION", path: "/accountant/report/transaction", language: "en"},
+    /*==========================================================================*/
 
 
     /*==========================================================================*/

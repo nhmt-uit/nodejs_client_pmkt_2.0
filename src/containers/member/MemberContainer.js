@@ -8,8 +8,23 @@ import { getMember } from "my-actions/member/MemberAction";
 import { isEmpty} from 'lodash'
 
 class MemberContainer extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            selectedMember: '',
+        }
+        this.handleMemberChange = this.handleMemberChange.bind(this);
+    }
     componentWillMount() {
         this.props.getMember()
+    }
+
+    handleMemberChange(e){
+        this.setState({
+            selectedMember : e.target.value,
+        })
+        this.props.changeSelectedMember(e.target.value)
+
     }
 
     render() {
@@ -17,33 +32,23 @@ class MemberContainer extends Component {
         if(isEmpty(DATA_MEMBER)){
             return null;
         }
-        var ListMember = DATA_MEMBER.res.data.List;
-        console.log("LIST MEMBER", ListMember)
+        var listMember = DATA_MEMBER.res.data.List;
 
-        var OptionMember = ListMember.map(function (item) {
+        var optionMember = listMember.map(function (item) {
             return(
-                <label key={item.id} className="mt-radio mt-radio-outline">
-                    <input type="radio" name={item.name} id={item.name} value={item.name}/>
-                    {item.name}
-                    <span></span>
-                </label>
+                <option key={item.id} value={item.id}> {item.fullname.toUpperCase()} </option>
             )
         })
 
         return (
-            <div>
-                <div className="col-md-8">
-                    <select>
-                        <option value="Select cycle"> Select cycle </option>
-                        {OptionMember}
-                    </select>
-                </div>
-            </div>
+            <select value={this.state.selectedMember} onChange={this.handleMemberChange}>
+                <option value="Select Member"> -- Select Member -- </option>
+                {optionMember}
+            </select>
         );
     }
 }
-//checked={this.state.selectedMoney === item.name} onChange={this.handleMoneyChange}
-// value={this.state.selectedCycle} onChange={this.handleCycleChange}
+
 const mapStateToProps = state => {
     let initialValues = {};
     if(state.form.member){

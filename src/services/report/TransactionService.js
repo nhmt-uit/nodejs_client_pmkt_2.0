@@ -15,6 +15,12 @@ class TransactionService extends BaseService {
     getTypeOfMoney(){
         return HttpService.post(`${this.serviceUrl}/loaitien`)
     }
+
+    saveTransaction(post){
+        console.log("service", post)
+
+        return HttpService.post(`${this.serviceUrl}/save`, post)
+    }
 }
 
 export default new TransactionService()

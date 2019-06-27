@@ -36,3 +36,16 @@ export const getTypeOfMoney = () => {
         })
     }
 };
+
+export const saveTransaction = (post) => {
+    console.log("POST", post)
+    return (dispatch) => {
+        return TransactionService.saveTransaction(post).then(res => {
+
+            dispatch({
+                type: TransactionActionType.SAVE_TRANSACTION,
+                post: post,
+            })
+        })
+    }
+}
