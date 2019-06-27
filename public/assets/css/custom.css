@@ -1,0 +1,372 @@
+html {
+  font-size: 15px;
+}
+@media (min-width: 992px) {
+  .page-content-wrapper .page-content {
+      margin-left: 195px;
+  }
+  .page-sidebar {
+    width: 195px;
+  }
+}
+
+.zopim{display: none !important;}
+.bg-default{background-color: #f2f2f2 !important;color: #333 !important;}
+.bg-success{background-color: #dff0d8 !important;}
+.bg-danger{background-color: #f2dede !important;}
+.radio-inline {
+  margin-right: 20px;
+  float: left;
+  width: auto !important;
+  padding-left: 0;
+}
+.radio-inline label {
+  width: calc(100% - 10px) !important;
+}
+.error {
+  font-size: 13px;
+  line-height: 12px;
+  color: rgb(244, 67, 54);
+  transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+}
+.table {
+  margin-bottom: 0px;
+}
+
+
+.fredux-radio-inline {
+  display: block !important;
+  overflow: hidden;
+}
+.col-md-6-custom {
+  padding-right: 0 !important;
+}
+.add-blog-categories .form-group {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* Custom From Bootstrap */
+.form-inline .form-group, .form-inline .btn, .form-group .btn {
+	margin-right: 5px
+}
+
+.form-actions .btn {margin-right: 5px;}
+.form-actions .btn:last-of-type {margin-right: 0px;}
+
+/* .form-inline .form-group:last-of-type {
+	margin-right: 0px
+} */
+
+/* Custom React Select */
+.form-group .css-2b097c-container:focus {
+	outline: none;
+}
+.form-group .css-1pahdxg-control, .form-group .css-1pahdxg-control:hover {
+	border-color: #93a1bb;
+	box-shadow: none;
+}
+.form-group .css-yk16xz-control {
+	border: 1px solid #c2cad8;
+	min-height: 32px;
+}
+
+.form-group .css-1g48xl4-IndicatorsContainer {
+	height: 32px;
+}
+
+.hide-multi .css-1rhbuit-multiValue .css-1alnv5e {
+	display: none;
+}
+
+/* Custom React Multi Select */
+.multi-select .dropdown {
+	z-index: 10;
+}
+.multi-select span.dropdown-heading-value {
+  max-width: 96% !important;
+  color: #888!important;
+}
+
+.multi-select abel.select-item{
+  margin-bottom: 0px !important;
+}
+.multi-select label.mt-checkbox {
+  margin: 5px 15px !important;
+}
+
+/* Custom React Datepicker */
+.react-datepicker-wrapper {
+	height: 34px;
+}
+.react-datepicker__input-container {
+	height: 30px;
+}
+.react-datepicker-popper {
+	z-index: 10 !important;
+}
+
+
+.input-secure-code {
+    background-color: #FFFFFF!important;
+}
+.div-top-center {
+    margin: 3% auto;
+    background-color: #FFFFFF;
+    width: 75%;
+}
+
+.ul-announcement {
+    list-style-type: none;
+    padding: 0;
+}
+
+.ul-announcement li {
+    margin: .8rem 0;
+}
+
+.text-red {
+    color: #ff1123;
+}
+
+.btn-announcement {
+    padding: .5rem 1.5rem;
+    border-radius: .5rem !important;
+}
+
+
+.portlet .caption label.mt-checkbox {
+  margin-bottom: 0px;
+  font-size: 18px;
+  line-height: 20px;
+}
+
+.list-banker-account .panel-title label.mt-checkbox {
+  margin: 5px 10px;
+  line-height: 20px;
+  font-size: 14px;
+}
+.portlet .panel-group:last-of-type {
+ margin-bottom: 0px;
+}
+.table label.mt-checkbox:last-of-type {
+  margin-bottom: 0px;
+}
+
+.list-banker-account .portlet-body {
+  padding: 10px 15px 0px 15px !important;
+}
+
+.list-banker-account .portlet-body:last-of-type {
+  padding-bottom: 10px !important;
+}
+
+.body-notify-acc-scan {height: 200px; overflow-y: auto}
+
+.padding-lf-10 {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.padding-tb-10-important {
+    padding-top: 10px!important;
+    padding-bottom: 10px!important;
+}
+
+.width-auto {
+    width: auto!important;
+}
+.spinner-animate{
+    animation-name: spin;
+    animation-duration: 2000ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+@keyframes spin {
+  from {
+      transform:rotate(0deg);
+  }
+  to {
+      transform:rotate(360deg);
+  }
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.color-grey {
+    color: grey;
+}
+
+.color-red {
+    color: red;
+}
+
+.float-right {
+    float: right;
+}
+
+.mt-checkbox>span:after {border-color: #e7505a }
+.mt-radio>span:after { background: #e7505a}
+.mt-checkbox>span, .mt-radio>span {border: 1px solid #e7505a; background: none}
+
+.placeholder-parent {width: 15px; display: inline-block}
+.spacing-0{width: 5px; display: inline-block}
+.spacing-1{width: 20px; display: inline-block}
+.spacing-2{width: 35px; display: inline-block}
+.spacing-3{width: 50px; display: inline-block}
+.spacing-4{width: 65px; display: inline-block}
+.spacing-5{width: 80px; display: inline-block}
+.tab-report-detail {
+    min-width: 170px;
+    border: 1px solid #e8e8e8!important;
+    margin-right: 5px!important;
+}
+
+.tab-report-detail a {
+    height: 97px;
+}
+
+.tab-report::before {
+    content: "\f201";
+    font-family: FontAwesome, serif;
+    position: absolute;
+    right: 14px;
+    bottom: 6px;
+    font-size: 35px;
+    color: #dddddd;
+}
+
+.tab-accountant::before{
+    content: "\f080";
+    font-family: FontAwesome, serif;
+    position: absolute;
+    right: 14px;
+    bottom: 6px;
+    font-size: 35px;
+    color: #dddddd;
+}
+
+.display-block {
+    display: block;
+}
+
+.font-size-12 {
+    font-size: 12px!important;
+}
+
+.tabbable-report>.nav-tabs>li.active {
+    border-bottom: 4px solid #d43511!important;
+}
+
+.tabbable-report>.nav-tabs>li.open, .tabbable-report>.nav-tabs>li:hover {
+    border-bottom: 4px solid #d43511!important;
+}
+
+.tab-report-content {
+    border-top: none!important;
+}
+
+.tabs-reversed > li.title-accountant {
+    float: left;
+}
+
+.tabs-reversed > li.title-accountant:hover {
+    border: none;
+}
+
+.tabs-reversed > li.title-accountant a {
+    padding-left: unset;
+    cursor: auto;
+}
+
+.tbl-scan-result td, .tbl-scan-result th {font-size: 12px; vertical-align: middle !important;}
+
+.tbl-scan-result tbody:hover td[rowspan], .tbl-scan-result tr:hover td {
+  background-color: rgba(0,0,0,.075) !important;
+}
+
+.tbl-scan-result {
+  /* animation: fadein 1.5s;
+  -moz-animation: fadein 1.5s;
+  -webkit-animation: fadein 1.5s;
+  -o-animation: fadein 1.5s; */
+}
+
+@keyframes fadein {
+  from {
+      opacity:0;
+  }
+  to {
+      opacity:1;
+  }
+}
+@-moz-keyframes fadein { /* Firefox */
+  from {
+      opacity:0;
+  }
+  to {
+      opacity:1;
+  }
+}
+@-webkit-keyframes fadein { /* Safari and Chrome */
+  from {
+      opacity:0;
+  }
+  to {
+      opacity:1;
+  }
+}
+@-o-keyframes fadein { /* Opera */
+  from {
+      opacity:0;
+  }
+  to {
+      opacity: 1;
+  }
+}
+
+.list-banker-account.sportsbook .rec {
+  background: #e48c7a !important;
+  color: #ffffff !important;
+}
+.list-banker-account.sportsbook .pay {
+  background: #e47c79 !important;
+  color: #ffffff !important;
+}
+.list-banker-account.casino .rec {
+  background: #eeba70 !important;
+  color: #ffffff !important;
+}
+.list-banker-account.casino .pay {
+  background: #f09a93 !important;
+  color: #ffffff !important;
+}
+.list-banker-account.loto .rec {
+  background: #d7584d !important;
+  color: #ffffff !important;
+}
+.list-banker-account.loto .pay {
+  background: #d78aa3 !important;
+  color: #ffffff !important;
+}
+.list-banker-account.other .rec {
+  background: #9b609a !important;
+  color: #ffffff !important;
+}
+.list-banker-account.other .pay {
+  background: #a54b74 !important;
+  color: #ffffff !important;
+}
+
+.page-header.navbar .top-menu .navbar-nav>li.dropdown>.dropdown-toggle:last-child{padding-right: 10px;}
+
+/* Full screen */
+.btn-fullscreen i.fa {margin-right: 5px}
+.full-screen .page-header, .full-screen .page-sidebar-wrapper {display: none}
+.full-screen .page-container {margin-top: 0px}
+@media (min-width: 992px) {
+  .full-screen .page-content-wrapper .page-content { margin-left: 0px;}
+}
