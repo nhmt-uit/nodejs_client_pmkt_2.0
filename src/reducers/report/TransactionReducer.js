@@ -4,11 +4,10 @@ let defaultState = {
     payload: {},
     cycle: {},
     money: {},
+    reportDetailById: {},
 }
 
 const TransactionReducer = (state = defaultState, action) => {
-    console.log("state",state)
-    console.log("action",action)
     switch (action.type) {
         case TransactionActionType.GET_ALL_TRANSACTION:
             return {...state, payload: action.payload};
@@ -21,6 +20,12 @@ const TransactionReducer = (state = defaultState, action) => {
 
         case TransactionActionType.SAVE_TRANSACTION:
             return {...state};
+
+        case TransactionActionType.DEL_TRANSACTION:
+            return {...state};
+
+        case TransactionActionType.GET_DETAIL_REPORT:
+            return {...state, reportDetailById: action.payload};
 
         default:
             return {...state};

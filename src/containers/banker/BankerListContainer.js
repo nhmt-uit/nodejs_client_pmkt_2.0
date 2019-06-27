@@ -16,11 +16,9 @@ class BankerListContainer extends React.Component{
         DATA = this.props.bankerList.payload;
         // console.log("DATA:", typeof DATA);
         if(isEmpty(DATA)){
-            console.log("DATA is empty!")
             return null;
         }
         var List = DATA.res.data.List;
-        console.log("LIST", List)
         return(
             <div>
                 <div className="col-xs-12 portlet light bordered">
@@ -48,7 +46,6 @@ class BankerListContainer extends React.Component{
 }
 
 const mapStateToProps = state => {
-    console.log("State banker", state);
     let initialValues = {};
     if(state.form.banker){
         initialValues = state.form.banker.values;

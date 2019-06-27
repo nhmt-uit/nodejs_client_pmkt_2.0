@@ -20,12 +20,8 @@ class CreateTransaction extends Component{
             note:'',
             isEdit: false,
 
+            editValueID: this.props.editValueID,
         }
-        this.handleTransactionChange = this.handleTransactionChange.bind(this);
-        this.handleMoneyChange = this.handleMoneyChange.bind(this);
-        this.handleCycleChange = this.handleCycleChange.bind(this);
-        this.onInputChange = this.onInputChange.bind(this);
-        this.submitForm = this.submitForm.bind(this);
     }
 
     componentWillMount() {
@@ -38,7 +34,7 @@ class CreateTransaction extends Component{
             selectedMember: changeMember,
         });
     }
-    onInputChange(e){
+    onInputChange = (e) => {
         let name = e.target.name;
         let value = e.target.value;
         this.setState({
@@ -46,25 +42,25 @@ class CreateTransaction extends Component{
         })
     }
 
-    handleTransactionChange(e) {
+    handleTransactionChange = (e) => {
         this.setState({
             selectedTransaction: e.target.value
         });
     }
 
-    handleMoneyChange(e) {
+    handleMoneyChange = (e) => {
         this.setState({
             selectedMoney: e.target.value,
         });
     }
 
-    handleCycleChange(e){
+    handleCycleChange = (e) => {
         this.setState({
             selectedCycle: e.target.value
         });
     }
 
-    submitForm(e){
+    submitForm = (e) => {
         e.preventDefault();
         var post = {
             currency_type_id: this.state.selectedMoney,
@@ -76,27 +72,34 @@ class CreateTransaction extends Component{
             chu_ky_id: this.state.selectedCycle,
             // id: this.state.idEdit,
         }
+        var self = this;
         this.props.saveTransaction({data: JSON.stringify(post)})
-        // this.setState({
-        //     selectedTransaction: '',
-        //     selectedMoney: '',
-        //     selectedCycle: '',
-        //     selectedMember: '',
-        //     transaction: '',
-        //     note:'',
-        //     isEdit: false,
-        // })
-        // this.props.getAllTransaction()
-
+            .then(function () {
+                self.setState({
+                    selectedTransaction: '',
+                    selectedMoney: '',
+                    selectedCycle: '',
+                    selectedMember: '',
+                    transaction: '',
+                    note:'',
+                    isEdit: false,
+                })
+            })
+            .then(function () {
+                self.props.getAllTransaction()
+            })
+            .catch(function (err) {
+                console.log(err)
+            })
     }
 
     render() {
+
         var typeOfTransaction = [
             {id: '2', name: 'Payment'},
             {id: '9', name: 'Other'}
         ]
 
-        console.log("STATE", this.state)
         var DATA_CYCLE = this.props.transaction.cycle;
         var DATA_MONEY = this.props.transaction.money;
         if(isEmpty(DATA_CYCLE) || isEmpty(DATA_MONEY)) {
@@ -105,12 +108,12 @@ class CreateTransaction extends Component{
         var money = DATA_MONEY.res.data;
         var cycleList = DATA_CYCLE.res.data.List
 
+
         var optionsCycle = cycleList.map(function (item) {
             return (
                 <option key={item.id} value={item.id}> {item.chuky} </option>
             )
         })
-
         var optionsMoney = money.map( item => {
             return(
                 <label key={item.id} className="mt-radio mt-radio-outline">
@@ -142,7 +145,8 @@ class CreateTransaction extends Component{
                         <div className="form-group">
                             <label className="control-label col-md-3"> {t("Member")} </label>
                             <div className="col-md-8">
-                                <MemberContainer changeSelectedMember = {this.callbackFromChildHandlerFunction}/>
+                                <MemberContainer changeSelectedMember = {this.callbackFromChildHandlerFunction}
+                                                 selectedMember = {this.state.selectedMember}/>
                             </div>
                         </div>
                         <div className="form-group">
@@ -212,7 +216,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         getCycle: params => {dispatch(getCycle(params))},
         getTypeOfMoney: params => {dispatch(getTypeOfMoney(params))},
-        saveTransaction: params => {dispatch(saveTransaction(params))},
+        saveTransaction: params => dispatch(saveTransaction(params)),
         getAllTransaction: params => {dispatch(getAllTransaction(params))},
     }
 };

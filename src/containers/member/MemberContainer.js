@@ -3,6 +3,7 @@ import {compose} from "redux";
 import {reduxForm} from "redux-form";
 import {connect} from "react-redux";
 import {withTranslation} from "react-i18next";
+import Select from 'react-select';
 
 import { getMember } from "my-actions/member/MemberAction";
 import { isEmpty} from 'lodash'
@@ -11,7 +12,7 @@ class MemberContainer extends Component {
     constructor(props){
         super(props);
         this.state = {
-            selectedMember: '',
+            selectedMember: this.props.selectedMember,
         }
         this.handleMemberChange = this.handleMemberChange.bind(this);
     }
@@ -41,7 +42,7 @@ class MemberContainer extends Component {
         })
 
         return (
-            <select value={this.state.selectedMember} onChange={this.handleMemberChange}>
+            <select value={this.props.selectedMember} onChange={this.handleMemberChange}>
                 <option value="Select Member"> -- Select Member -- </option>
                 {optionMember}
             </select>

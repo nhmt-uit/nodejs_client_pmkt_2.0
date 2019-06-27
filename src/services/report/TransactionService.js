@@ -17,9 +17,15 @@ class TransactionService extends BaseService {
     }
 
     saveTransaction(post){
-        console.log("service", post)
-
         return HttpService.post(`${this.serviceUrl}/save`, post)
+    }
+
+    delTransaction(id){
+       return HttpService.post(`${this.serviceUrl}/delete`, id)
+    }
+
+    getDetailReportById(id){
+        return HttpService.post(`${this.serviceUrl}/get_detail_report_by_id`, id)
     }
 }
 

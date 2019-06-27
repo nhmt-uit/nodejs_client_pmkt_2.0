@@ -39,53 +39,29 @@ class ReportDetail extends Component {
             var account = "";
             var level = 0;
             var item = items;
-            do{
-                item = Object.entries(item);
-                var VND = 0, USD = 0;
-                var Money;
+            if(items[1].child.accounting) { //Loc chi lay accounting
+                do {
+                    item = Object.entries(item);
+                    var VND = 0, USD = 0;
+                    var Money;
 
-                if(level === 0){
-                    book_type = "ALL";
-                    account = "";
+                    if (level === 0) {
+                        book_type = "ALL";
+                        account = "";
 
-                    Money = item[1][1].total;
-                    Money = Object.entries(Money);
-                    Money.forEach(function(item) {
-                        var typeOfMoney = DV_Tiente_Map[item[1].id].dv_tien_te
-                        if(typeOfMoney == 'VND'){
-                            VND = item[1].result
-                        }
-                        if(typeOfMoney == 'USD') {
-                            USD = item[1].result
-                        }
-
-                    })
-
-                    arr.push({
-                        index: index,
-                        member_name: member_name,
-                        book_type: book_type,
-                        account: '',
-                        VND: VND,
-                        USD: USD,
-                    })
-                    item = item[1][1].child;
-                } else if(level === 1){
-                    item = item[0][1].child;
-                } else{
-                    item.forEach(function (item) {
-                        USD = 0; VND = 0
-                        book_type = item[1].name;
-                        var Money = item[1].total;
+                        Money = item[1][1].total;
                         Money = Object.entries(Money);
                         Money.forEach(function (item) {
                             var typeOfMoney = DV_Tiente_Map[item[1].id].dv_tien_te
-                            if(typeOfMoney == 'VND'){
+                            if (typeOfMoney == 'VND') {
                                 VND = item[1].result
                             }
-                            if(typeOfMoney == 'USD'){
+                            if (typeOfMoney == 'USD') {
                                 USD = item[1].result
-                            }});
+                            }
+
+                        })
+
                         arr.push({
                             index: index,
                             member_name: member_name,
@@ -93,37 +69,67 @@ class ReportDetail extends Component {
                             account: '',
                             VND: VND,
                             USD: USD,
-                        });
-                        var child = item[1].child;
-                        child = Object.entries(child);
-                        child.forEach(function (item) {
-                            USD = 0; VND = 0
-                            account = item[1].name;
-                            Money = item[1].total;
+                        })
+                        item = item[1][1].child;
+                    } else if (level === 1) {
+                        item = item[0][1].child;
+                    } else {
+                        item.forEach(function (item) {
+                            USD = 0;
+                            VND = 0
+                            book_type = item[1].name;
+                            var Money = item[1].total;
                             Money = Object.entries(Money);
                             Money.forEach(function (item) {
                                 var typeOfMoney = DV_Tiente_Map[item[1].id].dv_tien_te
-                                if(typeOfMoney == 'VND'){
+                                if (typeOfMoney == 'VND') {
                                     VND = item[1].result
                                 }
-                                if(typeOfMoney == 'USD'){
+                                if (typeOfMoney == 'USD') {
                                     USD = item[1].result
-                                }})
+                                }
+                            });
                             arr.push({
                                 index: index,
                                 member_name: member_name,
                                 book_type: book_type,
-                                account: account,
+                                account: '',
                                 VND: VND,
                                 USD: USD,
+                            });
+                            var child = item[1].child;
+                            child = Object.entries(child);
+                            child.forEach(function (item) {
+                                USD = 0;
+                                VND = 0
+                                account = item[1].name;
+                                Money = item[1].total;
+                                Money = Object.entries(Money);
+                                Money.forEach(function (item) {
+                                    var typeOfMoney = DV_Tiente_Map[item[1].id].dv_tien_te
+                                    if (typeOfMoney == 'VND') {
+                                        VND = item[1].result
+                                    }
+                                    if (typeOfMoney == 'USD') {
+                                        USD = item[1].result
+                                    }
+                                })
+                                arr.push({
+                                    index: index,
+                                    member_name: member_name,
+                                    book_type: book_type,
+                                    account: account,
+                                    VND: VND,
+                                    USD: USD,
+                                })
                             })
-                        })
 
-                    })
-                    item = item[0][1].child;
-                }
-                level++;
-            }while (level < 3)
+                        })
+                        item = item[0][1].child;
+                    }
+                    level++;
+                } while (level < 3)
+            }
         })
         return(
             <div>
