@@ -12,6 +12,7 @@ import * as AccountActionType from './AccountActionType'
 import * as ReportDetailActionType from './ReportDetailActionType'
 import * as TransactionActionType from './TransactionActionType'
 import * as MemberActionType from './MemberActionType'
+import * as ConfigurationActionType from './ConfigurationActionType';
 export {
     AppActionType,
     LanguageActionType,
@@ -27,4 +28,5 @@ export {
     ReportDetailActionType,
     TransactionActionType,
     MemberActionType,
+    ConfigurationActionType
 }

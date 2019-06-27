@@ -4,7 +4,7 @@ import { Route, Link } from "react-router-dom";
 import { RoutesService } from 'my-routes';
 
 
-const menus = [
+export const menus = [
     { to: RoutesService.getPath('ADMIN', 'DASHBOARD'), exact: true, name: 'Dashboard', icon: 'fa fa-pie-chart'},
     { to: RoutesService.getPath('ADMIN', 'ACCOUNTANT_DASHBOARD'), exact: false, name: 'Accountant', icon: 'fa fa-bar-chart',
         sub_menus: [
@@ -15,12 +15,13 @@ const menus = [
     },
     { to: RoutesService.getPath('ADMIN', 'MANAGE_DASHBOARD'), exact: false, name: 'Manage', icon: 'fa fa-gears',
         sub_menus: [
-            { to: RoutesService.getPath('ADMIN', 'CONFIGURATION'), exact: true, name: 'Configuration' },
-            { to: RoutesService.getPath('ADMIN', 'FORMULA'), exact: true, name: 'Formular' },
-            { to: RoutesService.getPath('ADMIN', 'FORMULA_GROUP'), exact: true, name: 'Formula Group' },
-            { to: RoutesService.getPath('ADMIN', 'MEMBER'), exact: true, name: 'Member' },
-            { to: RoutesService.getPath('ADMIN', 'ACCOUNT'), exact: true, name: 'Account' },
-            { to: RoutesService.getPath('ADMIN', 'ACCOUNT_SUB'), exact: true, name: 'Create Sub' },
+            { to: RoutesService.getPath('ADMIN', 'CREATE_NEW'), exact: true, name: 'Create new', icon: 'fa fa-user-plus fa-fw' },
+            { to: RoutesService.getPath('ADMIN', 'CONFIGURATION'), exact: true, name: 'Configuration', icon: 'fa fa-cog fa-fw' },
+            { to: RoutesService.getPath('ADMIN', 'FORMULA'), exact: true, name: 'Formular', icon: 'fa fa-sliders fa-fw' },
+            { to: RoutesService.getPath('ADMIN', 'FORMULA_GROUP'), exact: true, name: 'Formula Group', icon: 'fa fa-sliders fa-fw' },
+            { to: RoutesService.getPath('ADMIN', 'MEMBER'), exact: true, name: 'Member', icon: 'fa fa-users fa-fw' },
+            { to: RoutesService.getPath('ADMIN', 'ACCOUNT'), exact: true, name: 'Account', icon: 'fa fa-user fa-fw' },
+            { to: RoutesService.getPath('ADMIN', 'ACCOUNT_SUB'), exact: true, name: 'Create Sub', icon: 'fa fa-user-plus fa-fw' },
         ],
     },
 ]

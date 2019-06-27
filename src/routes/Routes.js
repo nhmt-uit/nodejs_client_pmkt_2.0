@@ -6,6 +6,7 @@ import RoutesService from './RoutesService'
 import { AccountantListPage, AccountantManualPage } from 'my-pages/accountant';
 import { ReportPage, ReportDetailPage } from 'my-pages/report';
 import TransactionPage from "my-pages/report/transaction/TransactionPage";
+import { ManagePage, CreateNewPage, ConfigurationPage } from 'my-pages/manage';
 
 const Routes = [
 	{
@@ -74,6 +75,21 @@ const Routes = [
 		exact: true,
 		component: TransactionPage,
 	},
+    {
+        path: RoutesService.getPath('ADMIN', 'MANAGE_DASHBOARD'),
+        exact: true,
+        component: ManagePage,
+    },
+    {
+        path: RoutesService.getPath('ADMIN', 'CREATE_NEW'),
+        exact: true,
+        component: CreateNewPage,
+    },
+    {
+        path: RoutesService.getPath('ADMIN', 'CONFIGURATION'),
+        exact: true,
+        component: ConfigurationPage,
+    },
 	{
 		path: '*',
 		exact: true,

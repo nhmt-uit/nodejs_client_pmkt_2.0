@@ -31,6 +31,8 @@ const listAdminRoutes = [
     /*==========================================================================*/
     { name: "MANAGE_DASHBOARD", path: "/manage", language: "en"},
     /*==========================================================================*/
+    { name: "CREATE_NEW", path: "/manage/create_new", language: "en"},
+    /*==========================================================================*/
     { name: "CONFIGURATION", path: "/manage/configuration", language: "en"},
     /*==========================================================================*/
     { name: "FORMULA", path: "/manage/formula", language: "en"},

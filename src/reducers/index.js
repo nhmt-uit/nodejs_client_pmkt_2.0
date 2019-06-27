@@ -16,6 +16,7 @@ import AccountReducer from './AccountReducer';
 import ReportDetailReducer from "./report/ReportDetailReducer";
 import TransactionReducer from "./report/TransactionReducer";
 import MemberReducer from "./member/MemberReducer";
+import ConfigurationReducer from './manage/ConfigurationReducer'
 
 const appReducers = combineReducers({
     // Redux form reducer
@@ -38,7 +39,8 @@ const appReducers = combineReducers({
     ChangePasswordReducer,
     ChangeSecureCodeReducer,
     ReportReducer,
-    AccountReducer
+    AccountReducer,
+    ConfigurationReducer
 });
 
 export default appReducers;

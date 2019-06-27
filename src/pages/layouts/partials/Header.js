@@ -14,6 +14,7 @@ import { changeLanguage } from 'my-actions/systems/LanguageAction'
 import { AuthService } from 'my-services/systems'
 import { TransComponent } from 'my-components'
 
+import 'my-styles/styles.css'
 
 class Header extends Component {
     state = {
@@ -57,7 +58,7 @@ class Header extends Component {
                                 <li className="dropdown dropdown-user">
                                     <a href="/assets/images/HDSD PMKT VERSION 3.3.pdf" className="dropdown-toggle" target="_bank">
                                         <span className="username"> <TransComponent i18nKey="document for new features" /> </span>
-                                        
+
                                     </a>
                                 </li>
                                 <ZopimChat />
