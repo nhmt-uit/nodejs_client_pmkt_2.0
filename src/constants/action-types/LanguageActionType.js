@@ -1,1 +1,0 @@
-export const ON_CHANGE_LANGUAGE         = 'ON_CHANGE_LANGUAGE';
