@@ -12,6 +12,7 @@ import { CookieService } from 'my-utils/core';
 import { RoutesService } from 'my-routes';
 import InfoUserContainer from "my-containers/infoUser/InfoUserContainer";
 import 'my-styles/reactstrap-modal.css'
+import 'my-styles/styles.css'
 
 class Header extends Component {
     handleLogout = _ => {

@@ -3,6 +3,7 @@ import { LoginPage, SecureCodePage, ResetSecurePasswordPage } from 'my-pages/aut
 import { ChangePasswordPage } from 'my-pages/navigation';
 
 import { AccountantListPage } from 'my-pages/accountant';
+import { ManagePage, CreateNewPage, ConfigurationPage } from 'my-pages/manage';
 import RoutesService from './RoutesService'
 
 const Routes = [
@@ -41,6 +42,21 @@ const Routes = [
 		path: RoutesService.getPath('ADMIN', 'CHANGE_PASSWORD'),
 		exact: true,
 		component: ChangePasswordPage,
+	},
+	{
+		path: RoutesService.getPath('ADMIN', 'MANAGE_DASHBOARD'),
+		exact: true,
+		component: ManagePage,
+	},
+	{
+		path: RoutesService.getPath('ADMIN', 'CREATE_NEW'),
+		exact: true,
+		component: CreateNewPage,
+	},
+	{
+		path: RoutesService.getPath('ADMIN', 'CONFIGURATION'),
+		exact: true,
+		component: ConfigurationPage,
 	},
 	{
 		path: '*',

@@ -4,6 +4,7 @@ import * as AccountantActionType from './AccountantActionType';
 import * as NotificationActionType from './NotificationActionType';
 import * as BankerActionType from './BankerActionType';
 import * as InfoUserActionType from './InfoUserActionType';
+import * as ConfigurationActionType from './ConfigurationActionType';
 
 export {
     LanguageActionType,
@@ -12,4 +13,5 @@ export {
     NotificationActionType,
     BankerActionType,
     InfoUserActionType,
+    ConfigurationActionType
 }

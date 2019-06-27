@@ -7,6 +7,7 @@ import AuthReducer from './systems/AuthReducer';
 import AccountantReducer from './AccountantReducer';
 import NotificationReducer from './systems/NotificationReducer';
 import BankerReducer from './banker/BankerReducer'
+import ConfigurationReducer from './manage/ConfigurationReducer'
 
 const appReducers = combineReducers({
     // Redux form reducer
@@ -18,7 +19,8 @@ const appReducers = combineReducers({
 
     // Accountant Reducer
     AccountantReducer,
-    NotificationReducer
+    NotificationReducer,
+    ConfigurationReducer
 });
 
 export default appReducers;
