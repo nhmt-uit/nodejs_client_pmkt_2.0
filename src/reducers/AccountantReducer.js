@@ -1,4 +1,4 @@
-import { map as _map, isEmpty as _isEmpty, get as _get, uniq as _uniq, difference as _difference, cloneDeep as _cloneDeep } from 'lodash'
+import { map as _map, isEmpty as _isEmpty, get as _get, uniq as _uniq, difference as _difference, cloneDeep as _cloneDeep, has as _has } from 'lodash'
 import { AccountantActionType } from 'my-constants/action-types'
 
 let defaultState = {
@@ -150,6 +150,7 @@ export const AccountantReducer = (state = defaultState, action) => {
 				newBankerAccount[objIndex].type = "resolve"
 				newBankerAccount[objIndex].message = null
 				newBankerAccount[objIndex].data = action.full_payload.data
+				newBankerAccount[objIndex].data.dataHiddenFields = handleProcessDataCheckHiddenColumn(newBankerAccount[objIndex].data.accountant)
 			}
 			return {...state, bankerAccount: newBankerAccount}
 		case AccountantActionType.ACCOUNTANT_SOCKET_SCAN_DATA_STOP:
@@ -179,7 +180,10 @@ export const AccountantReducer = (state = defaultState, action) => {
 			let bankerAccountId = action.uuid2AccId[action.full_payload.uuid]
 			if(!_isEmpty(bankerAccountId)) {
 				var objIndex = newBankerAccount.findIndex((obj => obj.id === bankerAccountId))
-				if (objIndex !== -1) newBankerAccount[objIndex].data = {...newBankerAccount[objIndex].data, ...action.payload}
+				if (objIndex !== -1) {
+					newBankerAccount[objIndex].data = {...newBankerAccount[objIndex].data, ...action.payload}
+					newBankerAccount[objIndex].data.dataHiddenFields = handleProcessDataCheckHiddenColumn(newBankerAccount[objIndex].data.accountant)
+				}
 			}
 			return {...state, bankerAccount: newBankerAccount}
 		case AccountantActionType.ACCOUNTANT_TOGGLE_SHOW_ALL_FORMULA:
@@ -197,7 +201,33 @@ export const AccountantReducer = (state = defaultState, action) => {
 	}
 }
 
+/*
+|--------------------------------------------------------------------------
+| Check has hidden column
+| formatName, he_so, gia_thau, PRText
+|--------------------------------------------------------------------------
+*/
+function handleProcessDataCheckHiddenColumn(accountant, res = {formatName: true, he_so: false, gia_thau: false, PRText: true}) {
+	if (_isEmpty(accountant)) return res
+	for(let x in accountant) {
+		if (_isEmpty(accountant[x].reportAccountant)) continue
+		for(let y in accountant[x].reportAccountant) {
+			if (_isEmpty(accountant[x].reportAccountant[y].resultList)) continue
+			for(let z in accountant[x].reportAccountant[y].resultList) {
+				if(_has(accountant[x].reportAccountant[y].resultList[z], 'he_so')) res.he_so = true
+				if(_has(accountant[x].reportAccountant[y].resultList[z], 'gia_thau')) res.gia_thau = true
+				if (res.he_so && res.gia_thau) return res
+			}
+		}
+		return handleProcessDataCheckHiddenColumn(accountant[x].child, res)
+	}
+}
 
+/*
+|--------------------------------------------------------------------------
+| Scan result add/check object isShowChild
+|--------------------------------------------------------------------------
+*/
 function handleProcessDataWhenToggleShowHideChild(accountant, username) {
 	if (_isEmpty(accountant)) return
 	return accountant.map(node => {

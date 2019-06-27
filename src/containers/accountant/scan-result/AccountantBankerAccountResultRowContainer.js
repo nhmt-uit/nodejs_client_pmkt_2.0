@@ -50,8 +50,8 @@ class AccountantBankerAccountResultRowContainer extends Component {
     |--------------------------------------------------------------------------
     */
     generateRowData = _ => {
-        const { item } = this.props
-        const { dataFieldList, scanData } = this.props.bankerAccount
+        const { item, isFullScreen } = this.props
+        const { dataFieldList, dataHiddenFields, scanData } = this.props.bankerAccount
         const bankerAccountId = this.props.bankerAccount.id
         
         let xhtml = []
@@ -99,9 +99,12 @@ class AccountantBankerAccountResultRowContainer extends Component {
 
                 tbl_col_formula.push(
                     <>
-                    <td key={uuidv4()}><TransComponent i18nKey="Not have formula yet" /></td>
+                    <td key={uuidv4()}><TransComponent i18nKey="Not have formula yet" /></td> {/* // Column Formula Name */}
                     
-                    
+                    {isFullScreen && dataHiddenFields.formatName ?  <td key={uuidv4()}></td> : null} {/* formatName */}
+                    {isFullScreen && dataHiddenFields.he_so  ?  <td key={uuidv4()}></td> : null}  {/* he_so */}
+                    {isFullScreen && dataHiddenFields.gia_thau  ?  <td key={uuidv4()}></td> : null} {/* gia_thau */}
+                    {isFullScreen && dataHiddenFields.PRText  ?  <td key={uuidv4()}></td> : null} {/* PRText */}
 
                     <td key={uuidv4()}></td> {/* // Column Member */}
                     <td key={uuidv4()}></td> {/* // Column Result */}
@@ -125,7 +128,7 @@ class AccountantBankerAccountResultRowContainer extends Component {
                     idxFormula++
                     idxDynamic++
                     if (idxDynamic > rowSpanColDynamic ) idxDynamic = 1
-                    let resultClass = formula.valueRounded > 0 ? 'font-blue-steel' : 'font-red'
+                    let resultClass = formula.valueRounded >= 0 ? 'font-blue-steel' : 'font-red'
                     let tbl_col_formula = []
 
 
@@ -135,6 +138,12 @@ class AccountantBankerAccountResultRowContainer extends Component {
                     tbl_col_formula.push(
                         <>
                         <td key={uuidv4()} className={formula.PRText}>{Helpers.formatFormulaName(formula.formulaName)}</td> {/* // Column Formula Name */}
+
+                        {isFullScreen && dataHiddenFields.formatName ?  <td key={uuidv4()} className={formula.PRText}>{formula.formatName}</td> : null} {/* formatName */}
+                        {isFullScreen && dataHiddenFields.he_so  ?  <td key={uuidv4()} className={formula.PRText + " text-right"}>{formula.he_so}</td> : null}  {/* he_so */}
+                        {isFullScreen && dataHiddenFields.gia_thau  ?  <td key={uuidv4()} className={formula.PRText + " text-right"}>{formula.gia_thau}</td> : null} {/* gia_thau */}
+                        {isFullScreen && dataHiddenFields.PRText  ?  <td key={uuidv4()} className={formula.PRText}>{formula.PRText === 'rec' ? <TransComponent i18nKey="Receive" /> : <TransComponent i18nKey="Pay" />}</td> : null} {/* PRText */}
+
                         <td key={uuidv4()} ><b>{formula.memberName.toUpperCase()}</b></td> {/* // Column Member */}
                         <td key={uuidv4()} className={resultClass + " text-right"} >{Helpers.formatMoney(formula.valueRounded, 0)}</td> {/* // Column Result */}
                         <td key={uuidv4()} className={resultClass}>{formula.currencyName}</td> {/* // Column Currency */}
@@ -171,13 +180,6 @@ class AccountantBankerAccountResultRowContainer extends Component {
     }
 }
 
-
-
-const mapStateToProps = state => {
-    return {
-    }
-}
-
 const mapDispatchToProps = (dispatch) => {
     return {
         toggleModalDeleteFormula: (params) => {dispatch(toggleModalDeleteFormula(params))},
@@ -186,4 +188,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(AccountantBankerAccountResultRowContainer);
+export default connect(null, mapDispatchToProps)(AccountantBankerAccountResultRowContainer);

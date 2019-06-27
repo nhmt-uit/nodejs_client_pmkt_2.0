@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { withTranslation } from 'react-i18next';
 import {Field, reduxForm, SubmissionError} from "redux-form";
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -155,7 +156,7 @@ class ResetSecurePassword extends Component {
                                 component={this.renderField}
                                 className="form-control form-control-solid placeholder-no-fix"
                                 autoComplete="off"
-                                placeholder={<TransComponent i18nKey="Insert new secure password" />}
+                                placeholder={this.props.t("Insert new secure password")}
                             />
                         </div>
                         <div className="form-group">
@@ -165,7 +166,7 @@ class ResetSecurePassword extends Component {
                                 component={this.renderField}
                                 className="form-control form-control-solid placeholder-no-fix"
                                 autoComplete="off"
-                                placeholder={<TransComponent i18nKey="Confirm new secure password" />}
+                                placeholder={this.props.t("Confirm new secure password")}
                             />
                         </div>
                         <div className="form-actions text-center">
@@ -196,4 +197,5 @@ const mapDispatchToProps = dispatch => {
 export default compose(
     reduxForm({form: 'form_secure_password'}),
     connect(mapStateToProps, mapDispatchToProps),
+    withTranslation()
 )(ResetSecurePassword);

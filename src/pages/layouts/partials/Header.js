@@ -17,7 +17,8 @@ import { TransComponent } from 'my-components'
 
 class Header extends Component {
     state = {
-        isOpenModalBaner: false
+        isOpenModalBaner: false,
+        lang: CookieService.get('lang')
     };
 
     handleLogout = async _ => {
@@ -28,6 +29,7 @@ class Header extends Component {
 
     handleChangeLanguage = type => () => {
         CookieService.set('lang', type)
+        this.setState({lang: type})
         return this.props.changeLanguage(type)
     };
 
@@ -36,8 +38,7 @@ class Header extends Component {
     };
 
     render() {
-        const lang = CookieService.get('lang');
-
+        const lang = this.state.lang
         return (
             <>
                 <div className="page-header navbar navbar-fixed-top">

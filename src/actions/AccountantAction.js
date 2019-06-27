@@ -8,6 +8,10 @@ import { AuthService } from 'my-services/systems'
 import { AccountantService }  from 'my-services/account'
 import { AppConfig } from 'my-constants'
 
+const sleep = (milliseconds) => {
+    return new Promise(resolve => setTimeout(resolve, milliseconds))
+}
+
 export const socketInitData = () => {
     SocketService.connect('/accountant')
     return (dispatch) => {
@@ -51,12 +55,16 @@ export const socketInitData = () => {
 |--------------------------------------------------------------------------
 */
 export const socketScanData = (params) => {
-    return (dispatch) => {
+    return async (dispatch) => {
         let from_date = moment(params.from_date).format(AppConfig.FORMAT_DATE)
         let to_date = moment(params.to_date).format(AppConfig.FORMAT_DATE)
         
         // Active listener before send request
         let listUUID2AccID = {}
+        let login_name = AuthService.getUsername()
+        let queuesRequest = []
+        // let i = 0
+
         for(let x in params.ids) {
             let uuid = uuidv4()
             listUUID2AccID[uuid] = params.ids[x]
@@ -67,11 +75,18 @@ export const socketScanData = (params) => {
                 id: params.ids[x],
                 // id: '5a701ca320fd7e9eb445e37e',
                 more_post: {
-                    login_name: AuthService.getUsername()
+                    login_name: login_name
                 }
             }
-            SocketService.send('scan', requestObj, uuid)
+            queuesRequest.push(requestObj)
+            console.log(requestObj)
+            // SocketService.send('scan', requestObj, uuid)
+            // await sleep(200)
+            // if (i > 50) break
         }
+        console.log(queuesRequest)
+
+        
 
         // Dispatch data to reducer
         dispatch({

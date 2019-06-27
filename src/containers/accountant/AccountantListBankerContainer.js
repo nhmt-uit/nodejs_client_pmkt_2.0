@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { Collapse } from 'reactstrap'
 import { isEmpty as _isEmpty, isEqual as _isEqual } from 'lodash'
+import uuidv4 from 'uuid/v4'
+
 import { collapseBanker, checkBanker, checkBankerAccount } from 'my-actions/AccountantAction';
 import { LoadingComponent } from 'my-components';
 import { AccountantListBankerAccountContainer, ModalDeleteFormulaContainer, ModalFormFormulaContainer } from 'my-containers/accountant';
@@ -23,7 +25,7 @@ class AccountantListBankerContainer extends Component {
                 this.props.banker.map((banker, idx) => {
                     let classOpenBanker = banker.collapse ? "fa fa-chevron-down" : "fa fa-chevron-up"
                     return (
-                        <div key={idx} className={"portlet box grey-cascade list-banker-account " + banker.book_name}>
+                        <div key={uuidv4()} className={"portlet box grey-cascade list-banker-account " + banker.book_name}>
                             <div className="portlet-title">
                                 <div className="caption">
                                     <label className="mt-checkbox caption-subject bold uppercase">

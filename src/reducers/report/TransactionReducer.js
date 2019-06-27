@@ -7,8 +7,8 @@ let defaultState = {
 }
 
 const TransactionReducer = (state = defaultState, action) => {
-    console.log("state",state)
-    console.log("action",action)
+    // console.log("state",state)
+    // console.log("action",action)
     switch (action.type) {
         case TransactionActionType.GET_ALL_TRANSACTION:
             return {...state, payload: action.payload};

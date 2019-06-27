@@ -4,7 +4,7 @@ import moment  from 'moment'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css"
 import MultiSelect from "@khanacademy/react-multi-select";
-import { join, filter, isEmpty as _isEmpty, map as _map, isEqual as _isEqual } from 'lodash'
+import { join, filter, isEmpty as _isEmpty, map as _map, isEqual as _isEqual, cloneDeep as _cloneDeep, pick as _pick } from 'lodash'
 
 
 import { AppConfig } from 'my-constants'
@@ -32,10 +32,18 @@ class AccountantFormScanContainer extends Component {
     }
 
     shouldComponentUpdate(newProps, newState) {
+        let newBankerAccount = newProps.bankerAccount
+        let oldBankerAccount = this.props.bankerAccount
+        //Pick field to compare
+        if(!_isEqual(newBankerAccount, oldBankerAccount)) {
+            newBankerAccount = newBankerAccount.map(item => ({type: item.type}))
+            oldBankerAccount = oldBankerAccount.map(item => ({type: item.type}))
+        }
+       
+
         if(!_isEqual(newProps.socketInitStatus, this.props.socketInitStatus)
             || !_isEqual(newProps.member, this.props.member)
-            || !_isEqual(newProps.banker, this.props.banker)
-            || !_isEqual(newProps.bankerAccount, this.props.bankerAccount)
+            || !_isEqual(newBankerAccount, oldBankerAccount)
             || !_isEqual(newProps.isFullScreen, this.props.isFullScreen)
             || !_isEqual(newState.typeGroupDate, this.state.typeGroupDate)
             || !_isEqual(newState.from_date, this.state.from_date)
@@ -221,7 +229,7 @@ class AccountantFormScanContainer extends Component {
     }
 
     render() {
-
+        console.log('render AccountantFormScanContainer')
         const { from_date, to_date, typeGroupDate } = this.state
         const selectChecked = this.handleIsCheckMember()
         const {isProcessing, isAllowReport} = this.checkIsProcessingScan()
@@ -289,7 +297,6 @@ const mapStateToProps = state => {
     return {
         socketInitStatus : state.AccountantReducer.socketInitStatus,
         member : state.AccountantReducer.member,
-        banker : state.AccountantReducer.banker,
         bankerAccount : state.AccountantReducer.bankerAccount,
         isFullScreen : state.AppReducer.isFullScreen
     }
