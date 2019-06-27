@@ -1,20 +1,20 @@
 import React, { Component } from 'react'
-import { compose } from 'redux'
 import { connect } from 'react-redux'
-import { withTranslation } from 'react-i18next'
 import moment  from 'moment'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css"
 import MultiSelect from "@khanacademy/react-multi-select";
-import { join, filter } from 'lodash'
+import { join, filter, isEmpty as _isEmpty, map as _map, isEqual as _isEqual } from 'lodash'
 
 
 import { AppConfig } from 'my-constants'
 import BootstrapInputIcon from 'my-utils/components/date-picker/BootstrapInputIcon'
 import { FormScanButtonComponent, FormScanGroupDateComponent } from 'my-components/accountant'
-import EventsService from 'my-utils/core/EventsService'
-import { socketInitData, socketScanData } from 'my-actions/AccountantAction';
-import { Helpers } from 'my-utils';
+import { socketInitData, socketScanData, socketStopScanData, socketSaveReport, checkBankerAccount } from 'my-actions/AccountantAction';
+import { toggleFullScreen } from 'my-actions/systems/AppAction';
+import { SocketService } from 'my-utils/core';
+import { RoutesService } from 'my-routes'
+import { TransComponent } from 'my-components'
 
 
 const today = moment().format('YYYY-MM-DD')
@@ -26,10 +26,24 @@ const end_last_week = moment().endOf('week').subtract(6, 'days').format('YYYY-MM
 
 class AccountantFormScanContainer extends Component {
     state = {
-        selectedMember: [],
         typeGroupDate: 'today',
-        date_from: new Date(),
-        date_to: new Date()
+        from_date: new Date(),
+        to_date: new Date()
+    }
+
+    shouldComponentUpdate(newProps, newState) {
+        if(!_isEqual(newProps.socketInitStatus, this.props.socketInitStatus)
+            || !_isEqual(newProps.member, this.props.member)
+            || !_isEqual(newProps.banker, this.props.banker)
+            || !_isEqual(newProps.bankerAccount, this.props.bankerAccount)
+            || !_isEqual(newProps.isFullScreen, this.props.isFullScreen)
+            || !_isEqual(newState.typeGroupDate, this.state.typeGroupDate)
+            || !_isEqual(newState.from_date, this.state.from_date)
+            || !_isEqual(newState.typeGroupDate, this.state.typeGroupDate)
+            || !_isEqual(newState.to_date, this.state.to_date)
+            )
+            return true
+        return false;
     }
 
     componentDidMount() {
@@ -41,11 +55,11 @@ class AccountantFormScanContainer extends Component {
 
     /*
     |--------------------------------------------------------------------------
-    | Handle date picker change date_from
+    | Handle date picker change from_date
     |--------------------------------------------------------------------------
     */
     onChangeDateFrom = date  => {
-        this.setState({date_from: date})
+        this.setState({from_date: date})
         setTimeout(_ => {
             this.checkDateToSelectGroupDate()
         }, 200)
@@ -53,31 +67,26 @@ class AccountantFormScanContainer extends Component {
 
     /*
     |--------------------------------------------------------------------------
-    | Handle date picker change date_to
+    | Handle date picker change to_date
     |--------------------------------------------------------------------------
     */
     onChangeDateTo = date  => {
-        this.setState({date_to: date})
+        this.setState({to_date: date})
         setTimeout(_ => {
             this.checkDateToSelectGroupDate()
         }, 200)
     }
 
-    componentWillUnmount() {
-        EventsService.removeAllListeners('hello')
-        EventsService.removeAllListeners('hello-world')
-    }
-
     /*
     |--------------------------------------------------------------------------
-    | Generate date_to & date_from when change radio date type
+    | Generate to_date & from_date when change radio date type
     |--------------------------------------------------------------------------
     */
     checkDateToSelectGroupDate() {
-        let date_form = moment(this.state.date_from).format('YYYY-MM-DD')
-        let date_to = moment(this.state.date_to).format('YYYY-MM-DD')
+        let date_form = moment(this.state.from_date).format('YYYY-MM-DD')
+        let to_date = moment(this.state.to_date).format('YYYY-MM-DD')
         this.setState({typeGroupDate: null})
-        if (date_form === date_to) {
+        if (date_form === to_date) {
             if (date_form === today) {
                 this.setState({typeGroupDate: 'today'})
             }
@@ -85,10 +94,10 @@ class AccountantFormScanContainer extends Component {
                 this.setState({typeGroupDate: 'yesterday'})
             }
         } else {
-            if (start_this_week === date_form && end_this_week === date_to) {
+            if (start_this_week === date_form && end_this_week === to_date) {
                 this.setState({typeGroupDate: 'this_week'})
             }
-            if (start_last_week === date_form && end_last_week === date_to) {
+            if (start_last_week === date_form && end_last_week === to_date) {
                 this.setState({typeGroupDate: 'last_week'})
             }
         }
@@ -103,16 +112,16 @@ class AccountantFormScanContainer extends Component {
         this.setState({typeGroupDate: type})
         switch (type) {
             case 'today':
-                this.setState({date_from: new Date(today), date_to: new Date(today)})
+                this.setState({from_date: new Date(today), to_date: new Date(today)})
             break
             case 'yesterday':
-                this.setState({date_from: new Date(yesterday), date_to: new Date(yesterday)})
+                this.setState({from_date: new Date(yesterday), to_date: new Date(yesterday)})
             break
             case 'this_week':
-                this.setState({date_from: new Date(start_this_week), date_to: new Date(end_this_week)})
+                this.setState({from_date: new Date(start_this_week), to_date: new Date(end_this_week)})
             break
             case 'last_week':
-                this.setState({date_from: new Date(start_last_week), date_to: new Date(end_last_week)})
+                this.setState({from_date: new Date(start_last_week), to_date: new Date(end_last_week)})
             break
             default:break
         }
@@ -120,17 +129,47 @@ class AccountantFormScanContainer extends Component {
 
     /*
     |--------------------------------------------------------------------------
-    | Detect when component update
-    | Display loading when init data
+    | Call action to scan data
     |--------------------------------------------------------------------------
     */
-    componentDidUpdate = _ => {
-        const full_payload = this.props.accountant_full_payload, request_type = this.props.accountant_request_type
-        if(request_type === "accountant_init" && full_payload.type === "notify" && full_payload.message === "init_data") {
-            Helpers.showLoading();
-        } else {
-            Helpers.hideLoading();
+    handleRequestScan = _ => {
+        let ids = _map(this.props.bankerAccount.filter(item => item.checked && item.type !== 'resolve' && !item.data), 'id')
+        this.props.socketScanData({ids: ids, from_date: this.state.from_date, to_date: this.state.to_date})
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Call action to save report
+    |--------------------------------------------------------------------------
+    */
+    handleSaveReport = _ => {
+        this.props.socketSaveReport({payloadBankerAccount: this.props.bankerAccount.filter(item => item.type === 'resolve') })
+        this.props.history.push(RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT'))
+    }
+    
+    /*
+    |--------------------------------------------------------------------------
+    | Cancel Scan Data
+    |--------------------------------------------------------------------------
+    */
+    handleStopScan = _ => {
+        let ids = _map(this.props.bankerAccount.filter(item => item.type === 'notify'), 'id')
+        this.props.socketStopScanData({ids: ids})
+    }
+
+
+    checkIsProcessingScan = _ => {
+        let isProcessing = false
+        let isAllowReport = false
+        if(!_isEmpty(this.props.bankerAccount)) {
+            this.props.bankerAccount.map( item => {
+                if (item.type === "notify") isProcessing = true
+                if (item.type === "resolve") isAllowReport = true
+            })
+            if (!isProcessing) SocketService.unListenerResponse()
         }
+        return {isProcessing, isAllowReport}
     }
 
     renderOption = ({ checked, option, onClick }) => (
@@ -141,7 +180,7 @@ class AccountantFormScanContainer extends Component {
     )
     
     renderValue = (selected, options) => {
-        let label = 'Select the member'
+        let label = 'Select member'
         if (selected.length) {
             let labels = []
             for (let x in selected) {
@@ -153,28 +192,61 @@ class AccountantFormScanContainer extends Component {
         return <span className="uppercase" style={{'color': 'ccc'}}>{label}</span>
     }
 
+    handleSelectMember = selected => {
+        this.props.checkBankerAccount("member", {memberId: selected})
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Filter list member checked = true
+    |--------------------------------------------------------------------------
+    */
+    handleIsCheckMember = _ => {
+        const isCheckMember = this.props.member.filter(item => item.checked)
+        return _map(isCheckMember, 'id')
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Custom filter react-multiple-select
+    |--------------------------------------------------------------------------
+    */
+    filterSearch = (options, filter) => {
+        if (!filter) return options
+        return options.filter(item => {
+            let label = item.label.toLowerCase()
+            filter = filter.toLowerCase()
+            if(label.search(filter) !== -1) return item
+        })
+    }
+
     render() {
-        const { t } = this.props
-        let memberOptions = (this.props.accountant_payload) ? this.props.accountant_payload.memberOptionsProcessed : []
-        const { selectedMember, date_from, date_to, typeGroupDate } = this.state
+
+        const { from_date, to_date, typeGroupDate } = this.state
+        const selectChecked = this.handleIsCheckMember()
+        const {isProcessing, isAllowReport} = this.checkIsProcessingScan()
 
         return (
             <div className="portlet light bordered">
                 <div className="portlet-title">
-                    <div className="caption font-red-sunglo"><span className="caption-subject bold uppercase">{t("Accountant")}</span></div>
-                    <div className="tools"><span className="collapse"> </span></div>
+                    <div className="caption font-red-sunglo"><span className="caption-subject bold uppercase"><TransComponent i18nKey="Accountant" /></span></div>
+                    <div className="actions">
+                        <a className="btn btn-default btn-fullscreen" href="javascript:;" onClick={this.props.toggleFullScreen}>
+                            <i className={this.props.isFullScreen ? "fa fa-compress" : "fa fa-expand"} />
+                            {this.props.isFullScreen ? <TransComponent i18nKey="Exit Full Screen" /> : <TransComponent i18nKey="Full Screen" />}
+                        </a>
+                    </div>
                 </div>
                 <div className="portlet-body form">
-                    
                     <form className="form-inline">
                         <div className="form-group input-xlarge">
                             <div className="mt-radio-inline">
                                 <label className="mt-radio">
-                                    <input type="radio" name="optionsRadios"  /> {t("All")}
+                                    <input type="radio" name="optionsRadios"  /> All
                                     <span></span>
                                 </label>
                                 <label className="mt-radio">
-                                    <input type="radio" name="optionsRadios"  /> {t("SB & CSN & GAMES-XS & RACING & ESB")}
+                                    <input type="radio" name="optionsRadios"  /> SB & CSN & GAMES-XS & RACING & ESB
                                     <span></span>
                                 </label>
                             </div>
@@ -184,27 +256,28 @@ class AccountantFormScanContainer extends Component {
                         <div className="clearfix"></div>
                         <div className="form-group input-xlarge">
                             <MultiSelect
-                                options={memberOptions}
-                                selected={selectedMember}
-                                onSelectedChanged={selectedMember => this.setState({selectedMember})}
+                                options={this.props.member}
+                                selected={selectChecked}
+                                onSelectedChanged={this.handleSelectMember}
                                 ItemRenderer={this.renderOption}
                                 valueRenderer={this.renderValue}
+                                filterOptions={this.filterSearch}
                                 />
                         </div>
                         <div className="form-group">
                             <DatePicker customInput={<BootstrapInputIcon />}
-                                name="date_from"
-                                onChange={this.onChangeDateFrom} selected={date_from}
+                                name="from_date"
+                                onChange={this.onChangeDateFrom} selected={from_date}
                                 dateFormat={AppConfig.FORMAT_DATE_DATEPICKER} />
                             
                         </div>
                         <div className="form-group">
                             <DatePicker customInput={<BootstrapInputIcon />}
-                                name="date_from"
-                                onChange={this.onChangeDateTo} selected={date_to}
+                                name="from_date"
+                                onChange={this.onChangeDateTo} selected={to_date}
                                 dateFormat={AppConfig.FORMAT_DATE_DATEPICKER} />
                         </div>
-                        <FormScanButtonComponent socketScanData={this.props.socketScanData} />
+                        <FormScanButtonComponent socketInitStatus={this.props.socketInitStatus} socketScanData={this.handleRequestScan} socketSaveReport={this.handleSaveReport} socketStopScanData={this.handleStopScan}  isProcessing={isProcessing} isAllowReport={isAllowReport} />
                     </form>
                 </div>
             </div>
@@ -214,21 +287,24 @@ class AccountantFormScanContainer extends Component {
 
 const mapStateToProps = state => {
     return {
-        accountant_request_type : state.AccountantReducer.request_type,
-        accountant_full_payload : state.AccountantReducer.full_payload,
-        accountant_payload : state.AccountantReducer.payload,
+        socketInitStatus : state.AccountantReducer.socketInitStatus,
+        member : state.AccountantReducer.member,
+        banker : state.AccountantReducer.banker,
+        bankerAccount : state.AccountantReducer.bankerAccount,
+        isFullScreen : state.AppReducer.isFullScreen
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
         socketInitData: _ => {dispatch(socketInitData())},
-        socketScanData: _ => {dispatch(socketScanData())},
+        socketScanData: params => {dispatch(socketScanData(params))},
+        socketStopScanData: bankerAccount => {dispatch(socketStopScanData(bankerAccount))},
+        socketSaveReport: bankerAccount => {dispatch(socketSaveReport(bankerAccount))},
+        checkBankerAccount: (type_check, params) => {dispatch(checkBankerAccount(type_check, params))},
+        toggleFullScreen: _ => {dispatch(toggleFullScreen())},
     }
 };
 
-export default compose(
-    connect(mapStateToProps, mapDispatchToProps),
-    withTranslation()
-)(AccountantFormScanContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(AccountantFormScanContainer);
 

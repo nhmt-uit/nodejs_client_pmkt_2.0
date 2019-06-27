@@ -40,7 +40,10 @@ class CookieService {
         for (let x in curCookies) {
             this.remove(x, options);
         }
-        
+    }
+
+    addChangeListener(callback) {
+        this.cookies.addChangeListener(callback)
     }
 }
 

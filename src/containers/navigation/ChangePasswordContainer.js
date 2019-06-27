@@ -2,8 +2,10 @@ import React, {Component} from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withTranslation } from "react-i18next";
+import { get as _get } from 'lodash';
 
 import { FormWithReduxForm } from 'my-components/navigation';
+import { savePassword, toggleNotify } from 'my-actions/systems/ChangePasswordAction';
 
 class ChangePasswordContainer extends Component {
     data = [
@@ -11,33 +13,47 @@ class ChangePasswordContainer extends Component {
             name: 'current_password',
             label: 'Current Password',
             type: 'password',
-            rules: ['isRequired'],
+            rules: ['required'],
         },
         {
             name: 'new_password',
             label: 'New Password',
             type: 'password',
-            rules: ['isRequired', 'passwordValid'],
+            rules: ['required', 'passwordValid'],
         },
         {
             name: 're_new_password',
             label: 'Confirm Password',
             type: 'password',
-            rules: ['isRequired', 'confirmPassword'],
-            confirm: ['new_password'],
+            rules: ['required', 'confirmNewPassword'],
         }
     ];
 
-    handleSubmitForm() {
+    handleSubmitForm = password => {
+        this.props.savePassword(password);
+    };
 
-    }
+    handleToggleNotify = _ => {
+        this.props.toggleNotify(false);
+    };
 
     render() {
+        const { dataStore, t } = this.props;
+        const isReset = dataStore.status;
+
         return (
             <FormWithReduxForm
                 data={this.data}
                 title="Change Password"
-                onSubmitForm={this.handleSubmitForm.bind(this)}
+                onSubmitForm={this.handleSubmitForm}
+                onToggleNotify={this.handleToggleNotify}
+                isShowNotify={dataStore.isShowNotify}
+                isReset={isReset}
+                err={dataStore.errors || {}}
+                success={{
+                    status: dataStore.status || false,
+                    msg: t('Change password successfully')
+                }}
             />
         );
     }
@@ -45,14 +61,16 @@ class ChangePasswordContainer extends Component {
 
 const mapStateToProps = state => {
     return {
+        dataStore: _get(state, 'ChangePasswordReducer', {}),
     }
 };
 
 const mapDispatchToProps = dispatch => {
     return {
+        savePassword: (password) => dispatch(savePassword(password)),
+        toggleNotify: value => {dispatch(toggleNotify(value))},
     };
 };
-
 
 export default compose(
     connect(mapStateToProps, mapDispatchToProps),

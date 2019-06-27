@@ -16,6 +16,15 @@ const listAdminRoutes = [
     { name: "ACCOUNTANT_MANUAL", path: "/accountant/manual", language: "en"},
     /*==========================================================================*/
     { name: "ACCOUNTANT_REPORT", path: "/accountant/report", language: "en"},
+    /*==========================================================================*/
+    { name: "ACCOUNTANT_REPORT_DETAIL", path: "/accountant/report/detail_template/:chuky_id", language: "en"},
+    /*==========================================================================*/
+
+
+    /*==========================================================================*/
+    // {name: "REPORT_DETAIL", path: "/report_detail_template/:chuky_id?", language: "en"},
+    /*==========================================================================*/
+
 
     /*==========================================================================*/
     { name: "MANAGE_DASHBOARD", path: "/manage", language: "en"},
@@ -37,6 +46,10 @@ const listAdminRoutes = [
 
     /*==========================================================================*/
     { name: "CHANGE_PASSWORD", path: "/change-password", language: "en"},
+    /*==========================================================================*/
+    { name: "CHANGE_PASSWORD_2", path: "/change-password-2", language: "en"},
+    /*==========================================================================*/
+    { name: "CHANGE_SECURE_CODE", path: "/change-secure-code", language: "en"},
     /*==========================================================================*/
 ];
 

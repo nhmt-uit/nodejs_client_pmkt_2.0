@@ -7,7 +7,7 @@ const Menu = ({ children, selectProps, ...otherProps }) => (
     <components.Menu {...otherProps}>
         {!selectProps.inputValue
             && (
-                <section>
+                <>
                     <input
                         type="checkbox"
                         checked={selectAll}
@@ -17,7 +17,7 @@ const Menu = ({ children, selectProps, ...otherProps }) => (
                             selectProps.onChange(opts)
                         }}
                     /> <label>Select All</label>
-                </section>
+                </>
             )}
         {children}
     </components.Menu>

@@ -4,6 +4,7 @@ import { AuthActionType } from 'my-constants/action-types';
 import { AuthService, LanguageService } from 'my-services/systems';
 import { CookieService } from 'my-utils/core';
 import { AppConfig } from 'my-constants';
+import { RoutesService } from 'my-routes';
 
 export const login = (user) => {
     return (dispatch) => {
@@ -25,6 +26,7 @@ export const login = (user) => {
                     const hasReportDetailFeature = userInfo.hasReportDetailFeature;
                     const status = userInfo.status || 0;
                     const needChangeSecurePassword = userInfo.needChangeSecurePassword || 0;
+                    const lang = data.data.code || AppConfig.DEFAULT_LANG;
 
                     CookieService.set('isLogin', isLogin ? '1' : '0');
                     CookieService.set('isReset', isReset ? '1' : '0');
@@ -43,21 +45,22 @@ export const login = (user) => {
                     CookieService.set('refresh_token', resLogin.refresh_token);
                     CookieService.set('token_type', resLogin.token_type);
                     CookieService.set('isLogin', '1');
+                    CookieService.set('lang', lang);
                 }).then(_ => {
-                dispatch({
-                    type: AuthActionType.AUTH_LOGIN_SUCCESS,
-                    payload: resLogin
+                    dispatch({
+                        type: AuthActionType.AUTH_LOGIN_SUCCESS,
+                        payload: resLogin
+                    });
                 });
-            });
-        }).catch (error => {
-            dispatch({
-                type: AuthActionType.AUTH_LOGIN_FAIL,
-                payload: _get(error, 'response.data', {
-                    status: false,
-                    error_description: error.stack,
-                }),
+            }).catch (error => {
+                dispatch({
+                    type: AuthActionType.AUTH_LOGIN_FAIL,
+                    payload: _get(error, 'response.data', {
+                        status: false,
+                        error_description: error.stack,
+                    }),
+                })
             })
-        })
     }
 };
 
@@ -165,28 +168,5 @@ export const resetSecurePassword = (post) => {
                     }),
                 });
             })
-    }
-};
-
-export const logout = () => {
-    return dispatch => {
-        return AuthService.logout()
-            .then((res) => {
-                CookieService.removeAll();
-
-                dispatch({
-                    type: AuthActionType.LOGOUT_SUCCESS,
-                    payload: res,
-                });
-            })
-            .catch(e => {
-                dispatch({
-                    type: AuthActionType.LOGOUT_FAIL,
-                    payload: _get(e, 'response.data', {
-                        status: false,
-                        error_description: e.stack,
-                    }),
-                });
-            });
     }
 };

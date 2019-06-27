@@ -12,10 +12,7 @@ i18n
 // for all options read: https://www.i18next.com/overview/configuration-options
 .init({
     resources: {
-        en: {
-            translation: {
-            }
-        }
+
     },
     lng: "en",
     fallbackLng: "en",
@@ -25,6 +22,6 @@ i18n
     // interpolation: {
     //     escapeValue: false
     // }
-})
+});
 
 export default i18n;

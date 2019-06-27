@@ -1,9 +1,9 @@
 import CommentContainer from './CommentContainer'
-import QuickAtivitiesContainer from './QuickAtivitiesContainer'
+import QuickActivitiesContainer from './QuickActivitiesContainer'
 import PanelAlert from './PanelAlert'
 
 export {
     CommentContainer,
-    QuickAtivitiesContainer,
+    QuickActivitiesContainer,
     PanelAlert
 }

@@ -1,0 +1,1 @@
+export const GET_REPORT_DETAIL         = 'GET_REPORT_DETAIL';

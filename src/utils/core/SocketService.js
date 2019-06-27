@@ -34,12 +34,12 @@ class SocketService {
     | event: init, scan, get_report, get_member
     |--------------------------------------------------------------------------
     */
-    send(event, args) {
-        let uuid = uuidv4()
-        this.listUUID2Event[uuid] = event
-        this.socket.send({___Send: true, event: event, uuid: uuid, args: [args]})
-
+    send(event, args, uuid) {
+        let _uuid = uuid || uuidv4()
+        this.listUUID2Event[_uuid] = event
         
+        this.socket.send({___Send: true, event: event, uuid: _uuid, args: [args]})
+
         switch (event) {
             case "init":
                 // Emit channel when first init data
@@ -47,30 +47,56 @@ class SocketService {
             break
             case "scan":
                 // Map uuid & account_id
-                this.listUUID2AccID[uuid] = args.id
-                console.log(this.listUUID2AccID)
+            break
+            case "get_report":
+                this.listUUID2AccID[_uuid] = args.id
             break
             default: break
         }
+    }
 
+    listenerResponse() {
         // Listen response from websocket
         this.socket.on('message', msg => {
             switch (this.listUUID2Event[msg.uuid]) {
                 case "init":
-                    console.log("init")
                     EventsService.emit('accountant_init', msg)
                 break
                 case "scan":
-                    EventsService.emit('accountant_scan', msg)
+                    if (msg.type === "notify")
+                        EventsService.emit('accountant_scan_notify', msg)
+                    if (msg.type === "reject")
+                        EventsService.emit('accountant_scan_reject', msg)
+                    if (msg.type === "resolve")
+                        EventsService.emit('accountant_scan_resolve', msg)
+                break
+                case "stop":
+                    EventsService.emit('accountant_scan_stop', msg)
+                break
+                case "reloadAccInfo":
+                    EventsService.emit('accountant_reload_banker_account_info', msg)
                 break
                 case "get_report":
+                    //Emit chanel when receive data of bankerACcount
+                    if(msg.data.hasOwnProperty("accountant") && msg.data.hasOwnProperty("dataFieldList") && msg.data.hasOwnProperty("formulaFieldList"))
+                        EventsService.emit('accountant_get_report_banker_account', {...msg, uuid2AccId: this.listUUID2AccID})
                 break
                 case "get_member":
                 break
                 default: break
             }
         })
+    }
 
+    unListenerResponse() {
+        // this.socket.off('message')
+        EventsService.removeAllListeners('accountant_init')
+        EventsService.removeAllListeners('accountant_scan_notify')
+        EventsService.removeAllListeners('accountant_scan_reject')
+        EventsService.removeAllListeners('accountant_scan_resolve')
+        EventsService.removeAllListeners('accountant_reload_banker_account_info')
+        EventsService.removeAllListeners('accountant_get_report_banker_account')
+        // EventsService.removeAllListeners('accountant_scan_stop')
     }
 
     /*
@@ -92,7 +118,13 @@ class SocketService {
         // Reset variable
         this.listUUID2Event = {}
         this.listUUID2AccID = {}
+        this.socket.off('connect')
+        this.socket.off('ready')
+        this.socket.off('connect_error')
+        this.socket.off('disconnect')
+        this.socket.off('message')
         this.socket.disconnect()
+        this.socket = null
     }
 
     /*

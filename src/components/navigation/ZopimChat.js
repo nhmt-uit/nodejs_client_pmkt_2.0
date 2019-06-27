@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import jQuery from 'jquery';
-import { withTranslation } from 'react-i18next';
+import { TransComponent } from 'my-components'
 
 class ZopimChat extends Component {
     componentDidMount() {
@@ -14,14 +14,15 @@ class ZopimChat extends Component {
     }
 
     render() {
-        const { t, label, ...otherProps } = this.props;
-
+        const { t } = this.props;
         return (
-            <li className="pointer" id="zopim-chat" {...otherProps}>
-                <a className={otherProps.className} href="javascript:void($zopim.livechat.window.openPopout());"><span className="fa fa-wechat"/> {t(label)}</a>
+            <li className="pointer" id="zopim-chat">
+                <a className="text-red" href="javascript:void($zopim.livechat.window.openPopout());"><span className="fa fa-wechat"/>
+                    <TransComponent i18nKey="Live support" />
+                </a>
             </li>
         )
     }
 }
 
-export default withTranslation()(ZopimChat);
+export default ZopimChat

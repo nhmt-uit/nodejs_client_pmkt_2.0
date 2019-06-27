@@ -1,0 +1,1 @@
+export const GET_ALERT         = 'GET_ALERT';

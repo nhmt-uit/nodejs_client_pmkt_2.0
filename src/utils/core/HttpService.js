@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { isEmpty } from 'lodash';
+import { isEmpty as _isEmpty, get as _get } from 'lodash';
 import qs from 'qs';
 
 import { Helpers } from 'my-utils';
@@ -32,7 +32,7 @@ class HttpService {
     //Create request with method get
     get = (path, queryParams, cancelToken) => {
         this.setAuthorization();
-        if(isEmpty(cancelToken)){
+        if(_isEmpty(cancelToken)){
             cancelToken = this.getCancelToken();
         }
 
@@ -45,7 +45,7 @@ class HttpService {
     //Create request with method post
     post = (path, payload, cancelToken) => {
         this.setAuthorization();
-        if(isEmpty(cancelToken)){
+        if(_isEmpty(cancelToken)){
             cancelToken = this.getCancelToken();
         }
 
@@ -57,7 +57,7 @@ class HttpService {
     //Create request with method put
     put = (path, payload, cancelToken) => {
         this.setAuthorization();
-        if(isEmpty(cancelToken)){
+        if(_isEmpty(cancelToken)){
             cancelToken = this.getCancelToken();
         }
         return this.service.put(path, payload, { cancelToken: cancelToken });
@@ -66,7 +66,7 @@ class HttpService {
     //Create request with method delete
     delete = (path, queryParams, cancelToken) => {
         this.setAuthorization();
-        if(isEmpty(cancelToken)){
+        if(_isEmpty(cancelToken)){
             cancelToken = this.getCancelToken();
         }
 
@@ -87,7 +87,7 @@ class HttpService {
 
     //Handle berfore send request
     handleRequest = config => {
-        Helpers.showLoading();
+        // Helpers.showLoading();
         return config;
     };
 
@@ -95,13 +95,21 @@ class HttpService {
     handleSuccess = response => {
         //obj response : data, status, statusText, headers
         const { data } = response;
-        Helpers.hideLoading();
+        // Helpers.hideLoading();
         return data;
     };
 
     //Handle when request fail
     handleError = error => {
-        Helpers.hideLoading();
+        // Helpers.hideLoading();
+        let responstStatus = _get(error, 'response.status')
+		const pathname = window.location.pathname;
+        if ( responstStatus === 401 || responstStatus === 400 && !pathname.match(/\/auth\/login/i) ) {
+            CookieService.removeAll()
+            window.history.pushState(null, null, '/auth/login')
+            window.location.reload()
+        }
+
         return Promise.reject(error);
     };
 

@@ -22,7 +22,14 @@ class LanguageService extends BaseService {
                 let listLang = {}
                 for (let x in langKeys ) {
                     if(typeof langVals[langKeys[x].id] !== "undefined") {
-                        listLang[langKeys[x].name] = langVals[langKeys[x].id].name
+                        let key = langKeys[x].name
+                        let value = langVals[langKeys[x].id].name
+                        key = key.replace('{', '{{')
+                        key = key.replace('}', '}}')
+                        // key = key.toLowerCase()
+                        value = value.replace('{', '{{')
+                        value = value.replace('}', '}}')
+                        listLang[key] = value
                     }
                 }
                 res.res.listLang = listLang
