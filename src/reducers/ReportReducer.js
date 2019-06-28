@@ -13,7 +13,7 @@ let defaultState = {
 const ReportReducer = (state = defaultState, action) => {
     switch(action.type){
         case ReportActionType.GET_CYCLE_PAGE:
-            return {...state, isFetching: true};
+            return {...defaultState, isFetching: true};
         case ReportActionType.GET_CYCLE_PAGE_SUCCESS:
             return {...state, cyclePage: action.payload, errors: {}, isFetching: false};
         case ReportActionType.GET_CYCLE_PAGE_FAIL:
