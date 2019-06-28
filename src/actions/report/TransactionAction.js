@@ -38,13 +38,37 @@ export const getTypeOfMoney = () => {
 };
 
 export const saveTransaction = (post) => {
-    console.log("POST", post)
     return (dispatch) => {
         return TransactionService.saveTransaction(post).then(res => {
 
             dispatch({
                 type: TransactionActionType.SAVE_TRANSACTION,
                 post: post,
+            })
+        })
+    }
+}
+
+export const delTransaction = (id) => {
+    return(dispatch) => {
+        return TransactionService.delTransaction(id).then(res =>{
+
+            dispatch({
+                type: TransactionActionType.DEL_TRANSACTION,
+                id: id,
+            })
+        })
+    }
+}
+
+export const getDetailReportById = (id) => {
+    return(dispatch) => {
+        return TransactionService.getDetailReportById(id).then(res =>{
+
+            dispatch({
+                type: TransactionActionType.GET_DETAIL_REPORT,
+                payload: res,
+                id: id,
             })
         })
     }
