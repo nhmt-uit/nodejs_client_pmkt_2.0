@@ -4,17 +4,16 @@ import moment  from 'moment'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css"
 import MultiSelect from "@khanacademy/react-multi-select";
-import { join, filter, isEmpty as _isEmpty, map as _map, isEqual as _isEqual } from 'lodash'
+import { join, filter, isEmpty as _isEmpty, map as _map, isEqual as _isEqual, cloneDeep as _cloneDeep, pick as _pick } from 'lodash'
 
 
 import { AppConfig } from 'my-constants'
 import BootstrapInputIcon from 'my-utils/components/date-picker/BootstrapInputIcon'
-import { FormScanButtonComponent, FormScanGroupDateComponent } from 'my-components/accountant'
-import { socketInitData, socketScanData, socketStopScanData, socketSaveReport, checkBankerAccount } from 'my-actions/AccountantAction';
-import { toggleFullScreen } from 'my-actions/systems/AppAction';
+import { FormScanGroupDateComponent } from 'my-components/accountant'
+import { socketInitData, checkBankerAccount } from 'my-actions/AccountantAction';
 import { SocketService } from 'my-utils/core';
-import { RoutesService } from 'my-routes'
 import { TransComponent } from 'my-components'
+import { AccountantFormScanButtonContainer, AccountantFormButtonFullScreenContainer } from 'my-containers/accountant'
 
 
 const today = moment().format('YYYY-MM-DD')
@@ -32,11 +31,7 @@ class AccountantFormScanContainer extends Component {
     }
 
     shouldComponentUpdate(newProps, newState) {
-        if(!_isEqual(newProps.socketInitStatus, this.props.socketInitStatus)
-            || !_isEqual(newProps.member, this.props.member)
-            || !_isEqual(newProps.banker, this.props.banker)
-            || !_isEqual(newProps.bankerAccount, this.props.bankerAccount)
-            || !_isEqual(newProps.isFullScreen, this.props.isFullScreen)
+        if(!_isEqual(newProps.member, this.props.member)
             || !_isEqual(newState.typeGroupDate, this.state.typeGroupDate)
             || !_isEqual(newState.from_date, this.state.from_date)
             || !_isEqual(newState.typeGroupDate, this.state.typeGroupDate)
@@ -127,51 +122,6 @@ class AccountantFormScanContainer extends Component {
         }
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Call action to scan data
-    |--------------------------------------------------------------------------
-    */
-    handleRequestScan = _ => {
-        let ids = _map(this.props.bankerAccount.filter(item => item.checked && item.type !== 'resolve' && !item.data), 'id')
-        this.props.socketScanData({ids: ids, from_date: this.state.from_date, to_date: this.state.to_date})
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Call action to save report
-    |--------------------------------------------------------------------------
-    */
-    handleSaveReport = _ => {
-        this.props.socketSaveReport({payloadBankerAccount: this.props.bankerAccount.filter(item => item.type === 'resolve') })
-        this.props.history.push(RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT'))
-    }
-    
-    /*
-    |--------------------------------------------------------------------------
-    | Cancel Scan Data
-    |--------------------------------------------------------------------------
-    */
-    handleStopScan = _ => {
-        let ids = _map(this.props.bankerAccount.filter(item => item.type === 'notify'), 'id')
-        this.props.socketStopScanData({ids: ids})
-    }
-
-
-    checkIsProcessingScan = _ => {
-        let isProcessing = false
-        let isAllowReport = false
-        if(!_isEmpty(this.props.bankerAccount)) {
-            this.props.bankerAccount.map( item => {
-                if (item.type === "notify") isProcessing = true
-                if (item.type === "resolve") isAllowReport = true
-            })
-            if (!isProcessing) SocketService.unListenerResponse()
-        }
-        return {isProcessing, isAllowReport}
-    }
-
     renderOption = ({ checked, option, onClick }) => (
         <label className="mt-checkbox uppercase">
             <input type="checkbox" checked={checked} onChange={onClick} /> {option.label}
@@ -221,20 +171,16 @@ class AccountantFormScanContainer extends Component {
     }
 
     render() {
-
+        console.log('render AccountantFormScanContainer')
         const { from_date, to_date, typeGroupDate } = this.state
         const selectChecked = this.handleIsCheckMember()
-        const {isProcessing, isAllowReport} = this.checkIsProcessingScan()
 
         return (
             <div className="portlet light bordered">
                 <div className="portlet-title">
                     <div className="caption font-red-sunglo"><span className="caption-subject bold uppercase"><TransComponent i18nKey="Accountant" /></span></div>
                     <div className="actions">
-                        <a className="btn btn-default btn-fullscreen" href="javascript:;" onClick={this.props.toggleFullScreen}>
-                            <i className={this.props.isFullScreen ? "fa fa-compress" : "fa fa-expand"} />
-                            {this.props.isFullScreen ? <TransComponent i18nKey="Exit Full Screen" /> : <TransComponent i18nKey="Full Screen" />}
-                        </a>
+                        <AccountantFormButtonFullScreenContainer />
                     </div>
                 </div>
                 <div className="portlet-body form">
@@ -277,7 +223,7 @@ class AccountantFormScanContainer extends Component {
                                 onChange={this.onChangeDateTo} selected={to_date}
                                 dateFormat={AppConfig.FORMAT_DATE_DATEPICKER} />
                         </div>
-                        <FormScanButtonComponent socketInitStatus={this.props.socketInitStatus} socketScanData={this.handleRequestScan} socketSaveReport={this.handleSaveReport} socketStopScanData={this.handleStopScan}  isProcessing={isProcessing} isAllowReport={isAllowReport} />
+                        <AccountantFormScanButtonContainer from_date={this.state.from_date} to_date={this.state.to_date} />
                     </form>
                 </div>
             </div>
@@ -287,22 +233,14 @@ class AccountantFormScanContainer extends Component {
 
 const mapStateToProps = state => {
     return {
-        socketInitStatus : state.AccountantReducer.socketInitStatus,
         member : state.AccountantReducer.member,
-        banker : state.AccountantReducer.banker,
-        bankerAccount : state.AccountantReducer.bankerAccount,
-        isFullScreen : state.AppReducer.isFullScreen
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
         socketInitData: _ => {dispatch(socketInitData())},
-        socketScanData: params => {dispatch(socketScanData(params))},
-        socketStopScanData: bankerAccount => {dispatch(socketStopScanData(bankerAccount))},
-        socketSaveReport: bankerAccount => {dispatch(socketSaveReport(bankerAccount))},
         checkBankerAccount: (type_check, params) => {dispatch(checkBankerAccount(type_check, params))},
-        toggleFullScreen: _ => {dispatch(toggleFullScreen())},
     }
 };
 

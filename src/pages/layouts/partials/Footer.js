@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 
 class Footer extends Component {
     render() {
-        console.log("render Footer")
         return (
             <div className="page-footer">
                 <div className="page-footer-inner">

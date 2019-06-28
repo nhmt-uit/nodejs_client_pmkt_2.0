@@ -6,13 +6,14 @@ let defaultState = {
     cyclePage: {},
     isFetching: false,
     isFetchingReport: false,
-    itemActive: ''
+    itemActive: '',
+    reportType: 'cycle'
 };
 
 const ReportReducer = (state = defaultState, action) => {
     switch(action.type){
         case ReportActionType.GET_CYCLE_PAGE:
-            return {...state, isFetching: true};
+            return {...defaultState, isFetching: true};
         case ReportActionType.GET_CYCLE_PAGE_SUCCESS:
             return {...state, cyclePage: action.payload, errors: {}, isFetching: false};
         case ReportActionType.GET_CYCLE_PAGE_FAIL:
@@ -24,21 +25,25 @@ const ReportReducer = (state = defaultState, action) => {
             return {...state, errors: action.payload};
 
         case ReportActionType.GET_REPORT:
-            return {...state, isFetchingReport: true, errors: {}};
+            return {...state, isFetchingReport: true, reportType: 'cycle', errors: {}};
         case ReportActionType.GET_REPORT_SUCCESS:
-            return {...state, ...action.payload.res, isFetchingReport: false, itemActive: action.payload.itemActive, errors: {}};
+            return {...state, ...action.payload.res, reportType: 'cycle', isFetchingReport: false, itemActive: action.payload.itemActive, errors: {}};
         case ReportActionType.GET_REPORT_FAIL:
-            return {...state, isFetchingReport: false, errors: action.payload};
+            return {...state, isFetchingReport: false, reportType: 'cycle', errors: action.payload};
 
+        case ReportActionType.GET_REPORT_BY_BANKER:
+            return {...state, isFetchingReport: true, reportType: 'banker', errors: {}};
         case ReportActionType.GET_REPORT_BY_BANKER_SUCCESS:
-            return {...state, ...action.payload, errors: {}};
+            return {...state, ...action.payload.res, isFetchingReport: false, reportType: 'banker', itemActive: action.payload.itemActive, errors: {}};
         case ReportActionType.GET_REPORT_BY_BANKER_FAIL:
-            return {...state, errors: action.payload};
+            return {...state, isFetchingReport: false, reportType: 'banker', errors: action.payload};
 
+        case ReportActionType.GET_REPORT_BY_MEMBER:
+            return {...state, isFetchingReport: true, reportType: 'member', errors: {}};
         case ReportActionType.GET_REPORT_BY_MEMBER_SUCCESS:
-            return {...state, ...action.payload, errors: {}};
+            return {...state, ...action.payload.res, isFetchingReport: false, reportType: 'member', itemActive: action.payload.itemActive, errors: {}};
         case ReportActionType.GET_REPORT_BY_MEMBER_FAIL:
-            return {...state, errors: action.payload};
+            return {...state, isFetchingReport: false, reportType: 'member', errors: action.payload};
 
         default:
             return {...state};

@@ -24,7 +24,7 @@ class AccountantService {
         if (payload && payload.scanAccMap) {
             let bankerAccountOptions = []
             for(let x in payload.scanAccMap) {
-                bankerAccountOptions.push({...payload.scanAccMap[x], type: null, massage: null, data: null, checked: true, collapse: true})
+                bankerAccountOptions.push({...payload.scanAccMap[x], type: null, message: null, data: null, checked: true, collapse: true})
             }
             payload['payloadBankerAccount'] = bankerAccountOptions
         }

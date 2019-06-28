@@ -1,6 +1,7 @@
 import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import { withTranslation } from 'react-i18next'
 import { Redirect } from 'react-router-dom'
 import { Field, reduxForm } from 'redux-form';
 import { CookieService } from 'my-utils/core';
@@ -71,7 +72,7 @@ class FormLoginContainer extends React.Component {
                                 component="input"
                                 className="form-control form-control-solid placeholder-no-fix"
                                 autoComplete="off"
-                                placeholder={<TransComponent i18nKey="Username" />}
+                                placeholder={this.props.t("Username")}
                             />
                         </div>
                         <div className="form-group">
@@ -82,7 +83,7 @@ class FormLoginContainer extends React.Component {
                                 component="input"
                                 className="form-control form-control-solid placeholder-no-fix"
                                 autoComplete="off"
-                                placeholder={<TransComponent i18nKey="Password" />}
+                                placeholder={this.props.t("Password")}
                             />
                         </div>
                         <div className="form-group">
@@ -119,4 +120,5 @@ const mapDispatchToProps = (dispatch) => {
 export default compose(
     reduxForm({form: 'form_login'}),
     connect(mapStateToProps, mapDispatchToProps),
+    withTranslation(),
 )(FormLoginContainer);

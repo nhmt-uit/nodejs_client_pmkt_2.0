@@ -4,15 +4,20 @@ import { Table } from 'react-bootstrap'
 import { isEmpty as _isEmpty, uniq as _uniq, cloneDeep as _cloneDeep, isEqual as _isEqual} from 'lodash'
 import uuidv4 from 'uuid/v4'
 
-import {AccountantBankerAccountResultRowContainer, ModalDeleteFormulaContainer} from 'my-containers/accountant'
+import { AccountantBankerAccountResultHiddenTableThContainer, AccountantBankerAccountResultRowContainer, ModalDeleteFormulaContainer } from 'my-containers/accountant'
 import {AccountantService} from 'my-services/account'
 import { TransComponent } from 'my-components'
+import { toggleFullScreen } from 'my-actions/systems/AppAction';
 
 
 class AccountantBankerAccountResultContainer extends Component {
     shouldComponentUpdate(newProps, newState) {
+        //Prevent update when bankerAccount collapse
+        if(newProps.isCollapseBankerAccount !== false || newProps.isCollapseBanker !== false) return false
+
         if(!_isEqual(newProps.isShowAllFormula, this.props.isShowAllFormula)
-            || !_isEqual(newProps.isFullScreen, this.props.isFullScreen)
+            || !_isEqual(newProps.bankerAccountType, this.props.bankerAccountType)
+            || !_isEqual(newProps.payload, this.props.payload)
             )
             return true
         return false;
@@ -71,34 +76,43 @@ class AccountantBankerAccountResultContainer extends Component {
     }
 
     render() {
+        console.log("render AccountantBankerAccountResultContainer")
         const { payload, isFullScreen, isShowAllFormula } = this.props
+        if (_isEmpty(payload)) return null
+
         const dataFieldList = payload.dataFieldList
-        const accountant = isShowAllFormula === false ? this.handleProcessDataWhenActiveFilterNoFormula(_cloneDeep(payload.accountant)) : _cloneDeep(payload.accountant)
+        const dataHiddenFields = payload.dataHiddenFields
+        const accountant = isShowAllFormula === false ? this.handleProcessDataWhenActiveFilterNoFormula(payload.accountant) : payload.accountant
         
         return (
-            <Table responsive striped bordered condensed className="tbl-scan-result">
-                <thead>
-                    <tr>
-                        <th width="15%"><TransComponent i18nKey="Account" /></th>
-                        <th><TransComponent i18nKey="Report Type" /></th>
-                        {/* dynamic data */}
-                        {this.generateDynamicColumn()}
-                        {/* dynamic data */}
-                        <th><TransComponent i18nKey="Formula" /></th>
-                        {/* Hidden Column */}
-                        {isFullScreen ? <th><TransComponent i18nKey="lock out" /></th> : null}
-                        {isFullScreen ? <th><TransComponent i18nKey="Ratio" /></th> : null}
-                        {isFullScreen ? <th><TransComponent i18nKey="Price" /></th> : null}
-                        {isFullScreen ? <th><TransComponent i18nKey="Pay/Rec" /></th> : null}
-                        {/* Hidden Column */}
-                        <th><TransComponent i18nKey="Member" /></th>
-                        <th><TransComponent i18nKey="Result" /></th>
-                        <th><TransComponent i18nKey="Currency" /></th>
-                        <th colSpan="2"><TransComponent i18nKey="+/- Formula" /> </th>
-                    </tr>
-                </thead>
-                { !_isEmpty(accountant) ? this.handleNestedDataAccountant(accountant) : null }
-            </Table>
+            <div className="panel-body bootstrap-table">
+                <Table responsive striped bordered condensed className="tbl-scan-result">
+                    <thead>
+                        <tr>
+                            <th><TransComponent i18nKey="Account" /></th>
+                            <th><TransComponent i18nKey="Report Type" /></th>
+                            {/* dynamic data */}
+                            {this.generateDynamicColumn()}
+                            {/* dynamic data */}
+                            <th>
+                                <span style={{float: 'left', padding: "5px 10px"}}><TransComponent i18nKey="Formula" /></span>
+                                <a className="btn btn-default btn-sm btn-fullscreen bg-blue-oleo bg-font-blue-oleo" href="javascript:;" onClick={_ => this.props.toggleFullScreen() } style={{float: 'right'}}>
+                                    <i className="fa fa-info" />
+                                    {isFullScreen ? <TransComponent i18nKey="Hide" /> : <TransComponent i18nKey="Detail" />}
+                                </a>
+                            </th>
+                            {/* Hidden Column */}
+                            <AccountantBankerAccountResultHiddenTableThContainer dataHiddenFields={dataHiddenFields} />
+                            {/* Hidden Column */}
+                            <th><TransComponent i18nKey="Member" /></th>
+                            <th><TransComponent i18nKey="Result" /></th>
+                            <th><TransComponent i18nKey="Currency" /></th>
+                            <th colSpan="2"><TransComponent i18nKey="+/- Formula" /> </th>
+                        </tr>
+                    </thead>
+                    { !_isEmpty(accountant) ? this.handleNestedDataAccountant(accountant) : null }
+                </Table>
+            </div>
         )
     }
 }
@@ -108,13 +122,14 @@ class AccountantBankerAccountResultContainer extends Component {
 const mapStateToProps = state => {
     return {
         isShowAllFormula : state.AccountantReducer.isShowAllFormula,
-        isFullScreen : state.AppReducer.isFullScreen,
+        isCollapseBanker : state.AccountantReducer.isCollapseBanker,
+        isCollapseBankerAccount : state.AccountantReducer.isCollapseBankerAccount,
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-
+        toggleFullScreen: _ => {dispatch(toggleFullScreen())},
     }
 };
 

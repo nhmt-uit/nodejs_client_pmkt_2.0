@@ -1,5 +1,8 @@
-import { map as _map, isEmpty as _isEmpty, get as _get, uniq as _uniq, difference as _difference, cloneDeep as _cloneDeep } from 'lodash'
+import uuidv4 from 'uuid/v4'
+import { map as _map, isEmpty as _isEmpty, get as _get, uniq as _uniq, difference as _difference, cloneDeep as _cloneDeep, has as _has } from 'lodash'
+
 import { AccountantActionType } from 'my-constants/action-types'
+import { SocketService } from 'my-utils/core';
 
 let defaultState = {
 	socketInitStatus: 'start',
@@ -10,6 +13,15 @@ let defaultState = {
 	bankerAccount: [],
 	member: [],
 	bankerAccountByMember: [],
+
+	//Handle Optimize Render
+	isCollapseBanker: false,
+	isCollapseBankerAccount: false,
+
+	// Handel button form
+	isProcessing: false,
+	isAllowReport: false,
+
 
 	// Handel delete formula after scan
 	isShowAllFormula: true,
@@ -22,8 +34,15 @@ export const AccountantReducer = (state = defaultState, action) => {
 	let newBanker = _cloneDeep(state.banker)
 	let newBankerAccount = _cloneDeep(state.bankerAccount)
 	let newBankerAccountByMember = _cloneDeep(state.bankerAccountByMember)
+	let newIsProcessing = state.isProcessing
+	let newIsAllowReport = state.isProcessing
+	state.isCollapseBanker = false
+	state.isCollapseBankerAccount = false
 	switch(action.type){
 		case AccountantActionType.ACCOUNTANT_SOCKET_INIT_DATA:
+			if(action.request_type === "accountant_init" && action.full_payload.type === "notify" && action.full_payload.message === "init_data") {
+				state = defaultState
+			}
 			let socketInitStatus = 'inprogress'
 			if(action.request_type === "accountant_init" && action.full_payload.type !== "notify" && action.full_payload.message !== "init_data") {
 				socketInitStatus = 'finish'
@@ -51,7 +70,6 @@ export const AccountantReducer = (state = defaultState, action) => {
 				})
 				newBankerAccountByMember = _uniq(newBankerAccountByMember)
 				memberChekedFalse = _difference(_uniq(memberChekedFalse), newBankerAccountByMember)
-				
 				
 				toggleBankerAccount(newBanker, newBankerAccount, newBankerAccountByMember, memberChekedFalse)
 			}
@@ -111,13 +129,13 @@ export const AccountantReducer = (state = defaultState, action) => {
 			if (action.type_collapse === "open_all") {
 				newBanker.map(item => {item.collapse = true})
 			}
-			return {...state, banker: newBanker}
+			return {...state, banker: newBanker, isCollapseBanker: uuidv4()}
 		case AccountantActionType.ACCOUNTANT_COLLAPSE_BANKER_ACCOUNT:
 			var objIndex = newBankerAccount.findIndex((obj => obj.id === action.bankerAccountId))
 			if (objIndex !== -1){
 				newBankerAccount[objIndex].collapse = !newBankerAccount[objIndex].collapse
 			}
-			return {...state, bankerAccount: newBankerAccount}
+			return {...state, bankerAccount: newBankerAccount, isCollapseBankerAccount: uuidv4()}
 		/*
 		|--------------------------------------------------------------------------
 		| Scan Data
@@ -132,26 +150,50 @@ export const AccountantReducer = (state = defaultState, action) => {
 					newBankerAccount[objIndex].uuid = x
 				}
 			}
-			return {...state, bankerAccount: newBankerAccount}
+			return {...state, bankerAccount: newBankerAccount, isProcessing: true}
 		case AccountantActionType.ACCOUNTANT_SOCKET_SCAN_DATA_NOTIFY:
-			var objIndex = newBankerAccount.findIndex((obj => obj.uuid === action.full_payload.uuid))
-			if (objIndex !== -1) newBankerAccount[objIndex].message = _get(action, 'full_payload.data.message')
+			if (action.payload.length !== 0 ) {
+				for(let x in action.payload) {
+					var objIndex = newBankerAccount.findIndex((obj => obj.uuid === action.payload[x].uuid))
+					if (objIndex !== -1) newBankerAccount[objIndex].message = _get(action.payload[x], 'data.message')
+				}
+			}
 			return {...state, bankerAccount: newBankerAccount}
 		case AccountantActionType.ACCOUNTANT_SOCKET_SCAN_DATA_REJECT:
-			var objIndex = newBankerAccount.findIndex((obj => obj.uuid === action.full_payload.uuid))
-			if (objIndex !== -1) {
-				newBankerAccount[objIndex].type = "reject"
-				newBankerAccount[objIndex].message = _get(action, 'full_payload.data.message')
+			if (action.payload.length !== 0 ) {
+				for(let x in action.payload) {
+					var objIndex = newBankerAccount.findIndex((obj => obj.uuid === action.payload[x].uuid))
+					if (objIndex !== -1) {
+						newBankerAccount[objIndex].type = "reject"
+						newBankerAccount[objIndex].message = _get(action.payload[x], 'data.message')
+					}
+				}
 			}
-			return {...state, bankerAccount: newBankerAccount}
+			//Check process finish
+			newIsProcessing = !_isEmpty(newBankerAccount.find(item => item.type === "notify")) ? true : false
+			newIsAllowReport = !_isEmpty(newBankerAccount.find(item => item.type === "resolve")) ? true : false
+			// Stop listen when scan finish
+			if (newIsProcessing === false) SocketService.unListenerResponse()
+			return {...state, bankerAccount: newBankerAccount, isProcessing: newIsProcessing, isAllowReport: newIsAllowReport}
 		case AccountantActionType.ACCOUNTANT_SOCKET_SCAN_DATA_RESOLVE:
-			var objIndex = newBankerAccount.findIndex((obj => obj.uuid === action.full_payload.uuid))
-			if (objIndex !== -1) {
-				newBankerAccount[objIndex].type = "resolve"
-				newBankerAccount[objIndex].message = null
-				newBankerAccount[objIndex].data = action.full_payload.data
+			if (action.payload.length !== 0 ) {
+				for(let x in action.payload) {
+					var objIndex = newBankerAccount.findIndex((obj => obj.uuid === action.payload[x].uuid))
+					if (objIndex !== -1) {
+						newBankerAccount[objIndex].type = "resolve"
+						newBankerAccount[objIndex].message = null
+						newBankerAccount[objIndex].data = action.payload[x].data
+						newBankerAccount[objIndex].data.dataHiddenFields = handleProcessDataCheckHiddenColumn(newBankerAccount[objIndex].data.accountant)
+					}
+				}
 			}
-			return {...state, bankerAccount: newBankerAccount}
+			//Check process finish
+			newIsProcessing = !_isEmpty(newBankerAccount.find(item => item.type === "notify")) ? true : false
+			newIsAllowReport = !_isEmpty(newBankerAccount.find(item => item.type === "resolve")) ? true : false
+			// Stop listen when scan finish
+			if (newIsProcessing === false) SocketService.unListenerResponse()
+
+			return {...state, bankerAccount: newBankerAccount, isProcessing: newIsProcessing, isAllowReport: newIsAllowReport}
 		case AccountantActionType.ACCOUNTANT_SOCKET_SCAN_DATA_STOP:
 			for(let x of action.bankerAccountIds) {
 				var objIndex = newBankerAccount.findIndex((obj => obj.id === x))
@@ -160,7 +202,7 @@ export const AccountantReducer = (state = defaultState, action) => {
 					newBankerAccount[objIndex].message = "Stopped"
 				}
 			}
-			return {...state, bankerAccount: newBankerAccount}
+			return {...state, bankerAccount: newBankerAccount, isProcessing: false}
 		case AccountantActionType.ACCOUNTANT_DELETE_BANKER_ACCOUNT:
 			newBankerAccount = newBankerAccount.filter(item => item.id !== action.item.id)
 			//Remove Banker
@@ -179,7 +221,10 @@ export const AccountantReducer = (state = defaultState, action) => {
 			let bankerAccountId = action.uuid2AccId[action.full_payload.uuid]
 			if(!_isEmpty(bankerAccountId)) {
 				var objIndex = newBankerAccount.findIndex((obj => obj.id === bankerAccountId))
-				if (objIndex !== -1) newBankerAccount[objIndex].data = {...newBankerAccount[objIndex].data, ...action.payload}
+				if (objIndex !== -1) {
+					newBankerAccount[objIndex].data = {...newBankerAccount[objIndex].data, ...action.payload}
+					newBankerAccount[objIndex].data.dataHiddenFields = handleProcessDataCheckHiddenColumn(newBankerAccount[objIndex].data.accountant)
+				}
 			}
 			return {...state, bankerAccount: newBankerAccount}
 		case AccountantActionType.ACCOUNTANT_TOGGLE_SHOW_ALL_FORMULA:
@@ -197,7 +242,33 @@ export const AccountantReducer = (state = defaultState, action) => {
 	}
 }
 
+/*
+|--------------------------------------------------------------------------
+| Check has hidden column
+| formatName, he_so, gia_thau, PRText
+|--------------------------------------------------------------------------
+*/
+function handleProcessDataCheckHiddenColumn(accountant, res = {formatName: true, he_so: false, gia_thau: false, PRText: true}) {
+	if (_isEmpty(accountant)) return res
+	for(let x in accountant) {
+		if (_isEmpty(accountant[x].reportAccountant)) continue
+		for(let y in accountant[x].reportAccountant) {
+			if (_isEmpty(accountant[x].reportAccountant[y].resultList)) continue
+			for(let z in accountant[x].reportAccountant[y].resultList) {
+				if(_has(accountant[x].reportAccountant[y].resultList[z], 'he_so')) res.he_so = true
+				if(_has(accountant[x].reportAccountant[y].resultList[z], 'gia_thau')) res.gia_thau = true
+				if (res.he_so && res.gia_thau) return res
+			}
+		}
+		return handleProcessDataCheckHiddenColumn(accountant[x].child, res)
+	}
+}
 
+/*
+|--------------------------------------------------------------------------
+| Scan result add/check object isShowChild
+|--------------------------------------------------------------------------
+*/
 function handleProcessDataWhenToggleShowHideChild(accountant, username) {
 	if (_isEmpty(accountant)) return
 	return accountant.map(node => {

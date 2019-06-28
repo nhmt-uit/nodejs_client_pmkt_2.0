@@ -72,7 +72,6 @@ class FormAccountContainer extends Component {
                             isDisabled={isDisabledBasedOneAccountBelong}
                             value={selectedBanker}
                             isSearchable={true}
-                            placeholder={<TransComponent i18nKey="choose" />}
                             onChange={this.handleChangeBanker}
                             options={optBanker}
                         />
@@ -96,7 +95,6 @@ class FormAccountContainer extends Component {
                             name="belong_account"
                             value={selectedAccountBelong}
                             isSearchable={true}
-                            placeholder={<TransComponent i18nKey="choose" />}
                             onChange={this.handleChangeBelongAcc}
                             options={optAccountBelong}
                             formatGroupLabel={formatGroupLabel}
@@ -159,7 +157,6 @@ class FormAccountContainer extends Component {
                                             name="is_banker_sub"
                                             value={selectedIsSub}
                                             isSearchable={true}
-                                            placeholder={<TransComponent i18nKey="choose" />}
                                             onChange={this.handleChangeIsSub}
                                             options={optIsSub}
                                             menuPosition="fixed"
@@ -173,7 +170,6 @@ class FormAccountContainer extends Component {
                                             name="is_banker_sub"
                                             value={selectedIsSub}
                                             isSearchable={true}
-                                            placeholder={<TransComponent i18nKey="choose" />}
                                             onChange={this.handleChangeIsSub}
                                             options={optIsSub}
                                             menuPosition="fixed"
