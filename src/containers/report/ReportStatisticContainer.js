@@ -10,10 +10,11 @@ import {
 } from 'lodash';
 
 import { Helpers } from 'my-utils';
-import { LoadingComponent } from 'my-components';
+import { LoadingComponent, TransComponent } from 'my-components';
 import { ReportByMember } from 'my-components/report';
 import { CookieService } from 'my-utils/core';
 import { RoutesService } from 'my-routes';
+import { isConditional } from 'babel-types';
 
 class ReportStatisticContainer extends Component {
     constructor(props) {
@@ -34,9 +35,9 @@ class ReportStatisticContainer extends Component {
 
     renderTabReport(type) {
         const t = this.props.t;
-        const { currencyMap, totalAccounting, totalReport } = this.props.reportStore;
+        const { currencyMap, totalAccounting, totalReport, total } = this.props.reportStore;
         const title = type === 'accounting' ? t('REPORT OF ACCOUNTING') : t('SYNTHESIS OF REPORT');
-        const total = type === 'accounting' ? totalAccounting : totalReport;
+        const totalTab = type === 'accounting' ? totalAccounting : type === 'member' ? total : totalReport;
         const className = type === 'accounting' ? 'tab-accountant' : 'tab-report';
 
         if (!currencyMap) {
@@ -54,13 +55,13 @@ class ReportStatisticContainer extends Component {
                 <strong className="display-block font-red margin-bottom-5">{title}</strong>
                 {
                     currencyMap.map((item, index) => {
-                        if (!totalAccounting || !totalAccounting[item.dv_tien_te_id]) {
+                        if (!totalTab || !totalTab[item.dv_tien_te_id]) {
                             return null;
                         }
 
                         return (
                             <strong key={index} className="display-block font-size-12">
-                                {`${item.dv_tien_te}: ${Helpers.formatMoney(total[item.dv_tien_te_id].result, 0)}`}
+                                {`${item.dv_tien_te}: ${Helpers.formatMoney(totalTab[item.dv_tien_te_id].result, 0)}`}
                             </strong>
                         );
                     })
@@ -112,9 +113,9 @@ class ReportStatisticContainer extends Component {
                                             <>
                                                 {this.renderBookTabContent('synthesis', 'tab_synthesis_all', true)}
                                                 {this.renderBookTabContent('synthesis', 'tab_synthesis_1')}
-                                                {this.renderBookTabContent('synthesis', 'tab_synthesis_2')}
                                                 {this.renderBookTabContent('synthesis', 'tab_synthesis_3')}
-                                                {this.renderBookTabContent('synthesis', 'tab_synthesis_4')}
+                                                {this.renderBookTabContent('synthesis', 'tab_synthesis_9')}
+                                                {this.renderBookTabContent('synthesis', 'tab_synthesis_2')}
                                             </>
                                         )
                                 }
@@ -170,13 +171,13 @@ class ReportStatisticContainer extends Component {
         } else {
             bookElement = [
                 <li key={0}>
-                    <a className="text-capitalize" href={`#tab_${tabReportActive}_4`} data-toggle="tab">{t('Payment')}</a>
+                    <a className="text-capitalize" href={`#tab_${tabReportActive}_2`} data-toggle="tab">{t('Payment')}</a>
                 </li>,
                 <li key={1}>
-                    <a className="text-capitalize" href={`#tab_${tabReportActive}_3`} data-toggle="tab">{t('Other')}</a>
+                    <a className="text-capitalize" href={`#tab_${tabReportActive}_9`} data-toggle="tab">{t('Other')}</a>
                 </li>,
                 <li key={2}>
-                    <a className="text-capitalize" href={`#tab_${tabReportActive}_2`} data-toggle="tab">{t('Old owing')}</a>
+                    <a className="text-capitalize" href={`#tab_${tabReportActive}_3`} data-toggle="tab">{t('Old owing')}</a>
                 </li>,
                 <li key={3}>
                     <a className="text-capitalize" href={`#tab_${tabReportActive}_1`} data-toggle="tab">{t('Accounting')}</a>
@@ -191,12 +192,20 @@ class ReportStatisticContainer extends Component {
     };
 
     renderBookTabContent = (type, id, isActive) => {
-        const { data = {} } = this.props.reportStore;
+        const { data = {}, totalAccounting = {}, totalByBook = {}, totalByTypeReport = {}, totalReport = {} } = this.props.reportStore;
         const t = this.props.t;
         const classActive = isActive ? 'active' : '';
 
+        let total = {}
         let { currencyMap = [] } = this.props.reportStore;
         let accountingList = _sortBy(_toArray(data), 'name');
+
+        if (type === 'accounting') {
+            total = id === -1 ? totalAccounting : (totalByBook[id] || []);
+        } else {
+            const bookId = id.split('_')[2] || '';
+            total = id === 'tab_synthesis_all' ? totalReport : (totalByTypeReport[Number(bookId) === 1 ? 0 : bookId] || {})
+        }
 
         accountingList = this.filterAccounting(accountingList, type, id);
         accountingList = this.parseAccountingToArray(accountingList, type, id);
@@ -205,7 +214,7 @@ class ReportStatisticContainer extends Component {
         return (
             <div className={`tab-pane ${classActive}`} id={id} key={id}>
                 <div className="portlet-body">
-                    <table className="table table-hover table-light">
+                    <table className="table table-striped table-bordered table-hover">
                         <thead className="font-red">
                             <tr>
                                 <td><span className="glyphicon glyphicon-sort-by-alphabet" /></td>
@@ -237,20 +246,39 @@ class ReportStatisticContainer extends Component {
                                                     ? <span className="glyphicon glyphicon-chevron-right"/>
                                                     : <span className="glyphicon glyphicon-chevron-down"/>
                                             }
-                                            &nbsp;{ abc }</td>
-                                            {
-                                                currencyMap.map((currency, i) => {
-                                                    const value = elm.total[currency.dv_tien_te_id] ?  elm.total[currency.dv_tien_te_id].result : 0;
-                                                    const className = Number(value) < 0 ? 'font-red' : 'font-blue-steel';
-                    
-                                                    return <td className={className} key={i}>{Helpers.formatMoney(Number(value), 0)}</td>;
-                                                })
-                                            }
+                                            &nbsp;{ abc }
+                                        </td>
+                                        {
+                                            currencyMap.map((currency, i) => {
+                                                const value = elm.total[currency.dv_tien_te_id] ?  elm.total[currency.dv_tien_te_id].result : 0;
+                                                const className = Number(value) < 0 ? 'font-red' : 'font-blue-steel';
+                
+                                                return <td className={className} key={i}>{Helpers.formatMoney(Number(value), 0)}</td>;
+                                            })
+                                        }
+                                        <td className="text-center">{ elm.deleteMoneyExchange ? <icon className="fa fa-close" /> : null }</td>
                                     </tr>)
                                 });
                             })
                         }
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <td />
+                                <td><TransComponent i18nKey="Total" /></td>
+                                {
+                                    currencyMap.map(function (item, index) {
+                                        const value = total && total[item.dv_tien_te_id] ? total[item.dv_tien_te_id].result : 0;
+                                        const classCurrency = Number(value) < 0 ? 'font-red' : 'font-blue-steel';
+
+                                        return <td className={classCurrency} key={index}>
+                                            { Helpers.formatMoney(value, 0) }
+                                        </td>
+                                    })
+                                }
+                                <td/>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -264,28 +292,38 @@ class ReportStatisticContainer extends Component {
 
             const currentRs = { name: data.name, order: data.level, total: {} };
 
-            if (data.level === 4) {
-                currentRs.total[data.dv_tien_te_id] = { result: data.result };
-            } else {
-                let total = data.total || {};
+            let total = {};
+            let deleteMoneyExchange = false;
 
-                if (data.level === 0 && tabReportActive === 'accounting') {
-                    const childTotalAccounting = _get(data, 'child.accounting', {});
-                    
-                    switch(tabBookActive) {
-                        case 'banker' :
-                            total = _get(childTotalAccounting, `child[${Object.keys(childTotalAccounting.child || {})[0]}].total`, {});
-                            break;
-                        case -1:
-                            total = childTotalAccounting.total || {};
-                            break;
-                        default:
-                            total = _get(childTotalAccounting, `.child[${tabBookActive}].total`, {})
-                    }
-                }
-
-                currentRs.total = total;
+            if (tabReportActive === 'accounting' && data.level !== 1 && data.level !== 0 && data.type_report && data.type_report === 4) {
+                deleteMoneyExchange = true;
             }
+
+            if (data.level === 0 && tabReportActive === 'accounting') {
+                const childTotalAccounting = _get(data, 'child.accounting', {});
+
+                deleteMoneyExchange = !!data.hasMoneyExchange;
+                
+                switch(tabBookActive) {
+                    case 'banker' :
+                        total = _get(childTotalAccounting, `child[${Object.keys(childTotalAccounting.child || {})[0]}].total`, {});
+                        break;
+                    case -1:
+                        total = childTotalAccounting.total || {};
+                        break;
+                    default:
+                        total = _get(childTotalAccounting, `child[${tabBookActive}].total`, {})
+                }
+            } else {
+                total = data.total
+                    ? data.total
+                    : data.dv_tien_te_id
+                        ? { [data.dv_tien_te_id]: { result: data.result } }
+                        : {};
+            }
+
+            currentRs.total = total;
+            currentRs.deleteMoneyExchange = deleteMoneyExchange;
 
             rs[id] = rs[id] || [];
             rs[id].push(currentRs);
@@ -332,9 +370,34 @@ class ReportStatisticContainer extends Component {
                     break;
 
                 case 'synthesis':
+                    const bookId = Number(tabBookActive.split('_')[2]) || '';
+
+                    let childNext = child;
+
                     if (data.level === 0) {
-                        Object.keys(child).forEach(elm => {
-                            mapAccount(child[elm], id);
+                        switch (bookId) {
+                            case 1:
+                                childNext = _get(child, 'accounting.child', {});
+                                break;
+                            case 2:
+                                childNext = _get(child, 'Payment.child', {});
+                                break;
+                            case 3:
+                                childNext = _get(child, 'Old owing.child', {});
+                                break;
+                            case 4:
+                                childNext = {};
+                                break;
+                            case 9:
+                                childNext = _get(child, 'Other.child', {});
+                                break;
+                            default:
+                                childNext = child;
+                                break;
+                        }
+
+                        Object.keys(childNext).forEach(elm => {
+                            mapAccount(childNext[elm], id);
                         })
                     }
             }
@@ -361,11 +424,11 @@ class ReportStatisticContainer extends Component {
                 switch (tabBookActive) {
                     case `tab_${tabReportActive}_1`:
                         return !!item.child.accounting;
-                    case `tab_${tabReportActive}_2`:
-                        return !!item.child['Old owing'];
                     case `tab_${tabReportActive}_3`:
+                        return !!item.child['Old owing'];
+                    case `tab_${tabReportActive}_9`:
                         return !!item.child['Other'];
-                    case `tab_${tabReportActive}_4`:
+                    case `tab_${tabReportActive}_2`:
                         return !!item.child['Payment'];
                     default:
                         return true;
@@ -377,8 +440,10 @@ class ReportStatisticContainer extends Component {
     }
 
     render() {
-        const { currencyMap, isFetchingReport, reportType = 'cycle', data } = this.props.reportStore;
+        const { currencyMap, isFetchingReport, reportType = 'cycle' } = this.props.reportStore;
+
         let tabContent = <></>;
+        let tabReport = <></>;
 
         switch(reportType) {
             case 'cycle':
@@ -388,12 +453,21 @@ class ReportStatisticContainer extends Component {
                         {this.renderTabReportContent('synthesis')}
                     </>
                 );
+
+                tabReport = (
+                    <>
+                        <li className="active tab-report-detail">{ this.renderTabReport('accounting') }</li>
+                        <li className="tab-report-detail">{ this.renderTabReport('synthesis') }</li>
+                    </>
+                );
                 break;
             case 'banker':
                 tabContent = this.renderTabReportContent('accounting', true);
+                tabReport = <li className="active tab-report-detail">{ this.renderTabReport('accounting') }</li>;
                 break;
             default:
-                tabContent = <ReportByMember data={data} />
+                tabContent = <ReportByMember reportStore={this.props.reportStore} />
+                tabReport = <li className="active tab-report-detail">{ this.renderTabReport('member') }</li>;
         }
 
         if (isFetchingReport) {
@@ -415,18 +489,7 @@ class ReportStatisticContainer extends Component {
                 <div className="portlet-body ">
                     <div className="tabbable-line tabbable-full-width tabbable-report">
                         <ul className="nav nav-tabs">
-                            {
-                                reportType === 'cycle'
-                                    ? (
-                                        <>
-                                            <li className="active tab-report-detail">{ this.renderTabReport('accounting') }</li>
-                                            <li className="tab-report-detail">{ this.renderTabReport('synthesis') }</li>
-                                        </>
-                                     )
-                                    : (
-                                        <li className="active tab-report-detail">{ this.renderTabReport('accounting') }</li>
-                                    )
-                            }
+                            { tabReport }
                         </ul>
                         <div className="tab-content tab-report-content">
                             { tabContent }
