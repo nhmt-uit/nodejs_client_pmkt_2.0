@@ -6,6 +6,7 @@ import uuidv4 from 'uuid/v4'
 import { Helpers } from 'my-utils'
 import { toggleModalDeleteFormula, socketScanData, toggleShowHideBankerAccountChild } from 'my-actions/AccountantAction'
 import { TransComponent } from 'my-components'
+import { AccountantBankerAccountResultHiddenTableTdContainer } from 'my-containers/accountant'
 
 
 class AccountantBankerAccountResultRowContainer extends Component {
@@ -101,10 +102,7 @@ class AccountantBankerAccountResultRowContainer extends Component {
                     <>
                     <td key={uuidv4()}><TransComponent i18nKey="Not have formula yet" /></td> {/* // Column Formula Name */}
                     
-                    {isFullScreen && dataHiddenFields.formatName ?  <td key={uuidv4()}></td> : null} {/* formatName */}
-                    {isFullScreen && dataHiddenFields.he_so  ?  <td key={uuidv4()}></td> : null}  {/* he_so */}
-                    {isFullScreen && dataHiddenFields.gia_thau  ?  <td key={uuidv4()}></td> : null} {/* gia_thau */}
-                    {isFullScreen && dataHiddenFields.PRText  ?  <td key={uuidv4()}></td> : null} {/* PRText */}
+                    <AccountantBankerAccountResultHiddenTableTdContainer dataHiddenFields={dataHiddenFields} />
 
                     <td key={uuidv4()}></td> {/* // Column Member */}
                     <td key={uuidv4()}></td> {/* // Column Result */}
@@ -138,11 +136,10 @@ class AccountantBankerAccountResultRowContainer extends Component {
                     tbl_col_formula.push(
                         <>
                         <td key={uuidv4()} className={formula.PRText}>{Helpers.formatFormulaName(formula.formulaName)}</td> {/* // Column Formula Name */}
-
-                        {isFullScreen && dataHiddenFields.formatName ?  <td key={uuidv4()} className={formula.PRText}>{formula.formatName}</td> : null} {/* formatName */}
-                        {isFullScreen && dataHiddenFields.he_so  ?  <td key={uuidv4()} className={formula.PRText + " text-right"}>{formula.he_so}</td> : null}  {/* he_so */}
-                        {isFullScreen && dataHiddenFields.gia_thau  ?  <td key={uuidv4()} className={formula.PRText + " text-right"}>{formula.gia_thau}</td> : null} {/* gia_thau */}
-                        {isFullScreen && dataHiddenFields.PRText  ?  <td key={uuidv4()} className={formula.PRText}>{formula.PRText === 'rec' ? <TransComponent i18nKey="Receive" /> : <TransComponent i18nKey="Pay" />}</td> : null} {/* PRText */}
+                        
+                        {/* Hidden Column */}
+                        <AccountantBankerAccountResultHiddenTableTdContainer dataHiddenFields={dataHiddenFields} formula={formula} />
+                        {/* Hidden Column */}
 
                         <td key={uuidv4()} ><b>{formula.memberName.toUpperCase()}</b></td> {/* // Column Member */}
                         <td key={uuidv4()} className={resultClass + " text-right"} >{Helpers.formatMoney(formula.valueRounded, 0)}</td> {/* // Column Result */}

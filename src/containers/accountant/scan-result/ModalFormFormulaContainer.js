@@ -28,14 +28,14 @@ class ModalFormFormulaContainer extends Component {
         const formulaMember = _get(payloadDeleteFormula, 'formulaDetail.memberName', '').toUpperCase()
         
         return (
-            <Modal isOpen={isOpenModalDeleteFormula} toggle={this.props.toggleModalDeleteFormula}>
-                <ModalHeader toggle={this.props.toggleModalDeleteFormula}><TransComponent i18nKey="confirm" /></ModalHeader>
+            <Modal isOpen={isOpenModalDeleteFormula} toggle={_ => this.props.toggleModalDeleteFormula()}>
+                <ModalHeader toggle={_ => this.props.toggleModalDeleteFormula()}><TransComponent i18nKey="confirm" /></ModalHeader>
                 <ModalBody>
                     <TransComponent i18nKey="are you sure unlink formula {{formulaname}} and member {{membername}}" i18nObj={{formulaname: formulaName, membername: formulaMember}} />
                 </ModalBody>
                 <ModalFooter>
                     <Button color="btn btn-default green" onClick={this.handleDelete}><TransComponent i18nKey="confirm" /></Button>{' '}
-                    <Button color="btn btn-default red" onClick={this.props.toggleModalDeleteFormula}><TransComponent i18nKey="Cancel" /></Button>
+                    <Button color="btn btn-default red" onClick={_ => this.props.toggleModalDeleteFormula()}><TransComponent i18nKey="Cancel" /></Button>
                 </ModalFooter>
             </Modal>
         );

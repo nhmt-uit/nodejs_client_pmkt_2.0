@@ -282,7 +282,7 @@ class ReportStatisticContainer extends Component {
                         default:
                             total = _get(childTotalAccounting, `.child[${tabBookActive}].total`, {})
                     }
-                } 
+                }
 
                 currentRs.total = total;
             }
@@ -378,11 +378,10 @@ class ReportStatisticContainer extends Component {
 
     render() {
         const { currencyMap, isFetchingReport, reportType = 'cycle', data } = this.props.reportStore;
-
         let tabContent = <></>;
 
         switch(reportType) {
-            case 'cycle': 
+            case 'cycle':
                 tabContent = (
                     <>
                         {this.renderTabReportContent('accounting', true)}

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { compose } from 'redux'
 import { connect } from 'react-redux'
+import { Collapse } from 'reactstrap'
 import { isEmpty as _isEmpty, isEqual as _isEqual, cloneDeep as _cloneDeep, pick as _pick } from 'lodash'
 import LazyLoad from 'react-lazyload';
 
@@ -10,6 +11,9 @@ import { AccountantBankerAccountResultContainer, AccountantItemBankerAccountChec
 class AccountantItemBankerAccountContainer extends Component {
 
     shouldComponentUpdate(newProps, newState) {
+        //Prevent update when banker collapse
+        if(newProps.isCollapseBanker !== false) return false
+
         let newBankerAccount = newProps.bankerAccount.find(item => item.id === newProps.bankerAccountId)
         let oldBankerAccount = this.props.bankerAccount.find(item => item.id === this.props.bankerAccountId)
         //Pick field to compare
@@ -24,11 +28,8 @@ class AccountantItemBankerAccountContainer extends Component {
     render() {
         const bankerAccount = this.props.bankerAccount.find(item => item.id === this.props.bankerAccountId)
         if(_isEmpty(bankerAccount)) return null
+        
         return (
-            // <>
-            //     {bankerAccount.acc_name}
-            //     <BankerAccountStatusIconContainer bankerAccountId={bankerAccount.id} />
-            // </>
             <div className="panel-group accordion">
                 <div className="panel panel-default">
                     <div className="panel-heading">
@@ -52,13 +53,20 @@ class AccountantItemBankerAccountContainer extends Component {
                             <div className="clearfix"></div>
                         </h4>
                     </div>
-                    { !_isEmpty(bankerAccount.data) && bankerAccount.collapse ? (
-                        <LazyLoad>
-                            <div className="panel-body bootstrap-table">
-                                <AccountantBankerAccountResultContainer payload={bankerAccount.data} bankerAccountType={bankerAccount.type} />
-                            </div>
-                        </LazyLoad>
-                    ) : null }
+                    <Collapse isOpen={bankerAccount.collapse}>
+                        <AccountantBankerAccountResultContainer payload={bankerAccount.data} bankerAccountType={bankerAccount.type}  />
+                    </Collapse>
+                    {
+                        // bankerAccount.collapse ?
+                        //     (
+                        //         // <LazyLoad>
+                        
+                        //         <AccountantBankerAccountResultContainer payload={bankerAccount.data} bankerAccountType={bankerAccount.type}  />
+                        //         // </LazyLoad>
+                        //     )
+                        // : null
+                    }
+                    
                 </div>
             </div>
         )
@@ -70,6 +78,7 @@ class AccountantItemBankerAccountContainer extends Component {
 const mapStateToProps = state => {
     return {
         bankerAccount : state.AccountantReducer.bankerAccount,
+        isCollapseBanker : state.AccountantReducer.isCollapseBanker,
     }
 }
 

@@ -1,6 +1,6 @@
 import moment  from 'moment'
 import uuidv4 from 'uuid/v4'
-import { get as _get } from 'lodash'
+import { get as _get, isEmpty as _isEmpty } from 'lodash'
 
 import { AccountantActionType } from 'my-constants/action-types';
 import { SocketService, EventsService } from 'my-utils/core';
@@ -11,6 +11,10 @@ import { AppConfig } from 'my-constants'
 const sleep = (milliseconds) => {
     return new Promise(resolve => setTimeout(resolve, milliseconds))
 }
+
+const sleepTime = 200
+const timeWaitToDispatch = 500
+const firstNumberPayloadSend = 50
 
 export const socketInitData = () => {
     SocketService.connect('/accountant')
@@ -63,10 +67,10 @@ export const socketScanData = (params) => {
         let listUUID2AccID = {}
         let login_name = AuthService.getUsername()
         let queuesRequest = []
-        // let i = 0
-
+        let i = 0
         for(let x in params.ids) {
             let uuid = uuidv4()
+            i++
             listUUID2AccID[uuid] = params.ids[x]
             // listUUID2AccID[uuid] = '5a701ca320fd7e9eb445e37e'
             const requestObj = {
@@ -78,16 +82,17 @@ export const socketScanData = (params) => {
                     login_name: login_name
                 }
             }
-            queuesRequest.push(requestObj)
-            console.log(requestObj)
-            // SocketService.send('scan', requestObj, uuid)
-            // await sleep(200)
-            // if (i > 50) break
+            queuesRequest.push({uuid: uuid, arg: requestObj})
+
+            // First send package to websocket
+            if (i <= firstNumberPayloadSend) {
+                let item = queuesRequest.pop()
+                if(!_isEmpty(item)) {
+                    SocketService.send('scan', item.arg, item.uuid)
+                }
+            }
         }
-        console.log(queuesRequest)
-
         
-
         // Dispatch data to reducer
         dispatch({
             type: AccountantActionType.ACCOUNTANT_SOCKET_SCAN_DATA_START,
@@ -95,40 +100,69 @@ export const socketScanData = (params) => {
             payload: listUUID2AccID
         });
 
-
-        EventsService.on('accountant_scan_notify', res => {
+        let payloadNotify = []
+        EventsService.on('accountant_scan_notify', async res => {
             if (res) {
+                payloadNotify.push(res)
+                await sleep(timeWaitToDispatch)
                 // Dispatch data to reducer
-                dispatch({
-                    type: AccountantActionType.ACCOUNTANT_SOCKET_SCAN_DATA_NOTIFY,
-                    request_type: 'accountant_scan_notify',
-                    full_payload: res,
-                    payload: res.data
-                });
+                if(payloadNotify.length !== 0 ) {
+                    dispatch({
+                        type: AccountantActionType.ACCOUNTANT_SOCKET_SCAN_DATA_NOTIFY,
+                        request_type: 'accountant_scan_notify',
+                        payload: payloadNotify
+                        // full_payload: res,
+                        // payload: res.data
+                    });
+                    
+                    payloadNotify = []
+                }
             }
         })
         
-        EventsService.on('accountant_scan_reject', res => {
+        let payloadReject = []
+        EventsService.on('accountant_scan_reject', async res => {
             if (res) {
+                let item = queuesRequest.pop()
+                if(!_isEmpty(item)) SocketService.send('scan', item.arg, item.uuid)
+
+                payloadReject.push(res)
+                await sleep(timeWaitToDispatch)
                 // Dispatch data to reducer
-                dispatch({
-                    type: AccountantActionType.ACCOUNTANT_SOCKET_SCAN_DATA_REJECT,
-                    request_type: 'accountant_scan_reject',
-                    full_payload: res,
-                    payload: res.data
-                });
+                if(payloadReject.length !== 0 ) {
+                    dispatch({
+                        type: AccountantActionType.ACCOUNTANT_SOCKET_SCAN_DATA_REJECT,
+                        request_type: 'accountant_scan_reject',
+                        payload: payloadReject
+                        // full_payload: res,
+                        // payload: res.data
+                    });
+                    
+                    payloadReject = []
+                }
             }
         })
 
-        EventsService.on('accountant_scan_resolve', res => {
+        let payloadResolve = []
+        EventsService.on('accountant_scan_resolve',async res => {
             if (res) {
+                let item = queuesRequest.pop()
+                if(!_isEmpty(item)) SocketService.send('scan', item.arg, item.uuid)
+
+                payloadResolve.push(res)
+                await sleep(timeWaitToDispatch)
                 // Dispatch data to reducer
-                dispatch({
-                    type: AccountantActionType.ACCOUNTANT_SOCKET_SCAN_DATA_RESOLVE,
-                    request_type: 'accountant_scan_resolve',
-                    full_payload: res,
-                    payload: res.data
-                });
+                if(payloadResolve.length !== 0 ) {
+                    dispatch({
+                        type: AccountantActionType.ACCOUNTANT_SOCKET_SCAN_DATA_RESOLVE,
+                        request_type: 'accountant_scan_resolve',
+                        payload: payloadResolve
+                        // full_payload: res,
+                        // payload: res.data
+                    });
+                    
+                    payloadResolve = []
+                }
             }
         })
     }
@@ -163,25 +197,6 @@ export const socketStopScanData = (params) => {
         // })
     }
 }
-
-/*
-|--------------------------------------------------------------------------
-| Handle call socket save report
-|--------------------------------------------------------------------------
-*/
-export const socketSaveReport = params => {
-    return (dispatch) => {
-        for(let x in params.payloadBankerAccount) {
-            const requestObj = {
-                from_date: params.payloadBankerAccount[x].data.from_date,
-                to_date: params.payloadBankerAccount[x].data.to_date,
-                dataReportSave: [params.payloadBankerAccount[x].data.reportSave]
-            }
-            SocketService.send('save_report', requestObj)
-        }
-    }
-}
-
 
 /*
 |--------------------------------------------------------------------------

@@ -22,7 +22,6 @@ class Notification extends Component {
     }
 
     render() {
-        console.log("redner")
         const notification = this.props.notification;
         const count = get(notification, 'msg.acc', 0);
 

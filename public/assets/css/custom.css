@@ -367,6 +367,8 @@ html {
 .btn-fullscreen i.fa {margin-right: 5px}
 .full-screen .page-header, .full-screen .page-sidebar-wrapper {display: none}
 .full-screen .page-container {margin-top: 0px}
+.full-screen th.column-hidden, .full-screen td.column-hidden {display: table-cell; }
+.tbl-scan-result .column-hidden{display: none}
 @media (min-width: 992px) {
   .full-screen .page-content-wrapper .page-content { margin-left: 0px;}
 }
