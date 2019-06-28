@@ -8,7 +8,7 @@ import {isEmpty} from 'lodash'
 import { Helpers } from 'my-utils'
 import { getAllTransaction} from "my-actions/report/TransactionAction";
 import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
-import { delTransaction, getDetailReportById} from "my-actions/report/TransactionAction";
+import { delTransaction} from "my-actions/report/TransactionAction";
 
 
 class ListOfTransaction extends Component {
@@ -16,7 +16,7 @@ class ListOfTransaction extends Component {
         super(props);
         this.state = {
             delValueID: '',
-            editValueID:'',
+            editValue:'',
             isOpenDelModal: false,
         }
     }
@@ -44,17 +44,11 @@ class ListOfTransaction extends Component {
             })
     };
 
-    toggleEditTransactionModal = (value_id) => {
-        if(value_id){
-            this.setState({
-                editValueID: value_id,
-            })
-            var valueID = {
-                id: value_id
-            }
-            console.log(value_id)
-            this.props.getDetailReportById(valueID);
-        }
+    toggleEditTransactionModal = (item) => {
+        this.setState({
+            editValue : item,
+        })
+        this.props.handleParent(item);
     }
 
     toggleDelTransactionModal = (value_id) => {
@@ -115,7 +109,7 @@ class ListOfTransaction extends Component {
                                     <td className="text-center"> {item.note} </td>
                                     <td className="text-center"> {item.created} </td>
                                     <td className="text-center"> <button className="text-success btn btn-link"
-                                                                         onClick={ () => self.toggleEditTransactionModal(item.id)}> <i className="fa fa-edit"></i> </button> </td>
+                                                                         onClick={ () => self.toggleEditTransactionModal(item)}> <i className="fa fa-edit"></i> </button> </td>
                                     <td className="text-center"> <button className="text-success btn btn-link font-red"
                                                                          onClick={ () => self.toggleDelTransactionModal(item.id)}> <i className="fa fa-close"></i> </button> </td>
                                 </tr>
@@ -157,7 +151,6 @@ const mapDispatchToProps = (dispatch) => {
     return {
         getAllTransaction: params => {dispatch(getAllTransaction(params))},
         delTransaction: params => dispatch(delTransaction(params)),
-        getDetailReportById: params => {dispatch(getDetailReportById(params))},
     }
 };
 

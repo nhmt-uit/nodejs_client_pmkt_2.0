@@ -1,26 +1,55 @@
 import React, {Component} from 'react'
-import ListOfTransaction from "my-containers/report/transaction/ListOfTransaction";
-import CreateTransaction from "my-containers/report/transaction/CreateTransaction";
+import {ListOfTransaction, CreateTransaction, BillTransaction} from "my-containers/report/transaction";
 
-class TransactionPage extends Component{
+class TransactionPage extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
-            editValueID: '',
+            editValue: '',
+
+            showBill: '',
+            memberId: '',
+            cycleId: '',
         }
     }
 
-    callbackListOfTransaction = valueID =>{
+    callbackListOfTransaction = item =>{
         this.setState({
-            editValueID: valueID,
+            editValue: item,
         })
+        this.child.callCreateTransaction(item)
+    };
+
+    getDataFromCreateTransaction = (Data) => {
+        if(Data.memberId){
+            this.setState({
+                showBill: Data.showBill,
+                memberId: Data.memberId,
+            })
+        } else if (Data.cycleId){
+            this.setState({
+                showBill: Data.showBill,
+                cycleId: Data.cycleId,
+            })
+        } else{
+            this.setState({
+                showBill: Data.showBill,
+                memberId: '',
+                cycleId: '',
+            })
+        }
+
     };
 
     render() {
         return (
             <div>
                 <div className="col-xs-5">
-                    <CreateTransaction editValueID ={this.state.editValueID} />
+                    <CreateTransaction editValue = {this.state.editValue} onRef={ref => (this.child = ref)}
+                                        callParentFromCreateTransaction={this.getDataFromCreateTransaction}/>
+                </div>
+                <div className="col-xs-7">
+                    { this.state.showBill ? (<BillTransaction {...this.state}/>) : ''}
                 </div>
                 <div></div>
                 <div className="row">

@@ -61,14 +61,14 @@ export const delTransaction = (id) => {
     }
 }
 
-export const getDetailReportById = (id) => {
+export const getDetailReport = (post) => {
     return(dispatch) => {
-        return TransactionService.getDetailReportById(id).then(res =>{
+        return TransactionService.getDetailReport(post).then(res =>{
 
             dispatch({
                 type: TransactionActionType.GET_DETAIL_REPORT,
                 payload: res,
-                id: id,
+                post: post,
             })
         })
     }

@@ -25,7 +25,6 @@ class MemberContainer extends Component {
             selectedMember : e.target.value,
         })
         this.props.changeSelectedMember(e.target.value)
-
     }
 
     render() {
