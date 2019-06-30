@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { AccountantFormScanContainer, AccountantListBankerContainer, AccountantStatusAccountContainer, AccountantListBankerUtilContainer } from "my-containers/accountant"
-import { SocketService, EventsService } from 'my-utils/core';
+import { SocketService } from 'my-utils/core';
 
 class AccountantListPage extends Component {
     componentWillUnmount() {

@@ -37,18 +37,28 @@ class SocketService {
     send(event, args, uuid) {
         let _uuid = uuid || uuidv4()
         this.listUUID2Event[_uuid] = event
-        
-        this.socket.send({___Send: true, event: event, uuid: _uuid, args: [args]})
 
         switch (event) {
             case "init":
+                this.socket.send({___Send: true, event: event, uuid: _uuid, args: [args]})
                 // Emit channel when first init data
                 EventsService.emit('accountant_init', {type: "notify", message: "init_data"})
             break
+            case "accountant_manual_init_banker":
+                this.socket.send({___Send: true, event: "init", uuid: _uuid, args: [args]})
+            break
+            case "accountant_manual_scan_form_banker":
+                this.socket.send({___Send: true, event: "scan", uuid: _uuid, args: [args]})
+            break
+            case "accountant_manual_submit_form_banker":
+                this.socket.send({___Send: true, event: "scan", uuid: _uuid, args: [args]})
+            break
             case "scan":
+                this.socket.send({___Send: true, event: event, uuid: _uuid, args: [args]})
                 // Map uuid & account_id
             break
             case "get_report":
+                this.socket.send({___Send: true, event: event, uuid: _uuid, args: [args]})
                 this.listUUID2AccID[_uuid] = args.id
             break
             default: break
@@ -61,6 +71,15 @@ class SocketService {
             switch (this.listUUID2Event[msg.uuid]) {
                 case "init":
                     EventsService.emit('accountant_init', msg)
+                break
+                case "accountant_manual_init_banker":
+                    EventsService.emit('accountant_manual_init', msg)
+                break
+                case "accountant_manual_scan_form_banker":
+                    EventsService.emit('accountant_manual_scan_form_banker', msg)
+                break
+                case "accountant_manual_submit_form_banker":
+                    EventsService.emit('accountant_manual_submit_form_banker', msg)
                 break
                 case "scan":
                     if (msg.type === "notify")
@@ -125,6 +144,8 @@ class SocketService {
         this.socket.off('message')
         this.socket.disconnect()
         this.socket = null
+
+        this.unListenerResponse()
     }
 
     /*

@@ -12,3 +12,17 @@ export const getBanker = () => {
         })
     }
 }
+
+
+export const getBankerByMember = () => {
+    return (dispatch) => {
+        let params = {exclude_banker: true, arr_rs: true}
+        return BankerService.getBankerByMember(params).then(res => {
+
+            dispatch({
+                type: BankerActionType.GET_BANKER_BY_MEMBER,
+                payload: res,
+            })
+        })
+    }
+}

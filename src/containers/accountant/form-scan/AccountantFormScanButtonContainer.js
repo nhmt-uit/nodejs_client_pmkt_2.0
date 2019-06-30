@@ -3,11 +3,11 @@ import { connect } from 'react-redux'
 import { withRouter } from "react-router"
 import { isEqual as _isEqual, map as _map, isEmpty as _isEmpty } from 'lodash'
 
-import { toggleFullScreen } from 'my-actions/systems/AppAction';
 import { socketScanData, socketStopScanData } from 'my-actions/AccountantAction';
 import { TransComponent } from 'my-components'
 import { RoutesService } from 'my-routes'
 import { SocketService } from 'my-utils/core';
+import { Helpers } from 'my-utils'
 
 class AccountantFormScanButtonContainer extends Component {
 
@@ -38,6 +38,7 @@ class AccountantFormScanButtonContainer extends Component {
     |--------------------------------------------------------------------------
     */
     handleSaveReport = _ => {
+        Helpers.showLoading()
         const payloadBankerAccount = this.props.bankerAccount.filter(item => item.type === 'resolve' && !_isEmpty(item.data.reportSave.reportSaveList))
         for(let x in payloadBankerAccount) {
             const requestObj = {
@@ -47,7 +48,6 @@ class AccountantFormScanButtonContainer extends Component {
             }
             SocketService.send('save_report', requestObj)
         }
-
         this.props.history.push(RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT'))
     }
 

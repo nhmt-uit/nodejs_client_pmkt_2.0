@@ -3,7 +3,7 @@ import { LoginPage, SecureCodePage, ResetSecurePasswordPage } from 'my-pages/aut
 import { ChangePasswordPage, ChangePassword2Page, ChangeSecureCodePage } from 'my-pages/navigation';
 
 import RoutesService from './RoutesService'
-import { AccountantListPage, AccountantManualPage } from 'my-pages/accountant';
+import { AccountantListPage, AccountantManualBankerPage, AccountantManualLoginPage, AccountantManualPage } from 'my-pages/accountant';
 import { ReportPage, ReportDetailPage } from 'my-pages/report';
 import TransactionPage from "my-pages/report/transaction/TransactionPage";
 
@@ -41,6 +41,16 @@ const Routes = [
 	},
 	{
 		path: RoutesService.getPath('ADMIN', 'ACCOUNTANT_MANUAL'),
+		exact: true,
+		component: AccountantManualBankerPage,
+	},
+	{
+		path: RoutesService.getPath('ADMIN', 'ACCOUNTANT_MANUAL_PROCESS', { type: 'login' }),
+		exact: true,
+		component: AccountantManualLoginPage,
+	},
+	{
+		path: RoutesService.getPath('ADMIN', 'ACCOUNTANT_MANUAL_PROCESS', { type: '' }),
 		exact: true,
 		component: AccountantManualPage,
 	},

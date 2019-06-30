@@ -163,7 +163,7 @@ class AccountantBankerAccountResultRowContainer extends Component {
             // final_xhtml.push(xhtml)
         })
         return (
-            <tbody key={uuidv4()}>
+            <tbody>
                 {xhtml}
             </tbody>
         )

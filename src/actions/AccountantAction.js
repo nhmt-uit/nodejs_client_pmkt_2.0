@@ -12,7 +12,6 @@ const sleep = (milliseconds) => {
     return new Promise(resolve => setTimeout(resolve, milliseconds))
 }
 
-const sleepTime = 200
 const timeWaitToDispatch = 500
 const firstNumberPayloadSend = 50
 
@@ -127,7 +126,7 @@ export const socketScanData = (params) => {
                 if(!_isEmpty(item)) SocketService.send('scan', item.arg, item.uuid)
 
                 payloadReject.push(res)
-                await sleep(timeWaitToDispatch)
+                await sleep(timeWaitToDispatch * 2)
                 // Dispatch data to reducer
                 if(payloadReject.length !== 0 ) {
                     dispatch({

@@ -11,7 +11,6 @@ import { AppConfig } from 'my-constants'
 import BootstrapInputIcon from 'my-utils/components/date-picker/BootstrapInputIcon'
 import { FormScanGroupDateComponent } from 'my-components/accountant'
 import { socketInitData, checkBankerAccount } from 'my-actions/AccountantAction';
-import { SocketService } from 'my-utils/core';
 import { TransComponent } from 'my-components'
 import { AccountantFormScanButtonContainer, AccountantFormButtonFullScreenContainer } from 'my-containers/accountant'
 
@@ -32,6 +31,7 @@ class AccountantFormScanContainer extends Component {
 
     shouldComponentUpdate(newProps, newState) {
         if(!_isEqual(newProps.member, this.props.member)
+            || !_isEqual(newProps.isProcessing, this.props.isProcessing)
             || !_isEqual(newState.typeGroupDate, this.state.typeGroupDate)
             || !_isEqual(newState.from_date, this.state.from_date)
             || !_isEqual(newState.typeGroupDate, this.state.typeGroupDate)
@@ -197,7 +197,7 @@ class AccountantFormScanContainer extends Component {
                                 </label>
                             </div>
                         </div>
-                        <FormScanGroupDateComponent changeGroupDate={this.changeGroupDate} typeGroupDate={typeGroupDate} />
+                        <FormScanGroupDateComponent changeGroupDate={this.changeGroupDate} typeGroupDate={typeGroupDate} disabled={this.props.isProcessing} />
 
                         <div className="clearfix"></div>
                         <div className="form-group input-xlarge">
@@ -208,20 +208,23 @@ class AccountantFormScanContainer extends Component {
                                 ItemRenderer={this.renderOption}
                                 valueRenderer={this.renderValue}
                                 filterOptions={this.filterSearch}
+                                disabled={this.props.isProcessing}
                                 />
                         </div>
                         <div className="form-group">
                             <DatePicker customInput={<BootstrapInputIcon />}
                                 name="from_date"
                                 onChange={this.onChangeDateFrom} selected={from_date}
-                                dateFormat={AppConfig.FORMAT_DATE_DATEPICKER} />
+                                dateFormat={AppConfig.FORMAT_DATE_DATEPICKER}
+                                disabled={this.props.isProcessing} />
                             
                         </div>
                         <div className="form-group">
                             <DatePicker customInput={<BootstrapInputIcon />}
                                 name="from_date"
                                 onChange={this.onChangeDateTo} selected={to_date}
-                                dateFormat={AppConfig.FORMAT_DATE_DATEPICKER} />
+                                dateFormat={AppConfig.FORMAT_DATE_DATEPICKER}
+                                disabled={this.props.isProcessing}  />
                         </div>
                         <AccountantFormScanButtonContainer from_date={this.state.from_date} to_date={this.state.to_date} />
                     </form>
@@ -234,6 +237,7 @@ class AccountantFormScanContainer extends Component {
 const mapStateToProps = state => {
     return {
         member : state.AccountantReducer.member,
+        isProcessing : state.AccountantReducer.isProcessing,
     }
 }
 

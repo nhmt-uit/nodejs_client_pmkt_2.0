@@ -1,6 +1,5 @@
 import React from "react";
 import {compose} from "redux";
-import {reduxForm} from "redux-form";
 import {connect} from "react-redux";
 import { getBanker } from "my-actions/banker/BankerAction";
 
@@ -13,7 +12,7 @@ class BankerListContainer extends React.Component{
 
     render() {
         var DATA = {};
-        DATA = this.props.bankerList.payload;
+        DATA = this.props.bankerList;
         // console.log("DATA:", typeof DATA);
         if(isEmpty(DATA)){
             return null;
@@ -46,11 +45,9 @@ class BankerListContainer extends React.Component{
 }
 
 const mapStateToProps = state => {
-    let initialValues = {};
-    if(state.form.banker){
-        initialValues = state.form.banker.values;
+    return {
+        bankerList: state.banker.payload
     }
-    return {initialValues, auth: state.AuthReducer, bankerList: state.banker}
 };
 
 const mapDispatchToProps = (dispatch) => {
@@ -60,6 +57,5 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 export default compose(
-    reduxForm({form: 'banker'}),
     connect(mapStateToProps, mapDispatchToProps),
 )(BankerListContainer);

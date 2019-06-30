@@ -15,6 +15,8 @@ const listAdminRoutes = [
     /*==========================================================================*/
     { name: "ACCOUNTANT_MANUAL", path: "/accountant/manual", language: "en"},
     /*==========================================================================*/
+    { name: "ACCOUNTANT_MANUAL_PROCESS", path: "/accountant/manual/:bankerName/:type", language: "en"},
+    /*==========================================================================*/
     { name: "ACCOUNTANT_REPORT", path: "/accountant/report", language: "en"},
     /*==========================================================================*/
     { name: "ACCOUNTANT_REPORT_DETAIL", path: "/accountant/report/detail_template/:chuky_id", language: "en"},
@@ -111,7 +113,7 @@ class RoutesService {
             });
 
             //Remove All Params Without Specified
-            path = path.replace(/:.*[^/]?[^?]?/gi, "");
+            // path = path.replace(/:.*[^/]?[^?]?/gi, "");
 
             //Remove Last / In Path
             path = path.replace(/\/$/gi, "");

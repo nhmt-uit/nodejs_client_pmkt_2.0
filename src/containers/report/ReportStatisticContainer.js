@@ -14,7 +14,6 @@ import { LoadingComponent, TransComponent } from 'my-components';
 import { ReportByMember } from 'my-components/report';
 import { CookieService } from 'my-utils/core';
 import { RoutesService } from 'my-routes';
-import { isConditional } from 'babel-types';
 
 class ReportStatisticContainer extends Component {
     constructor(props) {
