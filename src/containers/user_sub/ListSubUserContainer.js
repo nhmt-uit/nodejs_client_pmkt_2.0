@@ -60,6 +60,7 @@ class ListSubUserContainer extends Component{
 
     render() {
         const {t} = this.props
+        console.log("AAAA",this.props)
         var DATA = this.props.memberSub.memberSub;
         if(isEmpty(DATA)){
             return null;

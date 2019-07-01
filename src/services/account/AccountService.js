@@ -1,11 +1,34 @@
+import { groupBy as _groupBy } from 'lodash'
+
 import { AppConfig} from 'my-constants'
 import { BaseService, HttpService} from 'my-utils/core'
 
 class AccountService extends BaseService {
     serviceUrl = `${AppConfig.API_URL}/account`
 
-    getMember() {
-        return HttpService.post(`${this.serviceUrl}`)
+    getAccount() {
+        return HttpService.post(`${this.serviceUrl}`).then(res => {
+            if (res.status) {
+                let bankerList = _groupBy(res.res.data.List, 'banker')
+                let optBanker = []
+                if(bankerList) {
+                    for(let x in bankerList) {
+                        let groupOtion = []
+                        let bankerId, bankerName
+                        if(bankerList[x].length !== 0) {
+                            groupOtion = bankerList[x].map(item => {
+                                bankerId = item.banker
+                                bankerName = item.banker_name
+                                return { label: item.acc_name.toUpperCase(), value: item.id, bankerId: bankerId}
+                            })
+                        }
+                        optBanker.push({ value: bankerId, label: bankerName.toUpperCase(), options: groupOtion})
+                    }
+                }
+                res.res.data.bankerAccountMap = optBanker
+            }
+            return res
+        })
     }
 
     deleteAccount(id) {

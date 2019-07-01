@@ -2,6 +2,7 @@ import * as AppActionType from './AppActionType'
 import * as LanguageActionType from './LanguageActionType'
 import * as AuthActionType from './AuthActionType'
 import * as AccountantActionType from './AccountantActionType'
+import * as AccountantManualActionType from './AccountantManualActionType'
 import * as NotificationActionType from './NotificationActionType'
 import * as BankerActionType from './BankerActionType'
 import * as ChangePasswordActionType from './ChangePasswordActionType'
@@ -18,6 +19,7 @@ export {
     LanguageActionType,
     AuthActionType,
     AccountantActionType,
+    AccountantManualActionType,
     NotificationActionType,
     BankerActionType,
     ChangePasswordActionType,

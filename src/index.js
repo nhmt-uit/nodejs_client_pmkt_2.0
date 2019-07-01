@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux';
+import { middleware as flashMiddleware } from 'redux-flash'
 import thunk from 'redux-thunk';
 
 
@@ -11,10 +12,12 @@ import 'my-utils/i18n';
 import * as serviceWorker from './serviceWorker';
 
 
+const flashOptions = { timeout: 5000 }
+
 const store = createStore(
     appReducers,
     compose(
-        applyMiddleware(thunk),
+        applyMiddleware(thunk, flashMiddleware()),
         window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
     )
 );

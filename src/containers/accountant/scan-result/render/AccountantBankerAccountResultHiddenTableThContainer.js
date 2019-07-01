@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { isEqual as _isEqual } from 'lodash'
 
 import { TransComponent } from 'my-components'

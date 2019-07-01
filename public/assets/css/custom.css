@@ -10,6 +10,8 @@ html {
   }
 }
 
+.input-group-btn .btn { margin-right: 0px !important}
+
 .zopim{display: none !important;}
 .bg-default{background-color: #f2f2f2 !important;color: #333 !important;}
 .bg-success{background-color: #dff0d8 !important;}
@@ -150,7 +152,7 @@ html {
  margin-bottom: 0px;
 }
 .table label.mt-checkbox:last-of-type {
-  margin-bottom: 0px;
+  /* margin-bottom: 0px; */
 }
 
 .list-banker-account .portlet-body {
@@ -282,17 +284,17 @@ html {
     cursor: auto;
 }
 
-.tbl-scan-result td, .tbl-scan-result th {font-size: 12px; vertical-align: middle !important;}
+.tbl-scan-result td, .tbl-scan-result th {font-size: 12px !important; vertical-align: middle !important;}
 
 .tbl-scan-result tbody:hover td[rowspan], .tbl-scan-result tr:hover td {
   background-color: rgba(0,0,0,.075) !important;
 }
 
 .tbl-scan-result {
-  /* animation: fadein 1.5s;
+  animation: fadein 1.5s;
   -moz-animation: fadein 1.5s;
   -webkit-animation: fadein 1.5s;
-  -o-animation: fadein 1.5s; */
+  -o-animation: fadein 1.5s;
 }
 
 @keyframes fadein {
@@ -371,4 +373,35 @@ html {
 .tbl-scan-result .column-hidden{display: none}
 @media (min-width: 992px) {
   .full-screen .page-content-wrapper .page-content { margin-left: 0px;}
+}
+
+.form-banker-login {margin: 60px auto;max-width: 400px;padding: 20px;box-shadow: 0px 0px 10px 5px #ccc;}
+.form-banker-login .form-title {margin-bottom: 20px}
+.form-banker-login .logo {margin-bottom: 20px}
+.form-banker-login .logo img {max-height: 45px}
+.form-banker-login .captcha img { cursor: pointer;}
+.position-relative {
+  position: relative;
+}
+
+.position-absolute {
+  position: absolute;
+}
+
+.btn-money-exchange {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+.display-inline-block {
+  display: inline-block;
+}
+
+.max-width-40 {
+  width: 40px;
+}
+
+.td-exchange-money .mt-checkbox {
+  padding-left: 14px
 }

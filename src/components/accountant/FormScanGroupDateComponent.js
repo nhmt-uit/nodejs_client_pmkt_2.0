@@ -12,17 +12,17 @@ const groupDateType = [
 class FormScanGroupDateComponent extends Component {
     render() {
         
-        const { changeGroupDate, typeGroupDate } = this.props
+        const { changeGroupDate, typeGroupDate, disabled } = this.props
 
         const groupDateTypeXhtml = groupDateType.map((item, index) => {
             return (
                 <label key={index} className="mt-radio">
-                    <input type="radio" name="optionsRadios" onChange={() => changeGroupDate(item.value)} checked={typeGroupDate === item.value} />
+                    <input type="radio" name="optionsRadios" onChange={() => changeGroupDate(item.value)} checked={typeGroupDate === item.value} disabled={disabled} />
                     <TransComponent i18nKey={item.label} />
                     <span></span>
                 </label>
             )
-         })
+        })
         return (
             <div className="form-group">
                 <div className="mt-radio-inline">

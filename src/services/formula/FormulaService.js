@@ -17,6 +17,10 @@ class FormulaService extends BaseService {
         const payload = {congthuctinhId}
         return HttpService.post(`${this.serviceUrl}/create_new/delete_link_formula_detail`, payload)
     }
+
+    saveFormulaAccount(payload) {
+        return HttpService.post(`${this.serviceUrl}/create_new/merge`, payload)
+    }
 }
 
 export default new FormulaService()

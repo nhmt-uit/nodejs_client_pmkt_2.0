@@ -202,6 +202,8 @@ export const AccountantReducer = (state = defaultState, action) => {
 					newBankerAccount[objIndex].message = "Stopped"
 				}
 			}
+			// Stop listen when scan finish
+			if (newIsProcessing === false) SocketService.unListenerResponse()
 			return {...state, bankerAccount: newBankerAccount, isProcessing: false}
 		case AccountantActionType.ACCOUNTANT_DELETE_BANKER_ACCOUNT:
 			newBankerAccount = newBankerAccount.filter(item => item.id !== action.item.id)

@@ -3,9 +3,10 @@ import { LoginPage, SecureCodePage, ResetSecurePasswordPage } from 'my-pages/aut
 import { ChangePasswordPage, ChangePassword2Page, ChangeSecureCodePage } from 'my-pages/navigation';
 
 import RoutesService from './RoutesService'
-import { AccountantListPage, AccountantManualPage } from 'my-pages/accountant';
+import { AccountantListPage, AccountantManualBankerPage, AccountantManualLoginPage, AccountantManualPage } from 'my-pages/accountant';
 import { ReportPage, ReportDetailPage } from 'my-pages/report';
 import TransactionPage from "my-pages/report/transaction/TransactionPage";
+import { CreateNewPage } from 'my-pages/manages';
 import SubUserPage from "../pages/manage/SubUserPage";
 
 const Routes = [
@@ -76,8 +77,8 @@ const Routes = [
 		component: TransactionPage,
 	},
 	{
-		path: RoutesService.getPath('ADMIN', 'ACCOUNT_SUB'),
-		exact: true,
+		path: RoutesService.getPath('ADMIN', 'MANAGE_ACCOUNT_SUB'),
+		exact:true,
 		component: SubUserPage,
 	},
 	{

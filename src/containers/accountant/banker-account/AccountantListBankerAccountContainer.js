@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { compose } from 'redux'
 import { connect } from 'react-redux'
 import { isEmpty as _isEmpty, isEqual as _isEqual, cloneDeep as _cloneDeep, pick as _pick } from 'lodash'
-import LazyLoad from 'react-lazyload';
 import uuidv4 from 'uuid/v4'
 
 import { AccountantItemBankerAccountContainer } from 'my-containers/accountant';

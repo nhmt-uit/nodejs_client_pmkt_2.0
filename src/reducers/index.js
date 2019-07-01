@@ -1,11 +1,13 @@
 import { combineReducers } from 'redux';
 import { reducer as formReducer } from 'redux-form';
+import { reducer as flashReducer } from 'redux-flash'
 
 // System Reducers
 import AppReducer from './systems/AppReducer';
 import LanguageReducer from './systems/LanguageReducer';
 import AuthReducer from './systems/AuthReducer';
 import AccountantReducer from './AccountantReducer';
+import AccountantManualReducer from './AccountantManualReducer';
 import NotificationReducer from './systems/NotificationReducer';
 import ChangePasswordReducer from './systems/ChangePasswordReducer';
 import BankerReducer from './banker/BankerReducer'
@@ -21,6 +23,8 @@ import AccountSubReducer from "./account_sub/AccountSubReducer"
 const appReducers = combineReducers({
     // Redux form reducer
     form: formReducer,
+    flash: flashReducer,
+
     banker: BankerReducer,
     alert: AlertReducer,
     report_detail: ReportDetailReducer,

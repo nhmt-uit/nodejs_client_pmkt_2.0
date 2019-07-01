@@ -18,7 +18,7 @@ class AccountantListBankerContainer extends Component {
         }
 
         if(!_isEqual(newProps.socketInitStatus, this.props.socketInitStatus)
-            || !_isEqual(oldBankerAccount, oldBankerAccount)
+            || !_isEqual(oldBankerAccount, newBankerAccount)
             )
             return true
         return false;

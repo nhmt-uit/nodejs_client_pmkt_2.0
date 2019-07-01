@@ -29,7 +29,7 @@ class FormLoginContainer extends React.Component {
         e.preventDefault();
     };
 
-    handleKeyDown(e) {
+    handleKeyDown = e => {
         if (e.key === 'Enter' && e.shiftKey === false) {
             return this.handleSubmit(e);
         }
@@ -58,7 +58,7 @@ class FormLoginContainer extends React.Component {
                             <img src="/assets/images/logo.png" alt="logo vw3" />
                         </a>
                     </div>
-                    <form className="login-form" onSubmit={this.handleSubmit} onKeyDown={this.handleKeyDown.bind(this)}>
+                    <form className="login-form" onSubmit={this.handleSubmit} onKeyDown={e => this.handleKeyDown(e)}>
                         <h3 className="form-title font-red"><TransComponent i18nKey="Login to VW3 Application" /></h3>
                         <div className="alert alert-danger display-hide">
                             <button className="close" data-close="alert" />

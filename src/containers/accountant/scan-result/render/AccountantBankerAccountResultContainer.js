@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux'
 import { Table } from 'react-bootstrap'
 import { isEmpty as _isEmpty, uniq as _uniq, cloneDeep as _cloneDeep, isEqual as _isEqual} from 'lodash'
@@ -32,20 +32,20 @@ class AccountantBankerAccountResultContainer extends Component {
         
         return item.map((node, idx) => {
             return (
-                <>
+                <Fragment key={uuidv4()}>
                     {(isShowAllFormula === false && this.handleNestedChedkHasFormula(node)) || (isShowAllFormula) ?
-                        <AccountantBankerAccountResultRowContainer key={uuidv4()} parent={parent} item={node} bankerAccount={this.props.payload} bankerAccountType={this.props.bankerAccountType} />
+                        <AccountantBankerAccountResultRowContainer parent={parent} item={node} bankerAccount={this.props.payload} bankerAccountType={this.props.bankerAccountType} />
                         : null
                     }
                     {node.child.length === 0 || (typeof node.isShowChild !== "undefined" && node.isShowChild === false) ? null : this.handleNestedDataAccountant(node.child, node)}
-                </>
+                </Fragment>
             )
         })
     }
 
     handleProcessDataWhenActiveFilterNoFormula = (item) => {
-        const isShowAllFormula = this.props.isShowAllFormula
         if (_isEmpty(item)) return
+        item = [...item]
         return item.map(node => {
             if(_uniq(node.child.map(node => this.handleNestedChedkHasFormula(node))).indexOf(true) === -1) {
                 node.child = []
@@ -76,13 +76,11 @@ class AccountantBankerAccountResultContainer extends Component {
     }
 
     render() {
-        console.log("render AccountantBankerAccountResultContainer")
         const { payload, isFullScreen, isShowAllFormula } = this.props
         if (_isEmpty(payload)) return null
 
-        const dataFieldList = payload.dataFieldList
         const dataHiddenFields = payload.dataHiddenFields
-        const accountant = isShowAllFormula === false ? this.handleProcessDataWhenActiveFilterNoFormula(payload.accountant) : payload.accountant
+        const accountant = isShowAllFormula === false ? this.handleProcessDataWhenActiveFilterNoFormula(_cloneDeep(payload.accountant)) : _cloneDeep(payload.accountant)
         
         return (
             <div className="panel-body bootstrap-table">
@@ -91,9 +89,7 @@ class AccountantBankerAccountResultContainer extends Component {
                         <tr>
                             <th><TransComponent i18nKey="Account" /></th>
                             <th><TransComponent i18nKey="Report Type" /></th>
-                            {/* dynamic data */}
-                            {this.generateDynamicColumn()}
-                            {/* dynamic data */}
+                            {this.generateDynamicColumn()} {/* dynamic data */}
                             <th>
                                 <span style={{float: 'left', padding: "5px 10px"}}><TransComponent i18nKey="Formula" /></span>
                                 <a className="btn btn-default btn-sm btn-fullscreen bg-blue-oleo bg-font-blue-oleo" href="javascript:;" onClick={_ => this.props.toggleFullScreen() } style={{float: 'right'}}>
@@ -101,9 +97,7 @@ class AccountantBankerAccountResultContainer extends Component {
                                     {isFullScreen ? <TransComponent i18nKey="Hide" /> : <TransComponent i18nKey="Detail" />}
                                 </a>
                             </th>
-                            {/* Hidden Column */}
-                            <AccountantBankerAccountResultHiddenTableThContainer dataHiddenFields={dataHiddenFields} />
-                            {/* Hidden Column */}
+                            <AccountantBankerAccountResultHiddenTableThContainer dataHiddenFields={dataHiddenFields} /> {/* Hidden Column */}
                             <th><TransComponent i18nKey="Member" /></th>
                             <th><TransComponent i18nKey="Result" /></th>
                             <th><TransComponent i18nKey="Currency" /></th>
