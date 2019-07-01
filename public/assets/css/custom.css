@@ -380,3 +380,28 @@ html {
 .form-banker-login .logo {margin-bottom: 20px}
 .form-banker-login .logo img {max-height: 45px}
 .form-banker-login .captcha img { cursor: pointer;}
+.position-relative {
+  position: relative;
+}
+
+.position-absolute {
+  position: absolute;
+}
+
+.btn-money-exchange {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+.display-inline-block {
+  display: inline-block;
+}
+
+.max-width-40 {
+  width: 40px;
+}
+
+.td-exchange-money .mt-checkbox {
+  padding-left: 14px
+}
