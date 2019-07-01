@@ -15,7 +15,7 @@ const sleep = (milliseconds) => {
 const timeWaitToDispatch = 500
 const firstNumberPayloadSend = 50
 
-export const socketInitData = () => {
+export const socketInitData = (params) => {
     SocketService.connect('/accountant')
     return (dispatch) => {
         EventsService.on('accountant_init', res => {
@@ -47,7 +47,14 @@ export const socketInitData = () => {
                 
         // Active listener before send request
         SocketService.listenerResponse()
-        SocketService.send('init', { username: AuthService.getUsername() })
+
+        let objInit = { username: AuthService.getUsername() }
+        if(!_isEmpty(params) && params.type === "manual") {
+            objInit.type = "home"
+            objInit.bankerName = params.bankerName
+        }
+
+        SocketService.send('init', objInit)
     }
 };
 
@@ -81,6 +88,16 @@ export const socketScanData = (params) => {
                     login_name: login_name
                 }
             }
+
+            if (typeof params.more_post !== "undefined") requestObj.more_post = params.more_post
+
+            // Incase Accountant Manual
+            if(!_isEmpty(params.bankerName)) {
+                if (typeof params.flagType !== "undefined") requestObj.more_post.flag_type = params.flagType
+                if (typeof params.accountRole !== "undefined") requestObj.more_post.is_sub = params.accountRole
+                requestObj.more_post.is_scan_by_hand = true
+            }
+
             queuesRequest.push({uuid: uuid, arg: requestObj})
 
             // First send package to websocket

@@ -6,14 +6,19 @@ import { withTranslation } from 'react-i18next'
 import { Field, reduxForm } from 'redux-form';
 import {get as _get, isEmpty as _isEmpty} from 'lodash';
 
-import { socketAccountantManualInitData, socketAccountantManualGetFromData, socketAccountantManualSubmitFromData} from 'my-actions/AccountantManualAction';
+import { socketAccountantManualInitData, socketAccountantManualResetData, socketAccountantManualGetFromData, socketAccountantManualSubmitFromData} from 'my-actions/AccountantManualAction';
 import {TransComponent} from 'my-components'
+import { RoutesService } from 'my-routes';
 
 class BankerLoginContainer extends Component {
   
-    componentWillMount() {
+    componentDidMount() {
         const bankerName = this.props.match.params.bankerName
         this.props.socketAccountantManualInitData({bankerName})
+    }
+
+    componentWillUnmount() {
+        this.props.socketAccountantManualResetData()
     }
 
     /*
@@ -51,7 +56,12 @@ class BankerLoginContainer extends Component {
         const { isRenderFinish, payload, payload_reject, banker } = this.props
         const bankerName = this.props.match.params.bankerName
         const errorSubmit = _get(payload, 'err')
-        console.log(payload_reject)
+        const isLoginSuccess = _get(payload, 'loginSuccess', false)
+
+        if(isLoginSuccess) {
+            this.props.history.push(RoutesService.getPath('ADMIN', 'ACCOUNTANT_MANUAL_PROCESS', { bankerName: bankerName, type: '' }))
+        }
+
         return (
             <div className="portlet light bordered">
                 <div className="portlet-title">
@@ -174,6 +184,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch) => {
     return {
         socketAccountantManualInitData: params => {dispatch(socketAccountantManualInitData(params))},
+        socketAccountantManualResetData: _ => {dispatch(socketAccountantManualResetData())},
         socketAccountantManualGetFromData: params => {dispatch(socketAccountantManualGetFromData(params))},
         socketAccountantManualSubmitFromData: params => {dispatch(socketAccountantManualSubmitFromData(params))},
     }
@@ -183,6 +194,6 @@ export default compose(
     reduxForm({form: 'form_accountant_manual_login'}),
     connect(mapStateToProps, mapDispatchToProps),
     withTranslation(),
-    withRouter,
+    withRouter
 )(BankerLoginContainer);
 

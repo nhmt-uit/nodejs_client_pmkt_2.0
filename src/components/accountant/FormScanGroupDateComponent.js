@@ -22,7 +22,7 @@ class FormScanGroupDateComponent extends Component {
                     <span></span>
                 </label>
             )
-         })
+        })
         return (
             <div className="form-group">
                 <div className="mt-radio-inline">

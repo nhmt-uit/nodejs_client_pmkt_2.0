@@ -13,7 +13,7 @@ class AccountantStatusAccountContainer extends Component {
         isOpenModal: false,
         selectedItem: null
     };
-    
+
     shouldComponentUpdate(newProps, newState) {
         if(!_isEqual(newState.typeModal, this.state.typeModal)
             || !_isEqual(newState.modal, this.state.modal)

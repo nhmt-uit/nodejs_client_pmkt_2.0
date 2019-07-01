@@ -6,6 +6,7 @@ import { BaseComponent } from "my-utils/core"
 import { AppConfig } from "my-constants"
 import { MainLayout, AuthenticationLayout } from 'my-pages/layouts'
 import { Loading } from 'my-pages/layouts/partials';
+import { FlashMessagesContainer } from 'my-containers/systems';
 import { CookieService } from 'my-utils/core';
 import { changeLanguage } from 'my-actions/systems/LanguageAction';
 import { RoutesService } from 'my-routes'
@@ -46,6 +47,7 @@ class AppPage extends BaseComponent {
 			<>
 				<RenderComponent />
 				<Loading />
+				<FlashMessagesContainer />
 			</>
 		);
 	}

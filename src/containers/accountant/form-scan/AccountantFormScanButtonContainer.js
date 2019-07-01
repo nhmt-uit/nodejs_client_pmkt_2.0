@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from "react-router"
+import { Link } from 'react-router-dom'
 import { isEqual as _isEqual, map as _map, isEmpty as _isEmpty } from 'lodash'
 
 import { socketScanData, socketStopScanData } from 'my-actions/AccountantAction';
@@ -8,6 +9,7 @@ import { TransComponent } from 'my-components'
 import { RoutesService } from 'my-routes'
 import { SocketService } from 'my-utils/core';
 import { Helpers } from 'my-utils'
+import BankerService from 'my-services/banker/BankerService'
 
 class AccountantFormScanButtonContainer extends Component {
 
@@ -28,8 +30,22 @@ class AccountantFormScanButtonContainer extends Component {
     |--------------------------------------------------------------------------
     */
     handleRequestScan = _ => {
+        const bankerName = this.props.match.params.bankerName
+
         let ids = _map(this.props.bankerAccount.filter(item => item.checked && item.type !== 'resolve' && !item.data), 'id')
-        this.props.socketScanData({ids: ids, from_date: this.props.from_date, to_date: this.props.to_date})
+        let objRequestScan = {ids: ids, from_date: this.props.from_date, to_date: this.props.to_date}
+        if (!_isEmpty(ids)) {
+            // Incase Accountant Manual
+            if (!_isEmpty(bankerName)) {
+                const objBanker = BankerService.getFlagType(bankerName)
+
+                objRequestScan.bankerName = bankerName
+                if(objBanker.account_role.length > 0) objRequestScan.accountRole = this.props.accountRole
+                if(objBanker.flag_type.length > 0) objRequestScan.flagType = this.props.flagType
+            }
+
+            this.props.socketScanData(objRequestScan)
+        }
     }
 
     /*
@@ -64,14 +80,16 @@ class AccountantFormScanButtonContainer extends Component {
 
     render() {
         const { socketInitStatus, isProcessing, isAllowReport } = this.props
+        const bankerName = this.props.match.params.bankerName
+
         if(socketInitStatus !== "finish") return null
         return (
             <div className="form-group">
-                {!isProcessing ? <a href="#/" className="btn btn-default red" onClick={this.handleRequestScan}><TransComponent i18nKey="Scan" /></a> : null}
-                {isProcessing ? <a href="#/" className="btn btn-default grey" onClick={this.handleStopScan}><TransComponent i18nKey="Stop" /></a> : null}
-                {/* <button type="submit" className="btn btn-default grey">{t("Sign Out")}</button> */}
-                {isAllowReport ? <a href="#/" type="submit" className="btn btn-default red" onClick={_ => this.handleSaveReport() }><TransComponent i18nKey="Save report" /></a> : null}
-                {isAllowReport ? <a href="#/" type="submit" className="btn btn-default red"><TransComponent i18nKey="export to csv" /></a> : null}
+                { !isProcessing ? <a href="#/" className="btn btn-default red" onClick={this.handleRequestScan}><TransComponent i18nKey="Scan" /></a> : null}
+                { isProcessing ? <a href="#/" className="btn btn-default grey" onClick={this.handleStopScan}><TransComponent i18nKey="Stop" /></a> : null}
+                { bankerName ? <Link to={RoutesService.getPath('ADMIN', 'ACCOUNTANT_MANUAL_PROCESS', { bankerName: bankerName, type: 'login' })} className="btn btn-default grey"><TransComponent i18nKey="Sign Out" /></Link> : null}
+                { typeof bankerName === "undefined" && isAllowReport ? <a href="#/" type="submit" className="btn btn-default red" onClick={_ => this.handleSaveReport() }><TransComponent i18nKey="Save report" /></a> : null}
+                { typeof bankerName === "undefined" && isAllowReport ? <a href="#/" type="submit" className="btn btn-default red"><TransComponent i18nKey="export to csv" /></a> : null}
             </div>
         )
     }

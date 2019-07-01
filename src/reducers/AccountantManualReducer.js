@@ -12,7 +12,7 @@ let defaultState = {
 export const AccountantManualReducer = (state = defaultState, action) => {
 	switch(action.type){
 		case AccountantManualActionType.ACCOUNTANT_MANUAL_SOCKET_INIT_DATA:
-			return {defaultState}
+			return {...defaultState}
 		case AccountantManualActionType.ACCOUNTANT_MANUAL_SOCKET_GET_BANKER_DATA:
 			return {...state, banker: action.banker}
 		case AccountantManualActionType.ACCOUNTANT_MANUAL_SOCKET_SCAN_FORM_BANKER: {

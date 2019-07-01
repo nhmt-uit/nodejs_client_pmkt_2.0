@@ -10,6 +10,8 @@ html {
   }
 }
 
+.input-group-btn .btn { margin-right: 0px !important}
+
 .zopim{display: none !important;}
 .bg-default{background-color: #f2f2f2 !important;color: #333 !important;}
 .bg-success{background-color: #dff0d8 !important;}
@@ -150,7 +152,7 @@ html {
  margin-bottom: 0px;
 }
 .table label.mt-checkbox:last-of-type {
-  margin-bottom: 0px;
+  /* margin-bottom: 0px; */
 }
 
 .list-banker-account .portlet-body {

@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import { reducer as formReducer } from 'redux-form';
+import { reducer as flashReducer } from 'redux-flash'
 
 // System Reducers
 import AppReducer from './systems/AppReducer';
@@ -21,6 +22,8 @@ import MemberReducer from "./member/MemberReducer";
 const appReducers = combineReducers({
     // Redux form reducer
     form: formReducer,
+    flash: flashReducer,
+
     banker: BankerReducer,
     alert: AlertReducer,
     report_detail: ReportDetailReducer,

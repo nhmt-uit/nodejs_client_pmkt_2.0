@@ -5,6 +5,15 @@ import { SocketService, EventsService } from 'my-utils/core';
 import { AuthService } from 'my-services/systems'
 
 
+export const socketAccountantManualResetData = params => {
+    return (dispatch) => {
+        // Dispatch data to reducer
+        dispatch({
+            type: AccountantManualActionType.ACCOUNTANT_MANUAL_SOCKET_INIT_DATA,
+        });
+    }
+}
+
 export const socketAccountantManualInitData = params => {
     SocketService.connect('/accountant')
     return (dispatch) => {
@@ -60,11 +69,6 @@ export const socketAccountantManualInitData = params => {
                 EventsService.removeAllListeners('accountant_manual_scan_form_banker')
             }
         })
-
-        // Dispatch data to reducer
-        dispatch({
-            type: AccountantManualActionType.ACCOUNTANT_MANUAL_SOCKET_INIT_DATA,
-        });
                 
         // Active listener before send request
         SocketService.listenerResponse()

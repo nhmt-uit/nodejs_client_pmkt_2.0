@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { flashMessage } from 'redux-flash'
 import { isEmpty as _isEmpty, isEqual as _isEqual} from 'lodash'
 
 import { TransComponent } from 'my-components'
+import { RoutesService } from 'my-routes';
 
 class BankerAccountErrorContainer extends Component {
     state = {
@@ -14,6 +17,15 @@ class BankerAccountErrorContainer extends Component {
     shouldComponentUpdate(newProps, newState) {
         const bankerAccounts = this.props.bankerAccount.filter(item => ((item.type === "reject" && item.message !== "Empty data") || item.type === "stop"))
         const newPropsBankerAccounts = newProps.bankerAccount.filter(item => ((item.type === "reject" && item.message !== "Empty data") || item.type === "stop"))
+
+        const isManualAccountatLostSession = newProps.bankerAccount.filter(item => item.type === "reject" && item.message === "Lost session please login again")
+
+        const bankerName = this.props.match.params.bankerName
+        if(!_isEmpty(isManualAccountatLostSession) && !_isEmpty(bankerName)) {
+            this.props.flashMessage("Lost session please login again")
+            this.props.history.push(RoutesService.getPath('ADMIN', 'ACCOUNTANT_MANUAL_PROCESS', { bankerName: bankerName, type: 'login' }))
+        }
+
 
         if(!_isEqual(bankerAccounts, newPropsBankerAccounts)
             || !_isEqual(newState.isDelete, this.state.isDelete)
@@ -91,4 +103,9 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps, null)(BankerAccountErrorContainer);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        flashMessage: (message) => {dispatch(flashMessage(message))},
+    }
+};
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(BankerAccountErrorContainer))

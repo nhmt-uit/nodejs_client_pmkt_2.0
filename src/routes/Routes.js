@@ -6,6 +6,7 @@ import RoutesService from './RoutesService'
 import { AccountantListPage, AccountantManualBankerPage, AccountantManualLoginPage, AccountantManualPage } from 'my-pages/accountant';
 import { ReportPage, ReportDetailPage } from 'my-pages/report';
 import TransactionPage from "my-pages/report/transaction/TransactionPage";
+import { CreateNewPage } from 'my-pages/manages';
 
 const Routes = [
 	{
@@ -83,6 +84,16 @@ const Routes = [
 		path: RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT_TRANSACTION'),
 		exact: true,
 		component: TransactionPage,
+	},
+	/*
+	|--------------------------------------------------------------------------
+	| Manage Routes Area
+	|--------------------------------------------------------------------------
+	*/
+	{
+		path: RoutesService.getPath('ADMIN', 'MANAGE_CREATE_NEW'),
+		exact: true,
+		component: CreateNewPage,
 	},
 	{
 		path: '*',

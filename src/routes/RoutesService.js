@@ -33,17 +33,19 @@ const listAdminRoutes = [
     /*==========================================================================*/
     { name: "MANAGE_DASHBOARD", path: "/manage", language: "en"},
     /*==========================================================================*/
-    { name: "CONFIGURATION", path: "/manage/configuration", language: "en"},
+    { name: "MANAGE_CREATE_NEW", path: "/manage/create_new", language: "en"},
     /*==========================================================================*/
-    { name: "FORMULA", path: "/manage/formula", language: "en"},
+    { name: "MANAGE_CONFIGURATION", path: "/manage/configuration", language: "en"},
     /*==========================================================================*/
-    { name: "FORMULA_GROUP", path: "/manage/formula_group", language: "en"},
+    { name: "MANAGE_FORMULA", path: "/manage/formula", language: "en"},
     /*==========================================================================*/
-    { name: "MEMBER", path: "/manage/member", language: "en"},
+    { name: "MANAGE_FORMULA_GROUP", path: "/manage/formula_group", language: "en"},
     /*==========================================================================*/
-    { name: "ACCOUNT", path: "/manage/account", language: "en"},
+    { name: "MANAGE_MEMBER", path: "/manage/member", language: "en"},
     /*==========================================================================*/
-    { name: "ACCOUNT_SUB", path: "/manage/account-sub", language: "en"},
+    { name: "MANAGE_ACCOUNT", path: "/manage/account", language: "en"},
+    /*==========================================================================*/
+    { name: "MANAGE_ACCOUNT_SUB", path: "/manage/account-sub", language: "en"},
     /*==========================================================================*/
 
     /*==========================================================================*/

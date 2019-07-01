@@ -8,6 +8,7 @@ import { FormulaService } from 'my-services/formula'
 import { toggleModalDeleteFormula, socketGetReport } from 'my-actions/AccountantAction'
 import { Helpers} from 'my-utils'
 import { TransComponent } from 'my-components'
+import { FormAssignContainer, ListFormulaBasedAccountContainer } from 'my-containers/accountant'
 
 class ModalFormFormulaContainer extends Component {
     handleDelete = async _ => {
@@ -28,10 +29,17 @@ class ModalFormFormulaContainer extends Component {
         const formulaMember = _get(payloadDeleteFormula, 'formulaDetail.memberName', '').toUpperCase()
         
         return (
-            <Modal isOpen={isOpenModalDeleteFormula} toggle={_ => this.props.toggleModalDeleteFormula()}>
+            <Modal isOpen={isOpenModalDeleteFormula} toggle={_ => this.props.toggleModalDeleteFormula()} size="lg">
                 <ModalHeader toggle={_ => this.props.toggleModalDeleteFormula()}><TransComponent i18nKey="confirm" /></ModalHeader>
                 <ModalBody>
-                    <TransComponent i18nKey="are you sure unlink formula {{formulaname}} and member {{membername}}" i18nObj={{formulaname: formulaName, membername: formulaMember}} />
+                    <div className="row">
+                        <div className="col-md-4">
+                            <FormAssignContainer />
+                        </div>
+                        <div className="col-md-8">
+                            <ListFormulaBasedAccountContainer />
+                        </div>
+                    </div>
                 </ModalBody>
                 <ModalFooter>
                     <Button color="btn btn-default green" onClick={this.handleDelete}><TransComponent i18nKey="confirm" /></Button>{' '}

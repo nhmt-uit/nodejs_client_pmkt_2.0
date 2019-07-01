@@ -53,7 +53,7 @@ class AccountantItemBankerAccountContainer extends Component {
                             <div className="clearfix"></div>
                         </h4>
                     </div>
-                    <LazyLoad>
+                    <LazyLoad offset={100}>
                         <Collapse isOpen={bankerAccount.collapse}>
                             <AccountantBankerAccountResultContainer payload={bankerAccount.data} bankerAccountType={bankerAccount.type}  />
                         </Collapse>

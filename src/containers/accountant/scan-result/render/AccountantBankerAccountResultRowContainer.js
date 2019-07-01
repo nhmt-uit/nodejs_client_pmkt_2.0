@@ -19,7 +19,7 @@ class AccountantBankerAccountResultRowContainer extends Component {
         // let finded = this.dynamicColumn.find(item => item.key === key)
         if (this.props.bankerAccountType === "resolve") {
             let ids = [this.props.bankerAccount.id]
-            this.props.socketScanData({ids: ids, from_date: this.props.bankerAccount.from_date, to_date: this.props.bankerAccount.to_date})
+            this.props.socketScanData({ids: ids, from_date: this.props.bankerAccount.from_date, to_date: this.props.bankerAccount.to_date, more_post: this.props.bankerAccount.more_post})
         }
     }
 
