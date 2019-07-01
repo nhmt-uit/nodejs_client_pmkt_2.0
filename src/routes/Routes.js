@@ -6,6 +6,7 @@ import RoutesService from './RoutesService'
 import { AccountantListPage, AccountantManualPage } from 'my-pages/accountant';
 import { ReportPage, ReportDetailPage } from 'my-pages/report';
 import TransactionPage from "my-pages/report/transaction/TransactionPage";
+import SubUserPage from "../pages/manage/SubUserPage";
 
 const Routes = [
 	{
@@ -73,6 +74,11 @@ const Routes = [
 		path: RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT_TRANSACTION'),
 		exact: true,
 		component: TransactionPage,
+	},
+	{
+		path: RoutesService.getPath('ADMIN', 'ACCOUNT_SUB'),
+		exact: true,
+		component: SubUserPage,
 	},
 	{
 		path: '*',

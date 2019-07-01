@@ -14,7 +14,6 @@ class BankerListContainer extends React.Component{
     render() {
         var DATA = {};
         DATA = this.props.bankerList.payload;
-        // console.log("DATA:", typeof DATA);
         if(isEmpty(DATA)){
             return null;
         }

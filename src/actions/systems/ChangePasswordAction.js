@@ -17,7 +17,7 @@ export const savePassword = (password) => {
                     payload: {
                         errors: {
                             status: true,
-                            error_description: _get(res, 'res.data.message', 'Chang password fail'),
+                            error_description: _get(res, 'res.data.message', 'Change password fail'),
                         },
                     },
                 });

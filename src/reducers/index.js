@@ -16,6 +16,7 @@ import AccountReducer from './AccountReducer';
 import ReportDetailReducer from "./report/ReportDetailReducer";
 import TransactionReducer from "./report/TransactionReducer";
 import MemberReducer from "./member/MemberReducer";
+import AccountSubReducer from "./account_sub/AccountSubReducer"
 
 const appReducers = combineReducers({
     // Redux form reducer
@@ -33,6 +34,7 @@ const appReducers = combineReducers({
     AuthReducer,
 
     // Accountant Reducer
+    AccountSubReducer,
     AccountantReducer,
     NotificationReducer,
     ChangePasswordReducer,

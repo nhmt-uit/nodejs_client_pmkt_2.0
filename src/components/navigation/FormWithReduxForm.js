@@ -62,6 +62,7 @@ class FormWithReduxForm extends Component {
     renderForm() {
         const {data, err, success, handleSubmit} = this.props;
 
+
         return (
             <form className="form-horizontal" onSubmit={handleSubmit(this.handleSubmit)}>
                 <div className="form-body">
@@ -70,14 +71,14 @@ class FormWithReduxForm extends Component {
                             <div className="alert alert-danger display-hide alert-err">
                                 {
                                     err.status || false
-                                        ? <span> <TransComponent i18nKey={err.error_description || ''} /> </span>
+                                        ? <span> <TransComponent i18nKey= {err.error_description || ''} /> </span>
                                         : null
                                 }
                             </div>
                             <div className="alert alert-success display-hide alert-succ">
                                 {
                                     success.status || false
-                                        ? <span> <TransComponent i18nKey={success.msg || ''} /> </span>
+                                        ? <span> <TransComponent i18nKey= {success.msg || ''} /> </span>
                                         : null
                                 }
                             </div>

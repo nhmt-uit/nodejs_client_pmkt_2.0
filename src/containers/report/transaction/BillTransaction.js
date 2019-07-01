@@ -18,7 +18,6 @@ class BillTransaction extends Component {
 
     componentWillReceiveProps(nextProps, nextContext) {
         if (nextProps.memberId != this.props.memberId || nextProps.cycleId != this.props.cycleId) {
-            console.log("Nhan props moi khac props cu, goi api lay du lieu:  ", nextProps.cycleId)
             var post = {
                 memberId: nextProps.memberId,
                 cycleId: nextProps.cycleId,
@@ -39,7 +38,6 @@ class BillTransaction extends Component {
         var result = DATA.res.result;
         result = Object.entries(result);
         var total = DATA.res.total;
-        console.log("total 1", total)
         let map_currency = keyBy(currencyMap, 'dv_tien_te_id');
 
         let currencyIDs = currencyMap.map(function (currency) {
@@ -79,7 +77,6 @@ class BillTransaction extends Component {
                         <tbody>
                         {result.map(function (item, index) {
                             var total = item[1].total;
-                            console.log("TOTAL", total)
 
                             return (
                                 <tr key={index}>

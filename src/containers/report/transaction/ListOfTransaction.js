@@ -44,13 +44,6 @@ class ListOfTransaction extends Component {
             })
     };
 
-    toggleEditTransactionModal = (item) => {
-        this.setState({
-            editValue : item,
-        })
-        this.props.handleParent(item);
-    }
-
     toggleDelTransactionModal = (value_id) => {
         if(value_id){
             this.setState({
@@ -62,6 +55,13 @@ class ListOfTransaction extends Component {
             isOpenDelModal : !isOpenDelModal,
         })
     };
+
+    toggleEditTransactionModal = (item) => {
+        this.setState({
+            editValue : item,
+        })
+        this.props.handleParent(item);
+    }
 
     render() {
         const { t } = this.props;
