@@ -4,7 +4,7 @@ let defaultState = {
     payload: {},
     cycle: {},
     money: {},
-    reportDetailById: {},
+    reportDetail: {},
 }
 
 const TransactionReducer = (state = defaultState, action) => {
@@ -25,7 +25,7 @@ const TransactionReducer = (state = defaultState, action) => {
             return {...state};
 
         case TransactionActionType.GET_DETAIL_REPORT:
-            return {...state, reportDetailById: action.payload};
+            return {...state, reportDetail: action.payload};
 
         default:
             return {...state};

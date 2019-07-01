@@ -13,14 +13,16 @@ class CreateTransaction extends Component{
         super(props);
         this.state = {
             selectedTransaction: '',
-            selectedMoney: '',
+            selectedTypeOfMoney: '',
             selectedCycle: '',
             selectedMember: '',
             transaction: '',
             note:'',
             isEdit: false,
+            idEdit:'',
+            showBill: false,
 
-            editValueID: this.props.editValueID,
+            editValue: this.props.editValue,
         }
     }
 
@@ -29,10 +31,48 @@ class CreateTransaction extends Component{
         this.props.getTypeOfMoney();
     }
 
+    componentDidMount() {
+        this.props.onRef(this)
+    }
+    componentWillUnmount() {
+        this.props.onRef(undefined)
+    }
+    callCreateTransaction = (item) => {
+        this.setState({
+            selectedTransaction: item.type_report,
+            selectedTypeOfMoney: item.dv_tien_te_id,
+            selectedCycle: item.chukybaocaotuan_id,
+            selectedMember: item.user_id,
+            transaction: item.result,
+            note: item.note,
+            idEdit: item.id,
+            isEdit: true,
+        })
+    }
+
+    onClickAddNew = () => {
+        this.setState({
+            selectedTransaction: '',
+            selectedTypeOfMoney: '',
+            selectedCycle: '',
+            selectedMember: '',
+            transaction: '',
+            note: '',
+            idEdit: '',
+            isEdit: false,
+        })
+    }
+
     callbackFromChildHandlerFunction = (changeMember) => {
         this.setState({
             selectedMember: changeMember,
+            showBill: true,
         });
+        var Data = {
+            showBill: true,
+            memberId: changeMember,
+        }
+        this.props.callParentFromCreateTransaction(Data);
     }
     onInputChange = (e) => {
         let name = e.target.name;
@@ -48,27 +88,34 @@ class CreateTransaction extends Component{
         });
     }
 
-    handleMoneyChange = (e) => {
+    handleTypeOfMoneyChange = (e) => {
         this.setState({
-            selectedMoney: e.target.value,
+            selectedTypeOfMoney: e.target.value,
         });
     }
 
     handleCycleChange = (e) => {
         this.setState({
-            selectedCycle: e.target.value
-        });
+            selectedCycle: e.target.value,
+            showBill: true,
+        })
+        var Data = {
+            showBill: true,
+            cycleId: e.target.value,
+        }
+        this.props.callParentFromCreateTransaction(Data);
     }
 
     submitForm = (e) => {
         e.preventDefault();
         var post = {
-            currency_type_id: this.state.selectedMoney,
+            currency_type_id: this.state.selectedTypeOfMoney,
             member_select: this.state.selectedMember,
             transaction: this.state.transaction,
             transaction_type: this.state.selectedTransaction,
             note: this.state.note,
             isEdit: this.state.isEdit,
+            id: this.state.idEdit,
             chu_ky_id: this.state.selectedCycle,
             // id: this.state.idEdit,
         }
@@ -77,13 +124,21 @@ class CreateTransaction extends Component{
             .then(function () {
                 self.setState({
                     selectedTransaction: '',
-                    selectedMoney: '',
+                    selectedTypeOfMoney: '',
                     selectedCycle: '',
                     selectedMember: '',
                     transaction: '',
-                    note:'',
+                    note: '',
+                    idEdit: '',
                     isEdit: false,
+                    showBill: false,
                 })
+            })
+            .then(function () {
+                var Data = {
+                    showBill: self.state.showBill,
+                }
+                self.props.callParentFromCreateTransaction(Data);
             })
             .then(function () {
                 self.props.getAllTransaction()
@@ -94,10 +149,9 @@ class CreateTransaction extends Component{
     }
 
     render() {
-
         var typeOfTransaction = [
-            {id: '2', name: 'Payment'},
-            {id: '9', name: 'Other'}
+            {id: 2, name: 'Payment'},
+            {id: 9, name: 'Other'}
         ]
 
         var DATA_CYCLE = this.props.transaction.cycle;
@@ -118,7 +172,7 @@ class CreateTransaction extends Component{
             return(
                 <label key={item.id} className="mt-radio mt-radio-outline">
                     <input type="radio" name={item.name} id={item.name} value={item.id}
-                           checked={this.state.selectedMoney === item.id} onChange={this.handleMoneyChange}/>
+                           checked={this.state.selectedTypeOfMoney === item.id} onChange={this.handleTypeOfMoneyChange}/>
                     {item.name}
                     <span></span>
                 </label>
@@ -127,8 +181,8 @@ class CreateTransaction extends Component{
         var optionsTransaction = typeOfTransaction.map( item => {
             return(
                 <label key={item.id} className="mt-radio mt-radio-outline">
-                    <input type="radio" name={item.name} id={item.id} value={item.id}
-                           checked={this.state.selectedTransaction === item.id} onChange={this.handleTransactionChange}/>
+                    <input type="radio" name={item.name} id={item.name} value={item.id}
+                           checked={this.state.selectedTransaction == item.id} onChange={this.handleTransactionChange}/>
                     {item.name}
                     <span></span>
                 </label>
@@ -192,6 +246,9 @@ class CreateTransaction extends Component{
                     <div className="form-actions">
                         <div className="row">
                             <div className="col-md-offset-3 col-md-9">
+                                {this.state.isEdit ? (<button type="submit" className="btn red" onClick={this.onClickAddNew}>
+                                                        <i className="fa fa-plus"></i> {t("Add new")}
+                                                        </button>) : ''}
                                 <button type="submit" className="btn dark">
                                     <i className="fa fa-check"></i> {t("Save")}
                                 </button>
