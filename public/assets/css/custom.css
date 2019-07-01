@@ -372,3 +372,29 @@ html {
 @media (min-width: 992px) {
   .full-screen .page-content-wrapper .page-content { margin-left: 0px;}
 }
+
+.position-relative {
+  position: relative;
+}
+
+.position-absolute {
+  position: absolute;
+}
+
+.btn-money-exchange {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+.display-inline-block {
+  display: inline-block;
+}
+
+.max-width-40 {
+  width: 40px;
+}
+
+.td-exchange-money .mt-checkbox {
+  padding-left: 14px
+}

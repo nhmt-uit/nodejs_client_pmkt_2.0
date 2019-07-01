@@ -14,7 +14,7 @@ import { LoadingComponent, TransComponent } from 'my-components';
 import { ReportByMember } from 'my-components/report';
 import { CookieService } from 'my-utils/core';
 import { RoutesService } from 'my-routes';
-import { isConditional } from 'babel-types';
+import { ReportAccountContainer } from 'my-containers/report';
 
 class ReportStatisticContainer extends Component {
     constructor(props) {
@@ -23,6 +23,7 @@ class ReportStatisticContainer extends Component {
         this.state = {
             tabReportActive: 'accounting',
             tabBookActive: -1,
+            visible: {},
         };
     }
 
@@ -191,6 +192,14 @@ class ReportStatisticContainer extends Component {
         return bookElement;
     };
 
+    handleToggleAccount = (id) => {
+        const visible = this.state.visible;
+
+        visible[id] = visible[id] !== undefined ? !visible[id] : true;
+
+        this.setState({ visible });
+    }
+
     renderBookTabContent = (type, id, isActive) => {
         const { data = {}, totalAccounting = {}, totalByBook = {}, totalByTypeReport = {}, totalReport = {} } = this.props.reportStore;
         const t = this.props.t;
@@ -210,7 +219,11 @@ class ReportStatisticContainer extends Component {
         accountingList = this.filterAccounting(accountingList, type, id);
         accountingList = this.parseAccountingToArray(accountingList, type, id);
         currencyMap = _sortBy(currencyMap, 'dv_tien_te').reverse();
-
+        
+        if (type === 'accounting' && id == -1) {
+            console.log(type, id, accountingList);
+        }
+        
         return (
             <div className={`tab-pane ${classActive}`} id={id} key={id}>
                 <div className="portlet-body">
@@ -220,45 +233,24 @@ class ReportStatisticContainer extends Component {
                                 <td><span className="glyphicon glyphicon-sort-by-alphabet" /></td>
                                 <th className="font-red">{t('Member')}</th>
                                 { currencyMap.map((item, index) => <th className="font-red" key={index}>{item.dv_tien_te}</th>) }
-                                <th/>
+                                <th className="max-width-40" />
+                                <th className="max-width-40" />
                             </tr>
                         </thead>
                         <tbody>
                         {
                             Object.keys(accountingList).map((account, index) => {
                                 const accountElm = accountingList[account];
-                    
-                                return accountElm.map((elm, ind) => {
-                                    let childIcon = '';
-                                    let abc = '';
-                    
-                                    for(let i = 0; i < elm.order; i++) {
-                                        childIcon += '===';
-                                    }
-                    
-                                    abc = `${childIcon}${elm.name}`;
-                    
-                                    return (<tr key={ind} className="cursor-pointer">
-                                        <td>{ elm.order > 0 ? '' : index + 1 }</td>
-                                        <td>
-                                            {
-                                                elm.order > 0
-                                                    ? <span className="glyphicon glyphicon-chevron-right"/>
-                                                    : <span className="glyphicon glyphicon-chevron-down"/>
-                                            }
-                                            &nbsp;{ abc }
-                                        </td>
-                                        {
-                                            currencyMap.map((currency, i) => {
-                                                const value = elm.total[currency.dv_tien_te_id] ?  elm.total[currency.dv_tien_te_id].result : 0;
-                                                const className = Number(value) < 0 ? 'font-red' : 'font-blue-steel';
-                
-                                                return <td className={className} key={i}>{Helpers.formatMoney(Number(value), 0)}</td>;
-                                            })
-                                        }
-                                        <td className="text-center">{ elm.deleteMoneyExchange ? <icon className="fa fa-close" /> : null }</td>
-                                    </tr>)
-                                });
+                                const visible = this.state.visible;
+
+                                return <ReportAccountContainer 
+                                    key={index}
+                                    item={accountElm}
+                                    visible={visible}
+                                    currencyMap={currencyMap}
+                                    order={index + 1}
+                                    onToggleAccount={this.handleToggleAccount}
+                                />
                             })
                         }
                         </tbody>
@@ -287,10 +279,11 @@ class ReportStatisticContainer extends Component {
 
     parseAccountingToArray(accountingList, tabReportActive, tabBookActive) {
         const rs = {};
-        const mapAccount = (data, id) => {
+
+        const mapAccount = (data, id, parent) => {
             data = _cloneDeep(data);
 
-            const currentRs = { name: data.name, order: data.level, total: {} };
+            const currentRs = { name: data.name, order: data.level, total: {}, id: data.id, state: id + data.id, parent };
 
             let total = {};
             let deleteMoneyExchange = false;
@@ -337,6 +330,8 @@ class ReportStatisticContainer extends Component {
             /*eslint-disable default-case*/
             switch(tabReportActive) {
                 case 'accounting':
+                    let childNextAccounting = child;
+
                     if (data.level === 0) {
                         if (!_get(child, 'accounting.child')) {
                             delete rs[id];
@@ -347,24 +342,22 @@ class ReportStatisticContainer extends Component {
                         const childAccountingByBanker = child.accounting.child[Object.keys(child.accounting.child)[0]];
 
                         if (tabBookActive === 'banker' && childAccountingByBanker.child) {
-                            Object.keys(childAccountingByBanker.child).forEach(elm => {
-                                mapAccount(childAccountingByBanker.child[elm], id);
-                            });
-
-                            return;
+                            childNextAccounting = childAccountingByBanker.child;
+                        } else if (tabBookActive === -1) {
+                            childNextAccounting = child.accounting.child;
+                        } else {
+                            childNextAccounting = child.accounting.child[tabBookActive].child;
                         }
-
-                        const childAccounting = tabBookActive === -1 ? child.accounting.child : child.accounting.child[tabBookActive].child;
-
-                        Object.keys(childAccounting).forEach(elm => {
-                            mapAccount(childAccounting[elm], id);
+                        
+                        Object.keys(childNextAccounting).forEach(elm => {
+                            mapAccount(childNextAccounting[elm], id, data.id);
                         });
 
                         return;
                     }
-
-                    Object.keys(child).forEach(elm => {
-                        mapAccount(child[elm], id);
+                        
+                    Object.keys(childNextAccounting).forEach(elm => {
+                        mapAccount(childNextAccounting[elm], id, data.id);
                     });
 
                     break;
@@ -372,39 +365,41 @@ class ReportStatisticContainer extends Component {
                 case 'synthesis':
                     const bookId = Number(tabBookActive.split('_')[2]) || '';
 
-                    let childNext = child;
+                    let childNextSynthesis = child;
 
                     if (data.level === 0) {
                         switch (bookId) {
                             case 1:
-                                childNext = _get(child, 'accounting.child', {});
+                                childNextSynthesis = _get(child, 'accounting.child', {});
                                 break;
                             case 2:
-                                childNext = _get(child, 'Payment.child', {});
+                                childNextSynthesis = _get(child, 'Payment.child', {});
                                 break;
                             case 3:
-                                childNext = _get(child, 'Old owing.child', {});
+                                childNextSynthesis = _get(child, 'Old owing.child', {});
                                 break;
                             case 4:
-                                childNext = {};
+                                childNextSynthesis = {};
                                 break;
                             case 9:
-                                childNext = _get(child, 'Other.child', {});
+                                childNextSynthesis = _get(child, 'Other.child', {});
                                 break;
                             default:
-                                childNext = child;
+                                childNextSynthesis = child;
                                 break;
                         }
 
-                        Object.keys(childNext).forEach(elm => {
-                            mapAccount(childNext[elm], id);
+                        Object.keys(childNextSynthesis).forEach(elm => {
+                            mapAccount(childNextSynthesis[elm], id, data.id);
                         })
+
+                        return;
                     }
             }
         };
 
         accountingList.forEach(item => {
-            mapAccount(item, item.id);
+            mapAccount(item, item.id, 0);
         });
 
         return rs;
@@ -488,8 +483,9 @@ class ReportStatisticContainer extends Component {
             <div className="portlet light bordered">
                 <div className="portlet-body ">
                     <div className="tabbable-line tabbable-full-width tabbable-report">
-                        <ul className="nav nav-tabs">
+                        <ul className="position-relative nav nav-tabs">
                             { tabReport }
+                            <button className="btn btn-circle green btn-money-exchange"><TransComponent i18nKey="Money Exchange" /></button>
                         </ul>
                         <div className="tab-content tab-report-content">
                             { tabContent }
