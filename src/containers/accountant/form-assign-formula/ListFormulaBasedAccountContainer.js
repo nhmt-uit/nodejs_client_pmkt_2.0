@@ -5,7 +5,7 @@ import { reduxForm } from "redux-form";
 import { get as _get } from 'lodash'
 
 import { TransComponent } from 'my-components'
-import { FormulaService } from 'my-services/formula'
+import { initAccount, initMember, initFormula, onChangeFormulaType, saveFormulaAccount, resetFormSaveResponse } from 'my-actions/AccountantAssignFormulaAction'
 
 class ListFormulaBasedAccountContainer extends Component {
 
@@ -13,20 +13,12 @@ class ListFormulaBasedAccountContainer extends Component {
         formulaPayload: []
     }
 
+    
     componentWillReceiveProps(newProps) {
-        const account_id = _get(newProps, 'initialValues.account.value')
-        this.initDetailData(account_id)
+        // this.initDetailData(account_id)
     }
 
     
-    initDetailData = account_id => {
-        FormulaService.getFormulaByAccountId(account_id).then(res => {
-            if (res.status) {
-                this.setState({formulaPayload: res.res.data.data})
-            }
-        })
-    }
-
     renderDetailData = formulaPayload => {
         let xhtml = null
         if (formulaPayload.length) {
@@ -52,8 +44,8 @@ class ListFormulaBasedAccountContainer extends Component {
     }
 
     render() {
-        const { formulaPayload } = this.state
-        if(!formulaPayload.length) return null
+        const { listFormulaDetail } = this.props
+        if(!listFormulaDetail.length) return null
         return (
             <div className="portlet light bordered">
                 <div className="portlet-title">
@@ -75,7 +67,7 @@ class ListFormulaBasedAccountContainer extends Component {
                                 </tr>
                             </thead>
                             <tbody>
-                                {this.renderDetailData(formulaPayload)}
+                                {this.renderDetailData(listFormulaDetail)}
                             </tbody>
                         </table>
                     </div>
@@ -91,14 +83,16 @@ class ListFormulaBasedAccountContainer extends Component {
 
 const mapStateToProps = state => {
     return {
-        initialValues: _get(state, 'form.form_assign_formula.values', {}),
+        listFormulaDetail: state.AccountantAssignFormulaReducer.listFormulaDetail,
     }
 };
 
+const mapDispatchToProps = dispatch => {
+    return {
+        initAccount: _ => dispatch(initAccount()),
+    };
+};
 
 export default compose(
-    reduxForm({
-        form: 'form_assign_formula',
-    }),
-    connect(mapStateToProps, null),
+    connect(mapStateToProps, mapDispatchToProps),
 )(ListFormulaBasedAccountContainer)
