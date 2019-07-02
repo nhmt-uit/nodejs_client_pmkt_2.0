@@ -14,10 +14,7 @@ import { LoadingComponent, TransComponent } from 'my-components';
 import { ReportByMember } from 'my-components/report';
 import { CookieService } from 'my-utils/core';
 import { RoutesService } from 'my-routes';
-<<<<<<< HEAD
-=======
 import { ReportAccountContainer } from 'my-containers/report';
->>>>>>> e7cf71f90c769ad01f7ad2470cde131b7d117766
 
 class ReportStatisticContainer extends Component {
     constructor(props) {
@@ -246,7 +243,7 @@ class ReportStatisticContainer extends Component {
                                 const accountElm = accountingList[account];
                                 const visible = this.state.visible;
 
-                                return <ReportAccountContainer 
+                                return <ReportAccountContainer
                                     key={index}
                                     item={accountElm}
                                     visible={visible}
