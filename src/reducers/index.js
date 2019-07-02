@@ -8,6 +8,7 @@ import LanguageReducer from './systems/LanguageReducer';
 import AuthReducer from './systems/AuthReducer';
 import AccountantReducer from './AccountantReducer';
 import AccountantManualReducer from './AccountantManualReducer';
+import AccountantAssignFormulaReducer from './AccountantAssignFormulaReducer';
 import NotificationReducer from './systems/NotificationReducer';
 import ChangePasswordReducer from './systems/ChangePasswordReducer';
 import BankerReducer from './banker/BankerReducer'
@@ -36,10 +37,10 @@ const appReducers = combineReducers({
     AppReducer,
     LanguageReducer,
     AuthReducer,
-
-    // Accountant Reducer
     AccountSubReducer,
-    AccountantReducer,
+    AccountantAssignFormulaReducer,
+    // Accountant Reducer
+    AccountantReducer, AccountantManualReducer,
     NotificationReducer,
     ChangePasswordReducer,
     ChangeSecureCodeReducer,

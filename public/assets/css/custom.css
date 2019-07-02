@@ -72,6 +72,9 @@ html {
 	border: 1px solid #c2cad8;
 	min-height: 32px;
 }
+.form-group .css-26l3qy-menu {
+	z-index: 10;
+}
 
 .form-group .css-1g48xl4-IndicatorsContainer {
 	height: 32px;
