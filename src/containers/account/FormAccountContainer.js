@@ -21,19 +21,28 @@ const bankerIsSub = ['s1288','hk1119']
 
 class FormAccountContainer extends Component {
     componentWillMount() {
-        this.props.requestInitFormData(this.props.account.id)
-        this.props.initialize({...this.props.initialValues,
-            id: this.props.account.id,
-            company: this.props.account.banker,
-            acc_name: this.props.account.acc_name,
-            belong_account: this.props.account.acc_parent_id,
-            sub_user: this.props.account.sub_user,
-            sub_pass: this.props.account.sub_pass,
-            sub_code: this.props.account.sub_code,
-            note: this.props.account.note,
-            is_banker_sub: 0,
-            is_active: this.props.account.is_active,
-        })
+        
+        this.props.requestInitFormData(_get(this.props, 'account.id'))
+
+        if(this.props.formType === "update" && !_isEmpty(this.props.account)) {
+            this.props.initialize({...this.props.initialValues,
+                id: this.props.account.id,
+                company: this.props.account.banker,
+                acc_name: this.props.account.acc_name,
+                belong_account: this.props.account.acc_parent_id,
+                sub_user: this.props.account.sub_user,
+                sub_pass: this.props.account.sub_pass,
+                sub_code: this.props.account.sub_code,
+                note: this.props.account.note,
+                is_banker_sub: 0,
+                is_active: this.props.account.is_active,
+            })
+        }
+        if(this.props.formType === "create") {
+            this.props.initialize({...this.props.initialValues,
+                is_active: optAccountStatus.filter(item => item.value === true),
+            })
+        }
     }
 
     handleChangeBanker = item => {
@@ -49,7 +58,7 @@ class FormAccountContainer extends Component {
     }
 
     render() {
-        const optBanker = this.props.optBanker
+        const {optBanker, formType} = this.props
         const optAccountBelong = [{value: "root", label: <TransComponent i18nKey="Is root account" toUpperCase />}].concat(this.props.optAccountBelong.filter(item => item.value === this.props.initialValues.company))
 
         const selectedBanker = optBanker.filter(item => item.value === this.props.initialValues.company)
@@ -76,17 +85,21 @@ class FormAccountContainer extends Component {
                             options={optBanker}
                         />
                     </div>
-                    <div className="form-group">
-                        <label><TransComponent i18nKey="Account name" /></label>
-                        <Field
-                            name="acc_name"
-                            type="text"
-                            component="input"
-                            className="form-control form-control-solid placeholder-no-fix"
-                            autoComplete="off"
-                            readOnly={!isDisabledBasedOneAccountBelong}
-                        />
-                    </div>
+                    {
+                        formType === "update" ?
+                            <div className="form-group">
+                                <label><TransComponent i18nKey="Account name" /></label>
+                                <Field
+                                    name="acc_name"
+                                    type="text"
+                                    component="input"
+                                    className="form-control form-control-solid placeholder-no-fix"
+                                    autoComplete="off"
+                                    readOnly={!isDisabledBasedOneAccountBelong}
+                                />
+                            </div>
+                        : null
+                    }
                     <div className="form-group">
                         <label><TransComponent i18nKey="Belong to account" /></label>
                         <Select

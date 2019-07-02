@@ -50,8 +50,7 @@ class HttpService {
         }
 
         //Convert Object to form data
-        // payload = this.obj2fd(payload)
-        return this.service.post(path, qs.stringify(payload), { cancelToken: cancelToken });
+        return this.service.post(path, qs.stringify(payload, { indices: false }), { cancelToken: cancelToken });
     };
 
     //Create request with method put
@@ -112,15 +111,6 @@ class HttpService {
 
         return Promise.reject(error);
     };
-
-    //Convert object to form data
-    obj2fd = obj => {
-        let fd = new FormData()
-        for(let x in obj) {
-            fd.append(x, obj[x])
-        }
-        return fd
-    }
 }
 
 export default new HttpService();

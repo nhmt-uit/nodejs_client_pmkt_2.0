@@ -27,7 +27,8 @@ import BankerAccountStatusIconContainer from './scan-result/BankerAccountStatusI
 |--------------------------------------------------------------------------
 */
 import FormAssignContainer from './form-assign-formula/FormAssignContainer'
-import ListFormulaBasedAccountContainer from './form-assign-formula/ListFormulaBasedAccountContainer'
+import ListFormulaByAccountContainer from './form-assign-formula/ListFormulaByAccountContainer'
+import ModalDeleteFormulaByAccountContainer from './form-assign-formula/ModalDeleteFormulaByAccountContainer'
 
 
 export {
@@ -44,5 +45,5 @@ export {
     | Form Assign Formula
     |--------------------------------------------------------------------------
     */
-   FormAssignContainer, ListFormulaBasedAccountContainer,
+   FormAssignContainer, ListFormulaByAccountContainer, ModalDeleteFormulaByAccountContainer,
 }

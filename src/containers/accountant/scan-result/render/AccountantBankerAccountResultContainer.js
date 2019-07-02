@@ -27,17 +27,18 @@ class AccountantBankerAccountResultContainer extends Component {
         this.dynamicColumn = AccountantService.getDynamicColumn()
     }
 
-    handleNestedDataAccountant = (item, parent) => {
+    handleNestedDataAccountant = (item, parent, rootAccInfo) => {
         const isShowAllFormula = this.props.isShowAllFormula
         
         return item.map((node, idx) => {
+            if(node.level === 0) rootAccInfo = node.accInfo
             return (
                 <Fragment key={uuidv4()}>
                     {(isShowAllFormula === false && this.handleNestedChedkHasFormula(node)) || (isShowAllFormula) ?
-                        <AccountantBankerAccountResultRowContainer parent={parent} item={node} bankerAccount={this.props.payload} bankerAccountType={this.props.bankerAccountType} />
+                        <AccountantBankerAccountResultRowContainer rootAccInfo={rootAccInfo} parent={parent} item={node} bankerAccount={this.props.payload} bankerAccountType={this.props.bankerAccountType} />
                         : null
                     }
-                    {node.child.length === 0 || (typeof node.isShowChild !== "undefined" && node.isShowChild === false) ? null : this.handleNestedDataAccountant(node.child, node)}
+                    {node.child.length === 0 || (typeof node.isShowChild !== "undefined" && node.isShowChild === false) ? null : this.handleNestedDataAccountant(node.child, node, rootAccInfo)}
                 </Fragment>
             )
         })

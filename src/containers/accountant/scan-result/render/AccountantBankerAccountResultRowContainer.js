@@ -4,7 +4,7 @@ import { isEmpty as _isEmpty, forEach as _forEach, concat as _concat } from 'lod
 import uuidv4 from 'uuid/v4'
 
 import { Helpers } from 'my-utils'
-import { toggleModalDeleteFormula, socketScanData, toggleShowHideBankerAccountChild } from 'my-actions/AccountantAction'
+import { toggleModalDeleteFormula, toggleModalFormFormula, socketScanData, toggleShowHideBankerAccountChild } from 'my-actions/AccountantAction'
 import { TransComponent } from 'my-components'
 import { AccountantBankerAccountResultHiddenTableTdContainer } from 'my-containers/accountant'
 
@@ -21,15 +21,6 @@ class AccountantBankerAccountResultRowContainer extends Component {
             let ids = [this.props.bankerAccount.id]
             this.props.socketScanData({ids: ids, from_date: this.props.bankerAccount.from_date, to_date: this.props.bankerAccount.to_date, more_post: this.props.bankerAccount.more_post})
         }
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Toggle Modal Delete Formula
-    |--------------------------------------------------------------------------
-    */
-    handleToggleModalDeleteFormula = formulaDetail => {
-        this.props.toggleModalDeleteFormula()
     }
     
     /*
@@ -51,7 +42,7 @@ class AccountantBankerAccountResultRowContainer extends Component {
     |--------------------------------------------------------------------------
     */
     generateRowData = _ => {
-        const { item, isFullScreen } = this.props
+        const { item, isFullScreen, rootAccInfo } = this.props
         const { dataFieldList, dataHiddenFields, scanData } = this.props.bankerAccount
         const bankerAccountId = this.props.bankerAccount.id
         
@@ -88,6 +79,12 @@ class AccountantBankerAccountResultRowContainer extends Component {
             })
             tbl_col_dynamic.push(dynamicColmn)
 
+            let accInfo
+            if(typeof item.accInfo !== "undefined") {
+                accInfo = item.accInfo
+            } else {
+                accInfo = {...rootAccInfo, acc_name: item.username, id: -9999}
+            }
 
             //Generate formula column
             if(item.noFormula) {
@@ -96,7 +93,7 @@ class AccountantBankerAccountResultRowContainer extends Component {
                 if (idxDynamic > rowSpanColDynamic ) idxDynamic = 1
                 let tbl_col_formula = []
 
-                let objToggleModalDeleteFomula = {bankerAccountId: bankerAccountId, accInfo: item.accInfo, scanData: scanData}
+                let objToggleModalSelectedFomula = {bankerAccountId: bankerAccountId, accInfo: accInfo, rootAccInfo: rootAccInfo, scanData: scanData}
 
                 tbl_col_formula.push(
                     <>
@@ -108,7 +105,7 @@ class AccountantBankerAccountResultRowContainer extends Component {
                     <td key={uuidv4()}></td> {/* // Column Result */}
                     <td key={uuidv4()}></td> {/* // Column Currency */}
                     <td key={uuidv4()} className="text-center" width="45px"></td> {/* // Column +/- Formula (delete) */}
-                    <td key={uuidv4()} className="text-center" width="45px"><a href="#/" onClick={_ => this.props.toggleModalDeleteFormula(objToggleModalDeleteFomula)} className="font-green-jungle"><i className="fa fa-plus-circle" /></a></td> {/* // Column +/- Formula (add) */}
+                    <td key={uuidv4()} className="text-center" width="45px"><a href="#/" onClick={_ => this.props.toggleModalFormFormula(objToggleModalSelectedFomula)} className="font-green-jungle"><i className="fa fa-plus-circle" /></a></td> {/* // Column +/- Formula (add) */}
                     </>
                 )
                 
@@ -128,10 +125,14 @@ class AccountantBankerAccountResultRowContainer extends Component {
                     if (idxDynamic > rowSpanColDynamic ) idxDynamic = 1
                     let resultClass = formula.valueRounded >= 0 ? 'font-blue-steel' : 'font-red'
                     let tbl_col_formula = []
-
-
                     
-                    let objToggleModalDeleteFomula = {bankerAccountId: bankerAccountId, accInfo: item.accInfo, formulaDetail: formula, scanData: scanData}
+                    let objToggleModalSelectedFomula = {
+                        bankerAccountId: bankerAccountId,
+                        accInfo: accInfo,
+                        rootAccInfo: rootAccInfo,
+                        formulaDetail: formula,
+                        scanData: scanData
+                    }
 
                     tbl_col_formula.push(
                         <>
@@ -144,8 +145,8 @@ class AccountantBankerAccountResultRowContainer extends Component {
                         <td key={uuidv4()} ><b>{formula.memberName.toUpperCase()}</b></td> {/* // Column Member */}
                         <td key={uuidv4()} className={resultClass + " text-right"} >{Helpers.formatMoney(formula.valueRounded, 0)}</td> {/* // Column Result */}
                         <td key={uuidv4()} className={resultClass}>{formula.currencyName}</td> {/* // Column Currency */}
-                        <td key={uuidv4()} className="text-center" width="45px"><a href="#/" onClick={_ => this.props.toggleModalDeleteFormula(objToggleModalDeleteFomula)} className="font-red-sunglo"><i className="fa fa-times-circle" /></a></td> {/* // Column +/- Formula (delete) */}
-                        {idxDynamic === 1 ? <td key={uuidv4()} className="text-center" width="45px" rowSpan={rowSpanColDynamic}><a href="#/" onClick={_ => this.props.toggleModalDeleteFormula(objToggleModalDeleteFomula)} className="font-green-jungle"><i className="fa fa-plus-circle" /></a></td> : null} {/* // Column +/- Formula (add) */}
+                        <td key={uuidv4()} className="text-center" width="45px"><a href="#/" onClick={_ => this.props.toggleModalDeleteFormula(objToggleModalSelectedFomula)} className="font-red-sunglo"><i className="fa fa-times-circle" /></a></td> {/* // Column +/- Formula (delete) */}
+                        {idxDynamic === 1 ? <td key={uuidv4()} className="text-center" width="45px" rowSpan={rowSpanColDynamic}><a href="#/" onClick={_ => this.props.toggleModalFormFormula(objToggleModalSelectedFomula)} className="font-green-jungle"><i className="fa fa-plus-circle" /></a></td> : null} {/* // Column +/- Formula (add) */}
                         </>
                     )
 
@@ -180,6 +181,7 @@ class AccountantBankerAccountResultRowContainer extends Component {
 const mapDispatchToProps = (dispatch) => {
     return {
         toggleModalDeleteFormula: (params) => {dispatch(toggleModalDeleteFormula(params))},
+        toggleModalFormFormula: (params) => {dispatch(toggleModalFormFormula(params))},
         socketScanData: params => {dispatch(socketScanData(params))},
         toggleShowHideBankerAccountChild: params => {dispatch(toggleShowHideBankerAccountChild(params))},
     }

@@ -25,7 +25,6 @@ export const AccountReducer = (state = defaultState, action) => {
 					optAccountBelong.push({label: bankerList[x].name.toUpperCase(), value: bankerList[x].id, options: groupOtion})
 				}
 			}
-
 			return {...state, initFormData: action.initFormData, optBanker: optBanker, optAccountBelong: optAccountBelong}
 		default:
 			return {...state}

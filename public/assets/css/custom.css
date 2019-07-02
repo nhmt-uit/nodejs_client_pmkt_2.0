@@ -10,6 +10,7 @@ html {
   }
 }
 
+.form-control {padding: 6px 10px}
 .input-group-btn .btn { margin-right: 0px !important}
 
 .zopim{display: none !important;}
@@ -407,4 +408,10 @@ html {
 
 .td-exchange-money .mt-checkbox {
   padding-left: 14px
+}
+
+@media (min-width: 992px) {
+  .modal-xxl {
+    max-width: 1200px !important;
+  }
 }

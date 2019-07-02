@@ -344,7 +344,16 @@ export const toggleModalDeleteFormula = params => {
     return (dispatch) => {
         dispatch({
             type: AccountantActionType.ACCOUNTANT_TOGGLE_MODAL_DELETE_FORMULA,
-            payloadDeleteFormula: params,
+            payloadSelectedFormula: params,
+        });
+    }
+}
+
+export const toggleModalFormFormula = params => {
+    return (dispatch) => {
+        dispatch({
+            type: AccountantActionType.ACCOUNTANT_TOGGLE_MODAL_FROM_FORMULA,
+            payloadSelectedFormula: params,
         });
     }
 }
