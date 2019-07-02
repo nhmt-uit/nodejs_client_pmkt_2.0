@@ -7,7 +7,6 @@ import { AccountantListPage, AccountantManualBankerPage, AccountantManualLoginPa
 import { ReportPage, ReportDetailPage } from 'my-pages/report';
 import TransactionPage from "my-pages/report/transaction/TransactionPage";
 import { CreateNewPage } from 'my-pages/manages';
-import SubUserPage from "../pages/manage/SubUserPage";
 
 const Routes = [
 	{
@@ -44,6 +43,16 @@ const Routes = [
 	{
 		path: RoutesService.getPath('ADMIN', 'ACCOUNTANT_MANUAL'),
 		exact: true,
+		component: AccountantManualBankerPage,
+	},
+	{
+		path: RoutesService.getPath('ADMIN', 'ACCOUNTANT_MANUAL_PROCESS', { type: 'login' }),
+		exact: true,
+		component: AccountantManualLoginPage,
+	},
+	{
+		path: RoutesService.getPath('ADMIN', 'ACCOUNTANT_MANUAL_PROCESS', { type: '' }),
+		exact: true,
 		component: AccountantManualPage,
 	},
 	{
@@ -76,10 +85,15 @@ const Routes = [
 		exact: true,
 		component: TransactionPage,
 	},
+	/*
+	|--------------------------------------------------------------------------
+	| Manage Routes Area
+	|--------------------------------------------------------------------------
+	*/
 	{
-		path: RoutesService.getPath('ADMIN', 'MANAGE_ACCOUNT_SUB'),
-		exact:true,
-		component: SubUserPage,
+		path: RoutesService.getPath('ADMIN', 'MANAGE_CREATE_NEW'),
+		exact: true,
+		component: CreateNewPage,
 	},
 	{
 		path: '*',
