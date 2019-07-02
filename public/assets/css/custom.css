@@ -137,7 +137,6 @@ html {
 
 .btn-announcement {
     padding: .5rem 1.5rem;
-    border-radius: .5rem !important;
 }
 
 
@@ -294,7 +293,7 @@ html {
   background-color: rgba(0,0,0,.075) !important;
 }
 
-.tbl-scan-result {
+.tbl-scan-result, .table-animation {
   animation: fadein 1.5s;
   -moz-animation: fadein 1.5s;
   -webkit-animation: fadein 1.5s;

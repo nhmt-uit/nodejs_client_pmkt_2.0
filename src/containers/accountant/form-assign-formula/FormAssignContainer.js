@@ -11,6 +11,8 @@ import { resetData, initAccount, initMember, initFormula, onChangeFormulaType, s
 import { ModalFormAccountContainer } from 'my-containers/account'
 import { ModalFormMemberContainer } from 'my-containers/member'
 
+import { toggleModalMember, resetStore as resetStoreMember} from 'my-actions/member/MemberAction'
+
 const optFormulaType = [{value: 1, label: <TransComponent i18nKey="-- formula --" />}, {value: 2, label: <TransComponent i18nKey="-- formula group --" />}]
 class FormAssignContainer extends Component {
 
@@ -40,14 +42,24 @@ class FormAssignContainer extends Component {
         this.props.resetData()
     }
 
+    componentDidUpdate() {
+        if(this.props.formMemberSaveStatus === true) {
+            this.props.initMember()
+            this.props.resetStoreMember()
+        }
+    }
+
     handleChangeAccount = account => {
         const formulaBankerId = _get(this.props.initialValues, 'formula.bankerId')
-        const formulaAccountId = _get(this.props.initialValues, 'formula.value')
+        const formulaGroupBankerId = _get(this.props.initialValues, 'formula_group')
+        const formulaAccountId = _get(this.props.initialValues, 'account.value')
+
 
         if (account.value !== formulaAccountId) {
-            if (formulaBankerId !== account.bankerId) {
+            if (formulaBankerId !== account.bankerId || formulaGroupBankerId !== account.bankerId) {
                 this.props.initialize({...this.props.initialValues,
-                    formula: null
+                    formula: null,
+                    formula_group: null
                 })
             }
             this.props.initFormulaByAccount(account.value)
@@ -57,7 +69,8 @@ class FormAssignContainer extends Component {
     handleChangeFormulaType = formula => {
         if (formula.value !==  _get(this.props.initialValues, 'formula_type.value')) {
             this.props.initialize({...this.props.initialValues,
-                formula: null
+                formula: null,
+                formula_group: null
             })
             this.props.onChangeFormulaType(formula.value)
         }
@@ -194,7 +207,7 @@ class FormAssignContainer extends Component {
                                 placeholder={<TransComponent i18nKey="Member" />}
                                 />
                             <span className="input-group-btn">
-                                <button className="btn green" type="button"><i className="fa fa-plus" /></button>
+                                <button className="btn green" type="button" onClick={_ => this.props.toggleModalMember()}><i className="fa fa-plus" /></button>
                             </span>
                         </div>
                         <Field name="member"component={renderError} />
@@ -242,7 +255,6 @@ class FormAssignContainer extends Component {
 
 const validate = values => {
     const errors = {}
-    console.log(values)
     if (_get(values, 'formula_type.value') === 1 && !values.formula) {
         errors.formula = '"Formula" is not allowed to be empty'
     }
@@ -266,6 +278,7 @@ const mapStateToProps = state => {
         optFormula: state.AccountantAssignFormulaReducer.optFormula,
         formSaveStatus: state.AccountantAssignFormulaReducer.formSaveStatus,
         formSaveResponse: state.AccountantAssignFormulaReducer.formSaveResponse,
+        formMemberSaveStatus: state.member.formSaveStatus,
     }
 };
 
@@ -279,6 +292,8 @@ const mapDispatchToProps = dispatch => {
         saveFormulaAccount: params => dispatch(saveFormulaAccount(params)),
         resetFormSaveResponse: _ => dispatch(resetFormSaveResponse()),
         initFormulaByAccount: accountId => dispatch(initFormulaByAccount(accountId)),
+        toggleModalMember:  _ => dispatch(toggleModalMember()),
+        resetStoreMember:  _ => dispatch(resetStoreMember()),
     };
 };
 

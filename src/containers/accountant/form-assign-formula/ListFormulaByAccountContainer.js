@@ -55,7 +55,7 @@ class ListFormulaByAccountContainer extends Component {
                 return (
                     <tr key={idx}>
                         <td> {++idx} </td>
-                        <td> {item.fullname} </td>
+                        <td> {item.fullname.toUpperCase()} </td>
                         <td> {item.formula_group_name} </td>
                         <td> {item.tenct} </td>
                         <td className="text-center">
@@ -76,7 +76,6 @@ class ListFormulaByAccountContainer extends Component {
 
     render() {
         const { listFormulaDetail } = this.props
-        if(!listFormulaDetail.length) return null
         return (
             <div className="portlet light bordered">
                 <div className="portlet-title">
@@ -86,7 +85,7 @@ class ListFormulaByAccountContainer extends Component {
                 </div>
                 <div className="portlet-body">
                     <div className="table-scrollable">
-                        <table className="table table-striped table-bordered table-hover">
+                        <table className="table table-striped table-bordered table-hover table-animation">
                             <thead>
                                 <tr className="font-red-sunglo">
                                     <th className="text-center"> # </th>
@@ -102,11 +101,14 @@ class ListFormulaByAccountContainer extends Component {
                             </tbody>
                         </table>
                     </div>
-                    <div className="form-actions text-right">
-                        <button type="button" className="btn red" disabled={!this.state.congthuctinhIds.length} onClick={this.handleMultipleDeleteFormula}>
-                            <TransComponent i18nKey="Delete selected" />
+                    {listFormulaDetail.length ?
+                        <div className="form-actions text-right">
+                            <button type="button" className="btn red" disabled={!this.state.congthuctinhIds.length} onClick={this.handleMultipleDeleteFormula}>
+                                <TransComponent i18nKey="Delete selected" />
                             </button>
-                    </div>
+                        </div>
+                        : null
+                    }
                 </div>
                 <ModalDeleteFormulaByAccountContainer />
             </div>

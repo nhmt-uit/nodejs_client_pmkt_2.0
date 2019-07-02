@@ -6,14 +6,21 @@ import 'my-styles/reactstrap-modal.css'
 
 import { TransComponent } from 'my-components'
 import { FormMemberContainer } from 'my-containers/member'
+import { toggleModalMember } from 'my-actions/member/MemberAction'
 
 class ModalFormMemberContainer extends Component {
+    componentDidUpdate(){
+        if(this.props.formSaveStatus && this.props.isOpenModal) {
+            this.props.toggleModalMember()
+        }
+    }
+
     render() {
         return (
-            <Modal isOpen={false} toggle={_ => null}>
-                <ModalHeader toggle={_ => null}><TransComponent i18nKey="Create member" /></ModalHeader>
+            <Modal isOpen={this.props.isOpenModal} toggle={_ => this.props.toggleModalMember()}>
+                <ModalHeader toggle={_ => this.props.toggleModalMember()}><TransComponent i18nKey="Create member" /></ModalHeader>
                 <ModalBody>
-                    <FormMemberContainer />
+                    <FormMemberContainer formType="create" />
                 </ModalBody>
                 <ModalFooter />
             </Modal>
@@ -24,13 +31,14 @@ class ModalFormMemberContainer extends Component {
 
 const mapStateToProps = state => {
     return {
-
+        isOpenModal: state.member.isOpenModal,
+        formSaveStatus: state.member.formSaveStatus,
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-
+        toggleModalMember:  _ => dispatch(toggleModalMember()),
     }
 };
 
