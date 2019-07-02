@@ -65,6 +65,24 @@ class ReportService extends BaseService {
     getReportByBanker(post){
         return HttpService.post(`${this.serviceUrl}/get_report_by_banker`, post);
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | @content: money exchange
+    |--------------------------------------------------------------------------
+    */
+    moneyExchange(post){
+        return HttpService.post(`${this.serviceUrl}/money_exchange`, post);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | @content: delete money exchange
+    |--------------------------------------------------------------------------
+    */
+    deleteMoneyExchange(post){
+        return HttpService.post(`${this.serviceUrl}/delete_money_exchange`, post);
+    }
 }
 
 export default new ReportService()

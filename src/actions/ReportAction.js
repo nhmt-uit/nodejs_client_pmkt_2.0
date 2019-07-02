@@ -194,3 +194,65 @@ export const getReportByMember = (post, itemActive) => {
             })
     }
 };
+
+/**
+ * @description Money exchange
+ * */
+export const moneyExchange = (post) => {
+    return dispatch => {
+        dispatch({
+            type: ReportActionType.MONEY_EXCHANGE,
+        });
+
+        return ReportService.moneyExchange(post)
+            .then(res => {
+                if (res.status) {
+                    dispatch({
+                        type: ReportActionType.MONEY_EXCHANGE_SUCCESS,
+                        payload: res.res || {},
+                    });
+                } else {
+                    dispatch({
+                        type: ReportActionType.MONEY_EXCHANGE_FAIL,
+                        payload: {
+                            status: false,
+                            error_description: _get(res, 'res.data.message', '')
+                        },
+                    });
+                }
+            })
+            .catch(e => {
+                dispatch({
+                    type: ReportActionType.MONEY_EXCHANGE_FAIL,
+                    payload: _get(e, 'response.data', {
+                        status: false,
+                        error_description: e.stack,
+                    }),
+                });
+            })
+    }
+};
+
+/**
+ * @description Modifie money exchange id
+ * */
+export const changeMoneyExchangeIds = (id) => {
+    return dispatch => {
+        dispatch({
+            type: ReportActionType.CHANGE_MONEY_EXCHANGE_IDS,
+            payload: id,
+        });
+    }
+};
+
+/**
+ * @description Modifie status button money exchange
+ * */
+export const changeStatusBtnMoneyExchange = (status) => {
+    return dispatch => {
+        dispatch({
+            type: ReportActionType.CHANGE_STATUS_BTN_MONEY_EXCHANGE,
+            payload: status,
+        });
+    }
+};
