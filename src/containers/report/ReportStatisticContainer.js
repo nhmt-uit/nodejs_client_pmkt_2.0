@@ -16,7 +16,6 @@ import { CookieService } from 'my-utils/core';
 import { RoutesService } from 'my-routes';
 import { ReportAccountContainer } from 'my-containers/report';
 
-
 class ReportStatisticContainer extends Component {
     constructor(props) {
         super(props);
