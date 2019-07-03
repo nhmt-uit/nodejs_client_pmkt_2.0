@@ -33,3 +33,12 @@ export function formatFormulaName(formulaName) {
         console.log(e)
     }
 }
+
+/*
+|--------------------------------------------------------------------------
+| Promise function
+|--------------------------------------------------------------------------
+*/
+export function sleep(milliseconds) {
+    return new Promise(resolve => setTimeout(resolve, milliseconds))
+}

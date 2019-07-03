@@ -61,7 +61,9 @@ class SocketService {
                 this.socket.send({___Send: true, event: event, uuid: _uuid, args: [args]})
                 this.listUUID2AccID[_uuid] = args.id
             break
-            default: break
+            default:
+                this.socket.send({___Send: true, event: event, uuid: _uuid, args: [args]})
+            break
         }
     }
 

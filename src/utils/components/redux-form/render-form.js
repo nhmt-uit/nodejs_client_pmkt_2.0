@@ -24,3 +24,9 @@ export const renderSelectField = props => {
         />
     )
 }
+
+export const renderFormatGroupLabel = data => (
+    <div style={{fontWeight: 'bold', fontSize: '14px', color: '#333'}}>
+        <span>{data.label}</span>
+    </div>
+);

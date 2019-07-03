@@ -7,10 +7,9 @@ import { SocketService, EventsService } from 'my-utils/core';
 import { AuthService } from 'my-services/systems'
 import { AccountantService }  from 'my-services/account'
 import { AppConfig } from 'my-constants'
+import { Helpers } from 'my-utils'
 
-const sleep = (milliseconds) => {
-    return new Promise(resolve => setTimeout(resolve, milliseconds))
-}
+
 
 const timeWaitToDispatch = 500
 const firstNumberPayloadSend = 50
@@ -68,15 +67,28 @@ export const socketScanData = (params) => {
     return async (dispatch) => {
         let from_date = moment(params.from_date).format(AppConfig.FORMAT_DATE)
         let to_date = moment(params.to_date).format(AppConfig.FORMAT_DATE)
+
+        let filterBankerAccount = _get(params, 'filterBankerAccount')
         
         // Active listener before send request
         let listUUID2AccID = {}
         let login_name = AuthService.getUsername()
         let queuesRequest = []
+        let queuesAccountLock = []
         let i = 0
         for(let x in params.ids) {
             let uuid = uuidv4()
             i++
+
+            // Check account is_active != false
+            if(!_isEmpty(filterBankerAccount)) {
+                const bankerAccount = filterBankerAccount.find(item => item.id === params.ids[x])
+                if(!_isEmpty(bankerAccount) && bankerAccount.is_active === false) {
+                    queuesAccountLock.push(bankerAccount)
+                    continue
+                }
+            }
+
             listUUID2AccID[uuid] = params.ids[x]
             // listUUID2AccID[uuid] = '5a701ca320fd7e9eb445e37e'
             const requestObj = {
@@ -116,11 +128,19 @@ export const socketScanData = (params) => {
             payload: listUUID2AccID
         });
 
+        
+        if(!_isEmpty(queuesAccountLock)) {
+            dispatch({
+                type: AccountantActionType.ACCOUNTANT_SOCKET_SCAN_DATA_ACCOUNT_LOCK,
+                payload: queuesAccountLock
+            });
+        }
+
         let payloadNotify = []
         EventsService.on('accountant_scan_notify', async res => {
             if (res) {
                 payloadNotify.push(res)
-                await sleep(timeWaitToDispatch)
+                await Helpers.sleep(timeWaitToDispatch)
                 // Dispatch data to reducer
                 if(payloadNotify.length !== 0 ) {
                     dispatch({
@@ -143,7 +163,7 @@ export const socketScanData = (params) => {
                 if(!_isEmpty(item)) SocketService.send('scan', item.arg, item.uuid)
 
                 payloadReject.push(res)
-                await sleep(timeWaitToDispatch * 2)
+                await Helpers.sleep(timeWaitToDispatch * 2)
                 // Dispatch data to reducer
                 if(payloadReject.length !== 0 ) {
                     dispatch({
@@ -166,7 +186,7 @@ export const socketScanData = (params) => {
                 if(!_isEmpty(item)) SocketService.send('scan', item.arg, item.uuid)
 
                 payloadResolve.push(res)
-                await sleep(timeWaitToDispatch)
+                await Helpers.sleep(timeWaitToDispatch)
                 // Dispatch data to reducer
                 if(payloadResolve.length !== 0 ) {
                     dispatch({

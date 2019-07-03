@@ -50,7 +50,7 @@ class HttpService {
         }
 
         //Convert Object to form data
-        return this.service.post(path, qs.stringify(payload, { indices: false }), { cancelToken: cancelToken });
+        return this.service.post(path, qs.stringify(payload, { indices: false, skipNulls: false }), { cancelToken: cancelToken });
     };
 
     //Create request with method put

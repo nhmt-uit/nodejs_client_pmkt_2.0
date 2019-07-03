@@ -3,6 +3,10 @@ import { connect } from 'react-redux'
 import { isEmpty as _isEmpty, isEqual as _isEqual} from 'lodash'
 
 import { TransComponent } from 'my-components'
+import { RoutesService } from 'my-routes';
+import { toggleModalAccount, toggleModalDeleteAccount} from 'my-actions/AccountAction'
+import { socketReloadBankerAccountInfo } from 'my-actions/AccountantAction'
+import { deleteBankerAccount } from 'my-actions/AccountantAction';
 
 class BankerAccountEmptyContainer extends Component {
     state = {
@@ -18,17 +22,27 @@ class BankerAccountEmptyContainer extends Component {
         if(!_isEqual(bankerAccounts, newPropsBankerAccounts)
             || !_isEqual(newState.isDelete, this.state.isDelete)
             || !_isEqual(newState.isUpdate, this.state.isUpdate)
+            || !_isEqual(newProps.formAccountSaveStatus, this.props.formAccountSaveStatus)
+            || !_isEqual(newProps.formAccountDeleteStatus, this.props.formAccountDeleteStatus)
             || !_isEqual(newProps.isOpenModal, this.props.isOpenModal)
+            || !_isEqual(newProps.isOpenModalDelete, this.props.isOpenModalDelete)
             )
             return true
         return false;
     }
 
-
-
     componentWillReceiveProps() {
         const bankerAccounts = this.props.bankerAccount.filter(item => item.type === "reject" && item.message === "Empty data")
         if (_isEmpty(bankerAccounts)) this.setState({isUpdate: false, isDelete: false})
+    }
+
+    componentDidUpdate() {
+        if(this.props.formAccountSaveStatus === true) {
+            this.props.socketReloadBankerAccountInfo({id: this.props.selectedItem.id})
+        }
+        if(this.props.formAccountDeleteStatus === true) {
+            this.props.deleteBankerAccount(this.props.selectedItem)
+        }
     }
 
     handleControl = type => {
@@ -36,19 +50,20 @@ class BankerAccountEmptyContainer extends Component {
         if (type === "edit") this.setState({isUpdate: !this.state.isUpdate, isDelete: false})
     }
 
-    handelToggleModal = (item) => {
-        if (this.state.isDelete) this.props.toggleModal('open_delete', item)
-        if (this.state.isUpdate) this.props.toggleModal('open_update', item)
-        this.forceUpdate()
+    handelToggleModal = (e, item) => {
+        this.checkItem = item.id
+        if (this.state.isDelete) this.props.toggleModalDeleteAccount({selectedItem: item})
+        if (this.state.isUpdate) this.props.toggleModalAccount({selectedItem: item})
+        e.preventDefault()
     }
     
     renderBankerAccount(bankerAccounts) {
-        this.checkItem = this.props.isOpenModal ? this.checkItem : null
+        this.checkItem = this.props.isOpenModal || this.props.isOpenModalDelete ? this.checkItem : null
         return bankerAccounts.map((item, idx) => {
             return (
                 <div key={idx} className="form-group col-md-4" style={{marginBottom: '5px'}} >
-                    <label className="mt-radio" onClick={_ => this.handelToggleModal(item) } style={{marginBottom: '0px'}} >
-                        {this.state.isUpdate || this.state.isDelete ? <input type="radio" name="optionsRadios" onChange={_ => this.checkItem = item.id} checked={item.id === this.checkItem} /> : null }
+                    <label className="mt-radio" onClick={e => this.handelToggleModal(e, item) } style={{marginBottom: '0px'}} >
+                        {this.state.isUpdate || this.state.isDelete ? <input type="radio" name="optionsRadios" onChange={_ => null} checked={item.id === this.checkItem} /> : null }
                         <b className="uppercase">{item.acc_name}</b>
                         {this.state.isUpdate || this.state.isDelete ? <span></span> : null}
                     </label>
@@ -88,7 +103,26 @@ class BankerAccountEmptyContainer extends Component {
 const mapStateToProps = state => {
     return {
         bankerAccount : state.AccountantReducer.bankerAccount,
+        //Response Modal Account Saved
+        formAccountSaveStatus: state.AccountReducer.formSaveStatus,
+        formAccountDeleteStatus: state.AccountReducer.formDeleteStatus,
+        selectedItem : state.AccountReducer.selectedItem,
+        isOpenModal: state.AccountReducer.isOpenModal,
+        isOpenModalDelete: state.AccountReducer.isOpenModalDelete,
     }
 }
 
-export default connect(mapStateToProps, null)(BankerAccountEmptyContainer);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        // Socket Reload Account Info
+        socketReloadBankerAccountInfo: (payload) => {dispatch(socketReloadBankerAccountInfo(payload))},
+        // Handle Modal Form Account
+        toggleModalAccount:  params => dispatch(toggleModalAccount(params)),
+        // Handle Modal Delete Account
+        toggleModalDeleteAccount:  params => dispatch(toggleModalDeleteAccount(params)),
+        //Socket
+        deleteBankerAccount: (params) => {dispatch(deleteBankerAccount(params))},
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(BankerAccountEmptyContainer);

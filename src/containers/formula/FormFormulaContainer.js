@@ -11,7 +11,7 @@ import { saveMember } from 'my-actions/member/MemberAction'
 
 const optSubMemberNumber = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-class FormMemberContainer extends Component {
+class FormFormulaContainer extends Component {
 
     componentWillMount() {
         /*
@@ -107,13 +107,22 @@ class FormMemberContainer extends Component {
                         <Field name="username"component={renderError} />
                     </div>
                     <div className="form-group">
-                        <label className="mt-checkbox">
+                        
+                        <div className="can-toggle">
                             <Field
-                                name="status"
-                                type="checkbox"
-                                component="input"
-                                autoComplete="off"
-                            /> <TransComponent i18nKey="Status" />
+                                id="a"
+                                    name="status"
+                                    type="checkbox"
+                                    component="input"
+                                    autoComplete="off"
+                                />
+                            <label for="a">
+                                <div className="can-toggle__switch" data-checked="oOn" data-unchecked="oOff"></div>
+                                <div className="can-toggle__label-text">.can-toggle</div>
+                            </label>
+                        </div>
+                        <label className="mt-checkbox">
+                             <TransComponent i18nKey="Status" />
                             <span></span>
                         </label>
                     </div>
@@ -227,4 +236,4 @@ export default compose(
         asyncChangeFields: [ 'fullname', 's1', 's2', 's3' ]
     }),
     connect(mapStateToProps, mapDispatchToProps),
-)(FormMemberContainer)
+)(FormFormulaContainer)

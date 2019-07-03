@@ -5,13 +5,16 @@ import { reduxForm, Field } from "redux-form";
 import { get as _get, isEmpty as _isEmpty} from 'lodash'
 
 import { TransComponent } from 'my-components'
-import { renderSelectField, renderError } from 'my-utils/components/redux-form/render-form'
+import { renderSelectField, renderError, renderFormatGroupLabel } from 'my-utils/components/redux-form/render-form'
 import { resetData, initAccount, initMember, initFormula, onChangeFormulaType, saveFormulaAccount, resetFormSaveResponse, initFormulaByAccount } from 'my-actions/AccountantAssignFormulaAction'
 
 import { ModalFormAccountContainer } from 'my-containers/account'
 import { ModalFormMemberContainer } from 'my-containers/member'
+import { ModalFormFormulaContainer } from 'my-containers/formula'
 
-import { toggleModalMember, resetStore as resetStoreMember} from 'my-actions/member/MemberAction'
+import { toggleModalMember} from 'my-actions/member/MemberAction'
+import { toggleModalAccount} from 'my-actions/AccountAction'
+import { toggleModalFormula} from 'my-actions/formula/FormulaAction'
 
 const optFormulaType = [{value: 1, label: <TransComponent i18nKey="-- formula --" />}, {value: 2, label: <TransComponent i18nKey="-- formula group --" />}]
 class FormAssignContainer extends Component {
@@ -45,7 +48,10 @@ class FormAssignContainer extends Component {
     componentDidUpdate() {
         if(this.props.formMemberSaveStatus === true) {
             this.props.initMember()
-            this.props.resetStoreMember()
+        }
+
+        if(this.props.formAccountSaveStatus === true) {
+            this.props.initAccount()
         }
     }
 
@@ -135,7 +141,7 @@ class FormAssignContainer extends Component {
     }
 
     renderInputAccount = _ => {
-        const { optAccount, optMember } = this.props
+        const { optAccount } = this.props
         //First Init Select When Call Component From Accountant Scan
         if(!_isEmpty(this.props.selectedAccount)) {
             return (
@@ -146,6 +152,7 @@ class FormAssignContainer extends Component {
                     isSearchable={true}
                     isDisabled={true}
                     options={[this.props.selectedAccount]}
+                    formatGroupLabel={renderFormatGroupLabel}
                     />
             )
         } else {
@@ -159,9 +166,10 @@ class FormAssignContainer extends Component {
                             options={optAccount}
                             placeholder={<TransComponent i18nKey="-- Select account --" />}
                             onChange={this.handleChangeAccount}
+                            formatGroupLabel={renderFormatGroupLabel}
                             />
                         <span className="input-group-btn">
-                            <button className="btn green" type="button"><i className="fa fa-plus" /></button>
+                            <button className="btn green" type="button" onClick={_ => this.props.toggleModalAccount()}><i className="fa fa-plus" /></button>
                         </span>
                     </div>
                     <Field name="account"component={renderError} />
@@ -236,7 +244,7 @@ class FormAssignContainer extends Component {
                                 placeholder={placeholderFormula}
                                 />
                             <span className="input-group-btn">
-                                <button className="btn green" type="button"><i className="fa fa-plus" /></button>
+                                <button className="btn green" type="button" onClick={_ => this.props.toggleModalFormula()}><i className="fa fa-plus" /></button>
                             </span>
                         </div>
                         <Field name="formula"component={renderError} />
@@ -247,7 +255,9 @@ class FormAssignContainer extends Component {
                 </div>
 
                 {/* <ModalFormAccountContainer isOpen={true} toggle={_ => null} formType="create" /> */}
-                <ModalFormMemberContainer />
+                <ModalFormAccountContainer formType="create" />
+                <ModalFormMemberContainer formType="create" />
+                <ModalFormFormulaContainer formType="create" />
             </form>
         );
     }
@@ -278,7 +288,12 @@ const mapStateToProps = state => {
         optFormula: state.AccountantAssignFormulaReducer.optFormula,
         formSaveStatus: state.AccountantAssignFormulaReducer.formSaveStatus,
         formSaveResponse: state.AccountantAssignFormulaReducer.formSaveResponse,
+
+        //Response Modal Member Saved
         formMemberSaveStatus: state.member.formSaveStatus,
+
+        //Response Modal Account Saved
+        formAccountSaveStatus: state.AccountReducer.formSaveStatus,
     }
 };
 
@@ -292,8 +307,13 @@ const mapDispatchToProps = dispatch => {
         saveFormulaAccount: params => dispatch(saveFormulaAccount(params)),
         resetFormSaveResponse: _ => dispatch(resetFormSaveResponse()),
         initFormulaByAccount: accountId => dispatch(initFormulaByAccount(accountId)),
+        // Handle Modal Form Account
+        toggleModalAccount:  _ => dispatch(toggleModalAccount()),
+        // Handel Modal Form Member
         toggleModalMember:  _ => dispatch(toggleModalMember()),
-        resetStoreMember:  _ => dispatch(resetStoreMember()),
+        // Handel Modal Form Formula
+        toggleModalFormula:  _ => dispatch(toggleModalFormula()),
+        
     };
 };
 

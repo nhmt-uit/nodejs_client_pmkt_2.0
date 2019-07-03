@@ -1,8 +1,6 @@
-import { MemberActionType } from 'my-constants/action-types';
+import { FormulaActionType } from 'my-constants/action-types';
 
 let defaultState = {
-    member: {},
-
     //Handle Modal Form Member
     isOpenModal: false,
 
@@ -11,22 +9,22 @@ let defaultState = {
 	formSaveResponse: {},
 }
 
-const MemberReducer = (state = defaultState, action) => {
+const FormulaReducer = (state = defaultState, action) => {
 
     switch (action.type) {
-        case MemberActionType.MEMBER_RESET_STORE:
+        case FormulaActionType.FORMULA_RESET_STORE:
             return {...defaultState}
-        case MemberActionType.GET_MEMBER:
+        case FormulaActionType.GET_MEMBER:
             return {...state, member: action.payload};
-        case MemberActionType.MEMBER_TOGGLE_MODAL_FORM:
+        case FormulaActionType.FORMULA_TOGGLE_MODAL_FORM:
             //Reset Store When Modal Close
 			if (!state.isOpenModal === false) return {...defaultState}
             return {...state, isOpenModal: !state.isOpenModal};
-        case MemberActionType.MEMBER_SAVE_FORM:
+        case FormulaActionType.FORMULA_SAVE_FORM:
             return {...state, formSaveStatus: action.formSaveStatus, formSaveResponse: action.formSaveResponse}
         default:
             return {...state};
     }
 }
 
-export default MemberReducer
+export default FormulaReducer

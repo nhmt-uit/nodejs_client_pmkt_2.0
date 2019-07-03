@@ -32,8 +32,10 @@ class AccountantFormScanButtonContainer extends Component {
     handleRequestScan = _ => {
         const bankerName = this.props.match.params.bankerName
 
-        let ids = _map(this.props.bankerAccount.filter(item => item.checked && item.type !== 'resolve' && !item.data), 'id')
-        let objRequestScan = {ids: ids, from_date: this.props.from_date, to_date: this.props.to_date}
+        const filterBankerAccount = this.props.bankerAccount.filter(item => item.checked && item.type !== 'resolve' && !item.data)
+        const ids = _map(filterBankerAccount, 'id')
+        console.log(ids, filterBankerAccount)
+        let objRequestScan = {ids: ids, from_date: this.props.from_date, to_date: this.props.to_date, filterBankerAccount: filterBankerAccount}
         if (!_isEmpty(ids)) {
             // Incase Accountant Manual
             if (!_isEmpty(bankerName)) {

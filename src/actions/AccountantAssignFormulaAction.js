@@ -8,6 +8,7 @@ import { AccountService } from 'my-services/account'
 import { MemberService } from 'my-services/member'
 import { FormulaService } from 'my-services/formula'
 import { FormulaGroupService } from 'my-services/formula-group'
+import { Helpers } from 'my-utils'
 
 
 export const resetData = params => {
@@ -101,18 +102,17 @@ export const onChangeFormulaType = (type) => {
 
 export const saveFormulaAccount = (params) => {
     return (dispatch) => {
-        FormulaService.saveFormulaAccount(params).then(res => {
-            if(res.status) {
-                
-            } else {
-
-            }
+        FormulaService.saveFormulaAccount(params).then(async res => {
             // Dispatch data to reducer
             dispatch({
                 type: AccountantAssignFormulaActionType.ASSIGN_FORMULA_SAVE_DATA_FORMULA,
                 formSaveStatus: res.status,
                 formSaveResponse: res.res.data,
             });
+
+            //Clear Message
+            await Helpers.sleep(3000)
+            dispatch(resetFormSaveResponse())
         })
     }
 }

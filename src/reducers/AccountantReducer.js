@@ -197,6 +197,22 @@ export const AccountantReducer = (state = defaultState, action) => {
 			if (newIsProcessing === false) SocketService.unListenerResponse()
 
 			return {...state, bankerAccount: newBankerAccount, isProcessing: newIsProcessing, isAllowReport: newIsAllowReport}
+		case AccountantActionType.ACCOUNTANT_SOCKET_SCAN_DATA_ACCOUNT_LOCK:
+			if (action.payload.length !== 0 ) {
+				for(let x in action.payload) {
+					var objIndex = newBankerAccount.findIndex((obj => obj.id === action.payload[x].id))
+					if (objIndex !== -1) {
+						newBankerAccount[objIndex].type = "reject"
+						newBankerAccount[objIndex].message = "account is suspend! please call company for open account"
+					}
+				}
+			}
+			//Check process finish
+			newIsProcessing = !_isEmpty(newBankerAccount.find(item => item.type === "notify")) ? true : false
+			newIsAllowReport = !_isEmpty(newBankerAccount.find(item => item.type === "resolve")) ? true : false
+			// Stop listen when scan finish
+			if (newIsProcessing === false) SocketService.unListenerResponse()
+			return {...state, bankerAccount: newBankerAccount, isProcessing: newIsProcessing, isAllowReport: newIsAllowReport}
 		case AccountantActionType.ACCOUNTANT_SOCKET_SCAN_DATA_STOP:
 			for(let x of action.bankerAccountIds) {
 				var objIndex = newBankerAccount.findIndex((obj => obj.id === x))
