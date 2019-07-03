@@ -11,8 +11,9 @@ export const renderError = props => {
 }
 
 export const renderSelectField = props => {
-    const { input, options } = props;
+    const { input, options} = props;
     const {touched, error, warning } = props.meta
+
     return (
         <Select
             {...input}
@@ -21,5 +22,20 @@ export const renderSelectField = props => {
             onBlur={() => input.onBlur(input.value)}
             options={options}
         />
+    )
+}
+
+export const renderRadioField = props => {
+    const { input, options, label} = props;
+    const {touched, error, warning } = props.meta
+    return(
+        <label className="mt-radio mt-radio-outline">
+            <input
+                {...input}
+                {...props}
+            />
+            {label}
+            <span></span>
+        </label>
     )
 }

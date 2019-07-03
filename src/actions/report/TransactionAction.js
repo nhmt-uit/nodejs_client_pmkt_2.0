@@ -1,5 +1,6 @@
 import { TransactionActionType } from 'my-constants/action-types'
 import TransactionService from 'my-services/report/TransactionService'
+import {isEmpty as _isEmpty} from "lodash";
 
 export const getAllTransaction = () => {
     return (dispatch) => {
@@ -16,11 +17,18 @@ export const getAllTransaction = () => {
 export const getCycle = () => {
     return (dispatch) => {
         return TransactionService.getCycle().then(res => {
+            if (res.status) {
+                const optCycle = res.res.data.List.map(item => {
+                    return {value: item.id, label: item.chuky}
+                })
 
-            dispatch({
-                type: TransactionActionType.GET_CYCLE,
-                payload: res,
-            })
+                // Dispatch data to reducer
+                dispatch({
+                    type: TransactionActionType.GET_CYCLE,
+                    optCycle: optCycle
+                });
+            }
+
         })
     }
 };
@@ -28,11 +36,16 @@ export const getCycle = () => {
 export const getTypeOfMoney = () => {
     return (dispatch) => {
         return TransactionService.getTypeOfMoney().then(res => {
+            if(res.status) {
+                const optMoney = res.res.data.map(item => {
+                    return {value: item.id, label: item.name}
+                })
 
-            dispatch({
-                type: TransactionActionType.GET_TYPE_OF_MONEY,
-                payload: res,
-            })
+                dispatch({
+                    type: TransactionActionType.GET_TYPE_OF_MONEY,
+                    optMoney: optMoney,
+                })
+            }
         })
     }
 };

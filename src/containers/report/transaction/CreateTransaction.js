@@ -1,11 +1,13 @@
 import React, {Component} from 'react'
-import {reduxForm} from "redux-form";
+import {Field, reduxForm, formValueSelector} from "redux-form";
 import {connect} from "react-redux";
 import {compose} from "redux";
 import {withTranslation} from "react-i18next";
 import MemberContainer from 'my-containers/member/MemberContainer'
+import { renderSelectField, renderError, renderRadioField } from 'my-utils/components/redux-form/render-form'
+// import { number, required } from 'my-utils/components/redux-form/validate-rules'
 
-import { isEmpty} from 'lodash'
+import { isEmpty, keyBy, get as _get} from 'lodash'
 import {getCycle, getTypeOfMoney, saveTransaction, getAllTransaction} from "my-actions/report/TransactionAction";
 
 class CreateTransaction extends Component{
@@ -16,7 +18,7 @@ class CreateTransaction extends Component{
             selectedTypeOfMoney: '',
             selectedCycle: '',
             selectedMember: '',
-            transaction: '',
+            amount: '',
             note:'',
             isEdit: false,
             idEdit:'',
@@ -24,6 +26,11 @@ class CreateTransaction extends Component{
 
             editValue: this.props.editValue,
         }
+        const {
+            cycleValue,
+            amountValue,
+        } = props;
+        // console.log("cycleValue:",cycleValue )
     }
 
     componentWillMount() {
@@ -37,16 +44,25 @@ class CreateTransaction extends Component{
     componentWillUnmount() {
         this.props.onRef(undefined)
     }
+
     callCreateTransaction = (item) => {
         this.setState({
             selectedTransaction: item.type_report,
             selectedTypeOfMoney: item.dv_tien_te_id,
             selectedCycle: item.chukybaocaotuan_id,
             selectedMember: item.user_id,
-            transaction: item.result,
+            amount: item.result,
             note: item.note,
             idEdit: item.id,
             isEdit: true,
+        })
+
+        const { optCycle, optMoney } = this.props
+
+        this.props.initialize({...this.props.initialValues,
+            transaction: item.result,
+            cycle: optCycle.filter(obj => obj.value === item.chukybaocaotuan_id),
+            money: optMoney.filter(obj => obj.value === item.dv_tien_te_id),
         })
     }
 
@@ -56,7 +72,7 @@ class CreateTransaction extends Component{
             selectedTypeOfMoney: '',
             selectedCycle: '',
             selectedMember: '',
-            transaction: '',
+            amount: '',
             note: '',
             idEdit: '',
             isEdit: false,
@@ -111,7 +127,7 @@ class CreateTransaction extends Component{
         var post = {
             currency_type_id: this.state.selectedTypeOfMoney,
             member_select: this.state.selectedMember,
-            transaction: this.state.transaction,
+            amount: this.state.amount,
             transaction_type: this.state.selectedTransaction,
             note: this.state.note,
             isEdit: this.state.isEdit,
@@ -119,6 +135,7 @@ class CreateTransaction extends Component{
             chu_ky_id: this.state.selectedCycle,
             // id: this.state.idEdit,
         }
+        console.log("POST", post)
         var self = this;
         this.props.saveTransaction({data: JSON.stringify(post)})
             .then(function () {
@@ -127,7 +144,7 @@ class CreateTransaction extends Component{
                     selectedTypeOfMoney: '',
                     selectedCycle: '',
                     selectedMember: '',
-                    transaction: '',
+                    amount: '',
                     note: '',
                     idEdit: '',
                     isEdit: false,
@@ -154,30 +171,26 @@ class CreateTransaction extends Component{
             {id: 9, name: 'Other'}
         ]
 
-        var DATA_CYCLE = this.props.transaction.cycle;
-        var DATA_MONEY = this.props.transaction.money;
-        if(isEmpty(DATA_CYCLE) || isEmpty(DATA_MONEY)) {
+        //Get data Cycle
+        const { optCycle, optMoney } = this.props
+
+        if(isEmpty(optMoney) || isEmpty(optCycle)) {
             return null;
         }
-        var money = DATA_MONEY.res.data;
-        var cycleList = DATA_CYCLE.res.data.List
 
-
-        var optionsCycle = cycleList.map(function (item) {
-            return (
-                <option key={item.id} value={item.id}> {item.chuky} </option>
-            )
-        })
-        var optionsMoney = money.map( item => {
+        var optionsMoney = optMoney.map( item => {
             return(
-                <label key={item.id} className="mt-radio mt-radio-outline">
-                    <input type="radio" name={item.name} id={item.name} value={item.id}
-                           checked={this.state.selectedTypeOfMoney === item.id} onChange={this.handleTypeOfMoneyChange}/>
-                    {item.name}
-                    <span></span>
-                </label>
+                <Field
+                    key={item.value}
+                    name="money"
+                    component={renderRadioField}
+                    type="radio"
+                    value={item.value}
+                    label={item.label}
+                />
             )
         })
+
         var optionsTransaction = typeOfTransaction.map( item => {
             return(
                 <label key={item.id} className="mt-radio mt-radio-outline">
@@ -190,7 +203,7 @@ class CreateTransaction extends Component{
         })
 
         const { t } = this.props
-        const {transaction, note} = this.state;
+        const {amount, note} = this.state;
         return (
             <div className="row">
                 {/*<MemberContainer/>*/}
@@ -205,15 +218,31 @@ class CreateTransaction extends Component{
                         </div>
                         <div className="form-group">
                             <label className="control-label col-md-3"> {t("Cycle")} </label>
-                            <div className="col-md-8">
-                                <select value={this.state.selectedCycle} onChange={this.handleCycleChange}>
-                                    <option value="Select cycle"> {t("Select cycle")} </option>
-                                    {optionsCycle}
-                                </select>
+                            <div className="input-group col-md-8">
+                                <Field
+                                    name="cycle"
+                                    className="basic-single"
+                                    component={renderSelectField}
+                                    isSearchable={false}
+                                    options={optCycle}
+                                    placeholder="--Select Cycle--"
+                                />
+                                <span className="input-group-btn">
+                                    <button className="btn green" type="button"><i className="fa fa-plus" /></button>
+                                </span>
+                            </div>
+                            <div className="col-md-3"></div>
+                            <div className="col-md-7">
+                                <Field name="cycle"component={renderError} />
                             </div>
                         </div>
                         <div className="form-group">
                             <label className="control-label col-md-3"> {t("Currency")} </label>
+                            {/*<div className="col-md-8">*/}
+                                {/*<div className="mt-radio-list">*/}
+                                    {/*{optionsMoney}*/}
+                                {/*</div>*/}
+                            {/*</div>*/}
                             <div className="col-md-8">
                                 <div className="mt-radio-list">
                                     {optionsMoney}
@@ -231,8 +260,9 @@ class CreateTransaction extends Component{
                         <div className="form-group">
                             <label className="control-label col-md-3"> {t("Amount")} </label>
                             <div className="col-md-8">
-                                <input className="form-control" type="text" name="transaction"
-                                       value={transaction} onChange={this.onInputChange}/>
+                                <Field className="form-control" component="input" name="amount" type="text"/>
+                                {/*<input className="form-control" type="text" name="transaction"*/}
+                                       {/*value={transaction} onChange={this.onInputChange}/>*/}
                             </div>
                         </div>
                         <div className="form-group">
@@ -261,12 +291,41 @@ class CreateTransaction extends Component{
     }
 }
 
-const mapStateToProps = state => {
-    let initialValues = {};
-    if(state.form.transaction){
-        initialValues = state.form.transaction.values;
+const validate = values => {
+    const errors = {}
+    if (!values.cycle) {
+        errors.cycle = '"Cycle" is not allowed to be empty'
     }
-    return {initialValues, auth: state.AuthReducer, transaction: state.transaction}
+    if (!values.amount) {
+        errors.amount = '"Amount" is not allowed to be empty'
+    }
+    return errors
+}
+
+CreateTransaction = reduxForm({
+    form: 'transaction',
+    validate
+})(CreateTransaction);
+
+const selector = formValueSelector('transaction')
+CreateTransaction = connect(state => {
+    const cycleValue = selector(state, "cycle");
+    const amountValue = selector(state, "amount")
+    return{
+        cycleValue,
+        amountValue,
+    }
+})(CreateTransaction)
+
+const mapStateToProps = (state) => {
+    // let initialValues = {};
+    // if(state.form.transaction){
+    //     initialValues = Object.assign({}, state.form.transaction.values);
+    // }
+    return { auth: state.AuthReducer, transaction: state.transaction,
+        optCycle: state.TransactionReducer.optCycle,
+        optMoney: state.TransactionReducer.optMoney
+    }
 };
 
 const mapDispatchToProps = (dispatch) => {

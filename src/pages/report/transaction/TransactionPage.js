@@ -43,7 +43,11 @@ class TransactionPage extends React.Component{
 
     render() {
         return (
-            <div>
+            <div className='row'>
+                <div className="portlet light bordered" style={{marginLeft: 15, marginRight:15}}>
+                    <div className="caption font-red-sunglo"><h4><span className="caption-subject bold uppercase"> List of Transaction </span></h4></div>
+                    <div className="tools"><span className="collapse"> </span></div>
+                </div>
                 <div className="col-xs-5">
                     <CreateTransaction editValue = {this.state.editValue} onRef={ref => (this.child = ref)}
                                         callParentFromCreateTransaction={this.getDataFromCreateTransaction}/>
@@ -51,8 +55,7 @@ class TransactionPage extends React.Component{
                 <div className="col-xs-7">
                     { this.state.showBill ? (<BillTransaction {...this.state}/>) : ''}
                 </div>
-                <div></div>
-                <div className="row">
+                <div className="col-xs-12">
                     <ListOfTransaction handleParent={this.callbackListOfTransaction}/>
                 </div>
             </div>

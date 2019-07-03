@@ -38,6 +38,7 @@ const appReducers = combineReducers({
     LanguageReducer,
     AuthReducer,
     AccountSubReducer,
+    TransactionReducer,
     AccountantAssignFormulaReducer,
     // Accountant Reducer
     AccountantReducer, AccountantManualReducer,

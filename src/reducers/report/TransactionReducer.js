@@ -2,8 +2,8 @@ import { TransactionActionType } from 'my-constants/action-types';
 
 let defaultState = {
     payload: {},
-    cycle: {},
-    money: {},
+    optCycle: [],
+    optMoney: [],
     reportDetail: {},
 }
 
@@ -13,10 +13,10 @@ const TransactionReducer = (state = defaultState, action) => {
             return {...state, payload: action.payload};
 
         case TransactionActionType.GET_CYCLE:
-            return {...state, cycle: action.payload};
+            return {...state, optCycle: action.optCycle};
 
         case TransactionActionType.GET_TYPE_OF_MONEY:
-            return {...state, money: action.payload};
+            return {...state, optMoney: action.optMoney};
 
         case TransactionActionType.SAVE_TRANSACTION:
             return {...state};
