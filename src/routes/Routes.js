@@ -7,6 +7,7 @@ import { AccountantListPage, AccountantManualBankerPage, AccountantManualLoginPa
 import { ReportPage, ReportDetailPage } from 'my-pages/report';
 import TransactionPage from "my-pages/report/transaction/TransactionPage";
 import { CreateNewPage } from 'my-pages/manages';
+import { FormulaPage } from 'my-pages/formula';
 
 const Routes = [
 	{
@@ -94,6 +95,11 @@ const Routes = [
 		path: RoutesService.getPath('ADMIN', 'MANAGE_CREATE_NEW'),
 		exact: true,
 		component: CreateNewPage,
+	},
+	{
+		path: RoutesService.getPath('ADMIN', 'FORMULA'),
+		exact: true,
+		component: FormulaPage,
 	},
 	{
 		path: '*',

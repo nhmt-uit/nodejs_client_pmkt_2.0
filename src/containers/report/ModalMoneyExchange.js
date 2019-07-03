@@ -19,8 +19,8 @@ class ModalMoneyExchange extends Component {
 
         this.state = {
             rate: '',
-            from: {},
-            to: {}
+            from: { label: '', value: '' },
+            to: { label: '', value: '' }
         };
     }
 
@@ -50,7 +50,7 @@ class ModalMoneyExchange extends Component {
         };
 
         if (name === 'from') {
-            newState.to = {};
+            newState.to = { label: '', value: '' };
         }
 
         this.setState(newState);
@@ -67,7 +67,7 @@ class ModalMoneyExchange extends Component {
         const currencyMap = this.props.currencyMap;
         const fromOptions = this.parseCurrencyToOptions(currencyMap);
         const toOptions = fromOptions.filter(item => item.value !== _get(this.state, 'from.value'));
-        const { rate, from, to } = this.state;console.log(to, toOptions)
+        const { rate, from, to } = this.state;
 
         return (
             <Modal isOpen={this.props.isOpenModalMoneyExchange} toggle={this.toggleModalMoneyExchange}>
@@ -90,6 +90,7 @@ class ModalMoneyExchange extends Component {
                                     placeholder={this.props.t('Select')}
                                     options={fromOptions}
                                     isSearchable={false}
+                                    value={from}
                                     onChange={this.handleChangeSelect('from')}
                                 />
                             </Col>
@@ -119,7 +120,7 @@ class ModalMoneyExchange extends Component {
                 </ModalBody>
                 <ModalFooter>
                     <Button
-                        disabled={!rate || isNaN(rate) || isEmpty(from) || isEmpty(to)} 
+                        disabled={!rate || isNaN(rate) || !from.value || !to.value} 
                         className="red" 
                         onClick={this.handleSubmitForm}
                     ><TransComponent i18nKey="Submit" /></Button>&nbsp;

@@ -42,7 +42,7 @@ export default class ReportAccountContainer extends Component {
     }
 
     renderItem(account) {
-        const { currencyMap, order, btnMoneyExchangeClicked } = this.props;
+        const { currencyMap, order, btnMoneyExchangeClicked, tabActive } = this.props;
         const visible = this.state.visible;
         const rs = [];
 
@@ -50,7 +50,7 @@ export default class ReportAccountContainer extends Component {
 
         const recursiveItem = ((item, level, state) => {
             const marginLeft = `${level * 10}px`;
-            const iconChild = visible[item.state] ? <icon style={{ marginLeft }} className="fa fa-chevron-down" /> : <icon style={{ marginLeft }} className="fa fa-chevron-right" />;
+            const iconChild = visible[item.state] ? <i style={{ marginLeft }} className="fa fa-chevron-down" /> : <i style={{ marginLeft }} className="fa fa-chevron-right" />;
             const memberId = item.level === 0 ? item.id : item.user_id;
             const tranIds = item.level === 0 ? null : item.tranId;
             const elmDOM = (
@@ -68,16 +68,16 @@ export default class ReportAccountContainer extends Component {
                             const value = item.total[currency.dv_tien_te_id] ?  item.total[currency.dv_tien_te_id].result : 0;
                             const className = Number(value) < 0 ? 'font-red' : 'font-blue-steel';
 
-                            return <td className={className} key={i}>{Helpers.formatMoney(Number(value), 0)}</td>;
+                            return <td className={`${className} text-right`} key={i}>{Helpers.formatMoney(Number(value), 0)}</td>;
                         })
                     }
                     <td className="text-center">
-                        { item.deleteMoneyExchange ? <icon onClick={this.handleDeleteMoneyExchange(memberId, tranIds)} className="fa fa-close font-green cursor-pointer" /> : <>&nbsp;</> }
+                        { item.deleteMoneyExchange ? <i onClick={this.handleDeleteMoneyExchange(memberId, tranIds)} className="fa fa-close font-green cursor-pointer" /> : <>&nbsp;</> }
                     </td>
                     <td className="text-center td-exchange-money">
-                        { level === 0 && btnMoneyExchangeClicked 
+                        { (level === 0 && btnMoneyExchangeClicked  && tabActive === -1)
                             ? <label className="mt-checkbox mt-checkbox-outline">&nbsp;<input onClick={this.handleToggleCheckMoneyExchange(item.id)} type="checkbox"/><span /></label> 
-                            : null 
+                            : null
                         }
                     </td>
                 </tr>

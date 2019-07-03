@@ -5,7 +5,7 @@ import { get as _get } from 'lodash';
 import { TransComponent } from 'my-components';
 
 class ButtonMoneyExchange extends Component {
-    state = { btnMoneyExchangeClicked: false, showAll: false };
+    state = { btnMoneyExchangeClicked: false, showAll: true };
 
     changeState = state => _ => {
         this.setState(state, _ => {
@@ -27,6 +27,7 @@ class ButtonMoneyExchange extends Component {
 
     render() {
         const { btnMoneyExchangeClicked, showAll } = this.state;
+        const { typeReport, tabActive } = this.props;
 
         if (btnMoneyExchangeClicked) {
             return (
@@ -39,13 +40,15 @@ class ButtonMoneyExchange extends Component {
 
         return (
             <div className="btn-money-exchange">
-                <label class="mt-checkbox mt-checkbox-outline"> <TransComponent i18nKey="Show all" />
-                    <input type="checkbox" checked={showAll} onClick={this.handleToggleShowAll} name="test" />
+                <label className="mt-checkbox mt-checkbox-outline"> <TransComponent i18nKey="Show all" />
+                    <input type="checkbox" checked={showAll} onChange={this.handleToggleShowAll} name="test" />
                     <span></span>
                 </label>&nbsp;&nbsp;&nbsp;&nbsp;
-                <button className="btn green" onClick={this.changeState({ btnMoneyExchangeClicked: true })}>
-                    <TransComponent i18nKey="Money Exchange" />
-                </button>
+                { typeReport === 'accounting' && tabActive === -1 ? (
+                    <button className="btn green" onClick={this.changeState({ btnMoneyExchangeClicked: true })}>
+                        <TransComponent i18nKey="Money Exchange" />
+                    </button>
+                ) : null }
             </div>
         );
     }
