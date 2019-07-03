@@ -257,11 +257,11 @@ html {
     font-size: 12px!important;
 }
 
-.tabbable-report>.nav-tabs>li.active {
+.tabbable-report>.nav-tabs>li.active:not(.title-accountant), .tabbable-book>.nav-tabs>li.active:not(.title-accountant) {
     border-bottom: 4px solid #d43511!important;
 }
 
-.tabbable-report>.nav-tabs>li.open, .tabbable-report>.nav-tabs>li:hover {
+.tabbable-report>.nav-tabs>li.open:not(.title-accountant), .tabbable-report>.nav-tabs>li:hover:not(.title-accountant), .tabbable-book>.nav-tabs>li.open:not(.title-accountant), .tabbable-book>.nav-tabs>li:hover:not(.title-accountant) {
     border-bottom: 4px solid #d43511!important;
 }
 
@@ -383,8 +383,8 @@ html {
 
 .btn-money-exchange {
   position: absolute;
-  right: 0;
-  bottom: 0;
+  right: 15px;
+  top: -60px;
 }
 
 .display-inline-block {
@@ -397,4 +397,17 @@ html {
 
 .td-exchange-money .mt-checkbox {
   padding-left: 14px
+}
+
+.font-size-15 {
+  font-size: 15px!important;
+}
+
+.table-formula thead tr th {
+  vertical-align: middle;
+  color: #d9312a;
+}
+
+.table-formula tbody tr td {
+  vertical-align: middle;
 }

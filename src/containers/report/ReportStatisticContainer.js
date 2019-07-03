@@ -16,7 +16,7 @@ import { ReportByMember } from 'my-components/report';
 import { CookieService } from 'my-utils/core';
 import { RoutesService } from 'my-routes';
 import { ReportAccountContainer, ButtonMoneyExchange, ModalMoneyExchange } from 'my-containers/report';
-import { ReportService } from 'my-services';
+import { ReportService } from 'my-services/report';
 import { getReport, getReportByBanker, getReportByMember, changeMoneyExchangeIds, changeStatusBtnMoneyExchange } from 'my-actions/ReportAction';
 
 class ReportStatisticContainer extends Component {
@@ -105,7 +105,7 @@ class ReportStatisticContainer extends Component {
             <div className={`tab-pane ${classActive}`} id={`tab_${type}`}>
                 <div className="row">
                     <div className="col-md-12">
-                        <div className="tabbable-line tabbable-custom-profile">
+                        <div className="tabbable-line tabbable-custom-profile tabbable-book">
                             <ul className="nav nav-tabs tabs-reversed">
                                 <li className="title-accountant"><a href="javascript:;">{ itemActive.name || '' }</a></li>
                                 {
@@ -267,13 +267,21 @@ class ReportStatisticContainer extends Component {
         
         return (
             <div className={`tab-pane ${classActive}`} id={id} key={id}>
+                <ButtonMoneyExchange
+                    toggleBtnMoneyExchange={this.handleToggleStatusBtnMoneyExchange} 
+                    isChecked={false}
+                    onToggleModalMoneyExchange={this.toggleModalMoneyExchange}
+                    onToggleShowAll={this.toggleShowAll}
+                    typeReport={type}
+                    tabActive={id}
+                />
                 <div className="portlet-body">
                     <table className="table table-striped table-bordered table-hover">
                         <thead className="font-red">
                             <tr>
                                 <td><span className="glyphicon glyphicon-sort-by-alphabet" /></td>
                                 <th className="font-red">{t('Member')}</th>
-                                { currencyMap.map((item, index) => <th className="font-red" key={index}>{item.dv_tien_te}</th>) }
+                                { currencyMap.map((item, index) => <th className="font-red text-right" key={index}>{item.dv_tien_te}</th>) }
                                 <th className="max-width-40" />
                                 <th className="max-width-40" />
                             </tr>
@@ -290,6 +298,7 @@ class ReportStatisticContainer extends Component {
                                     visible={visible}
                                     currencyMap={currencyMap}
                                     order={index + 1}
+                                    tabActive={id}
                                     onToggleAccount={this.handleToggleAccount}
                                     onDeleteMoneyExchange={this.handleDeleteMoneyExchange}
                                     onToggleCheckMoneyExchange={this.handleToggleCheckMoneyExchange}
@@ -307,11 +316,12 @@ class ReportStatisticContainer extends Component {
                                         const value = total && total[item.dv_tien_te_id] ? total[item.dv_tien_te_id].result : 0;
                                         const classCurrency = Number(value) < 0 ? 'font-red' : 'font-blue-steel';
 
-                                        return <td className={classCurrency} key={index}>
+                                        return <td className={`${classCurrency} text-right`} key={index}>
                                             { Helpers.formatMoney(value, 0) }
                                         </td>
                                     })
                                 }
+                                <td/>
                                 <td/>
                             </tr>
                         </tfoot>
@@ -334,7 +344,8 @@ class ReportStatisticContainer extends Component {
                 id: data.id, 
                 state: id + data.id, 
                 parent,
-                tranIds: data.tranId || null,
+                tranId: data.tranId || null,
+                user_id: data.user_id || null,
                 level: data.level,
             };
 
@@ -384,6 +395,10 @@ class ReportStatisticContainer extends Component {
             switch(tabReportActive) {
                 case 'accounting':
                     let childNextAccounting = child;
+
+                    if (data.type_report && data.type_report === 4 && data.level === 3) {
+                        childNextAccounting = {};
+                    }
 
                     if (data.level === 0) {
                         if (!_get(child, 'accounting.child')) {
@@ -461,11 +476,21 @@ class ReportStatisticContainer extends Component {
     filterAccounting(accountingList, tabReportActive, tabBookActive) {
         let result = null;
 
+        const showAll = this.state.showAll;
+
         if (tabReportActive === 'accounting') {
             result = accountingList.filter(item => {
-                const currentItem = item.child.accounting;
+                const currentItem = item.child.accounting; 
 
-                return !(tabBookActive !== 'banker' && tabBookActive !== -1 && !_get(currentItem, `child[${tabBookActive}]`, false));
+                let flag = !(tabBookActive !== 'banker' && tabBookActive !== -1 && !_get(currentItem, `child[${tabBookActive}]`, false));
+
+                if (!showAll) {
+                    flag = flag && Object.keys(_get(item, 'child.accounting.total', {})).some(function (elm) {
+                        return Number(item.child.accounting.total[elm].result) !== 0;
+                    });
+                } 
+
+                return flag;
             });
         } else {
             result = accountingList.filter(item => {
@@ -479,6 +504,10 @@ class ReportStatisticContainer extends Component {
                     case `tab_${tabReportActive}_2`:
                         return !!item.child['Payment'];
                     default:
+                        if (!showAll) {
+                            return Object.keys(item.total).some(elm => Number(item.total[elm].result) !== 0);
+                        }
+
                         return true;
                 }
             });
@@ -546,8 +575,12 @@ class ReportStatisticContainer extends Component {
 
                 tabReport = (
                     <>
-                        <li className="active tab-report-detail">{ this.renderTabReport('accounting') }</li>
-                        <li className="tab-report-detail">{ this.renderTabReport('synthesis') }</li>
+                        <li className="active tab-report-detail">
+                            { this.renderTabReport('accounting') }
+                        </li>
+                        <li className="tab-report-detail">
+                            { this.renderTabReport('synthesis') }
+                        </li>
                     </>
                 );
                 break;
@@ -578,17 +611,10 @@ class ReportStatisticContainer extends Component {
             <div className="portlet light bordered">
                 <div className="portlet-body ">
                     <div className="tabbable-line tabbable-full-width tabbable-report">
-                        <ul className="position-relative nav nav-tabs">
+                        <ul className="nav nav-tabs">
                             { tabReport }
-
-                            <ButtonMoneyExchange
-                                toggleBtnMoneyExchange={this.handleToggleStatusBtnMoneyExchange} 
-                                isChecked={false}
-                                onToggleModalMoneyExchange={this.toggleModalMoneyExchange}
-                                onToggleShowAll={this.toggleShowAll}
-                            />
                         </ul>
-                        <div className="tab-content tab-report-content">
+                        <div className="tab-content tab-report-content position-relative">
                             { tabContent }
                         </div>
                     </div>

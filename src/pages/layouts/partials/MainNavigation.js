@@ -16,7 +16,7 @@ const menus = [
     { to: RoutesService.getPath('ADMIN', 'MANAGE_DASHBOARD'), exact: false, name: 'Manage', icon: 'fa fa-gears',
         sub_menus: [
             { to: RoutesService.getPath('ADMIN', 'CONFIGURATION'), exact: true, name: 'Configuration' },
-            { to: RoutesService.getPath('ADMIN', 'FORMULA'), exact: true, name: 'Formular' },
+            { to: RoutesService.getPath('ADMIN', 'FORMULA'), exact: true, name: 'Formula' },
             { to: RoutesService.getPath('ADMIN', 'FORMULA_GROUP'), exact: true, name: 'Formula Group' },
             { to: RoutesService.getPath('ADMIN', 'MEMBER'), exact: true, name: 'Member' },
             { to: RoutesService.getPath('ADMIN', 'ACCOUNT'), exact: true, name: 'Account' },

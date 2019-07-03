@@ -1,7 +1,7 @@
 import _get from 'lodash/get';
 
 import { ReportActionType } from 'my-constants/action-types';
-import { ReportService } from 'my-services';
+import { ReportService } from 'my-services/report';
 
 /**
  * @description Get cycle page
