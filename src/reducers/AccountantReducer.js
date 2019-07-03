@@ -26,7 +26,10 @@ let defaultState = {
 	// Handel delete formula after scan
 	isShowAllFormula: true,
 	isOpenModalDeleteFormula: false,
-	payloadDeleteFormula: {}
+	// Handel assign formula after scan
+	isOpenModalFormFormula: false,
+
+	payloadSelectedFormula: {}
 }
 
 export const AccountantReducer = (state = defaultState, action) => {
@@ -232,7 +235,9 @@ export const AccountantReducer = (state = defaultState, action) => {
 		case AccountantActionType.ACCOUNTANT_TOGGLE_SHOW_ALL_FORMULA:
 			return {...state, isShowAllFormula: !state.isShowAllFormula}
 		case AccountantActionType.ACCOUNTANT_TOGGLE_MODAL_DELETE_FORMULA:
-			return {...state, isOpenModalDeleteFormula: !state.isOpenModalDeleteFormula, payloadDeleteFormula: action.payloadDeleteFormula}
+			return {...state, isOpenModalDeleteFormula: !state.isOpenModalDeleteFormula, payloadSelectedFormula: action.payloadSelectedFormula}
+		case AccountantActionType.ACCOUNTANT_TOGGLE_MODAL_FROM_FORMULA:
+			return {...state, isOpenModalFormFormula: !state.isOpenModalFormFormula, payloadSelectedFormula: action.payloadSelectedFormula}
 		case AccountantActionType.ACCOUNTANT_TOGGLE_SHOW_HIDE_BANKER_ACCOUNT_CHILD:
 			var objIndex = newBankerAccount.findIndex((obj => obj.id === action.bankerAccountId))
 			if (objIndex !== -1){

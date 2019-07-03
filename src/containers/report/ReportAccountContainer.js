@@ -9,6 +9,7 @@ export default class ReportAccountContainer extends Component {
 
         this.state = { visible: {} };
     }
+
     handleToggleAccount = id => _ => {
         const visible = this.state.visible;
 
@@ -32,8 +33,16 @@ export default class ReportAccountContainer extends Component {
         return rs;
     }
 
+    handleDeleteMoneyExchange = (memberId, tranIds) => _ => {
+        return this.props.onDeleteMoneyExchange(memberId, tranIds);
+    }
+
+    handleToggleCheckMoneyExchange = id => _ => {
+        return this.props.onToggleCheckMoneyExchange(id);
+    }
+
     renderItem(account) {
-        const { currencyMap, order } = this.props;
+        const { currencyMap, order, btnMoneyExchangeClicked } = this.props;
         const visible = this.state.visible;
         const rs = [];
 
@@ -41,11 +50,13 @@ export default class ReportAccountContainer extends Component {
 
         const recursiveItem = ((item, level, state) => {
             const marginLeft = `${level * 10}px`;
-            const iconChild = visible[item.state] ? <icon style={{ marginLeft }} className="fa fa-chevron-down" /> : <icon style={{ marginLeft }} className="fa fa-chevron-right" />
+            const iconChild = visible[item.state] ? <icon style={{ marginLeft }} className="fa fa-chevron-down" /> : <icon style={{ marginLeft }} className="fa fa-chevron-right" />;
+            const memberId = item.level === 0 ? item.id : item.user_id;
+            const tranIds = item.level === 0 ? null : item.tranId;
             const elmDOM = (
-                <tr key={item.state} className="cursor-pointer" onClick={this.handleToggleAccount(item.state)}>
+                <tr key={item.state} >
                     <td>{ level === 0 ? order : null }</td>
-                    <td>
+                    <td className="cursor-pointer" onClick={this.handleToggleAccount(item.state)}>
                         {
                             account[item.id] 
                                 ? <>{ iconChild }<span>&nbsp;&nbsp;{item.name}</span></>
@@ -61,10 +72,13 @@ export default class ReportAccountContainer extends Component {
                         })
                     }
                     <td className="text-center">
-                        { item.deleteMoneyExchange ? <icon className="fa fa-close" /> : <>&nbsp;</> }
+                        { item.deleteMoneyExchange ? <icon onClick={this.handleDeleteMoneyExchange(memberId, tranIds)} className="fa fa-close font-green cursor-pointer" /> : <>&nbsp;</> }
                     </td>
                     <td className="text-center td-exchange-money">
-                        { level === 0 ? <label className="mt-checkbox mt-checkbox-outline">&nbsp;<input type="checkbox"/><span /></label> : null }
+                        { level === 0 && btnMoneyExchangeClicked 
+                            ? <label className="mt-checkbox mt-checkbox-outline">&nbsp;<input onClick={this.handleToggleCheckMoneyExchange(item.id)} type="checkbox"/><span /></label> 
+                            : null 
+                        }
                     </td>
                 </tr>
             );

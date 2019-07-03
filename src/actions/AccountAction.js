@@ -1,10 +1,12 @@
+import {get as _get} from 'lodash'
 import { AccountActionType } from 'my-constants/action-types';
 import { AccountService } from 'my-services/account'
 
 
+
 export const requestInitFormData = (bankerAccount) => {
     return (dispatch) => {
-        AccountService.initForm(bankerAccount.id).then(res => {
+        AccountService.initForm(_get(bankerAccount, 'id')).then(res => {
             if (res.status) {
                 dispatch({
                     type: AccountActionType.ACCOUNT_INIT_FROM_DATA,

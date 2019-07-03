@@ -14,6 +14,7 @@ class ModalFormAccountContainer extends Component {
     modalTitle = ''
     componentDidMount() {
         if(this.props.formType === "update") this.modalTitle = <TransComponent i18nKey="Update account" />
+        if(this.props.formType === "update") this.modalTitle = <TransComponent i18nKey="Update account" />
     }
 
     /*
@@ -47,7 +48,7 @@ class ModalFormAccountContainer extends Component {
             <Modal isOpen={isOpen} toggle={toggle} scrollable={true}>
                 <ModalHeader toggle={toggle}>{this.modalTitle}</ModalHeader>
                 <ModalBody>
-                    <FormAccountContainer account={account} />
+                    <FormAccountContainer account={account} formType={this.props.formType} />
                 </ModalBody>
                 <ModalFooter>
                     <Button color="btn btn-default green" onClick={this.handleSaveFormData}><TransComponent i18nKey="Save" /></Button>{' '}

@@ -6,7 +6,8 @@ import {
     sortBy as _sortBy,
     toArray as _toArray,
     cloneDeep as _cloneDeep,
-    get as _get
+    get as _get,
+    isEqual as _isEqual,
 } from 'lodash';
 
 import { Helpers } from 'my-utils';
@@ -14,7 +15,9 @@ import { LoadingComponent, TransComponent } from 'my-components';
 import { ReportByMember } from 'my-components/report';
 import { CookieService } from 'my-utils/core';
 import { RoutesService } from 'my-routes';
-import { ReportAccountContainer } from 'my-containers/report';
+import { ReportAccountContainer, ButtonMoneyExchange, ModalMoneyExchange } from 'my-containers/report';
+import { ReportService } from 'my-services';
+import { getReport, getReportByBanker, getReportByMember, changeMoneyExchangeIds, changeStatusBtnMoneyExchange } from 'my-actions/ReportAction';
 
 class ReportStatisticContainer extends Component {
     constructor(props) {
@@ -24,7 +27,27 @@ class ReportStatisticContainer extends Component {
             tabReportActive: 'accounting',
             tabBookActive: -1,
             visible: {},
+            btnMoneyExchangeClicked: false,
+            isOpenModalMoneyExchange: false,
+            showAll: true,
         };
+    }
+
+    shouldComponentUpdate(newProps, newState) {
+        const objKeys = Object.keys(newProps);
+        let flagRender = false;
+
+        objKeys.forEach(key => {
+            if (key !== 'moneyExchangeIds' && !_isEqual(newProps[key], this.props[key])) {
+                flagRender = true;
+            }
+        });
+
+        if (!_isEqual(newState, this.state)) {
+            flagRender = true;
+        }
+
+        return flagRender;
     }
 
     changeState = (obj, cb) => _ => {
@@ -90,7 +113,7 @@ class ReportStatisticContainer extends Component {
                                         ? <li className="title-accountant">
                                             <button
                                                 onClick={() => window.open(RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT_DETAIL', { chuky_id: itemActive.id }), '_blank')}
-                                                className="btn btn-danger btn-circle"
+                                                className="btn btn-danger"
                                             >
                                                 {t('Show detail')}
                                             </button>
@@ -200,8 +223,30 @@ class ReportStatisticContainer extends Component {
         this.setState({ visible });
     }
 
+    handleDeleteMoneyExchange = (memberId, tranIds) => {
+        const { itemActive, reportType } = this.props.reportStore;
+        const params = { member_id: memberId, tranIds: JSON.stringify(tranIds), chuky_id: itemActive.id };
+
+        ReportService.deleteMoneyExchange(params)
+            .then(() => {
+                if (reportType === 'cycle') {
+                    return this.props.getReport({ chuky_id: itemActive.id }, itemActive);
+                }
+
+                if (reportType === 'banker') {
+                    return this.props.getReportByBanker({ chuky_id: itemActive.id, banker_id: itemActive.bankerId }, itemActive);
+                }
+                
+                return this.props.getReportByMember({ chuky_id: itemActive.id, member_name: itemActive.memberName }, itemActive);
+            });
+    }
+
+    handleToggleCheckMoneyExchange = id => {
+        return this.props.changeMoneyExchangeIds(id);
+    }
+
     renderBookTabContent = (type, id, isActive) => {
-        const { data = {}, totalAccounting = {}, totalByBook = {}, totalByTypeReport = {}, totalReport = {} } = this.props.reportStore;
+        const { data = {}, totalAccounting = {}, totalByBook = {}, totalByTypeReport = {}, totalReport = {}, statusBtnMoneyExchange } = this.props.reportStore;
         const t = this.props.t;
         const classActive = isActive ? 'active' : '';
 
@@ -219,10 +264,6 @@ class ReportStatisticContainer extends Component {
         accountingList = this.filterAccounting(accountingList, type, id);
         accountingList = this.parseAccountingToArray(accountingList, type, id);
         currencyMap = _sortBy(currencyMap, 'dv_tien_te').reverse();
-        
-        if (type === 'accounting' && id == -1) {
-            console.log(type, id, accountingList);
-        }
         
         return (
             <div className={`tab-pane ${classActive}`} id={id} key={id}>
@@ -250,6 +291,9 @@ class ReportStatisticContainer extends Component {
                                     currencyMap={currencyMap}
                                     order={index + 1}
                                     onToggleAccount={this.handleToggleAccount}
+                                    onDeleteMoneyExchange={this.handleDeleteMoneyExchange}
+                                    onToggleCheckMoneyExchange={this.handleToggleCheckMoneyExchange}
+                                    btnMoneyExchangeClicked={statusBtnMoneyExchange !== undefined ? statusBtnMoneyExchange : false}
                                 />
                             })
                         }
@@ -283,7 +327,16 @@ class ReportStatisticContainer extends Component {
         const mapAccount = (data, id, parent) => {
             data = _cloneDeep(data);
 
-            const currentRs = { name: data.name, order: data.level, total: {}, id: data.id, state: id + data.id, parent };
+            const currentRs = { 
+                name: data.name, 
+                order: data.level, 
+                total: {}, 
+                id: data.id, 
+                state: id + data.id, 
+                parent,
+                tranIds: data.tranId || null,
+                level: data.level,
+            };
 
             let total = {};
             let deleteMoneyExchange = false;
@@ -434,11 +487,53 @@ class ReportStatisticContainer extends Component {
         return result;
     }
 
+    toggleModalMoneyExchange = () => {
+        this.setState({
+            isOpenModalMoneyExchange: !this.state.isOpenModalMoneyExchange
+        });
+    }
+
+    handleMoneyExchange = (data) => {
+        const { itemActive, reportType } = this.props.reportStore;
+        const params = { 
+            from_currency_id: data.from,
+            to_currency_id: data.to,
+            rate: data.rate,
+            chuky_id: itemActive.id, 
+            user_ids: JSON.stringify(data.moneyExchangeIds) 
+        };
+
+        return ReportService.moneyExchange(params)
+            .then(() => {
+                this.setState({
+                    isOpenModalMoneyExchange: !this.state.isOpenModalMoneyExchange
+                }, () => {
+                    if (reportType === 'cycle') {
+                        return this.props.getReport({ chuky_id: itemActive.id }, itemActive);
+                    }
+    
+                    if (reportType === 'banker') {
+                        return this.props.getReportByBanker({ chuky_id: itemActive.id, banker_id: itemActive.bankerId }, itemActive);
+                    }
+                    
+                    return this.props.getReportByMember({ chuky_id: itemActive.id, member_name: itemActive.memberName }, itemActive);
+                });
+            });
+    }
+
+    handleToggleStatusBtnMoneyExchange = (status) => {
+        return this.props.changeStatusBtnMoneyExchange(status);
+    }
+
+    toggleShowAll = status => {
+        this.setState({ showAll: status });
+    }
+
     render() {
         const { currencyMap, isFetchingReport, reportType = 'cycle' } = this.props.reportStore;
 
-        let tabContent = <></>;
-        let tabReport = <></>;
+        let tabContent = null;
+        let tabReport = null;
 
         switch(reportType) {
             case 'cycle':
@@ -485,13 +580,25 @@ class ReportStatisticContainer extends Component {
                     <div className="tabbable-line tabbable-full-width tabbable-report">
                         <ul className="position-relative nav nav-tabs">
                             { tabReport }
-                            <button className="btn btn-circle green btn-money-exchange"><TransComponent i18nKey="Money Exchange" /></button>
+
+                            <ButtonMoneyExchange
+                                toggleBtnMoneyExchange={this.handleToggleStatusBtnMoneyExchange} 
+                                isChecked={false}
+                                onToggleModalMoneyExchange={this.toggleModalMoneyExchange}
+                                onToggleShowAll={this.toggleShowAll}
+                            />
                         </ul>
                         <div className="tab-content tab-report-content">
                             { tabContent }
                         </div>
                     </div>
                 </div>
+                <ModalMoneyExchange
+                    onToggleModalMoneyExchange={this.toggleModalMoneyExchange} 
+                    isOpenModalMoneyExchange={this.state.isOpenModalMoneyExchange} 
+                    currencyMap={currencyMap}
+                    onMoneyExchange={this.handleMoneyExchange}
+                />
             </div>
         );
     }
@@ -503,7 +610,17 @@ const mapStateToProps = state => {
     };
 };
 
+const mapDispatchToProps = dispatch => {
+    return {
+        changeMoneyExchangeIds: id => dispatch(changeMoneyExchangeIds(id)),
+        getReport: (post, itemActive) => dispatch(getReport(post, itemActive)),
+        getReportByBanker: (post, itemActive) => dispatch(getReportByBanker(post, itemActive)),
+        getReportByMember: (post, itemActive) => dispatch(getReportByMember(post, itemActive)),
+        changeStatusBtnMoneyExchange: status => dispatch(changeStatusBtnMoneyExchange(status)),
+    };
+};
+
 export default compose(
-    connect(mapStateToProps, null),
+    connect(mapStateToProps, mapDispatchToProps),
     withTranslation()
 )(ReportStatisticContainer);

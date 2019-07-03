@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { TransComponent } from 'my-components'
-import { FormAssignContainer, ListFormulaBasedAccountContainer } from 'my-containers/accountant'
+import { FormAssignContainer, ListFormulaByAccountContainer } from 'my-containers/accountant'
 
 class CreateNewPage extends Component {
     render() {
@@ -20,7 +20,7 @@ class CreateNewPage extends Component {
                             <FormAssignContainer />
                         </div>
                         <div className="col-md-8">
-                            <ListFormulaBasedAccountContainer />
+                            <ListFormulaByAccountContainer />
                         </div>
                     </div>
                 </div>

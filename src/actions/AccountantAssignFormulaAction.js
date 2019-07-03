@@ -10,6 +10,14 @@ import { FormulaService } from 'my-services/formula'
 import { FormulaGroupService } from 'my-services/formula-group'
 
 
+export const resetData = params => {
+    return (dispatch) => {
+        dispatch({
+            type: AccountantAssignFormulaActionType.ASSIGN_FORMULA_RESET_DATA_ACCOUNT,
+        });
+    }
+}
+
 export const initAccount = (params) => {
     return (dispatch) => {
         AccountService.getAccount().then(res => {
@@ -125,6 +133,7 @@ export const initFormulaByAccount = account_id => {
                 // Dispatch data to reducer
                 dispatch({
                     type: AccountantAssignFormulaActionType.ASSIGN_FORMULA_INIT_LIST_DATA_BY_ACCOUNT,
+                    selectedAccountId: account_id,
                     listFormulaDetail: res.res.data.data,
                 });
             }
@@ -132,3 +141,14 @@ export const initFormulaByAccount = account_id => {
     }
     
 }
+
+
+export const toggleModalDeleteFormulaByAccount = params => {
+    return (dispatch) => {
+        dispatch({
+            type: AccountantAssignFormulaActionType.ASSIGN_FORMULA_TOGGLE_MODAL_DELETE_FORMULA,
+            paramsDeleteFormulaByAccount: params,
+        });
+    }
+}
+

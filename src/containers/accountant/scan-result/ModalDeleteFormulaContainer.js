@@ -18,10 +18,10 @@ class ModalDeleteFormulaContainer extends Component {
 
 
     handleDelete = async _ => {
-        const { payloadDeleteFormula } = this.props
-        const bankerAccountId = payloadDeleteFormula.bankerAccountId
-        const scanData = payloadDeleteFormula.scanData
-        const ctt_id = payloadDeleteFormula.formulaDetail.ctt_id
+        const { payloadSelectedFormula } = this.props
+        const bankerAccountId = payloadSelectedFormula.bankerAccountId
+        const scanData = payloadSelectedFormula.scanData
+        const ctt_id = payloadSelectedFormula.formulaDetail.ctt_id
 
         await FormulaService.deleteLinkFormulaDetail(ctt_id)
         this.props.socketGetReport({id: bankerAccountId, scanData: scanData})
@@ -29,11 +29,10 @@ class ModalDeleteFormulaContainer extends Component {
     }
 
     render() {
-        console.log("render")
-        const { payloadDeleteFormula } = this.props
-        const formulaID = _get(payloadDeleteFormula, 'formulaDetail.ctt_id')
-        const formulaName = Helpers.formatFormulaName(_get(payloadDeleteFormula, 'formulaDetail.formulaName', ''))
-        const formulaMember = _get(payloadDeleteFormula, 'formulaDetail.memberName', '').toUpperCase()
+        const { payloadSelectedFormula } = this.props
+        const formulaID = _get(payloadSelectedFormula, 'formulaDetail.ctt_id')
+        const formulaName = Helpers.formatFormulaName(_get(payloadSelectedFormula, 'formulaDetail.formulaName', ''))
+        const formulaMember = _get(payloadSelectedFormula, 'formulaDetail.memberName', '').toUpperCase()
         
         return (
             <Modal isOpen={this.props.isOpenModalDeleteFormula} toggle={_ => this.props.toggleModalDeleteFormula()}>
@@ -53,7 +52,7 @@ class ModalDeleteFormulaContainer extends Component {
 const mapStateToProps = state => {
     return {
         isOpenModalDeleteFormula : state.AccountantReducer.isOpenModalDeleteFormula,
-        payloadDeleteFormula : state.AccountantReducer.payloadDeleteFormula,
+        payloadSelectedFormula : state.AccountantReducer.payloadSelectedFormula,
     }
 }
 
