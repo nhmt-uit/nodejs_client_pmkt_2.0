@@ -36,6 +36,17 @@ class FormulaService extends BaseService {
     saveFormulaAccount(payload) {
         return HttpService.post(`${this.serviceUrl}/create_new/merge`, payload)
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | @params array congthuctinhIds = []
+    |--------------------------------------------------------------------------
+    */
+    deleteAccountUseFormula(ids) {
+        const payload = { ids: JSON.stringify(ids) };
+
+        return HttpService.post(`${this.serviceUrl}/formula/delete_account_use_formula`, payload);
+    }
 }
 
 export default new FormulaService()

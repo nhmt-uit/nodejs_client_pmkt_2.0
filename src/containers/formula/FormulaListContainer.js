@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 
 import { TransComponent, LoadingComponent } from 'my-components';
-import { getFormula } from 'my-actions/FormulaAction';
+import { getFormula } from 'my-actions/formula/FormulaAction';
 import { FormulaItemContainer } from 'my-containers/formula';
 
 class FormulaListContainer extends Component {
@@ -29,19 +29,24 @@ class FormulaListContainer extends Component {
 
         this.state = {
             bankerId: 'all',
+            keySearch: '',
         };
-
-        this.handleSearch = _debounce(this.handleSearch, 500);
     }
 
     componentDidMount() {
         this.props.getFormula();
     }
 
+    handleGetFormula = () => {
+        return this.props.getFormula();
+    }
+
     renderBody() {
         const { isFetching } = this.props;
+
         let { formulaList } = this.props;
 
+        formulaList = this.filterFormula(formulaList);
         formulaList = _sortBy(formulaList, ['giaonhan', 'tenct']);
 
         if (isFetching) {
@@ -52,7 +57,42 @@ class FormulaListContainer extends Component {
             );
         }
 
-        return formulaList.map((item, index) => <FormulaItemContainer key={index} formula={item} order={index + 1} />);
+        return formulaList.map((item, index) => 
+            <FormulaItemContainer 
+                key={index} 
+                formula={item} 
+                order={index + 1}
+                onGetFormula={this.handleGetFormula}
+            />
+        );
+    }
+
+    filterFormula(formulaList) {
+        const { keySearch, bankerId } = this.state;
+
+        if (!keySearch && (!bankerId || bankerId === 'all')) {
+            return formulaList;
+        }
+
+        const bankerFilter = (bankerId && bankerId !== 'all') ? bankerId : '';
+        const searchFilter = keySearch || '';
+
+        return formulaList.filter(item => {
+            const tenct = item.tenct ? item.tenct.toLowerCase() : '';
+            
+            let flagBanker = true;
+            let flagSearch = true;
+
+            if (bankerFilter && bankerFilter !== (item.banker_id || '')) {
+                flagBanker = false;
+            }
+
+            if (searchFilter && tenct.indexOf(searchFilter.toLowerCase()) === -1) {
+                flagSearch = false;
+            }
+
+            return flagBanker && flagSearch;
+        });
     }
 
     handleChangeSelectBanker = e => {
@@ -61,9 +101,9 @@ class FormulaListContainer extends Component {
         });
     }
 
-    handleSearch = e => {
-        console.log(e.target.value);
-    };
+    handleSearch = _debounce(key => {
+        this.setState({ keySearch: key });
+    }, 300);
 
     render() {
         const { banker } = this.props;
@@ -74,23 +114,27 @@ class FormulaListContainer extends Component {
                 <div className="portlet-title">
                     <div className="caption bold uppercase font-size-15"><TransComponent i18nKey="Formula list" /></div>
                     <div className="actions">
-                        <form className="form-inline">
+                        <div className="form-inline">
                             <div className="form-group">
                                 <label className="sr-only">formula name</label>
                                 <div className="input-icon right">
                                     <i className="fa fa-search"></i>
-                                    <input className="form-control" onChange={this.handleSearch} placeholder={this.props.t('Formula name')} type="text" />
+                                    <input className="form-control" onChange={e => this.handleSearch(e.target.value)} placeholder={this.props.t('Formula name')} type="text" />
                                 </div>
                             </div>
                             <div className="form-group">
                                 <select className="form-control" value={bankerId} onChange={this.handleChangeSelectBanker}>
-                                    <option value="all">{this.props.t('All')}</option>
+                                    <option value="all">{this.props.t('ALL')}</option>
                                     {
-                                        Object.keys(banker).map(id => <option key={id} value={id}>{banker[id]}</option>)
+                                        Object.keys(banker).map(id => 
+                                            <option className="text-uppercase" key={id} value={id}>
+                                                {banker[id].toUpperCase()}
+                                            </option>
+                                        )
                                     }
                                 </select>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
                 <div className="portlet-body">
@@ -110,7 +154,7 @@ class FormulaListContainer extends Component {
                                 <th rowSpan={2}><TransComponent i18nKey={'Total used account'}/></th>
                                 <th rowSpan={2}><TransComponent i18nKey={'Relink Formula'}/></th>
                                 <th rowSpan={2}><TransComponent i18nKey={'Edit'}/></th>
-                                <th rowSpan={2}><TransComponent i18nKey={'Delete'}/></th>
+                                <th rowSpan={2} className="text-center"><TransComponent i18nKey={'Delete'}/></th>
                             </tr>
                             <tr>
                                 <th className="text-center"><TransComponent i18nKey={'Type name'}/></th>

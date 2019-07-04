@@ -97,7 +97,7 @@ const Routes = [
 		component: CreateNewPage,
 	},
 	{
-		path: RoutesService.getPath('ADMIN', 'FORMULA'),
+		path: RoutesService.getPath('ADMIN', 'MANAGE_FORMULA'),
 		exact: true,
 		component: FormulaPage,
 	},
