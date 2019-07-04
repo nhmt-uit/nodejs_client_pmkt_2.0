@@ -3,11 +3,14 @@ import { BaseService, HttpService} from 'my-utils/core';
 
 class FormulaService extends BaseService {
     serviceUrl = `${AppConfig.API_URL}`;
-    
     getFormula() {
         return HttpService.post(`${this.serviceUrl}/formula`)
     }
-
+    
+    getInitForm() {
+        return HttpService.post(`${this.serviceUrl}/formula/init_form`)
+    }
+    
     getFormulaByAccountId(account_id) {
         const payload = {account_id}
         return HttpService.post(`${this.serviceUrl}/create_new/detail`, payload)
@@ -46,6 +49,15 @@ class FormulaService extends BaseService {
         const payload = { ids: JSON.stringify(ids) };
 
         return HttpService.post(`${this.serviceUrl}/formula/delete_account_use_formula`, payload);
+    }
+
+    validatorFormula(formula_name) {
+        const payload = {value: formula_name}
+        return HttpService.post(`${this.serviceUrl}/formula/validator_formula`, payload)
+    }
+    
+    saveFormula(payload) {
+        return HttpService.post(`${this.serviceUrl}/formula/action`, payload)
     }
 }
 

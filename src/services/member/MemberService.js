@@ -26,6 +26,12 @@ class MemberService extends BaseService {
         const payload = {value: username}
         return HttpService.post(`${this.serviceUrl}/member/validator_member_user`, payload)
     }
+
+    updateMultiCongThucTinh(members) {
+        const payload = { data: JSON.stringify(members) };
+
+        return HttpService.post(`${this.serviceUrl}/member/update_multi_cong_thuc_tinh`, payload);
+    }
 }
 
 export default new MemberService()
