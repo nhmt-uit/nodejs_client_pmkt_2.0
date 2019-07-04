@@ -5,11 +5,15 @@ import {isEmpty as _isEmpty} from "lodash";
 export const getAllTransaction = () => {
     return (dispatch) => {
         return TransactionService.getAllTransaction().then(res => {
-
-            dispatch({
-                type: TransactionActionType.GET_ALL_TRANSACTION,
-                payload: res,
-            })
+            if(res.status){
+                const currencies = res.res.data.List.currencies;
+                const listTransaction = res.res.data.List.result;
+                dispatch({
+                    type: TransactionActionType.GET_ALL_TRANSACTION,
+                    currencies: currencies,
+                    listTransaction: listTransaction,
+                })
+            }
         })
     }
 };
@@ -57,8 +61,18 @@ export const saveTransaction = (post) => {
             dispatch({
                 type: TransactionActionType.SAVE_TRANSACTION,
                 post: post,
+                formSaveStatus: res.status,
+                formSaveResponse: res.res,
             })
         })
+    }
+}
+
+export const resetFormSaveResponse = (params) => {
+    return (dispatch) => {
+        dispatch({
+            type: TransactionActionType.RESET_FORM_SAVE_RESPONSE_TRANSACTION,
+        });
     }
 }
 
@@ -77,12 +91,19 @@ export const delTransaction = (id) => {
 export const getDetailReport = (post) => {
     return(dispatch) => {
         return TransactionService.getDetailReport(post).then(res =>{
+            if(res.status){
+                const currencyMap = res.res.currencyMap;
+                const result = res.res.result;
+                const total = res.res.total;
 
-            dispatch({
-                type: TransactionActionType.GET_DETAIL_REPORT,
-                payload: res,
-                post: post,
-            })
+                dispatch({
+                    type: TransactionActionType.GET_DETAIL_REPORT,
+                    post: post,
+                    currencyMap: currencyMap,
+                    result: result,
+                    total: total,
+                })
+            }
         })
     }
 }

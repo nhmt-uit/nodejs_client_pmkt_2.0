@@ -3,7 +3,7 @@ import {compose} from "redux/es/redux";
 import {withTranslation} from "react-i18next";
 import {reduxForm} from "redux-form";
 import {connect} from "react-redux";
-import {isEmpty} from 'lodash'
+import {get as _get, isEmpty} from 'lodash'
 
 import { Helpers } from 'my-utils'
 import { getAllTransaction} from "my-actions/report/TransactionAction";
@@ -65,12 +65,18 @@ class ListOfTransaction extends Component {
 
     render() {
         const { t } = this.props;
-        var DATA = this.props.allTransaction.payload;
-        if(isEmpty(DATA)){
+
+        const {currencies, listTransaction} = this.props
+        if (isEmpty(currencies) || isEmpty(listTransaction)) {
             return null;
         }
-        var List = DATA.res.data.List.result;
-        // console.log("LIST ALL TRANSACTION", List)
+        var showCurrencies = currencies.map(function (item, index) {
+            return(
+                <th key={index} className="caption-subject font-red text-center"> {item.name} </th>
+            )
+        })
+
+
         var self = this;
         return (
             <div className="table-scrollable">
@@ -79,8 +85,7 @@ class ListOfTransaction extends Component {
                     <tr role="row">
                         <th className="caption-subject font-red text-center"> # </th>
                         <th className="caption-subject font-red text-center"> {t("Member")}</th>
-                        <th className="caption-subject font-red text-center"> {t("VND")} </th>
-                        <th className="caption-subject font-red text-center"> {t("USD")} </th>
+                        {showCurrencies}
                         <th className="caption-subject font-red text-center"> {t("Transaction")} </th>
                         <th className="caption-subject font-red text-center"> {t("Note")} </th>
                         <th className="caption-subject font-red text-center"> {t("Created")} </th>
@@ -90,21 +95,23 @@ class ListOfTransaction extends Component {
                     </thead>
                     <tbody>
                     {
-                        List.map(function (item, index) {
-                            var VND = 0, USD = 0;
-                            if(item.dv_tien_te === 'VND'){
-                                VND = item.result;
-                                USD = 0;
-                            } else {
-                                VND = 0;
-                                USD = item.result;
-                            }
+                        listTransaction.map(function (item, index) {
+                            var showCurrenciesValues = currencies.map(function (obj, index) {
+                                if(obj.id == item.dv_tien_te_id){
+                                    return(
+                                        <td key={index} className="text-right"> {Helpers.formatMoney(item.result ,0)} </td>
+                                    )
+                                }
+                                return(
+                                    <td key={index} className="text-right"> {Helpers.formatMoney(0,0)} </td>
+                                )
+                            })
+
                             return(
                                 <tr key={index}>
                                     <td className="text-center"> {index + 1} </td>
                                     <td className="text-center uppercase"> {item.customer_name} </td>
-                                    <td className="text-right"> {Helpers.formatMoney(VND,0)} </td>
-                                    <td className="text-right"> {Helpers.formatMoney(USD,0)} </td>
+                                    {showCurrenciesValues}
                                     <td className="text-center font-dark"> {item.transaction_type} </td>
                                     <td className="text-center"> {item.note} </td>
                                     <td className="text-center"> {item.created} </td>
@@ -140,11 +147,11 @@ class ListOfTransaction extends Component {
 }
 
 const mapStateToProps = state => {
-    let initialValues = {};
-    if(state.form.transaction){
-        initialValues = state.form.transaction.values;
+    return {
+        initialValues: _get(state, 'form.listTransaction.values'),
+        currencies: state.TransactionReducer.currencies,
+        listTransaction: state.TransactionReducer.listTransaction,
     }
-    return {initialValues, auth: state.AuthReducer, allTransaction: state.transaction}
 }
 
 const mapDispatchToProps = (dispatch) => {
@@ -155,7 +162,7 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 export default compose(
-    reduxForm({form: 'transaction'}),
+    reduxForm({form: 'listTransaction'}),
     connect(mapStateToProps, mapDispatchToProps),
     withTranslation(),
 )(ListOfTransaction);

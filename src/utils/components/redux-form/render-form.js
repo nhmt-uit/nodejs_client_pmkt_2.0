@@ -25,18 +25,3 @@ export const renderSelectField = props => {
         />
     )
 }
-
-export const renderRadioField = props => {
-    const { input, options, label} = props;
-    const {touched, error, warning } = props.meta
-    return(
-        <label className="mt-radio mt-radio-outline">
-            <input
-                {...input}
-                {...props}
-            />
-            {label}
-            <span></span>
-        </label>
-    )
-}
