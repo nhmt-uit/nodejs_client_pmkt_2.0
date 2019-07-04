@@ -54,7 +54,7 @@ export const initMember = (params) => {
 
 export const initFormula = (params) => {
     return (dispatch) => {
-        FormulaService.getFormula().then(res => {
+        return FormulaService.getFormula().then(res => {
             if (res.status) {
                 let listData = res.res.data.List
                 const optFormula = listData.map(item => {

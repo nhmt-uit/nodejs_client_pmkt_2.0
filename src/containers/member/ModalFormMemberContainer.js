@@ -27,7 +27,7 @@ class ModalFormMemberContainer extends Component {
             <Modal isOpen={this.props.isOpenModal} toggle={_ => this.props.toggleModalMember()}>
                 <ModalHeader toggle={_ => this.props.toggleModalMember()}>{this.modalTitle}</ModalHeader>
                 <ModalBody>
-                    <FormMemberContainer formType={this.props.formType} />
+                    <FormMemberContainer {...this.props} />
                 </ModalBody>
                 <ModalFooter />
             </Modal>

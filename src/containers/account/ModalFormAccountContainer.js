@@ -29,7 +29,7 @@ class ModalFormAccountContainer extends Component {
             <Modal isOpen={this.props.isOpenModal} toggle={_ => this.props.toggleModalAccount()} scrollable={true}>
                 <ModalHeader toggle={_ => this.props.toggleModalAccount()}>{this.modalTitle}</ModalHeader>
                 <ModalBody>
-                    <FormAccountContainer formType={this.props.formType} />
+                    <FormAccountContainer {...this.props} />
                 </ModalBody>
                 <ModalFooter>
                     {/* <Button color="btn btn-default green" onClick={this.handleSaveFormData}><TransComponent i18nKey="Save" /></Button>{' '}

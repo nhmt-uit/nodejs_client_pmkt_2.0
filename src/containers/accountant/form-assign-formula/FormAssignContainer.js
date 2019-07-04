@@ -53,13 +53,22 @@ class FormAssignContainer extends Component {
         if(this.props.formAccountSaveStatus === true) {
             this.props.initAccount()
         }
+
+        if(this.props.formFormulaSaveStatus === true) {
+            const newFormulaId = this.props.formFormulaSaveResponse.data.formulaId
+            this.props.initFormula().then(_ => {
+                console.log(this.props.optFormula)
+                this.props.initialize({...this.props.initialValues,
+                    formula: this.props.optFormula.find(item => item.value === newFormulaId),
+                })
+            })
+        }
     }
 
     handleChangeAccount = account => {
         const formulaBankerId = _get(this.props.initialValues, 'formula.bankerId')
         const formulaGroupBankerId = _get(this.props.initialValues, 'formula_group')
         const formulaAccountId = _get(this.props.initialValues, 'account.value')
-
 
         if (account.value !== formulaAccountId) {
             if (formulaBankerId !== account.bankerId || formulaGroupBankerId !== account.bankerId) {
@@ -235,7 +244,6 @@ class FormAssignContainer extends Component {
                         <label><TransComponent i18nKey="Formula" /></label>
                         <div className="input-group">
                             <Field
-                            formula_group_select
                                 name={inputNameFormula}
                                 className="basic-single"
                                 component={renderSelectField}
@@ -257,7 +265,7 @@ class FormAssignContainer extends Component {
                 {/* <ModalFormAccountContainer isOpen={true} toggle={_ => null} formType="create" /> */}
                 <ModalFormAccountContainer formType="create" />
                 <ModalFormMemberContainer formType="create" />
-                <ModalFormFormulaContainer formType="create" />
+                <ModalFormFormulaContainer formType="create" defaultBankerId={selectedAccountBankerId}/>
             </form>
         );
     }
@@ -294,6 +302,10 @@ const mapStateToProps = state => {
 
         //Response Modal Account Saved
         formAccountSaveStatus: state.AccountReducer.formSaveStatus,
+
+        //Response Modal Formula Saved
+        formFormulaSaveStatus: state.FormulaReducer.formSaveStatus,
+        formFormulaSaveResponse: state.FormulaReducer.formSaveResponse,
     }
 };
 
@@ -302,7 +314,7 @@ const mapDispatchToProps = dispatch => {
         resetData: _ => dispatch(resetData()),
         initAccount: _ => dispatch(initAccount()),
         initMember: _ => dispatch(initMember()),
-        initFormula: _ => dispatch(initFormula()),
+        initFormula: async _ => dispatch(initFormula()),
         onChangeFormulaType: type => dispatch(onChangeFormulaType(type)),
         saveFormulaAccount: params => dispatch(saveFormulaAccount(params)),
         resetFormSaveResponse: _ => dispatch(resetFormSaveResponse()),

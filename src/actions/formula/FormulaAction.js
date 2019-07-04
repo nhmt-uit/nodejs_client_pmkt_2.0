@@ -1,6 +1,18 @@
 import { FormulaActionType } from 'my-constants/action-types'
-import MemberService from 'my-services/member/MemberService'
+import FormulaService from 'my-services/formula/FormulaService'
 
+export const requestInitFormData = () => {
+    return (dispatch) => {
+        FormulaService.getInitForm().then(res => {
+            if (res.status) {
+                dispatch({
+                    type: FormulaActionType.FORMULA_INIT_FORM_DATA,
+                    initFormData: res.res.data
+                });
+            }
+        })
+    }
+}
 
 export const resetStoreFormula = () => {
     return (dispatch) => {
@@ -21,7 +33,7 @@ export const toggleModalFormula = () => {
 
 export const saveFormula = (payload) => {
     return (dispatch) => {
-        MemberService.createMember(payload).then(res => {
+        FormulaService.saveFormula(payload).then(res => {
             dispatch({
                 type: FormulaActionType.FORMULA_SAVE_FORM,
                 formSaveStatus: res.status,
