@@ -15,19 +15,19 @@ class QuickActivitiesContainer extends Component {
                     </div>
                 </div>
                 <div className="portlet-body">
-                    <Link to ="/create_new" className="icon-btn">
+                    <Link to={RoutesService.getPath('ADMIN', 'MANAGE_CREATE_NEW')} className="icon-btn">
                         <i className="fa fa-plus" />
                         <div><TransComponent i18nKey="Add new" /> </div>
                     </Link>
-                    <Link to ="/report_detail" className="icon-btn">
+                    <Link to={RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT')} className="icon-btn">
                         <i className="fa fa-list" />
                         <div><TransComponent i18nKey="Report" /></div>
                     </Link>
-                    <Link to ="/winloss" className="icon-btn">
+                    <Link to="/winloss" className="icon-btn">
                         <i className="fa fa-usd" />
                         <div><TransComponent i18nKey="Win / Lose" /></div>
                     </Link>
-                    <Link to ="/outstanding" className="icon-btn">
+                    <Link to="/outstanding" className="icon-btn">
                         <i className="fa fa-server" />
                         <div><TransComponent i18nKey="Outstanding" /></div>
                     </Link>

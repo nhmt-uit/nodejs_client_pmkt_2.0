@@ -11,10 +11,12 @@ import { resetData, initAccount, initMember, initFormula, onChangeFormulaType, s
 import { ModalFormAccountContainer } from 'my-containers/account'
 import { ModalFormMemberContainer } from 'my-containers/member'
 import { ModalFormFormulaContainer } from 'my-containers/formula'
+import { ModalFormAssignFormulaGroupContainer } from 'my-containers/formula-group'
 
 import { toggleModalMember} from 'my-actions/member/MemberAction'
 import { toggleModalAccount} from 'my-actions/AccountAction'
 import { toggleModalFormula} from 'my-actions/formula/FormulaAction'
+import { toggleModalAssignFormulaGroup} from 'my-actions/formula-group/FormulaGroupAction'
 
 const optFormulaType = [{value: 1, label: <TransComponent i18nKey="-- formula --" />}, {value: 2, label: <TransComponent i18nKey="-- formula group --" />}]
 class FormAssignContainer extends Component {
@@ -195,14 +197,7 @@ class FormAssignContainer extends Component {
         if(selectedAccountBankerId) {
             optFormula = this.props.optFormula.filter(item => item.bankerId === selectedAccountBankerId)
         }
-        
         const selectedFormulaTypeValue = _get(this.props.initialValues, 'formula_type.value')
-        let inputNameFormula = 'formula'
-        let placeholderFormula =  <TransComponent i18nKey="-- select formula --" />
-        if (selectedFormulaTypeValue === 2) {
-            inputNameFormula = 'formula_group'
-            placeholderFormula =  <TransComponent i18nKey="-- Select formula group --" />
-        }
 
         return (
             <form name="form_assign_formula" onSubmit={this.handleSubmit}>
@@ -240,23 +235,46 @@ class FormAssignContainer extends Component {
                             onChange={this.handleChangeFormulaType}
                             />
                     </div>
-                    <div className="form-group">
-                        <label><TransComponent i18nKey="Formula" /></label>
-                        <div className="input-group">
-                            <Field
-                                name={inputNameFormula}
-                                className="basic-single"
-                                component={renderSelectField}
-                                isSearchable={true}
-                                options={optFormula}
-                                placeholder={placeholderFormula}
-                                />
-                            <span className="input-group-btn">
-                                <button className="btn green" type="button" onClick={_ => this.props.toggleModalFormula()}><i className="fa fa-plus" /></button>
-                            </span>
+                    {
+                        
+                        selectedFormulaTypeValue === 1 ?
+                            <div className="form-group">
+                                <label><TransComponent i18nKey="Formula" /></label>
+                                <div className="input-group">
+                                    <Field
+                                        name='formula'
+                                        className="basic-single"
+                                        component={renderSelectField}
+                                        isSearchable={true}
+                                        options={optFormula}
+                                        placeholder={<TransComponent i18nKey="-- select formula --" />}
+                                        />
+                                    <span className="input-group-btn">
+                                        <button className="btn green" type="button" onClick={_ => this.props.toggleModalFormula()}><i className="fa fa-plus" /></button>
+                                    </span>
+                                </div>
+                                <Field name="formula"component={renderError} />
+                            </div>
+                        :
+                        <div className="form-group">
+                            <label><TransComponent i18nKey="Formula" /></label>
+                            <div className="input-group">
+                                <Field
+                                    name='formula_group'
+                                    className="basic-single"
+                                    component={renderSelectField}
+                                    isSearchable={true}
+                                    options={optFormula}
+                                    placeholder={<TransComponent i18nKey="-- Select formula group --" />}
+                                    />
+                                <span className="input-group-btn">
+                                    <button className="btn green" type="button" onClick={_ => this.props.toggleModalAssignFormulaGroup() }><i className="fa fa-plus" /></button>
+                                </span>
+                            </div>
+                            <Field name="formula"component={renderError} />
                         </div>
-                        <Field name="formula"component={renderError} />
-                    </div>
+                    }
+                    
                     <div className="form-actions text-right">
                         <button type="submit" className="btn red" disabled={this.props.invalid}><TransComponent i18nKey="Save" /></button>
                     </div>
@@ -266,6 +284,7 @@ class FormAssignContainer extends Component {
                 <ModalFormAccountContainer formType="create" />
                 <ModalFormMemberContainer formType="create" />
                 <ModalFormFormulaContainer formType="create" defaultBankerId={selectedAccountBankerId}/>
+                <ModalFormAssignFormulaGroupContainer formType="create" defaultBankerId={selectedAccountBankerId}/>
             </form>
         );
     }
@@ -325,6 +344,9 @@ const mapDispatchToProps = dispatch => {
         toggleModalMember:  _ => dispatch(toggleModalMember()),
         // Handel Modal Form Formula
         toggleModalFormula:  _ => dispatch(toggleModalFormula()),
+        
+        // Handel Modal Form Formula Group
+        toggleModalAssignFormulaGroup:  _ => dispatch(toggleModalAssignFormulaGroup()),
         
     };
 };

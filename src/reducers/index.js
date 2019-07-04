@@ -21,6 +21,7 @@ import TransactionReducer from "./report/TransactionReducer";
 import MemberReducer from "./member/MemberReducer";
 import AccountSubReducer from "./account_sub/AccountSubReducer"
 import FormulaReducer from "./formula/FormulaReducer"
+import FormulaGroupReducer from "./formula-group/FormulaGroupReducer"
 
 const appReducers = combineReducers({
     // Redux form reducer
@@ -47,7 +48,8 @@ const appReducers = combineReducers({
     ChangeSecureCodeReducer,
     ReportReducer,
     AccountReducer,
-    FormulaReducer
+    FormulaReducer,
+    FormulaGroupReducer
 });
 
 export default appReducers;

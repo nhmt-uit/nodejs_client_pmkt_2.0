@@ -10,7 +10,7 @@ import { renderSelectField, renderError } from 'my-utils/components/redux-form/r
 import { requestInitFormData, saveFormula } from 'my-actions/formula/FormulaAction'
 import { FormulaService } from 'my-services/formula'
 
-class FormFormulaContainer extends Component {
+class FormAssignFormulaGroupContainer extends Component {
 
     componentWillMount() {
         /*
@@ -354,4 +354,4 @@ export default compose(
     }),
     connect(mapStateToProps, mapDispatchToProps),
     withTranslation(),
-)(FormFormulaContainer)
+)(FormAssignFormulaGroupContainer)
