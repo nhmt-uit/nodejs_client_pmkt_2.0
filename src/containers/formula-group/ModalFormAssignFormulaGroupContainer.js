@@ -5,7 +5,7 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import 'my-styles/reactstrap-modal.css'
 
 import { TransComponent } from 'my-components'
-import { FormAssignFormulaGroupContainer } from 'my-containers/formula-group'
+import { FormAssignFormulaGroupContainer, ListFormulaByForumulaGroupContainer } from 'my-containers/formula-group'
 import { toggleModalAssignFormulaGroup } from 'my-actions/formula-group/FormulaGroupAction'
 
 class ModalFormAssignFormulaGroupContainer extends Component {
@@ -24,10 +24,18 @@ class ModalFormAssignFormulaGroupContainer extends Component {
 
     render() {
         return (
-            <Modal isOpen={this.props.isOpenModalAssign} toggle={_ => this.props.toggleModalAssignFormulaGroup()}>
+            <Modal className="modal-xxl" isOpen={this.props.isOpenModalAssign} toggle={_ => this.props.toggleModalAssignFormulaGroup()} scrollable={true} >
                 <ModalHeader toggle={_ => this.props.toggleModalAssignFormulaGroup()}>{this.modalTitle}</ModalHeader>
                 <ModalBody>
-                    <FormAssignFormulaGroupContainer {...this.props} />
+                    <div className="row">
+                        <div className="col-md-4">
+                            <FormAssignFormulaGroupContainer {...this.props} />
+                        </div>
+                        <div className="col-md-8">
+                            <ListFormulaByForumulaGroupContainer {...this.props} />
+                        </div>
+                    </div>
+                    
                 </ModalBody>
                 <ModalFooter />
             </Modal>

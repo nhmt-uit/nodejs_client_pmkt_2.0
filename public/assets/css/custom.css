@@ -67,7 +67,8 @@ html {
 }
 .form-group .css-1pahdxg-control, .form-group .css-1pahdxg-control:hover {
 	border-color: #93a1bb;
-	box-shadow: none;
+  box-shadow: none;
+  min-height: 32px;
 }
 .form-group .css-yk16xz-control {
 	border: 1px solid #c2cad8;

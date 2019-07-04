@@ -9,7 +9,7 @@ let defaultState = {
     //Handle Modal Form Member
     isOpenModalAssign: false,
 
-    //Handel Save Form
+    //Handel Save Form Assign
 	formSaveStatus: null,
 	formSaveResponse: {},
 }

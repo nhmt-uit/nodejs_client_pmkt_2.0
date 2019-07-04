@@ -8,7 +8,9 @@ import { get as _get, isEmpty as _isEmpty, isEqual as _isEqual} from 'lodash'
 import { TransComponent } from 'my-components'
 import { renderSelectField, renderError } from 'my-utils/components/redux-form/render-form'
 import { requestInitFormData, saveFormula } from 'my-actions/formula/FormulaAction'
+import { toggleModalFormula} from 'my-actions/formula/FormulaAction'
 import { FormulaService } from 'my-services/formula'
+import { ModalFormFormulaContainer } from 'my-containers/formula'
 
 class FormAssignFormulaGroupContainer extends Component {
 
@@ -41,6 +43,10 @@ class FormAssignFormulaGroupContainer extends Component {
                     he_so_2: 1,
                 })
             }
+        }
+
+        if(this.props.formFormulaSaveStatus === true) {
+
         }
     }
 
@@ -153,134 +159,59 @@ class FormAssignFormulaGroupContainer extends Component {
         const dataFormulaType = _get(this.props.initialValues, 'formula_type')
         this.renderFormulaName()
         return (
-            <form name="form_formula">
+            <form name="form_assign_formula_group">
                 <div className="form-body">
                     {/* {this.renderAlert()} */}
                     <div className="form-group">
-                        <label><TransComponent i18nKey="Formula name" /></label>
-                        <Field
-                            name="formula_name"
-                            type="text"
-                            component="input"
-                            className="form-control form-control-solid placeholder-no-fix"
-                            autoComplete="off"
-                            readOnly={true}
-                        />
-                        <Field name="formula_name"component={renderError} />
+                        <label><TransComponent i18nKey="Formula group" /></label>
+                        <div className="input-group">
+                            <Field
+                                name="formula_group_select"
+                                className="basic-single"
+                                component={renderSelectField}
+                                isSearchable={true}
+                                options={optFormulaType}
+                                />
+                            <span className="input-group-btn">
+                                <button className="btn green" type="button" onClick={_ => null}><i className="fa fa-plus" /></button>
+                            </span>
+                        </div>
+                        <Field name="formula_group_select"component={renderError} />
                     </div>
                     <div className="form-group">
-                        <label><TransComponent i18nKey="Code" /></label>
+                        <label><TransComponent i18nKey="Company" /></label>
                         <Field
                             name="company"
                             className="basic-single"
                             component={renderSelectField}
                             isSearchable={true}
-                            options={this.props.optBanker}
-                            onChange={this.handleChangeBanker}
-                            />
-                    </div>
-                    <div className="form-group">
-                        <label><TransComponent i18nKey="Formula type" /></label>
-                        <Field
-                            name="formula_type"
-                            className="basic-single"
-                            component={renderSelectField}
-                            isSearchable={true}
                             options={optFormulaType}
                             />
-                        <Field name="formula_type"component={renderError} />
                     </div>
                     <div className="form-group">
-                        <label><TransComponent i18nKey="Currency" /></label>
-                        <Field
-                            name="currency"
-                            className="basic-single"
-                            component={renderSelectField}
-                            isSearchable={true}
-                            options={this.props.optCurrency}
-                            />
+                        <label><TransComponent i18nKey="Formula" /></label>
+                        <div className="input-group">
+                            <Field
+                                name="formula_select"
+                                className="basic-single"
+                                component={renderSelectField}
+                                isSearchable={true}
+                                options={optFormulaType}
+                                />
+                            <span className="input-group-btn">
+                                <button className="btn green" type="button" onClick={_ => this.props.toggleModalFormula()}><i className="fa fa-plus" /></button>
+                            </span>
+                        </div>
+                        <Field name="formula_select"component={renderError} />
                     </div>
-                    { !_isEmpty(dataFormulaType) && !_isEmpty(dataFormulaType.data.filter(item => item.dis === "he_so")) ?
-                        <div className="form-group">
-                            <label><TransComponent i18nKey="Ratio" /></label>
-                            <Field
-                                name="ratio"
-                                type="text"
-                                component="input"
-                                className="form-control form-control-solid placeholder-no-fix"
-                                autoComplete="off"
-                            />
-                            <Field name="ratio"component={renderError} />
-                        </div>
-                        : null
-                    }
-                    { !_isEmpty(dataFormulaType) && !_isEmpty(dataFormulaType.data.filter(item => item.dis === "gia_thau")) ?
-                        <div className="form-group">
-                            <label><TransComponent i18nKey="Price" /></label>
-                            <Field
-                                name="price"
-                                type="text"
-                                component="input"
-                                className="form-control form-control-solid placeholder-no-fix"
-                                autoComplete="off"
-                            />
-                            <Field name="price"component={renderError} />
-                        </div>
-                        : null
-                    }
-                    
-                    { !_isEmpty(dataFormulaType) && !_isEmpty(dataFormulaType.data.filter(item => item.dis === "he_so_1")) ?
-                        <div className="form-group">
-                            <label><TransComponent i18nKey="Factor 1" /></label>
-                            <Field
-                                name="he_so_1"
-                                type="text"
-                                component="input"
-                                className="form-control form-control-solid placeholder-no-fix"
-                                autoComplete="off"
-                                onKeyUp={this.handleChangeHeSo}
-                            />
-                            <Field name="he_so_1"component={renderError} />
-                        </div>
-                        : null
-                    }
-                    { !_isEmpty(dataFormulaType) && !_isEmpty(dataFormulaType.data.filter(item => item.dis === "he_so_2")) ?
-                        <div className="form-group">
-                            <label><TransComponent i18nKey="Factor 2" /></label>
-                            <Field
-                                name="he_so_2"
-                                type="text"
-                                component="input"
-                                className="form-control form-control-solid placeholder-no-fix"
-                                autoComplete="off"
-                                onKeyUp={this.handleChangeHeSo}
-                            />
-                            <Field name="he_so_2"component={renderError} />
-                        </div>
-                        : null
-                    }
-                    <div className="form-group">
-                        <label><TransComponent i18nKey="Result" /> = {this.renderResult()}</label>
-                    </div>
-                    <div className="form-group">
-                        <label><TransComponent i18nKey="Pay/Rec" /></label>
-                        <div className="can-toggle">
-                            <Field
-                                id="giaonhan"
-                                name="giaonhan"
-                                type="checkbox"
-                                component="input"
-                                autoComplete="off"
-                            />
-                            <label htmlFor="giaonhan">
-                                <div className="can-toggle__switch" data-checked={this.props.t("Pay")} data-unchecked={this.props.t("Receive")}></div>
-                            </label>
-                        </div>
-                    </div>
+
                     <div className="form-actions text-right">
                         <button type="button" className="btn red" disabled={this.props.invalid} onClick={this.handleSubmit}><TransComponent i18nKey="Save" /></button>
                     </div>
                 </div>
+
+                {/* <ModalFormAccountContainer isOpen={true} toggle={_ => null} formType="create" /> */}
+                <ModalFormFormulaContainer formType="create" defaultBankerId={null}/>
             </form>
         );
     }
@@ -331,10 +262,15 @@ const validate = values => {
 
 const mapStateToProps = state => {
     return {
-        initialValues: _get(state, 'form.form_formula.values'),
+        initialValues: _get(state, 'form.form_assign_formula_group.values'),
         optBanker: state.FormulaReducer.optBanker,
         optFormulaType: state.FormulaReducer.optFormulaType,
         optCurrency: state.FormulaReducer.optCurrency,
+
+
+        //Response Modal Formula Saved
+        formFormulaSaveStatus: state.FormulaReducer.formSaveStatus,
+        formFormulaSaveResponse: state.FormulaReducer.formSaveResponse,
     }
 };
 
@@ -342,13 +278,15 @@ const mapDispatchToProps = dispatch => {
     return {
         saveFormula: payload => dispatch(saveFormula(payload)),
         requestInitFormData: _ => dispatch(requestInitFormData()),
+        // Handel Modal Form Formula
+        toggleModalFormula:  _ => dispatch(toggleModalFormula()),
     };
 };
 
 
 export default compose(
     reduxForm({
-        form: 'form_formula',
+        form: 'form_assign_formula_group',
         asyncValidate: asyncValidate,
         validate,
     }),
