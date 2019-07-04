@@ -37,9 +37,7 @@ class Notification extends Component {
                             <span className="label label-sm label-icon label-warning">
                                 <i className="fa fa-bell-o" />
                             </span>&nbsp;&nbsp;
-                            <span className="bold">{
-                                count + get(notification, 'msg.rs', []).length > 0 ? 1 : 0
-                            } notifications</span>
+                            <span className="bold"><TransComponent i18nKey="you have {{item}} messages" i18nObj={{ item: count + get(notification, 'msg.rs', []).length > 0 ? 1 : 0 }} /></span>
                         </h3>
                     </li>
                     <li>
@@ -50,7 +48,7 @@ class Notification extends Component {
                                         <li>
                                             <Link to={RoutesService.getPath('ADMIN', 'ACCOUNT')}>
                                                 <span className="details">
-                                                    <TransComponent i18nKey={`Have ${count} sub account need to be updated`} />
+                                                    <TransComponent i18nKey="co {{item}} tai khoan can cap nhat lai sub" i18nObj={{ item: count }} />
                                                 </span>
                                             </Link>
                                         </li>

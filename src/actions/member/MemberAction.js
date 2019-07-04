@@ -18,7 +18,7 @@ export const getMember = () => {
     }
 };
 
-export const resetStore = () => {
+export const resetStoreMember = () => {
     return (dispatch) => {
         dispatch({
             type: MemberActionType.MEMBER_RESET_STORE,

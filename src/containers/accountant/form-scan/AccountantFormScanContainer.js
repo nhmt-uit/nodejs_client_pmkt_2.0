@@ -5,7 +5,7 @@ import moment  from 'moment'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css"
 import MultiSelect from "@khanacademy/react-multi-select";
-import { join, filter, isEmpty as _isEmpty, map as _map, isEqual as _isEqual, cloneDeep as _cloneDeep, pick as _pick } from 'lodash'
+import { join, filter, isEmpty as _isEmpty, map as _map, isEqual as _isEqual } from 'lodash'
 
 
 import { AppConfig } from 'my-constants'

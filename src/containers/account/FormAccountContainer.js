@@ -3,17 +3,14 @@ import { compose } from 'redux'
 import { connect } from 'react-redux'
 import Select from 'react-select';
 import { Field, reduxForm } from 'redux-form';
-import { get as _get, isEmpty as _isEmpty } from 'lodash'
+import { get as _get, isEmpty as _isEmpty, isEqual as _isEqual } from 'lodash'
 
-import { requestInitFormData } from 'my-actions/AccountAction'
+import { requestInitFormData, saveAccount, resetFormSaveResponse } from 'my-actions/AccountAction'
 import { TransComponent } from 'my-components'
+import { renderSelectField, renderError, renderFormatGroupLabel } from 'my-utils/components/redux-form/render-form'
+import { AccountService } from 'my-services/account'
 
 
-const formatGroupLabel = data => (
-    <div style={{fontWeight: 'bold', fontSize: '14px', color: '#333'}}>
-        <span>{data.label}</span>
-    </div>
-  );
 const optAccountStatus = [{value: false, label: "False"}, {value: true, label: "True"}]
 const optIsSub = [{value: 0, label: "Sub"}, {value: 1, label: "Admin"}, {value: 2, label: "Agent"}, {value: 3, label: "Master"},  {value: 4, label: "Super"}]
 
@@ -21,72 +18,116 @@ const bankerIsSub = ['s1288','hk1119']
 
 class FormAccountContainer extends Component {
     componentWillMount() {
-        
         this.props.requestInitFormData(_get(this.props, 'account.id'))
-
-        if(this.props.formType === "update" && !_isEmpty(this.props.account)) {
-            this.props.initialize({...this.props.initialValues,
-                id: this.props.account.id,
-                company: this.props.account.banker,
-                acc_name: this.props.account.acc_name,
-                belong_account: this.props.account.acc_parent_id,
-                sub_user: this.props.account.sub_user,
-                sub_pass: this.props.account.sub_pass,
-                sub_code: this.props.account.sub_code,
-                note: this.props.account.note,
-                is_banker_sub: 0,
-                is_active: this.props.account.is_active,
-            })
-        }
+        // Init Default Value
         if(this.props.formType === "create") {
             this.props.initialize({...this.props.initialValues,
-                is_active: optAccountStatus.filter(item => item.value === true),
+                is_active: optAccountStatus.find(item => item.value === true),
+                belong_account: {value: "root", label: <TransComponent i18nKey="Is root account" toUpperCase />},
+                is_sub: optIsSub.find(item => item.value === 0),
             })
         }
     }
 
-    handleChangeBanker = item => {
-        this.props.initialize({...this.props.initialValues, company: item.value })
-    }
-
-    handleChangeBelongAcc = item => {
-        this.props.initialize({...this.props.initialValues, belong_account: item.value })
+    componentDidUpdate(prevProps){
+        // Init Form Incase Edit Item
+        if(!_isEqual(prevProps.optBanker, this.props.optBanker) ||!_isEqual(prevProps.optAccountBelong, this.props.optAccountBelong)) {
+            if(this.props.formType === "update" && !_isEmpty(this.props.selectedItem)) {
+                const optAccountBelong = [{value: "root", label: <TransComponent i18nKey="Is root account" toUpperCase />}].concat(this.props.optAccountBelong)
+                const belong_account_item = this.props.selectedItem.acc_parent_id ? this.props.selectedItem.acc_parent_id : "root"
+                this.props.initialize({...this.props.initialValues,
+                    id: this.props.selectedItem.id,
+                    company: this.props.optBanker.find(item => item.value === this.props.selectedItem.banker),
+                    acc_name: this.props.selectedItem.acc_name,
+                    belong_account:  optAccountBelong.find(item => item.value === belong_account_item),
+                    sub_user: this.props.selectedItem.sub_user,
+                    sub_pass: this.props.selectedItem.sub_pass,
+                    sub_code: this.props.selectedItem.sub_code,
+                    note: this.props.selectedItem.note,
+                    is_sub: optIsSub.find(item => item.value === this.props.selectedItem.is_sub),
+                    is_active: optAccountStatus.find(item => item.value === this.props.selectedItem.is_active),
+                })
+            }
+        }
     }
     
-    handleChangeIsSub = item => {
-        this.props.initialize({...this.props.initialValues, is_banker_sub: item.value })
+    handleSubmit = e => {
+        const payload = {
+            acc_name: _get(this.props.initialValues, 'acc_name', ""),
+            company: _get(this.props.initialValues, 'company.value', ""),
+            banker_name: _get(this.props.initialValues, 'company.name', ""),
+            book_name: _get(this.props.initialValues, 'company.book_name', ""),
+            need_security: _get(this.props.initialValues, 'company.need_security', ""),
+            sub_user: _get(this.props.initialValues, 'sub_user', ""),
+            sub_pass: _get(this.props.initialValues, 'sub_pass', ""),
+        }
+
+
+        if (_get(this.props.initialValues, 'belong_account.value') !== 'root') payload.belong_account = _get(this.props.initialValues, 'belong_account.value', "")
+        if (_get(this.props.initialValues, 'belong_account.value') === 'root') payload.check_login = 'yes'
+        if (!_isEmpty(_get(this.props.initialValues, 'sub_code'))) payload.sub_code = _get(this.props.initialValues, 'sub_code')
+        if (_get(this.props.initialValues, 'is_sub')) payload.is_sub = _get(this.props.initialValues, 'is_sub.value', 0)
+        if (!_isEmpty(_get(this.props.initialValues, 'note'))) payload.note = _get(this.props.initialValues, 'note')
+
+        // Incase Edit Item
+        if(this.props.formType === "update") {
+            payload.id = _get(this.props.initialValues, 'id')
+        }
+
+
+        this.props.saveAccount(payload)
     }
 
+    renderAlert = _ => {
+        const { formSaveStatus, formSaveResponse } = this.props
+        if(formSaveStatus === false) {
+            return (
+                <div className="alert alert-danger">
+                    <button className="close" onClick={this.props.resetFormSaveResponse} />
+                    <span><b> {formSaveResponse.data.message} </b></span>
+                </div>
+            )
+        } else if(formSaveStatus === true) {
+            return (
+                <div className="alert bg-success">
+                    <button className="close" onClick={this.props.resetFormSaveResponse} />
+                    <span><b> {formSaveResponse.data.message} </b></span>
+                </div>
+            )
+        }
+        return null
+    }
+
+
     render() {
+        
+        console.log(this.props.initialValues)
+        
         const {optBanker, formType} = this.props
-        const optAccountBelong = [{value: "root", label: <TransComponent i18nKey="Is root account" toUpperCase />}].concat(this.props.optAccountBelong.filter(item => item.value === this.props.initialValues.company))
+        const company = _get(this.props.initialValues, 'company')
+        const optAccountBelong = [{value: "root", label: <TransComponent i18nKey="Is root account" toUpperCase />}].concat(this.props.optAccountBelong.filter(item => item.value === _get(company, 'value')))
 
-        const selectedBanker = optBanker.filter(item => item.value === this.props.initialValues.company)
-        const belong_account = this.props.initialValues.belong_account ? this.props.initialValues.belong_account : "root"
-        const selectedAccountBelong = !_isEmpty(optAccountBelong[1]) && belong_account !== "root" ? optAccountBelong[1].options.filter(item => item.value === belong_account) : optAccountBelong.filter(item => item.value === belong_account)
-        const selectedAccountStatus = optAccountStatus.filter(item => item.value === this.props.initialValues.is_active)
-        const selectedIsSub = optIsSub.filter(item => item.value === this.props.initialValues.is_banker_sub)
-
-        const isDisabledBasedOneAccountBelong = belong_account === "root" ? false : true
+        const belong_account = _get(this.props.initialValues, 'belong_account')
+        const isDisabledBasedOneAccountBelong = _get(belong_account, 'value') === "root" ? false : true
 
         return (
-            <form>
+            <form name="form_account">
                 <div className="form-body">
+                    {this.renderAlert()}
                     <div className="form-group">
                         <label><TransComponent i18nKey="Company" /></label>
-                        <Select
+                        <Field
+                            name="company"
                             className="basic-single"
-                            classNamePrefix="select"
-                            name="banker_name"
-                            isDisabled={isDisabledBasedOneAccountBelong}
-                            value={selectedBanker}
+                            component={renderSelectField}
                             isSearchable={true}
-                            onChange={this.handleChangeBanker}
                             options={optBanker}
-                        />
+                            isDisabled={isDisabledBasedOneAccountBelong}
+                            />
+                        <Field name="company"component={renderError} />
                     </div>
                     {
-                        formType === "update" ?
+                        formType === "update" || _get(belong_account, 'value') !== "root" ?
                             <div className="form-group">
                                 <label><TransComponent i18nKey="Account name" /></label>
                                 <Field
@@ -97,24 +138,23 @@ class FormAccountContainer extends Component {
                                     autoComplete="off"
                                     readOnly={!isDisabledBasedOneAccountBelong}
                                 />
+                                <Field name="acc_name"component={renderError} />
                             </div>
                         : null
                     }
                     <div className="form-group">
                         <label><TransComponent i18nKey="Belong to account" /></label>
-                        <Select
-                            className="basic-single"
-                            classNamePrefix="select"
+                        <Field
                             name="belong_account"
-                            value={selectedAccountBelong}
+                            className="basic-single"
+                            component={renderSelectField}
                             isSearchable={true}
-                            onChange={this.handleChangeBelongAcc}
                             options={optAccountBelong}
-                            formatGroupLabel={formatGroupLabel}
+                            formatGroupLabel={renderFormatGroupLabel}
                             menuPosition="fixed"
-                        />
+                            />
                     </div>
-                    { belong_account === "root" ? (
+                    { _get(belong_account, 'value') === "root" ? (
                         <>
                             <div className="form-group">
                                 <label><TransComponent i18nKey="Login User" /></label>
@@ -137,7 +177,7 @@ class FormAccountContainer extends Component {
                                 />
                             </div>
                             {
-                            _get(selectedBanker[0], 'need_security', false) ? (
+                                _get(company, 'need_security', false) ? (
                                 <div className="form-group">
                                     <label><TransComponent i18nKey="Secure code" /></label>
                                     <Field
@@ -147,8 +187,9 @@ class FormAccountContainer extends Component {
                                         className="form-control form-control-solid placeholder-no-fix"
                                         autoComplete="off"
                                     />
+                                    <Field name="sub_code"component={renderError} />
                                 </div>
-                            ) : null
+                                ) : null
                             }
                             <div className="form-group">
                                 <label><TransComponent i18nKey="Note" /></label>
@@ -160,33 +201,29 @@ class FormAccountContainer extends Component {
                                     autoComplete="off"
                                 />
                             </div>
-                            { _isEmpty(selectedBanker.filter(item => bankerIsSub.indexOf(item.label.toLowerCase()) === -1)) ? (
+                            { !_isEmpty(company) && bankerIsSub.indexOf(company.label.toLowerCase()) !== -1 ? (
                                 <>
                                     <div className="form-group">
                                         <label><TransComponent i18nKey="The number of log" /></label>
-                                        <Select
+                                        <Field
+                                            name="is_sub"
                                             className="basic-single"
-                                            classNamePrefix="select"
-                                            name="is_banker_sub"
-                                            value={selectedIsSub}
+                                            component={renderSelectField}
                                             isSearchable={true}
-                                            onChange={this.handleChangeIsSub}
                                             options={optIsSub}
                                             menuPosition="fixed"
-                                        />
+                                            />
                                     </div>
                                     <div className="form-group">
                                         <label><TransComponent i18nKey="Permission" /></label>
-                                        <Select
+                                        <Field
+                                            name="is_sub"
                                             className="basic-single"
-                                            classNamePrefix="select"
-                                            name="is_banker_sub"
-                                            value={selectedIsSub}
+                                            component={renderSelectField}
                                             isSearchable={true}
-                                            onChange={this.handleChangeIsSub}
                                             options={optIsSub}
                                             menuPosition="fixed"
-                                        />
+                                            />
                                     </div>
                                 </>
                             ) : null }
@@ -194,16 +231,17 @@ class FormAccountContainer extends Component {
                     ) : null }
                     <div className="form-group">
                         <label><TransComponent i18nKey="Is Active" /></label>
-                        <Select
-                            className="basic-single"
-                            classNamePrefix="select"
+                        <Field
                             name="is_active"
-                            value={selectedAccountStatus}
+                            className="basic-single"
+                            component={renderSelectField}
+                            options={optAccountStatus}
                             isDisabled={true}
                             isSearchable={false}
-                            onChange={this.handleChangeCycleClose}
-                            options={optAccountStatus}
-                        />
+                            />
+                    </div>
+                    <div className="form-actions text-right">
+                        <button type="button" className="btn red" disabled={this.props.invalid} onClick={this.handleSubmit}><TransComponent i18nKey="Save" /></button>
                     </div>
                 </div>
             </form>
@@ -211,6 +249,38 @@ class FormAccountContainer extends Component {
     }
 }
 
+const asyncValidate = (values, dispatch, props, currentFieldName) => {
+    const errors = {}
+    return new Promise((resolve, reject) => {
+        //Validate fullname
+        if(currentFieldName === "acc_name") {
+            const payload = {
+                'value[acc_name]': values.acc_name,
+                'value[banker_id]': values.company.value
+            }
+            AccountService.validatorAccount(payload).then(res => {
+                if(res.status === false) {
+                    errors.acc_name = res.res.data.message
+                    return reject(errors)
+                }
+            })
+        }
+    });
+}
+
+const validate = values => {
+    const errors = {}
+    if (!_get(values, 'company.value')) {
+        errors.company = 'Company is invalid'
+    }
+    if (!values.acc_name) {
+        errors.acc_name = '"fullname" is not allowed to be empty'
+    }
+    if (!values.sub_code) {
+        errors.sub_code = '"Sub code" is not allowed to be empty'
+    }
+    return errors
+}
 
 const mapStateToProps = state => {
     return {
@@ -218,16 +288,26 @@ const mapStateToProps = state => {
         initFormData : state.AccountReducer.initFormData,
         optBanker : state.AccountReducer.optBanker,
         optAccountBelong : state.AccountReducer.optAccountBelong,
+        selectedItem : state.AccountReducer.selectedItem,
+        formSaveStatus : state.AccountReducer.formSaveStatus,
+        formSaveResponse : state.AccountReducer.formSaveResponse,
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
         requestInitFormData: (accountId) => {dispatch(requestInitFormData(accountId))},
+        saveAccount: payload => dispatch(saveAccount(payload)),
+        resetFormSaveResponse: _ => dispatch(resetFormSaveResponse()),
     }
 };
 
 export default compose(
-    reduxForm({form: 'form_account'}),
+    reduxForm({
+        form: 'form_account',
+        validate,
+        asyncValidate: asyncValidate,
+        asyncChangeFields: [ 'acc_name' ]
+    }),
     connect(mapStateToProps, mapDispatchToProps),
 )(FormAccountContainer);

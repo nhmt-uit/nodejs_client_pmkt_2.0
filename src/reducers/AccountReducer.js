@@ -4,12 +4,27 @@ import { AccountActionType } from 'my-constants/action-types'
 let defaultState = {
 	initFormData: {},
 	optBanker: [],
-	optAccountBelong: []
+	optAccountBelong: [],
+
+	//Handle Modal Delete Member
+	isOpenModalDelete: false,
+	formDeleteStatus: null,
+	formDeleteResponse: {},
+
+	//Handle Modal Form Member
+	selectedItem: {},
+	isOpenModal: false,
+
+	//Handel Save Form
+	formSaveStatus: null,
+	formSaveResponse: {},
 }
 
 export const AccountReducer = (state = defaultState, action) => {
 	switch(action.type){
-		case AccountActionType.ACCOUNT_INIT_FROM_DATA:
+		case AccountActionType.ACCOUNT_RESET_STORE:
+            return {...defaultState}
+		case AccountActionType.ACCOUNT_INIT_FORM_DATA:
 			let optBanker = []
 			let optAccountBelong = []
 			let bankerList = _get(action.initFormData, 'bankerList')
@@ -26,6 +41,20 @@ export const AccountReducer = (state = defaultState, action) => {
 				}
 			}
 			return {...state, initFormData: action.initFormData, optBanker: optBanker, optAccountBelong: optAccountBelong}
+		case AccountActionType.ACCOUNT_TOGGLE_MODAL_FORM:
+			//Reset Store When Modal Close
+			if (!state.isOpenModal === false) return {...defaultState}
+			return {...state, selectedItem: action.selectedItem, isOpenModal: !state.isOpenModal};
+		case AccountActionType.ACCOUNT_TOGGLE_MODAL_DELETE:
+			//Reset Store When Modal Close
+			if (!state.isOpenModalDelete === false) return {...defaultState}
+			return {...state, selectedItem: action.selectedItem, isOpenModalDelete: !state.isOpenModalDelete};
+		case AccountActionType.ACCOUNT_SAVE_FORM_DATA:
+			return {...state, formSaveStatus: action.formSaveStatus, formSaveResponse: action.formSaveResponse}
+		case AccountActionType.ACCOUNT_DELETE_ITEM:
+			return {...state, formDeleteStatus: action.formDeleteStatus, formDeleteResponse: action.formDeleteResponse}
+		case AccountActionType.ACCOUNT_RESET_FORM_RESPONSE:
+			return {...state, formSaveStatus: null, formSaveResponse: {}}
 		default:
 			return {...state}
 	}

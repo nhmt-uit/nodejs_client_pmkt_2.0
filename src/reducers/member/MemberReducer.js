@@ -5,7 +5,6 @@ let defaultState = {
 
     //Handle Modal Form Member
     isOpenModal: false,
-    isModalProcessSuccess: false,
 
     //Handel Save Form
 	formSaveStatus: null,
@@ -20,7 +19,9 @@ const MemberReducer = (state = defaultState, action) => {
         case MemberActionType.GET_MEMBER:
             return {...state, member: action.payload, optMember: action.optMember};
         case MemberActionType.MEMBER_TOGGLE_MODAL_FORM:
-            return {...state, isOpenModal: !state.isOpenModal, formSaveStatus: null, formSaveResponse: {}};
+            //Reset Store When Modal Close
+			if (!state.isOpenModal === false) return {...defaultState}
+            return {...state, isOpenModal: !state.isOpenModal};
         case MemberActionType.MEMBER_SAVE_FORM:
             return {...state, formSaveStatus: action.formSaveStatus, formSaveResponse: action.formSaveResponse}
         default:
