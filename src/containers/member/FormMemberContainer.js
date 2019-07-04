@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
-import { reduxForm, Field } from "redux-form";
-import { get as _get, isEmpty as _isEmpty} from 'lodash'
+import React, {Component} from 'react';
+import {compose} from 'redux';
+import {connect} from 'react-redux';
+import {reduxForm, Field} from "redux-form";
+import {get as _get, isEmpty as _isEmpty} from 'lodash'
 
-import { TransComponent } from 'my-components'
-import {  renderError } from 'my-utils/components/redux-form/render-form'
-import { MemberService } from 'my-services/member'
-import { saveMember } from 'my-actions/member/MemberAction'
+import {TransComponent} from 'my-components'
+import {renderError} from 'my-utils/components/redux-form/render-form'
+import {MemberService} from 'my-services/member'
+import {saveMember} from 'my-actions/member/MemberAction'
 
 const optSubMemberNumber = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
@@ -21,7 +21,8 @@ class FormMemberContainer extends Component {
         */
         MemberService.getSuffixesMember().then(res => {
             if (res.status) {
-                this.props.initialize({...this.props.initialValues,
+                this.props.initialize({
+                    ...this.props.initialValues,
                     username: res.res.username,
                     s1: res.res.s1,
                     s2: res.res.s2,
@@ -29,7 +30,7 @@ class FormMemberContainer extends Component {
                 })
             }
         })
-        
+
     }
 
     handleSubmit = e => {
@@ -45,7 +46,7 @@ class FormMemberContainer extends Component {
 
         this.props.saveMember(payload)
     }
-    
+
 
     render() {
         const memberStatus = _get(this.props.initialValues, 'status')
@@ -54,7 +55,7 @@ class FormMemberContainer extends Component {
                 <div className="form-body">
                     {/* {this.renderAlert()} */}
                     <div className="form-group">
-                        <label><TransComponent i18nKey="Full name" /></label>
+                        <label><TransComponent i18nKey="Full name"/></label>
                         <Field
                             name="fullname"
                             type="text"
@@ -62,10 +63,10 @@ class FormMemberContainer extends Component {
                             className="form-control form-control-solid placeholder-no-fix"
                             autoComplete="off"
                         />
-                        <Field name="fullname"component={renderError} />
+                        <Field name="fullname" component={renderError}/>
                     </div>
                     <div className="form-group">
-                        <label><TransComponent i18nKey="Username" /></label>
+                        <label><TransComponent i18nKey="Username"/></label>
                         <div className="row">
                             <div className="col-md-4" style={{paddingRight: '0px'}}>
                                 <Field
@@ -104,7 +105,7 @@ class FormMemberContainer extends Component {
                                 </Field>
                             </div>
                         </div>
-                        <Field name="username"component={renderError} />
+                        <Field name="username" component={renderError}/>
                     </div>
                     <div className="form-group">
                         <label className="mt-checkbox">
@@ -113,42 +114,43 @@ class FormMemberContainer extends Component {
                                 type="checkbox"
                                 component="input"
                                 autoComplete="off"
-                            /> <TransComponent i18nKey="Status" />
+                            /> <TransComponent i18nKey="Status"/>
                             <span></span>
                         </label>
                     </div>
                     {
                         memberStatus === true ?
-                        (
-                            <>
-                                <div className="form-group">
-                                    <label><TransComponent i18nKey="Password" /></label>
-                                    <Field
-                                        name="password"
-                                        type="password"
-                                        component="input"
-                                        className="form-control form-control-solid placeholder-no-fix"
-                                        autoComplete="off"
-                                    />
-                                    <Field name="password"component={renderError} />
-                                </div>
-                                <div className="form-group">
-                                    <label><TransComponent i18nKey="re-password" /></label>
-                                    <Field
-                                        name="re_password"
-                                        type="password"
-                                        component="input"
-                                        className="form-control form-control-solid placeholder-no-fix"
-                                        autoComplete="off"
-                                    />
-                                    <Field name="re_password"component={renderError} />
-                                </div>
-                            </>
-                        )
-                        : null
+                            (
+                                <>
+                                    <div className="form-group">
+                                        <label><TransComponent i18nKey="Password"/></label>
+                                        <Field
+                                            name="password"
+                                            type="password"
+                                            component="input"
+                                            className="form-control form-control-solid placeholder-no-fix"
+                                            autoComplete="off"
+                                        />
+                                        <Field name="password" component={renderError}/>
+                                    </div>
+                                    <div className="form-group">
+                                        <label><TransComponent i18nKey="re-password"/></label>
+                                        <Field
+                                            name="re_password"
+                                            type="password"
+                                            component="input"
+                                            className="form-control form-control-solid placeholder-no-fix"
+                                            autoComplete="off"
+                                        />
+                                        <Field name="re_password" component={renderError}/>
+                                    </div>
+                                </>
+                            )
+                            : null
                     }
                     <div className="form-actions text-right">
-                        <button type="button" className="btn red" disabled={this.props.invalid} onClick={this.handleSubmit}><TransComponent i18nKey="Save" /></button>
+                        <button type="button" className="btn red" disabled={this.props.invalid}
+                                onClick={this.handleSubmit}><TransComponent i18nKey="Save"/></button>
                     </div>
                 </div>
             </form>
@@ -161,9 +163,9 @@ const asyncValidate = (values, dispatch, props, currentFieldName) => {
     const errors = {}
     return new Promise((resolve, reject) => {
         //Validate fullname
-        if(currentFieldName === "fullname") {
+        if (currentFieldName === "fullname") {
             MemberService.validateMemberName(values.fullname).then(res => {
-                if(res.status === false) {
+                if (res.status === false) {
                     errors.fullname = res.res.data.message
                     return reject(errors)
                 }
@@ -171,10 +173,10 @@ const asyncValidate = (values, dispatch, props, currentFieldName) => {
         }
 
         //Validate username suffixes
-        if(["s1", "s2", "s3"].includes(currentFieldName)) {
+        if (["s1", "s2", "s3"].includes(currentFieldName)) {
             const uesrname = values.username + values.s1 + values.s2 + values.s3
             MemberService.validateMemberUser(uesrname).then(res => {
-                if(res.status === false) {
+                if (res.status === false) {
                     errors.username = res.res.data.message
                     return reject(errors)
                 } else {
@@ -194,13 +196,13 @@ const validate = values => {
         errors.member = '"member" is not allowed to be empty'
     }
 
-    if(!values.password) {
+    if (!values.password) {
         errors.password = '"Password" is not allowed to be empty'
     } else if (!(/^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%])[0-9A-Za-z!@#$%]{8,}$/).test(values.password)) {
         errors.password = '"password" had at least 8 char & contain 1 uppercase letter, 1 lowercase letter, 1 number, 1 special letter'
     }
 
-    if(!values.re_password || values.re_password !== values.password) {
+    if (!values.re_password || values.re_password !== values.password) {
         errors.re_password = 'confirm password fail'
     }
     return errors
@@ -224,7 +226,7 @@ export default compose(
         form: 'form_member',
         validate,
         asyncValidate: asyncValidate,
-        asyncChangeFields: [ 'fullname', 's1', 's2', 's3' ]
+        asyncChangeFields: ['fullname', 's1', 's2', 's3']
     }),
     connect(mapStateToProps, mapDispatchToProps),
 )(FormMemberContainer)

@@ -3,60 +3,99 @@ import {compose} from "redux";
 import {reduxForm} from "redux-form";
 import {connect} from "react-redux";
 import {withTranslation} from "react-i18next";
-
-import {isEmpty, keyBy} from 'lodash'
+import { Helpers } from 'my-utils'
+import {get as _get, isEmpty, keyBy} from 'lodash'
 import {getDetailReport} from "my-actions/report/TransactionAction";
 
 class BillTransaction extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            memberId: this.props.memberId,
-            cycleId: this.props.cycleId,
+            typeOfMoney: '',
+            transactionMethod: '',
+            amount: '',
+            rowInTable: false,
         }
     }
 
-    componentWillReceiveProps(nextProps, nextContext) {
-        if (nextProps.memberId != this.props.memberId || nextProps.cycleId != this.props.cycleId) {
-            var post = {
-                memberId: nextProps.memberId,
-                cycleId: nextProps.cycleId,
-            }
-            this.props.getDetailReport(post)
-        }
+    componentDidMount() {
+        this.props.onRef(this)
     }
+
+    componentWillUnmount() {
+        this.props.onRef(undefined)
+    }
+
+    callBillTransaction = (memberValues, cycleValues, typeOfMoney, transactionMethod, amount) => {
+        if(memberValues){
+            var memberId = memberValues.value;
+        }
+        if(cycleValues){
+            var cycleId = cycleValues.value;
+        }
+        var post = {
+            memberId: memberId,
+            cycleId: cycleId
+        };
+        this.props.getDetailReport(post);
+        if(memberValues && cycleValues && typeOfMoney && transactionMethod && amount){
+            this.setState({
+                typeOfMoney: typeOfMoney,
+                transactionMethod: transactionMethod,
+                amount: amount,
+                rowInTable: true,
+            })
+        }
+    };
 
     render() {
-        var DATA = this.props.transaction.reportDetail;
-        if (isEmpty(DATA)) {
+        var self = this;
+        const {currencyMap, result, total} = this.props;
+        if (isEmpty(currencyMap) || isEmpty(result) || isEmpty(total)) {
             return null;
         }
-        if (DATA.status == false) {
-            return null;
-        }
-        var currencyMap = DATA.res.currencyMap;
-        var result = DATA.res.result;
-        result = Object.entries(result);
-        var total = DATA.res.total;
+        var resultMap = Object.entries(result);
         let map_currency = keyBy(currencyMap, 'dv_tien_te_id');
-
         let currencyIDs = currencyMap.map(function (currency) {
             return currency.dv_tien_te_id;
-        }).sort().reverse()
-
+        }).sort().reverse();
 
         let headers = currencyIDs.map(function (id) {
             return (
                 <th key={id} className="caption-subject font-red text-center"> {map_currency[id].dv_tien_te} </th>
             )
+        });
+
+        var typeOfMoney = this.state.typeOfMoney;
+        var transactionMethod = this.state.transactionMethod;
+        var amount = this.state.amount;
+        var transaction;
+        if(transactionMethod === "2"){
+            transaction = "Payment";
+        } else {
+            transaction = "Other";
+        }
+        let test = currencyIDs.map(function (id) {
+            return(
+                <td key={id} className="caption-subject font-green text-center">
+                    {typeOfMoney === id ?
+                    amount < 0 ? <span className="font-red"> {Helpers.formatMoney(amount,0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney(amount,0)} </span> : ''}
+                </td>
+            )
         })
 
         let rows = currencyIDs.map(function (id) {
             return (
-                <td key={id} className="caption-subject font-green text-center"> {total[id].result} </td>
+                <td key={id} className="caption-subject font-green text-center">
+                    {/*{total[id].result < 0 ? <span className="font-red"> {Helpers.formatMoney(total[id].result,0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney(total[id].result,0)} </span>}*/}
+                    {self.state.rowInTable ?
+                        (typeOfMoney === id ? (Number(total[id].result) + Number(amount)) < 0 ? <span className="font-red"> {Helpers.formatMoney((Number(total[id].result) + Number(amount)),0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney((Number(total[id].result) + Number(amount)),0)} </span>
+                            : total[id].result < 0 ? <span className="font-red"> {Helpers.formatMoney(total[id].result,0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney(total[id].result,0)} </span>)
+                        : total[id].result < 0 ? <span className="font-red"> {Helpers.formatMoney(total[id].result,0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney(total[id].result,0)} </span>
+                    }
+                </td>
             )
-        })
-
+        });
         return (
             <div className="portlet light bordered">
                 <div className="portlet-title">
@@ -75,17 +114,28 @@ class BillTransaction extends Component {
                         </tr>
                         </thead>
                         <tbody>
-                        {result.map(function (item, index) {
+                        {this.state.rowInTable ?
+                            <tr>
+                                <td> {transaction} </td>
+                                {test}
+                            </tr> : <tr></tr>}
+                        {resultMap.map(function (item, index) {
                             var total = item[1].total;
-
                             return (
                                 <tr key={index}>
                                     <td> {item[1].name}</td>
                                     {
                                         currencyIDs.map(function (id) {
                                             return (
-                                                <td key={id}
-                                                    className="caption-subject font-green text-center"> {total[id] && total[id].result || 0} </td>
+                                                <td key={id} className="caption-subject font-green text-center">
+                                                    {self.state.rowInTable ?
+                                                        item[1].name == transaction ?
+                                                            (typeOfMoney === id ? (total[id] && Number(total[id].result) + Number(amount) || 0 + Number(amount)) < 0 ? <span className="font-red"> {Helpers.formatMoney((total[id] && Number(total[id].result) + Number(amount) || 0 + Number(amount)),0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney((total[id] && Number(total[id].result) + Number(amount) || 0 + Number(amount)),0)} </span>
+                                                                : (total[id] && total[id].result || 0) < 0 ? <span className="font-red"> {Helpers.formatMoney((total[id] && total[id].result || 0),0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney((total[id] && total[id].result || 0),0)} </span>)
+                                                            : (total[id] && total[id].result || 0) < 0 ? <span className="font-red"> {Helpers.formatMoney((total[id] && total[id].result || 0),0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney((total[id] && total[id].result || 0),0)} </span>
+                                                        : (total[id] && total[id].result || 0) < 0 ? <span className="font-red"> {Helpers.formatMoney((total[id] && total[id].result || 0),0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney((total[id] && total[id].result || 0),0)} </span>
+                                                    }
+                                                </td>
                                             )
                                         })
                                     }
@@ -105,23 +155,22 @@ class BillTransaction extends Component {
 }
 
 const mapStateToProps = state => {
-    let initialValues = {};
-    if (state.form.transaction) {
-        initialValues = state.form.transaction.values;
+    return {
+        initialValues: _get(state, 'form.billTransaction.values'),
+        currencyMap: state.TransactionReducer.currencyMap,
+        result: state.TransactionReducer.result,
+        total: state.TransactionReducer.total,
     }
-    return {initialValues, auth: state.AuthReducer, transaction: state.transaction}
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        getDetailReport: params => {
-            dispatch(getDetailReport(params))
-        },
+        getDetailReport: params => {dispatch(getDetailReport(params))},
     }
 };
 
 export default compose(
-    reduxForm({form: 'transaction'}),
+    reduxForm({form: 'billTransaction'}),
     connect(mapStateToProps, mapDispatchToProps),
     withTranslation(),
 )(BillTransaction);

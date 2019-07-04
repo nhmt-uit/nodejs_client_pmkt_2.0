@@ -31,15 +31,16 @@ const appReducers = combineReducers({
     banker: BankerReducer,
     alert: AlertReducer,
     report_detail: ReportDetailReducer,
-    transaction: TransactionReducer,
     member: MemberReducer,
     // type_of_money: TransactionReducer,
 
     // System reducers
     AppReducer,
     LanguageReducer,
+    MemberReducer,
     AuthReducer,
     AccountSubReducer,
+    TransactionReducer,
     AccountantAssignFormulaReducer,
     // Accountant Reducer
     AccountantReducer, AccountantManualReducer,
