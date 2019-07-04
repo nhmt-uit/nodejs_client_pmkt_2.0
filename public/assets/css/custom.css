@@ -427,3 +427,7 @@ html {
 .table-formula tbody tr td {
   vertical-align: middle;
 }
+
+.color-text-normal {
+  color: #333
+}

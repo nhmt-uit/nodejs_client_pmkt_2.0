@@ -11,7 +11,11 @@ let defaultState = {
 
     //Handel Save Form
 	formSaveStatus: null,
-	formSaveResponse: {},
+    formSaveResponse: {},
+    List: [],
+    banker: {},
+    isFetching: false,
+    error: null,
 }
 
 const FormulaReducer = (state = defaultState, action) => {
@@ -54,6 +58,14 @@ const FormulaReducer = (state = defaultState, action) => {
             return {...state, isOpenModal: !state.isOpenModal};
         case FormulaActionType.FORMULA_SAVE_FORM:
             return {...state, formSaveStatus: action.formSaveStatus, formSaveResponse: action.formSaveResponse}
+
+        case FormulaActionType.GET_FORMULA:
+            return {...state, isFetching: true, error: null}
+        case FormulaActionType.GET_FORMULA_SUCCESS:
+            return {...state, ...action.payload, isFetching: false, error: null}
+        case FormulaActionType.GET_FORMULA_FAIL:
+            return {...state, isFetching: false, error: action.payload}
+            
         default:
             return {...state};
     }

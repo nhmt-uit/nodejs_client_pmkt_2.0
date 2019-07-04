@@ -40,6 +40,17 @@ class FormulaService extends BaseService {
         return HttpService.post(`${this.serviceUrl}/create_new/merge`, payload)
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | @params array congthuctinhIds = []
+    |--------------------------------------------------------------------------
+    */
+    deleteAccountUseFormula(ids) {
+        const payload = { ids: JSON.stringify(ids) };
+
+        return HttpService.post(`${this.serviceUrl}/formula/delete_account_use_formula`, payload);
+    }
+
     validatorFormula(formula_name) {
         const payload = {value: formula_name}
         return HttpService.post(`${this.serviceUrl}/formula/validator_formula`, payload)
