@@ -14,11 +14,12 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import Select from 'react-select';
 
-import { TransComponent, LoadingComponent } from 'my-components';
+import { TransComponent, LoadingComponent, PaginationComponent } from 'my-components';
 import { getFormula, setFormulaSelected } from 'my-actions/formula/FormulaAction';
-import { FormulaItemContainer, FormulaModalContainer } from 'my-containers/formula';
+import { FormulaItemContainer, FormulaModalContainer, ModalFormFormulaContainer } from 'my-containers/formula';
 import { FormulaService } from 'my-services/formula';
 import { MemberService } from 'my-services/member';
+import { toggleModalFormula} from 'my-actions/formula/FormulaAction';
 
 class FormulaListContainer extends Component {
     static propTypes = {
@@ -38,13 +39,19 @@ class FormulaListContainer extends Component {
             bankerId: 'all',
             keySearch: '',
             isOpenAccountModal: false,
+            isOpenRelinkModal: false,
+            isOpenDeleteModal: false,
             formulaSelected: {},
             listAccDelete: [],
             listAccEdit: [],
             listMemberUpdate: [],
             isLoadingDelete: false,
             isLoadingUpdate: false,
+            isLoadingRelink: false,
             formulaBatchId: null,
+            relinkFormulaId: null,
+            isEdit: false,
+            currentPage: 1,
         };
     }
 
@@ -67,6 +74,10 @@ class FormulaListContainer extends Component {
         if (this.state.isOpenAccountModal && _get(this.state, 'formulaSelected.list_acc_use', []).length === 0) {
             this.setState({ isOpenAccountModal: false });
         }
+        
+        if (this.props.formFormulaSaveStatus && !_isEmpty(this.props.formFormulaSaveResponse)) {
+            this.props.getFormula();
+        }
     }
 
     componentDidMount() {
@@ -85,10 +96,26 @@ class FormulaListContainer extends Component {
         return this.props.getFormula();
     }
 
-    handleSetFormulaSelected = (formula) => {
-        this.setState({
-            isOpenAccountModal: true,
-            formulaSelected: formula
+    handleToggleModal = (type, formula) => {
+        const newState = { formulaSelected: formula };
+
+        switch (type) {
+            case 'relink': 
+                newState.isOpenRelinkModal = true;
+                break;
+            case 'delete': 
+                newState.isOpenDeleteModal = true;
+                break;
+            default:
+                newState.isOpenAccountModal = true;
+        }
+                
+        this.setState(newState);
+    }
+
+    handleToggleEditModal = formula => {
+        this.setState({ isEdit: true }, () => {
+            return this.props.toggleModalFormula(formula);
         });
     }
 
@@ -99,6 +126,7 @@ class FormulaListContainer extends Component {
 
         formulaList = this.filterFormula(formulaList);
         formulaList = _sortBy(formulaList, ['giaonhan', 'tenct']);
+        formulaList = formulaList.splice(this.state.currentPage - 1, 10);
 
         if (isFetching && !this.state.isOpenAccountModal) {
             return (
@@ -113,7 +141,8 @@ class FormulaListContainer extends Component {
                 key={index} 
                 formula={item} 
                 order={index + 1}
-                onSetFormulaSelected={this.handleSetFormulaSelected}
+                onToggle={this.handleToggleModal}
+                onToggleEditModal={this.handleToggleEditModal}
             />
         );
     }
@@ -256,15 +285,59 @@ class FormulaListContainer extends Component {
         });
     }
 
-    handleChangeFormulaBatch = value => {
+    handleChangeSelect = key => value => {
+        this.setState({ [key]: value.value });
+    }
+
+    handleRelinkFormula = () => {
+        const { formulaSelected, relinkFormulaId } = this.state;
+
         this.setState({
-            formulaBatchId: value.value
-        });
+            isLoadingRelink: true,
+        })
+
+        FormulaService.relinkFormula({ fromId: formulaSelected.id, toId: relinkFormulaId })
+            .then(res => {
+                if (res.status) {
+                    this.setState({
+                        isLoadingRelink: false,
+                        isOpenRelinkModal: false,
+                    }, () => this.props.getFormula())
+                }
+            })
+            .catch(() => {
+                this.setState({
+                    isLoadingRelink: false,
+                })
+            });
+    }
+
+    handleDeleleFormula = () => {
+        const { formulaSelected } = this.state;
+
+        this.setState({
+            isLoadingDelete: true,
+        })
+
+        FormulaService.deleteFormula({ id: formulaSelected.id })
+            .then(res => {
+                if (res.status) {
+                    this.setState({
+                        isLoadingDelete: false,
+                        isOpenDeleteModal: false,
+                    }, () => this.props.getFormula())
+                }
+            })
+            .catch(() => {
+                this.setState({
+                    isLoadingDelete: false,
+                })
+            });
     }
 
     renderBodyAccountModal = () => {
         const { formulaSelected, listAccDelete, listAccEdit, isLoadingDelete, isLoadingUpdate } = this.state;
-        const listAccUse = formulaSelected.list_acc_use || [];
+        const listAccUse = formulaSelected ? (formulaSelected.list_acc_use || []) : [];
         const listOptionFormula = this.props.formulaList.map(item => { return { label: item.tenct.toUpperCase(), value: item.id } })
         const selectBatchFormulaElm = listAccEdit.length > 1 
             ? <Select
@@ -272,7 +345,7 @@ class FormulaListContainer extends Component {
                 classNamePrefix="select"
                 defaultValue={listOptionFormula[0]}
                 isSearchable={false}
-                onChange={this.handleChangeFormulaBatch}
+                onChange={this.handleChangeSelect('formulaBatchId')}
                 options={listOptionFormula}
                 menuPosition="fixed"
             />
@@ -289,14 +362,14 @@ class FormulaListContainer extends Component {
                             <th className="text-center">{
                                 listAccEdit.length > 0 
                                     ? (
-                                        <button onClick={this.handleSaveMember} className="btn btn-danger">
+                                        <button disabled={isLoadingUpdate} onClick={this.handleSaveMember} className="btn btn-danger">
                                             <TransComponent i18nKey="Save" />&nbsp;{ isLoadingUpdate ? <i className="fa fa-spinner fa-spin" /> : null }
                                         </button>
                                     ) 
                                     : <TransComponent i18nKey={'Edit'} />
                             }</th>
                             <th className="text-center">
-                                <button disabled={!(this.state.listAccDelete.length > 0)} className="btn btn-danger" onClick={this.handleDeleteAccountUseFormula}>
+                                <button disabled={!(this.state.listAccDelete.length > 0) || isLoadingDelete} className="btn btn-danger" onClick={this.handleDeleteAccountUseFormula}>
                                     <TransComponent i18nKey="Delete" />&nbsp;{ isLoadingDelete ? <i className="fa fa-spinner fa-spin" /> : null }
                                 </button>
                                 </th>
@@ -352,12 +425,87 @@ class FormulaListContainer extends Component {
         );
     }
 
-    render() {console.log('render', this.state.isOpenAccountModal)
-        const { banker } = this.props;
-        const { bankerId, isOpenAccountModal } = this.state;
+    renderBodyRelinkModal = () => {
+        const formulaList = this.props.formulaList;
+        const { relinkFormulaId, isLoadingRelink } = this.state;
+
+        let formulaSelected = this.state.formulaSelected || {};
+
+
+
+        let listOptions = formulaSelected ? formulaList.filter(item => item.banker_id === formulaSelected.banker_id) : [];
+
+        listOptions = listOptions.map(item => ({ label: item.tenct, value: item.id }));
 
         return (
-            <div className="portlet box blue-hoki">
+            <>
+                <div className="form-group">
+                    <label><TransComponent i18nKey="Please Chose Formula" /></label>
+                    <Select
+                        className="basic-single color-text-normal"
+                        classNamePrefix="select"
+                        defaultValue={{ label: formulaSelected.tenct, value: formulaSelected.id }}
+                        isSearchable={false}
+                        onChange={this.handleChangeSelect('relinkFormulaId')}
+                        options={listOptions}
+                        menuPosition="fixed"
+                    />
+                </div>
+                <div className="form-group">
+                    <button 
+                        disabled={ !relinkFormulaId || relinkFormulaId === formulaSelected.id || isLoadingRelink } 
+                        className="btn btn-danger"
+                        onClick={this.handleRelinkFormula}
+                    >
+                        <TransComponent i18nKey="Submit" /> &nbsp; { isLoadingRelink ? <i className="fa fa-spinner spin" /> : null }
+                    </button>
+                </div>
+            </>
+        );
+    }
+
+    renderBodyDeleteModal = () => {
+        const { isLoadingDelete } = this.state;
+        const formulaSelected = this.state.formulaSelected || {};
+
+        return (
+            <>
+                <p className="text-center"><TransComponent i18nKey="confirm delete {{item}}" i18nObj={{ item: formulaSelected.tenct }} /></p>
+                <p className="text-center">
+                    <button 
+                        disabled={isLoadingDelete} 
+                        onClick={this.handleDeleleFormula} 
+                        className="btn green"
+                    >
+                        <TransComponent i18nKey="Delete" />&nbsp;{ isLoadingDelete ? <i className="fa fa-spinner spin" /> : null }
+                    </button>
+                    &nbsp;<button className="btn btn-danger" onClick={this.handleChangeState({ isOpenDeleteModal: false })}><TransComponent i18nKey="Cancel" /></button>
+                </p>
+            </>
+        )
+    }
+
+    handleToggleNewModal = () => {
+        this.setState({
+            isEdit: false,
+        }, () => {
+            return this.props.toggleModalFormula();
+        });
+    }
+
+    handleChangePage = currentPage => {
+        this.setState({
+            currentPage
+        });
+    }
+
+    render() {
+        const { banker, formulaList } = this.props;console.log('render');
+        const { bankerId, isOpenAccountModal, isOpenRelinkModal, isOpenDeleteModal, isEdit, currentPage } = this.state;
+
+        return (
+            <div className="portlet box blue-hoki position-relative">
+                <button onClick={_ => this.handleToggleNewModal()} className="btn btn-danger btn-add-formula"><TransComponent i18nKey="Add new" /></button>
                 <div className="portlet-title">
                     <div className="caption bold uppercase font-size-15"><TransComponent i18nKey="Formula list" /></div>
                     <div className="actions">
@@ -399,7 +547,7 @@ class FormulaListContainer extends Component {
                                     i18nKey={'Pay'}/>/<TransComponent i18nKey={'Receive'}/></th>
                                 <th colSpan={"3"} className="text-center"><TransComponent i18nKey={'Info'}/></th>
                                 <th rowSpan={2}><TransComponent i18nKey={'Total used account'}/></th>
-                                <th rowSpan={2}><TransComponent i18nKey={'Relink Formula'}/></th>
+                                <th rowSpan={2} className="text-center"><TransComponent i18nKey={'Relink Formula'}/></th>
                                 <th rowSpan={2}><TransComponent i18nKey={'Edit'}/></th>
                                 <th rowSpan={2} className="text-center"><TransComponent i18nKey={'Delete'}/></th>
                             </tr>
@@ -412,6 +560,14 @@ class FormulaListContainer extends Component {
                             { this.renderBody() }
                         </tbody>
                     </table>
+                    <div className="text-center">
+                        <PaginationComponent 
+                            currentPage={this.state.currentPage} 
+                            total={this.filterFormula(formulaList).length} 
+                            perPage={10}
+                            onClickPage={this.handleChangePage}
+                        />
+                    </div>
                 </div>
                 <FormulaModalContainer 
                     isOpen={isOpenAccountModal} 
@@ -421,6 +577,19 @@ class FormulaListContainer extends Component {
                     scrollable={true}
                     className="modal-xxl"
                 />
+                <FormulaModalContainer 
+                    isOpen={isOpenRelinkModal} 
+                    header={<strong><TransComponent i18nKey="Relink Formula" /></strong>} 
+                    onToggle={this.handleChangeState({ isOpenRelinkModal: !isOpenRelinkModal })}
+                    body={this.renderBodyRelinkModal()}
+                />
+                <FormulaModalContainer 
+                    isOpen={isOpenDeleteModal} 
+                    header={<strong><TransComponent i18nKey="xac nhan" /></strong>} 
+                    onToggle={this.handleChangeState({ isOpenDeleteModal: !isOpenDeleteModal })}
+                    body={this.renderBodyDeleteModal()}
+                />
+                { isEdit ? <ModalFormFormulaContainer formType="update" /> : <ModalFormFormulaContainer formType="create" /> }
             </div>
         )
     }
@@ -431,6 +600,10 @@ const mapStateToProps = state => {
         banker: _get(state, 'FormulaReducer.banker', {}),
         formulaList: _get(state, 'FormulaReducer.List', []),
         isFetching: _get(state, 'FormulaReducer.isFetching', false),
+        //Response Modal Formula Saved
+        formFormulaSaveStatus: state.FormulaReducer.formSaveStatus,
+        formFormulaSaveResponse: state.FormulaReducer.formSaveResponse,
+        selectedItem: _get(state, 'FormulaReducer.selectedItem', {}),
     };
 }
 
@@ -438,6 +611,8 @@ const mapDispatchToProps = dispatch => {
     return {
         getFormula: () => dispatch(getFormula()),
         setFormulaSelected: formula => dispatch(setFormulaSelected(formula)),
+        // Handel Modal Form Formula
+        toggleModalFormula:  formula => dispatch(toggleModalFormula({ selectedItem: formula })),
     };
 }
 

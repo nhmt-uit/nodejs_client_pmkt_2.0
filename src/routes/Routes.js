@@ -102,6 +102,11 @@ const Routes = [
 		component: SubUserPage,
 	},
 	{
+		path: RoutesService.getPath('ADMIN', 'MANAGE_FORMULA'),
+		exact: true,
+		component: FormulaPage,
+	},
+	{
 		path: '*',
 		exact: true,
 		component: DashboardPage,

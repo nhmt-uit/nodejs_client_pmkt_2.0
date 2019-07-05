@@ -434,3 +434,9 @@ html {
 .color-text-normal {
   color: #333
 }
+
+.btn-add-formula {
+  position: absolute;
+  top: -65px;
+  right: 0;
+}
