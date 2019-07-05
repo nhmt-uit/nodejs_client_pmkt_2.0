@@ -51,13 +51,20 @@ class FormulaService extends BaseService {
         return HttpService.post(`${this.serviceUrl}/formula/delete_account_use_formula`, payload);
     }
 
-    validatorFormula(formula_name) {
-        const payload = {value: formula_name}
+    validatorFormula(payload) {
         return HttpService.post(`${this.serviceUrl}/formula/validator_formula`, payload)
     }
     
     saveFormula(payload) {
         return HttpService.post(`${this.serviceUrl}/formula/action`, payload)
+    }
+
+    relinkFormula(payload) {
+        return HttpService.post(`${this.serviceUrl}/formula/relink_formula`, payload);
+    }
+
+    deleteFormula(payload) {
+        return HttpService.post(`${this.serviceUrl}/formula/delete_formula`, payload);
     }
 }
 

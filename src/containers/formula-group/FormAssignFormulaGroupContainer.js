@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { reduxForm, Field } from "redux-form";
-import { withTranslation } from 'react-i18next'
 import { get as _get, isEmpty as _isEmpty, isEqual as _isEqual} from 'lodash'
 
 import { TransComponent } from 'my-components'
 import { renderSelectField, renderError } from 'my-utils/components/redux-form/render-form'
-import { requestInitFormData, saveFormula } from 'my-actions/formula/FormulaAction'
-import { FormulaService } from 'my-services/formula'
+import { initFormulaGroup, initFormulaGroupDetail, initFormulaList, saveFormulaGroupAssign, resetFormAssignSaveResponse, toggleModalFormulaGroup, resetFormSaveResponse } from 'my-actions/formula-group/FormulaGroupAction'
+import { toggleModalFormula} from 'my-actions/formula/FormulaAction'
+import { ModalFormFormulaContainer } from 'my-containers/formula'
+import { ModalFormFormulaGroupContainer } from 'my-containers/formula-group'
 
 class FormAssignFormulaGroupContainer extends Component {
 
@@ -18,312 +19,188 @@ class FormAssignFormulaGroupContainer extends Component {
         | Init Form Data
         |--------------------------------------------------------------------------
         */
-        this.props.requestInitFormData()
-        
+        this.props.initFormulaGroup()
+        this.props.initFormulaGroupDetail()
+        // Init Default Form Value
+        this.handleInitialValue()
     }
 
     componentDidUpdate(prevProps){
-        if(!_isEqual(prevProps.optBanker, this.props.optBanker)
-            || !_isEqual(prevProps.optFormulaType, this.props.optFormulaType)
-            || !_isEqual(prevProps.optCurrency, this.props.optCurrency)
+        if(!_isEqual(prevProps.optFormulaGroup, this.props.optFormulaGroup)
+            || !_isEqual(prevProps.optBanker, this.props.optBanker)
+            || !_isEqual(prevProps.optFormula, this.props.optFormula)
          ) {
-            // Init Default Value
-            if(this.props.formType === "create") {
-                console.log(this.props, this.props.defaultBankerId)
-                const defaultBanker = !_isEmpty(this.props.defaultBankerId) ? this.props.optBanker.find(item => item.id === this.props.defaultBankerId) : this.props.optBanker[0]
-                const optFormulaType = this.props.optFormulaType.filter(item => item.banker_id === defaultBanker.value)
+            // Init Default Form Value
+            this.handleInitialValue()
+        }
+
+        // Detect Render List Formula
+        if(!_isEqual(_get(prevProps.initialValues, 'formula_group_select'), _get(this.props.initialValues, 'formula_group_select'))
+            || !_isEqual(_get(prevProps.initialValues, 'company'), _get(this.props.initialValues, 'company'))
+        ) {
+            // Render List Formula
+            this.handleLoadFormulaList()
+        }
+
+        // Handle Form Formula Group Detail Response
+        if(this.props.formFormulaGroupDetailSaveStatus === true
+            && _isEqual(prevProps.optFormulaGroup, this.props.optFormulaGroup)) {
+            const newFormulaGroupId = this.props.formFormulaGroupDetailGroupSaveResponse.data.formulaGroupId
+            this.props.initFormulaGroupDetail().then(_ => {
                 this.props.initialize({...this.props.initialValues,
-                    company: defaultBanker,
-                    formula_type: optFormulaType[0],
-                    currency: this.props.optCurrency[0],
-                    giaonhan: true,
-                    he_so_1: 1,
-                    he_so_2: 1,
+                    formula_group_select: this.props.optFormulaGroup.find(item => item.value === newFormulaGroupId),
                 })
-            }
+            })
+        }
+
+        // Handle Form Formula Group Detail Response
+        if(this.props.formFormulaSaveStatus === true) {
+            const newFormulaId = this.props.formFormulaSaveResponse.data.formulaId
+            this.props.initFormulaGroup().then(_ => {
+                this.props.initialize({...this.props.initialValues,
+                    formula_select: this.props.optFormula.find(item => item.value === newFormulaId),
+                })
+            })
+        }
+    }
+
+    handleInitialValue = _ =>{
+        if(this.props.formType === "create") {
+            // console.log(this.props, this.props.defaultBankerId)
+            const defaultBanker = !_isEmpty(this.props.defaultBankerId) ? this.props.optBanker.find(item => item.id === this.props.defaultBankerId) : this.props.optBanker[0]
+            const optFormula = this.props.optFormula.filter(item => item.banker_id === defaultBanker.value)
+            this.props.initialize({...this.props.initialValues,
+                company: defaultBanker,
+                formula_select: optFormula[0],
+            })
         }
     }
 
 
     handleChangeBanker = banker => {
-        const optFormulaType = this.props.optFormulaType.filter(item => item.banker_id === banker.value)
+        const optFormula = this.props.optFormula.filter(item => item.banker_id === banker.value)
         this.props.initialize({...this.props.initialValues,
-            formula_type: optFormulaType[0],
+            formula_select: optFormula[0],
         })
     }
 
-    handleChangeHeSo = _ => {
-        const dataFormulaType = _get(this.props.initialValues, 'formula_type')
-        const dataHeSo1 = _get(this.props.initialValues, 'he_so_1')
-        const dataHeSo2 = _get(this.props.initialValues, 'he_so_2')
-        if (_isEmpty(dataHeSo1) || !dataHeSo1) {
-            console.log("empty he so 1")
-            this.props.initialize({...this.props.initialValues,
-                he_so_1: 1,
-            })
-            this.props.touch('he_so_1')
-        }
-        if (_isEmpty(dataHeSo2) || !dataHeSo2) {
-            this.props.initialize({...this.props.initialValues,
-                he_so_2: 1,
-            })
-        }
-        this.renderFormulaName()
+    handleLoadFormulaList = _ => {
+        const dataFormulaGroupSelect = _get(this.props.initialValues, 'formula_group_select.value')
+        const dataCompany = _get(this.props.initialValues, 'company.value')
+        const payload = {}
+        if(!_isEmpty(dataFormulaGroupSelect)) payload.formula_group_select = dataFormulaGroupSelect
+        if(!_isEmpty(dataFormulaGroupSelect)) payload.banker_id = dataCompany
+        if(!_isEmpty(payload)) this.props.initFormulaList(payload)
     }
+
 
     handleSubmit = e => {
-        const dataFormulaType = _get(this.props.initialValues, 'formula_type')
-
         const payload = {
-            formula_name: _get(this.props.initialValues, 'formula_name'),
+            formula_group_select: _get(this.props.initialValues, 'formula_group_select.value'),
+            formula_select: _get(this.props.initialValues, 'formula_select.value'),
             company: _get(this.props.initialValues, 'company.value'),
-            formula_type: _get(this.props.initialValues, 'formula_type.value'),
-            currency: _get(this.props.initialValues, 'currency.value'),
-            giaonhan: _get(this.props.initialValues, 'giaonhan'),
         }
 
-        if (!_isEmpty(dataFormulaType.data.filter(item => item.dis === "he_so")))
-            payload[`field_${dataFormulaType.data.find(item => item.dis === "he_so").value}`] = _get(this.props.initialValues, 'ratio')
-        if (!_isEmpty(dataFormulaType.data.filter(item => item.dis === "gia_thau")))
-            payload[`field_${dataFormulaType.data.find(item => item.dis === "gia_thau").value}`] = _get(this.props.initialValues, 'price')
-        if (!_isEmpty(dataFormulaType.data.filter(item => item.dis === "he_so_1")))
-            payload[`field_${dataFormulaType.data.find(item => item.dis === "he_so_1").value}`] = _get(this.props.initialValues, 'he_so_1')
-        if (!_isEmpty(dataFormulaType.data.filter(item => item.dis === "he_so_2")))
-            payload[`field_${dataFormulaType.data.find(item => item.dis === "he_so_2").value}`] = _get(this.props.initialValues, 'he_so_2')
-
-        this.props.saveFormula(payload)
+        this.props.saveFormulaGroupAssign(payload)
     }
 
-    renderFormulaName = _ => {
-        const formula_name = _get(this.props.initialValues, 'formula_name')
-        const dataBanker = _get(this.props.initialValues, 'company')
-        const dataFormulaType = _get(this.props.initialValues, 'formula_type')
-        const dataCurrency = _get(this.props.initialValues, 'currency')
-        const dataRatio = _get(this.props.initialValues, 'ratio')
-        const dataPrice = _get(this.props.initialValues, 'price')
-        const dataHeSo1 = _get(this.props.initialValues, 'he_so_1')
-        const dataHeSo2 = _get(this.props.initialValues, 'he_so_2')
-        const dataGiaoNhan = _get(this.props.initialValues, 'giaonhan')
-        let result = ''
-        if(!_isEmpty(dataBanker) && !_isEmpty(dataFormulaType) && !_isEmpty(dataCurrency)) {
-            result = `${dataBanker.label}-${dataCurrency.label}`
-            result += dataPrice ? `-${dataPrice}`: ""
-            result += dataRatio ? `-${dataRatio}` : ""
-            result += !_isEmpty(dataFormulaType.data.filter(item => item.dis === "he_so_1")) && dataHeSo1 ? `-${dataHeSo1}`: ""
-            result += !_isEmpty(dataFormulaType.data.filter(item => item.dis === "he_so_2")) && dataHeSo2 ? `-${dataHeSo2}` : ""
-            result += `-${dataFormulaType.short}`
-            
-            if(dataGiaoNhan === false) result += '*(-1)'
+    renderAlert = _ => {
+        const { formAssignFormulaGroupSaveStatus, formAssignFormulaGroupSaveResponse } = this.props
+        if(formAssignFormulaGroupSaveStatus === false) {
+            return (
+                <div className="alert alert-danger">
+                    <button className="close" onClick={this.props.resetFormAssignSaveResponse} />
+                    <span><b> {formAssignFormulaGroupSaveResponse.data.message} </b></span>
+                </div>
+            )
+        } else if(formAssignFormulaGroupSaveStatus === true) {// Render List Formula
+            this.handleLoadFormulaList()
+            return (
+                <div className="alert bg-success">
+                    <button className="close" onClick={this.props.resetFormAssignSaveResponse} />
+                    <span><b> {formAssignFormulaGroupSaveResponse.data.message} </b></span>
+                </div>
+            )
         }
-
-        //Set data to redux-form
-        if(formula_name !== result) {
-            this.props.initialize({...this.props.initialValues,
-                formula_name: result,
-            })
-        }
-    }
-
-    renderResult = _ => {
-        const dataFormulaType = _get(this.props.initialValues, 'formula_type')
-        const dataRatio = _get(this.props.initialValues, 'ratio')
-        const dataPrice = _get(this.props.initialValues, 'price')
-        const dataHeSo1 = _get(this.props.initialValues, 'he_so_1')
-        const dataHeSo2 = _get(this.props.initialValues, 'he_so_2')
-        const dataGiaoNhan = _get(this.props.initialValues, 'giaonhan')
-        let result = ''
-        if(!_isEmpty(dataFormulaType)) {
-            for(let x in dataFormulaType.data){
-                let label = dataFormulaType.data[x].dis
-                if(label === "gia_thau" ) label = dataPrice ? dataPrice : this.props.t("Price")
-                if(label === "he_so") label = dataRatio ? dataRatio : this.props.t("Ratio")
-                if(label === "he_so_1" ) label = dataHeSo1 ? dataHeSo1 : this.props.t("Factor 1")
-                if(label === "he_so_2") label = dataHeSo2 ? dataHeSo2 : this.props.t("Factor 2")
-
-                result += label
-            }
-            if(dataGiaoNhan === false) result += '*(-1)'
-        }
-        return result
+        return null
     }
     
     render() {
         const bankerId = _get(this.props.initialValues, 'company.value')
-        const optFormulaType = this.props.optFormulaType.filter(item => item.banker_id === bankerId)
-        const dataFormulaType = _get(this.props.initialValues, 'formula_type')
-        this.renderFormulaName()
+        const optFormula = this.props.optFormula.filter(item => item.banker_id === bankerId)
         return (
-            <form name="form_formula">
+            <form name="form_assign_formula_group">
                 <div className="form-body">
-                    {/* {this.renderAlert()} */}
+                    {this.renderAlert()}
                     <div className="form-group">
-                        <label><TransComponent i18nKey="Formula name" /></label>
-                        <Field
-                            name="formula_name"
-                            type="text"
-                            component="input"
-                            className="form-control form-control-solid placeholder-no-fix"
-                            autoComplete="off"
-                            readOnly={true}
-                        />
-                        <Field name="formula_name"component={renderError} />
+                        <label><TransComponent i18nKey="Formula group" /></label>
+                        <div className="input-group">
+                            <Field
+                                name="formula_group_select"
+                                className="basic-single"
+                                component={renderSelectField}
+                                isSearchable={true}
+                                options={this.props.optFormulaGroup}
+                                menuPosition="fixed"
+                                />
+                            <span className="input-group-btn">
+                                <button className="btn green" type="button" onClick={_ => this.props.toggleModalFormulaGroup()}><i className="fa fa-plus" /></button>
+                            </span>
+                        </div>
+                        <Field name="formula_group_select"component={renderError} />
                     </div>
                     <div className="form-group">
-                        <label><TransComponent i18nKey="Code" /></label>
+                        <label><TransComponent i18nKey="Company" /></label>
                         <Field
                             name="company"
                             className="basic-single"
                             component={renderSelectField}
                             isSearchable={true}
                             options={this.props.optBanker}
+                            menuPosition="fixed"
                             onChange={this.handleChangeBanker}
+                            isDisabled={this.props.defaultBankerId}
                             />
                     </div>
                     <div className="form-group">
-                        <label><TransComponent i18nKey="Formula type" /></label>
-                        <Field
-                            name="formula_type"
-                            className="basic-single"
-                            component={renderSelectField}
-                            isSearchable={true}
-                            options={optFormulaType}
-                            />
-                        <Field name="formula_type"component={renderError} />
+                        <label><TransComponent i18nKey="Formula" /></label>
+                        <div className="input-group">
+                            <Field
+                                name="formula_select"
+                                className="basic-single"
+                                component={renderSelectField}
+                                isSearchable={true}
+                                options={optFormula}
+                                menuPosition="fixed"
+                                />
+                            <span className="input-group-btn">
+                                <button className="btn green" type="button" onClick={_ => this.props.toggleModalFormula()}><i className="fa fa-plus" /></button>
+                            </span>
+                        </div>
+                        <Field name="formula_select"component={renderError} />
                     </div>
-                    <div className="form-group">
-                        <label><TransComponent i18nKey="Currency" /></label>
-                        <Field
-                            name="currency"
-                            className="basic-single"
-                            component={renderSelectField}
-                            isSearchable={true}
-                            options={this.props.optCurrency}
-                            />
-                    </div>
-                    { !_isEmpty(dataFormulaType) && !_isEmpty(dataFormulaType.data.filter(item => item.dis === "he_so")) ?
-                        <div className="form-group">
-                            <label><TransComponent i18nKey="Ratio" /></label>
-                            <Field
-                                name="ratio"
-                                type="text"
-                                component="input"
-                                className="form-control form-control-solid placeholder-no-fix"
-                                autoComplete="off"
-                            />
-                            <Field name="ratio"component={renderError} />
-                        </div>
-                        : null
-                    }
-                    { !_isEmpty(dataFormulaType) && !_isEmpty(dataFormulaType.data.filter(item => item.dis === "gia_thau")) ?
-                        <div className="form-group">
-                            <label><TransComponent i18nKey="Price" /></label>
-                            <Field
-                                name="price"
-                                type="text"
-                                component="input"
-                                className="form-control form-control-solid placeholder-no-fix"
-                                autoComplete="off"
-                            />
-                            <Field name="price"component={renderError} />
-                        </div>
-                        : null
-                    }
-                    
-                    { !_isEmpty(dataFormulaType) && !_isEmpty(dataFormulaType.data.filter(item => item.dis === "he_so_1")) ?
-                        <div className="form-group">
-                            <label><TransComponent i18nKey="Factor 1" /></label>
-                            <Field
-                                name="he_so_1"
-                                type="text"
-                                component="input"
-                                className="form-control form-control-solid placeholder-no-fix"
-                                autoComplete="off"
-                                onKeyUp={this.handleChangeHeSo}
-                            />
-                            <Field name="he_so_1"component={renderError} />
-                        </div>
-                        : null
-                    }
-                    { !_isEmpty(dataFormulaType) && !_isEmpty(dataFormulaType.data.filter(item => item.dis === "he_so_2")) ?
-                        <div className="form-group">
-                            <label><TransComponent i18nKey="Factor 2" /></label>
-                            <Field
-                                name="he_so_2"
-                                type="text"
-                                component="input"
-                                className="form-control form-control-solid placeholder-no-fix"
-                                autoComplete="off"
-                                onKeyUp={this.handleChangeHeSo}
-                            />
-                            <Field name="he_so_2"component={renderError} />
-                        </div>
-                        : null
-                    }
-                    <div className="form-group">
-                        <label><TransComponent i18nKey="Result" /> = {this.renderResult()}</label>
-                    </div>
-                    <div className="form-group">
-                        <label><TransComponent i18nKey="Pay/Rec" /></label>
-                        <div className="can-toggle">
-                            <Field
-                                id="giaonhan"
-                                name="giaonhan"
-                                type="checkbox"
-                                component="input"
-                                autoComplete="off"
-                            />
-                            <label htmlFor="giaonhan">
-                                <div className="can-toggle__switch" data-checked={this.props.t("Pay")} data-unchecked={this.props.t("Receive")}></div>
-                            </label>
-                        </div>
-                    </div>
+
                     <div className="form-actions text-right">
                         <button type="button" className="btn red" disabled={this.props.invalid} onClick={this.handleSubmit}><TransComponent i18nKey="Save" /></button>
                     </div>
                 </div>
+
+                {/* <ModalFormAccountContainer isOpen={true} toggle={_ => null} formType="create" /> */}
+                <ModalFormFormulaContainer formType="create" defaultBankerId={bankerId}/>
+                <ModalFormFormulaGroupContainer formType="create" />
             </form>
         );
     }
 }
 
-const asyncValidate = (values, dispatch, props, currentFieldName) => {
-    const errors = {}
-    return new Promise((resolve, reject) => {
-        //Validate formula name
-        FormulaService.validatorFormula(values.formula_name).then(res => {
-            if(res.status === false) {
-                errors.formula_name = res.res.data.message
-                return reject(errors)
-            }
-            resolve()
-        })
-    });
-}
-
 const validate = values => {
     const errors = {}
-    if (!values.ratio) {
-        errors.ratio = 'Value is not empty'
-    } else if (!(/^\d*(\.\d*)?$/).test(values.ratio)) {
-        errors.ratio = 'Value must be a number'
+    if (!values.formula_group_select) {
+        errors.formula_group_select = 'Value is not empty'
     }
-    if (!values.price) {
-        errors.price = 'Value is not empty'
-    } else if (!(/^\d*(\.\d*)?$/).test(values.price)) {
-        errors.price = 'Value must be a number'
-    }
-    if (!values.he_so_1) {
-        errors.he_so_1 = 'Value is not empty'
-    } else if (!(/^\d*(\.\d*)?$/).test(values.he_so_1)) {
-        errors.he_so_1 = 'Value must be a number'
-    }
-    if (!values.he_so_2) {
-        errors.he_so_2 = 'Value is not empty'
-    } else if (!(/^\d*(\.\d*)?$/).test(values.he_so_2)) {
-        errors.he_so_2 = 'Value must be a number'
-    }
-    if (!values.formula_type) {
-        errors.formula_type = 'Value is not empty'
+
+    if (!values.formula_select) {
+        errors.formula_select = 'Value is not empty'
     }
 
     return errors
@@ -331,27 +208,47 @@ const validate = values => {
 
 const mapStateToProps = state => {
     return {
-        initialValues: _get(state, 'form.form_formula.values'),
-        optBanker: state.FormulaReducer.optBanker,
-        optFormulaType: state.FormulaReducer.optFormulaType,
-        optCurrency: state.FormulaReducer.optCurrency,
+        initialValues: _get(state, 'form.form_assign_formula_group.values'),
+
+        // Handel Formua Group
+        optFormulaGroup: state.FormulaGroupReducer.optFormulaGroup,
+        optBanker: state.FormulaGroupReducer.optBanker,
+        optFormula: state.FormulaGroupReducer.optFormula,
+
+        //Response Modal Formula Group Assign Saved
+        formAssignFormulaGroupSaveStatus: state.FormulaGroupReducer.formAssignSaveStatus,
+        formAssignFormulaGroupSaveResponse: state.FormulaGroupReducer.formAssignSaveResponse,
+        
+        //Response Modal Formula Group Assign Saved
+        formFormulaGroupDetailSaveStatus: state.FormulaGroupReducer.formSaveStatus,
+        formFormulaGroupDetailGroupSaveResponse: state.FormulaGroupReducer.formSaveResponse,
+
+        //Response Modal Formula Group Detail Saved
+        formFormulaSaveStatus: state.FormulaReducer.formSaveStatus,
+        formFormulaSaveResponse: state.FormulaReducer.formSaveResponse,
     }
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        saveFormula: payload => dispatch(saveFormula(payload)),
-        requestInitFormData: _ => dispatch(requestInitFormData()),
+        initFormulaGroup: async _ => dispatch(initFormulaGroup()),
+        initFormulaGroupDetail: _ => dispatch(initFormulaGroupDetail()),
+        initFormulaList: params => dispatch(initFormulaList(params)),
+        saveFormulaGroupAssign: params => dispatch(saveFormulaGroupAssign(params)),
+        resetFormAssignSaveResponse: params => dispatch(resetFormAssignSaveResponse(params)),
+        // Handel Modal Form Formula
+        toggleModalFormula:  _ => dispatch(toggleModalFormula()),
+        // Handel Modal Form Formula
+        toggleModalFormulaGroup:  _ => dispatch(toggleModalFormulaGroup()),
+        resetFormSaveResponse:  _ => dispatch(resetFormSaveResponse()),
     };
 };
 
 
 export default compose(
     reduxForm({
-        form: 'form_formula',
-        asyncValidate: asyncValidate,
+        form: 'form_assign_formula_group',
         validate,
     }),
     connect(mapStateToProps, mapDispatchToProps),
-    withTranslation(),
 )(FormAssignFormulaGroupContainer)

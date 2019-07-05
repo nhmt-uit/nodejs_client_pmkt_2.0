@@ -19,6 +19,8 @@ class AccountantItemBankerAccountContainer extends Component {
         //Pick field to compare
         if(!_isEqual(newBankerAccount.id, oldBankerAccount.id)
             || !_isEqual(newBankerAccount.collapse, oldBankerAccount.collapse)
+            || !_isEqual(newBankerAccount.acc_name, oldBankerAccount.acc_name)
+            || !_isEqual(newBankerAccount.note, oldBankerAccount.note)
             || !_isEqual(newBankerAccount.data, oldBankerAccount.data)
         )
             return true

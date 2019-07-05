@@ -18,13 +18,14 @@ class ModalFormFormulaContainer extends Component {
     componentDidUpdate(){
         // Hide modal after save success
         if(this.props.formSaveStatus && this.props.isOpenModal) {
+            console.log("fireddd", this.props)
             this.props.toggleModalFormula()
         }
     }
 
     render() {
         return (
-            <Modal isOpen={this.props.isOpenModal} toggle={_ => this.props.toggleModalFormula()}>
+            <Modal isOpen={this.props.isOpenModal} toggle={_ => this.props.toggleModalFormula()} scrollable={true}>
                 <ModalHeader toggle={_ => this.props.toggleModalFormula()}>{this.modalTitle}</ModalHeader>
                 <ModalBody>
                     <FormFormulaContainer {...this.props} />

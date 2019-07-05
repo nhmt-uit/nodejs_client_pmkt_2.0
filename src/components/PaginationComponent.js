@@ -37,24 +37,61 @@ class PaginationComponent extends Component {
         const { total, perPage } = this.props;
         const currentPage = this.state.currentPage;
         const totalPage = Math.ceil(total/perPage);
-        const itemElement = [];
+
+        let elementEllipsis = [];
+        let elementFirst = [];
+        let elementSecond = [];
+        
+        if (totalPage > 6) {
+            elementSecond = [
+                <PaginationItem active={currentPage === totalPage - 1}>
+                    <PaginationLink href="/" onClick={e => this.handleClick(e, totalPage - 1)}>
+                        {totalPage - 1}
+                    </PaginationLink>
+                </PaginationItem>,
+                <PaginationItem active={currentPage === totalPage}>
+                    <PaginationLink href="/" onClick={e => this.handleClick(e, totalPage)}>
+                        {totalPage}
+                    </PaginationLink>
+                </PaginationItem>
+            ];
+            elementEllipsis = [(
+                <PaginationItem >
+                    <PaginationLink href="/" >
+                    ...
+                    </PaginationLink>
+                </PaginationItem>
+            )];
+
+            for (let i = 1; i < 5; i++) {
+                elementFirst.push(
+                    <PaginationItem key={i} active={currentPage === i}>
+                        <PaginationLink href="/" onClick={e => this.handleClick(e, i)}>
+                            {i}
+                        </PaginationLink>
+                    </PaginationItem>
+                );
+            }
+        }
 
         if (totalPage < 2) {
             return null;
         }
 
-        for (let i = 1; i <= totalPage; i++) {
-            itemElement.push(
-                <PaginationItem key={i} active={currentPage === i}>
-                    <PaginationLink href="/" onClick={e => this.handleClick(e, i)}>
-                        {i}
-                    </PaginationLink>
-                </PaginationItem>
-            );
-        }
+        return [ 
+            ...elementFirst,
+            ...elementEllipsis,
+            ...elementSecond 
+        ];
+    }
+
+    render() {
+        const { total, perPage } = this.props;
+        const totalPage = Math.ceil(total/perPage);
+        const currentPage = this.state.currentPage;
 
         return (
-            <Fragment>
+            <Pagination aria-label="Page navigation example">
                 <PaginationItem>
                     <PaginationLink first href="/" onClick={e => this.handleClick(e, 1)} />
                 </PaginationItem>
@@ -66,7 +103,7 @@ class PaginationComponent extends Component {
                         }
                     />
                 </PaginationItem>
-                {itemElement}
+                {this.renderItem()}
                 <PaginationItem>
                     <PaginationLink
                         next href="#"
@@ -78,14 +115,6 @@ class PaginationComponent extends Component {
                 <PaginationItem>
                     <PaginationLink last href="#" onClick={e => this.handleClick(e, totalPage)} />
                 </PaginationItem>
-            </Fragment>
-        );
-    }
-
-    render() {
-        return (
-            <Pagination aria-label="Page navigation example">
-                {this.renderItem()}
             </Pagination>
         );
     }

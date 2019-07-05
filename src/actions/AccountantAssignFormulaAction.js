@@ -94,7 +94,6 @@ export const initFormulaGroup = (params) => {
 
 export const onChangeFormulaType = (type) => {
     return (dispatch) => {
-        console.log(type)
         if (type === 1) dispatch(initFormula())
         if (type === 2) dispatch(initFormulaGroup())
     }

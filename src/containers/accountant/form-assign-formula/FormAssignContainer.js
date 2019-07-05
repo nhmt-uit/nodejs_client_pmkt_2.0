@@ -22,7 +22,6 @@ const optFormulaType = [{value: 1, label: <TransComponent i18nKey="-- formula --
 class FormAssignContainer extends Component {
 
     componentWillMount() {
-        console.log(this.props.rootAccInfo)
         //First Init Select When Call Component From Accountant Scan
         if(!_isEmpty(this.props.selectedAccount)) {
             this.props.initialize({...this.props.initialValues,
@@ -47,6 +46,14 @@ class FormAssignContainer extends Component {
         this.props.resetData()
     }
 
+    componentWillReceiveProps(newProps) {
+        console.log(newProps.isOpenModalAssignFormulaGroup, this.props.isOpenModalAssignFormulaGroup)
+        if(newProps.isOpenModalAssignFormulaGroup === false
+            && newProps.isOpenModalAssignFormulaGroup !== this.props.isOpenModalAssignFormulaGroup){
+                this.props.onChangeFormulaType(_get(this.props.initialValues, 'formula_type.value'))
+        }
+    }
+
     componentDidUpdate() {
         if(this.props.formMemberSaveStatus === true) {
             this.props.initMember()
@@ -59,7 +66,6 @@ class FormAssignContainer extends Component {
         if(this.props.formFormulaSaveStatus === true) {
             const newFormulaId = this.props.formFormulaSaveResponse.data.formulaId
             this.props.initFormula().then(_ => {
-                console.log(this.props.optFormula)
                 this.props.initialize({...this.props.initialValues,
                     formula: this.props.optFormula.find(item => item.value === newFormulaId),
                 })
@@ -315,6 +321,7 @@ const mapStateToProps = state => {
         optFormula: state.AccountantAssignFormulaReducer.optFormula,
         formSaveStatus: state.AccountantAssignFormulaReducer.formSaveStatus,
         formSaveResponse: state.AccountantAssignFormulaReducer.formSaveResponse,
+        isOpenModalAssignFormulaGroup: state.FormulaGroupReducer.isOpenModalAssign,
 
         //Response Modal Member Saved
         formMemberSaveStatus: state.member.formSaveStatus,

@@ -20,6 +20,8 @@ class FormFormulaContainer extends Component {
         */
         this.props.requestInitFormData()
         
+        // Init Default Value
+        this.handleInitialValue()
     }
 
     componentDidUpdate(prevProps){
@@ -28,22 +30,40 @@ class FormFormulaContainer extends Component {
             || !_isEqual(prevProps.optCurrency, this.props.optCurrency)
          ) {
             // Init Default Value
-            if(this.props.formType === "create") {
-                console.log(this.props, this.props.defaultBankerId)
-                const defaultBanker = !_isEmpty(this.props.defaultBankerId) ? this.props.optBanker.find(item => item.id === this.props.defaultBankerId) : this.props.optBanker[0]
-                const optFormulaType = this.props.optFormulaType.filter(item => item.banker_id === defaultBanker.value)
+            this.handleInitialValue()
+        }
+    }
+
+    handleInitialValue = _ =>{
+        if(this.props.formType === "create") {
+            const defaultBanker = !_isEmpty(this.props.defaultBankerId) ? this.props.optBanker.find(item => item.id === this.props.defaultBankerId) : this.props.optBanker[0]
+            const optFormulaType = this.props.optFormulaType.filter(item => item.banker_id === defaultBanker.value)
+            this.props.initialize({...this.props.initialValues,
+                company: defaultBanker,
+                formula_type: optFormulaType[0],
+                currency: this.props.optCurrency[0],
+                giaonhan: true,
+                he_so_1: 1,
+                he_so_2: 1,
+            })
+        } else if(this.props.formType === "update") {
+            if (!_isEmpty(this.props.selectedItem)) {
+                const selectedItem = this.props.selectedItem;
+
                 this.props.initialize({...this.props.initialValues,
-                    company: defaultBanker,
-                    formula_type: optFormulaType[0],
-                    currency: this.props.optCurrency[0],
-                    giaonhan: true,
-                    he_so_1: 1,
-                    he_so_2: 1,
+                    company: this.props.optBanker.find(item => item.id === selectedItem.banker_id),
+                    formula_type: this.props.optFormulaType.find(item => item.id === selectedItem.f_format_id),
+                    currency: this.props.optCurrency.find(item => item.id === selectedItem.dv_tiente),
+                    giaonhan: selectedItem.giaonhan === 1 ? true : false,
+                    ratio: _get(selectedItem, 'field_value[0].value', null),
+                    price: _get(selectedItem, 'field_value[1].value', null),
+                    he_so_1: _get(selectedItem, 'field_value[0].value', null),
+                    he_so_2: _get(selectedItem, 'field_value[1].value', null),
+                    except: selectedItem.tenct
                 })
             }
         }
     }
-
 
     handleChangeBanker = banker => {
         const optFormulaType = this.props.optFormulaType.filter(item => item.banker_id === banker.value)
@@ -57,7 +77,6 @@ class FormFormulaContainer extends Component {
         const dataHeSo1 = _get(this.props.initialValues, 'he_so_1')
         const dataHeSo2 = _get(this.props.initialValues, 'he_so_2')
         if (_isEmpty(dataHeSo1) || !dataHeSo1) {
-            console.log("empty he so 1")
             this.props.initialize({...this.props.initialValues,
                 he_so_1: 1,
             })
@@ -113,7 +132,7 @@ class FormFormulaContainer extends Component {
             result += !_isEmpty(dataFormulaType.data.filter(item => item.dis === "he_so_2")) && dataHeSo2 ? `-${dataHeSo2}` : ""
             result += `-${dataFormulaType.short}`
             
-            if(dataGiaoNhan === false) result += '*(-1)'
+            if(dataGiaoNhan === false) result += '-(-1)'
         }
 
         //Set data to redux-form
@@ -289,14 +308,24 @@ class FormFormulaContainer extends Component {
 const asyncValidate = (values, dispatch, props, currentFieldName) => {
     const errors = {}
     return new Promise((resolve, reject) => {
-        //Validate formula name
-        FormulaService.validatorFormula(values.formula_name).then(res => {
-            if(res.status === false) {
-                errors.formula_name = res.res.data.message
-                return reject(errors)
-            }
+        const payload = {value : values.formula_name}
+        if (!_isEmpty(props.values.except))  {
+            payload.except = props.values.except;
+        }   
+
+        // Ignore validate unique incase same value
+        if(props.values.except === props.values.formula_name) {
             resolve()
-        })
+        } else {
+            //Validate formula name
+            FormulaService.validatorFormula(payload).then(res => {
+                if(res.status === false) {
+                    errors.formula_name = res.res.data.message
+                    return reject(errors)
+                }
+                resolve()
+            })
+        }
     });
 }
 
@@ -335,6 +364,9 @@ const mapStateToProps = state => {
         optBanker: state.FormulaReducer.optBanker,
         optFormulaType: state.FormulaReducer.optFormulaType,
         optCurrency: state.FormulaReducer.optCurrency,
+
+        //Handel Update Form Formula
+        selectedItem: _get(state, 'FormulaReducer.selectedItem', {}),
     }
 };
 
@@ -349,7 +381,7 @@ const mapDispatchToProps = dispatch => {
 export default compose(
     reduxForm({
         form: 'form_formula',
-        asyncValidate: asyncValidate,
+        asyncValidate,
         validate,
     }),
     connect(mapStateToProps, mapDispatchToProps),

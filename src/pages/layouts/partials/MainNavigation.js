@@ -17,7 +17,7 @@ const menus = [
         sub_menus: [
             { to: RoutesService.getPath('ADMIN', 'MANAGE_CREATE_NEW'), exact: true, name: 'Create New' },
             { to: RoutesService.getPath('ADMIN', 'MANAGE_CONFIGURATION'), exact: true, name: 'Configuration' },
-            { to: RoutesService.getPath('ADMIN', 'MANAGE_FORMULA'), exact: true, name: 'Formular' },
+            { to: RoutesService.getPath('ADMIN', 'MANAGE_FORMULA'), exact: true, name: 'Formula' },
             { to: RoutesService.getPath('ADMIN', 'MANAGE_FORMULA_GROUP'), exact: true, name: 'Formula Group' },
             { to: RoutesService.getPath('ADMIN', 'MANAGE_MEMBER'), exact: true, name: 'Member' },
             { to: RoutesService.getPath('ADMIN', 'MANAGE_ACCOUNT'), exact: true, name: 'Account' },
