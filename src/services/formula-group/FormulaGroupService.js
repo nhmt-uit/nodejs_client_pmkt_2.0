@@ -16,8 +16,12 @@ class FormulaGroupService extends BaseService {
         return HttpService.post(`${this.serviceUrl}/formula_group_detail`)
     }
 
-    loadFormulaList(banker_id) {
-        const payload = {banker_id : banker_id}
+    /*
+    |--------------------------------------------------------------------------
+    | @input: {banker_id, formula_group_select}
+    |--------------------------------------------------------------------------
+    */
+    loadFormulaList(payload) {
         return HttpService.post(`${this.serviceUrl}/formula_group/load_formula_list`, payload)
     }
 
@@ -26,8 +30,7 @@ class FormulaGroupService extends BaseService {
         return HttpService.post(`${this.serviceUrl}/formula_group_detail/validator`, payload)
     }
 
-    saveFormulaGroupDetail(name) {
-        const payload = {'name' : name}
+    saveFormulaGroupDetail(payload) {
         return HttpService.post(`${this.serviceUrl}/formula_group_detail/action`, payload)
     }
 
@@ -38,6 +41,33 @@ class FormulaGroupService extends BaseService {
     */
     saveFormulaGroup(payload) {
         return HttpService.post(`${this.serviceUrl}/formula_group/action`, payload)
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | @input: {formula_group_id, banker_id, f_pattern_id}
+    |--------------------------------------------------------------------------
+    */
+    deleteOneByOne(payload) {
+        return HttpService.post(`${this.serviceUrl}/formula_group/delete_one_by_one`, payload)
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | @input: {formula_group_id, banker_id, f_pattern_ids: array}
+    |--------------------------------------------------------------------------
+    */
+    multiDelete(payload) {
+        return HttpService.post(`${this.serviceUrl}/formula_group/multi_delete`, payload)
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | @input: {formula_group_id, banker_id, data: [{isEdit, formulaId, formulaAccountGroupId, random}]}
+    |--------------------------------------------------------------------------
+    */
+    updateListFormula(payload) {
+        return HttpService.post(`${this.serviceUrl}/formula_group/update`, payload)
     }
 }
 

@@ -17,9 +17,9 @@ class ModalFormAssignFormulaGroupContainer extends Component {
 
     componentDidUpdate(){
         // Hide modal after save success
-        if(this.props.formSaveStatus && this.props.isOpenModalAssign) {
-            this.props.toggleModalAssignFormulaGroup()
-        }
+        // if(this.props.formSaveStatus && this.props.isOpenModalAssign) {
+        //     this.props.toggleModalAssignFormulaGroup()
+        // }
     }
 
     render() {
@@ -47,7 +47,7 @@ class ModalFormAssignFormulaGroupContainer extends Component {
 const mapStateToProps = state => {
     return {
         isOpenModalAssign: state.FormulaGroupReducer.isOpenModalAssign,
-        formSaveStatus: state.FormulaGroupReducer.formSaveStatus,
+        // formSaveStatus: state.FormulaGroupReducer.formSaveStatus,
     }
 }
 

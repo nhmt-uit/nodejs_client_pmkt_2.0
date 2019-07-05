@@ -2,16 +2,20 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { reduxForm } from "redux-form";
-import { get as _get } from 'lodash'
+import { get as _get, isEmpty as _isEmpty } from 'lodash'
 
-import { ModalDeleteFormulaByAccountContainer } from 'my-containers/accountant'
+import { ModalDeleteFormulaByFormulaGroupContainer } from 'my-containers/formula-group'
 import { TransComponent } from 'my-components'
-import { toggleModalDeleteFormulaByAccount } from 'my-actions/AccountantAssignFormulaAction'
+import { initFormulaList, toggleModalDeleteFormulaByFormulaGroup } from 'my-actions/formula-group/FormulaGroupAction'
+import { FormulaGroupService } from 'my-services/formula-group'
+import { Helpers } from 'my-utils'
 
 class ListFormulaByForumulaGroupContainer extends Component {
 
     state = {
-        congthuctinhIds: []
+        f_pattern_ids: [],
+        selectedFormulas: [],
+        updateFormulaRes: {}
     }
 
     
@@ -22,47 +26,155 @@ class ListFormulaByForumulaGroupContainer extends Component {
     handleDeleteFormula = formula => {
         const params = {
             type: 'single',
-            congthuctinhId: formula.id,
-            account_id: formula.account_id
+            f_pattern_id: formula.formula.id,
+            formula_group_id: _get(this.props.initialValues, 'formula_group_select.value'),
+            banker_id: _get(this.props.initialValues, 'company.value'),
         }
-        this.props.toggleModalDeleteFormulaByAccount(params)
+        this.props.toggleModalDeleteFormulaByFormulaGroup(params)
     }
 
     handleMultipleDeleteFormula = formula => {
         const params = {
             type: 'multiple',
-            congthuctinhIds: this.state.congthuctinhIds,
-            account_id: this.props.selectedAccountId
+            f_pattern_ids: this.state.f_pattern_ids,
+            formula_group_id: _get(this.props.initialValues, 'formula_group_select.value'),
+            banker_id: _get(this.props.initialValues, 'company.value'),
         }
-        this.props.toggleModalDeleteFormulaByAccount(params)
+        this.props.toggleModalDeleteFormulaByFormulaGroup(params)
     }
 
     handleCheckFormula = (e, item) => {
         const isChecked = e.target.checked;
-        const formulaId = item.id
+        const formulaId = item.formula.id
         if(isChecked) {
-            this.state.congthuctinhIds.push(formulaId)
+            this.state.f_pattern_ids.push(formulaId)
         } else {
-            this.state.congthuctinhIds = this.state.congthuctinhIds.filter(id => id !== formulaId)
+            this.state.f_pattern_ids = this.state.f_pattern_ids.filter(id => id !== formulaId)
         }
-        this.setState({congthuctinhIds : this.state.congthuctinhIds})
+        this.setState({f_pattern_ids : this.state.f_pattern_ids})
+    }
+
+
+    renderChangeFormula = selectedItem => {
+        const optFormulaPatternList = this.props.optFormulaPatternList
+        
+        const selectedEdit = this.state.selectedFormulas.find(item => item.formula.id === selectedItem.formula.id && !_isEmpty(item.newFormulaId))
+        let selectValue = _isEmpty(selectedEdit) ? selectedItem.formula.id : selectedEdit.newFormulaId
+        console.log(this.state.selectedFormulas, selectedEdit, selectedItem, selectValue)
+        return (
+            <div className="form-group">
+                <select className="form-control" onChange={e => this.handleEditFormula('change', selectedItem, e)} value={selectValue}>
+                    {
+                        optFormulaPatternList.map(item => {
+                            return (
+                                <option className="text-uppercase" key={item.value} value={item.value}>
+                                    {item.label.toUpperCase()}
+                                </option>
+                            )
+                        })
+                    }
+                </select>
+            </div>
+        )
+    }
+
+    handleEditFormula = (type, selectedItem, e) => {
+        let selectedFormulas = this.state.selectedFormulas
+        if(type === 'edit') {
+            delete selectedItem.newFormulaId
+            selectedFormulas.push(selectedItem)
+        }
+
+        if(type === 'close') {
+            selectedFormulas = selectedFormulas.filter(item => item.formula.id !== selectedItem.formula.id)
+        }
+
+        if(type === 'change') {
+            console.log("fired change")
+            selectedFormulas = selectedFormulas.map(item => {
+                if( item.formula.id === selectedItem.formula.id) item.newFormulaId = e.target.value
+                return item
+            })
+        }
+        
+        this.setState({selectedFormulas})
+        
+    }
+
+    handleUpdateFormula = _ => {
+        /*
+        |--------------------------------------------------------------------------
+        | @input: {formula_group_id, banker_id, data: [{isEdit, formulaId, formulaAccountGroupId, random}]}
+        |--------------------------------------------------------------------------
+        */
+        const payload = {
+            formula_group_id: _get(this.props.initialValues, 'formula_group_select.value'),
+            banker_id: _get(this.props.initialValues, 'company.value'),
+            data:[]
+        }
+        this.state.selectedFormulas.forEach(item => {
+            if(!_isEmpty(item.newFormulaId)) {
+                payload.data.push({
+                    isEdit: true,
+                    formulaId: item.newFormulaId,
+                    formulaAccountGroupId: item.account_formula_group_id,
+                    random: Math.random()
+                })
+            }
+        })
+        payload.data = JSON.stringify(payload.data)
+        FormulaGroupService.updateListFormula(payload).then(async res => {
+            if(res.status) {
+                //Render List Formula
+                this.props.initFormulaList({
+                    formula_group_select: _get(this.props.initialValues, 'formula_group_select.value'),
+                    banker_id: _get(this.props.initialValues, 'company.value'),
+                })
+                
+                this.setState({
+                    selectedFormulas: [],
+                    updateFormulaRes: res
+                })
+            } else {
+                this.setState({
+                    updateFormulaRes: res
+                })
+                await Helpers.sleep(3000)
+                this.handleClearMessageError()
+            }
+        })
+    }
+
+    handleClearMessageError = _ => {
+        this.setState({
+            updateFormulaRes: {}
+        })
     }
     
-    renderDetailData = formulaPayload => {
+    renderDetailData = formulaPatternList => {
         let xhtml = null
-        if (formulaPayload.length) {
-            xhtml = formulaPayload.map((item, idx) => {
+        if (formulaPatternList.length) {
+            xhtml = formulaPatternList.map((item, idx) => {
                 return (
                     <tr key={idx}>
                         <td> {++idx} </td>
-                        <td> {item.fullname.toUpperCase()} </td>
-                        <td> {item.formula_group_name} </td>
-                        <td> {item.tenct} </td>
+                        <td>
+                            { _isEmpty(this.state.selectedFormulas.find(obj => obj.formula.id === item.formula.id)) ?
+                                item.formula.tenct.toUpperCase()
+                                : this.renderChangeFormula(item)
+                            }
+                        </td>
                         <td className="text-center">
                             <label className="mt-checkbox uppercase">
-                                <input type="checkbox" onChange={e => this.handleCheckFormula(e, item)} checked={this.state.congthuctinhIds.indexOf(item.id) !== -1}  />
+                                <input type="checkbox" onChange={e => this.handleCheckFormula(e, item)} checked={this.state.f_pattern_ids.indexOf(item.formula.id) !== -1}  />
                                 <span></span>
                             </label>
+                        </td>
+                        <td className="text-center">
+                            { _isEmpty(this.state.selectedFormulas.find(obj => obj.formula.id === item.formula.id)) ?
+                                <a href="#/" className="green" onClick={_ => this.handleEditFormula('edit', item)}> <i className="fa fa-edit" /> </a>
+                                : <a href="#/" className="green" onClick={_ => this.handleEditFormula('close', item)}> <TransComponent i18nKey="Close" /> </a>
+                            }
                         </td>
                         <td className="text-center">
                             <a href="#/" className="font-red-sunglo" onClick={_ => this.handleDeleteFormula(item)}> <i className="fa fa-close" /> </a>
@@ -75,7 +187,8 @@ class ListFormulaByForumulaGroupContainer extends Component {
     }
 
     render() {
-        const { listFormulaDetail } = this.props
+        const { formulaPatternList } = this.props
+        const updateFormulaRes = this.state.updateFormulaRes
         return (
             <div className="portlet light bordered">
                 <div className="portlet-title">
@@ -84,6 +197,13 @@ class ListFormulaByForumulaGroupContainer extends Component {
                     </div>
                 </div>
                 <div className="portlet-body">
+                    {!_get(updateFormulaRes, 'status', true) ?
+                        <div className="alert alert-danger">
+                            <button className="close" onClick={this.handleClearMessageError}  />
+                            <span><b> <TransComponent i18nKey={_get(updateFormulaRes, 'res.data.message')} /> </b></span>
+                        </div>
+                        : null
+                    }
                     <div className="table-scrollable">
                         <table className="table table-striped table-bordered table-hover table-animation">
                             <thead>
@@ -96,20 +216,24 @@ class ListFormulaByForumulaGroupContainer extends Component {
                                 </tr>
                             </thead>
                             <tbody>
-                                {this.renderDetailData(listFormulaDetail)}
+                                {this.renderDetailData(formulaPatternList)}
                             </tbody>
                         </table>
                     </div>
-                    {listFormulaDetail.length ?
+                    {formulaPatternList.length ?
                         <div className="form-actions text-right">
-                            <button type="button" className="btn red" disabled={!this.state.congthuctinhIds.length} onClick={this.handleMultipleDeleteFormula}>
+                            <button type="button" className="btn red" disabled={!this.state.f_pattern_ids.length} onClick={this.handleMultipleDeleteFormula}>
                                 <TransComponent i18nKey="Delete selected" />
+                            </button>
+                            <button type="button" className="btn red" disabled={!this.state.selectedFormulas.length} onClick={this.handleUpdateFormula}>
+                                <TransComponent i18nKey="Save" />
                             </button>
                         </div>
                         : null
                     }
                 </div>
-                <ModalDeleteFormulaByAccountContainer />
+
+                <ModalDeleteFormulaByFormulaGroupContainer />
             </div>
         );
     }
@@ -118,17 +242,23 @@ class ListFormulaByForumulaGroupContainer extends Component {
 
 const mapStateToProps = state => {
     return {
-        selectedAccountId: state.AccountantAssignFormulaReducer.selectedAccountId,
-        listFormulaDetail: state.AccountantAssignFormulaReducer.listFormulaDetail,
+        initialValues: _get(state, 'form.form_assign_formula_group.values'),
+
+        optFormulaPatternList: state.FormulaGroupReducer.optFormulaPatternList,
+        formulaPatternList: state.FormulaGroupReducer.formulaPatternList
     }
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        toggleModalDeleteFormulaByAccount: params => dispatch(toggleModalDeleteFormulaByAccount(params)),
+        initFormulaList: params => dispatch(initFormulaList(params)),
+        toggleModalDeleteFormulaByFormulaGroup: params => dispatch(toggleModalDeleteFormulaByFormulaGroup(params)),
     };
 };
 
 export default compose(
+    reduxForm({
+        form: 'form_assign_formula_group',
+    }),
     connect(mapStateToProps, mapDispatchToProps),
 )(ListFormulaByForumulaGroupContainer)

@@ -354,7 +354,7 @@ const mapDispatchToProps = dispatch => {
 export default compose(
     reduxForm({
         form: 'form_formula',
-        asyncValidate: asyncValidate,
+        asyncValidate,
         validate,
     }),
     connect(mapStateToProps, mapDispatchToProps),
