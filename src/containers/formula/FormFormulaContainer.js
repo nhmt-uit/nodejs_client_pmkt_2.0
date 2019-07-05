@@ -20,6 +20,8 @@ class FormFormulaContainer extends Component {
         */
         this.props.requestInitFormData()
         
+        // Init Default Value
+        this.handleInitialValue()
     }
 
     componentDidUpdate(prevProps){
@@ -28,19 +30,23 @@ class FormFormulaContainer extends Component {
             || !_isEqual(prevProps.optCurrency, this.props.optCurrency)
          ) {
             // Init Default Value
-            if(this.props.formType === "create") {
-                console.log(this.props, this.props.defaultBankerId)
-                const defaultBanker = !_isEmpty(this.props.defaultBankerId) ? this.props.optBanker.find(item => item.id === this.props.defaultBankerId) : this.props.optBanker[0]
-                const optFormulaType = this.props.optFormulaType.filter(item => item.banker_id === defaultBanker.value)
-                this.props.initialize({...this.props.initialValues,
-                    company: defaultBanker,
-                    formula_type: optFormulaType[0],
-                    currency: this.props.optCurrency[0],
-                    giaonhan: true,
-                    he_so_1: 1,
-                    he_so_2: 1,
-                })
-            }
+            this.handleInitialValue()
+        }
+    }
+
+    handleInitialValue = _ =>{
+        if(this.props.formType === "create") {
+            console.log(this.props, this.props.defaultBankerId)
+            const defaultBanker = !_isEmpty(this.props.defaultBankerId) ? this.props.optBanker.find(item => item.id === this.props.defaultBankerId) : this.props.optBanker[0]
+            const optFormulaType = this.props.optFormulaType.filter(item => item.banker_id === defaultBanker.value)
+            this.props.initialize({...this.props.initialValues,
+                company: defaultBanker,
+                formula_type: optFormulaType[0],
+                currency: this.props.optCurrency[0],
+                giaonhan: true,
+                he_so_1: 1,
+                he_so_2: 1,
+            })
         }
     }
 
@@ -57,7 +63,6 @@ class FormFormulaContainer extends Component {
         const dataHeSo1 = _get(this.props.initialValues, 'he_so_1')
         const dataHeSo2 = _get(this.props.initialValues, 'he_so_2')
         if (_isEmpty(dataHeSo1) || !dataHeSo1) {
-            console.log("empty he so 1")
             this.props.initialize({...this.props.initialValues,
                 he_so_1: 1,
             })

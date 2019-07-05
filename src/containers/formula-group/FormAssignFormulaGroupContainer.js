@@ -7,7 +7,7 @@ import { get as _get, isEmpty as _isEmpty, isEqual as _isEqual} from 'lodash'
 
 import { TransComponent } from 'my-components'
 import { renderSelectField, renderError } from 'my-utils/components/redux-form/render-form'
-import { requestInitFormData, saveFormula } from 'my-actions/formula/FormulaAction'
+import { initFormulaGroup, initFormulaGroupDetail, initFormulaList } from 'my-actions/formula-group/FormulaGroupAction'
 import { toggleModalFormula} from 'my-actions/formula/FormulaAction'
 import { FormulaService } from 'my-services/formula'
 import { ModalFormFormulaContainer } from 'my-containers/formula'
@@ -58,24 +58,6 @@ class FormAssignFormulaGroupContainer extends Component {
         })
     }
 
-    handleChangeHeSo = _ => {
-        const dataFormulaType = _get(this.props.initialValues, 'formula_type')
-        const dataHeSo1 = _get(this.props.initialValues, 'he_so_1')
-        const dataHeSo2 = _get(this.props.initialValues, 'he_so_2')
-        if (_isEmpty(dataHeSo1) || !dataHeSo1) {
-            console.log("empty he so 1")
-            this.props.initialize({...this.props.initialValues,
-                he_so_1: 1,
-            })
-            this.props.touch('he_so_1')
-        }
-        if (_isEmpty(dataHeSo2) || !dataHeSo2) {
-            this.props.initialize({...this.props.initialValues,
-                he_so_2: 1,
-            })
-        }
-        this.renderFormulaName()
-    }
 
     handleSubmit = e => {
         const dataFormulaType = _get(this.props.initialValues, 'formula_type')
@@ -100,64 +82,12 @@ class FormAssignFormulaGroupContainer extends Component {
         this.props.saveFormula(payload)
     }
 
-    renderFormulaName = _ => {
-        const formula_name = _get(this.props.initialValues, 'formula_name')
-        const dataBanker = _get(this.props.initialValues, 'company')
-        const dataFormulaType = _get(this.props.initialValues, 'formula_type')
-        const dataCurrency = _get(this.props.initialValues, 'currency')
-        const dataRatio = _get(this.props.initialValues, 'ratio')
-        const dataPrice = _get(this.props.initialValues, 'price')
-        const dataHeSo1 = _get(this.props.initialValues, 'he_so_1')
-        const dataHeSo2 = _get(this.props.initialValues, 'he_so_2')
-        const dataGiaoNhan = _get(this.props.initialValues, 'giaonhan')
-        let result = ''
-        if(!_isEmpty(dataBanker) && !_isEmpty(dataFormulaType) && !_isEmpty(dataCurrency)) {
-            result = `${dataBanker.label}-${dataCurrency.label}`
-            result += dataPrice ? `-${dataPrice}`: ""
-            result += dataRatio ? `-${dataRatio}` : ""
-            result += !_isEmpty(dataFormulaType.data.filter(item => item.dis === "he_so_1")) && dataHeSo1 ? `-${dataHeSo1}`: ""
-            result += !_isEmpty(dataFormulaType.data.filter(item => item.dis === "he_so_2")) && dataHeSo2 ? `-${dataHeSo2}` : ""
-            result += `-${dataFormulaType.short}`
-            
-            if(dataGiaoNhan === false) result += '*(-1)'
-        }
 
-        //Set data to redux-form
-        if(formula_name !== result) {
-            this.props.initialize({...this.props.initialValues,
-                formula_name: result,
-            })
-        }
-    }
-
-    renderResult = _ => {
-        const dataFormulaType = _get(this.props.initialValues, 'formula_type')
-        const dataRatio = _get(this.props.initialValues, 'ratio')
-        const dataPrice = _get(this.props.initialValues, 'price')
-        const dataHeSo1 = _get(this.props.initialValues, 'he_so_1')
-        const dataHeSo2 = _get(this.props.initialValues, 'he_so_2')
-        const dataGiaoNhan = _get(this.props.initialValues, 'giaonhan')
-        let result = ''
-        if(!_isEmpty(dataFormulaType)) {
-            for(let x in dataFormulaType.data){
-                let label = dataFormulaType.data[x].dis
-                if(label === "gia_thau" ) label = dataPrice ? dataPrice : this.props.t("Price")
-                if(label === "he_so") label = dataRatio ? dataRatio : this.props.t("Ratio")
-                if(label === "he_so_1" ) label = dataHeSo1 ? dataHeSo1 : this.props.t("Factor 1")
-                if(label === "he_so_2") label = dataHeSo2 ? dataHeSo2 : this.props.t("Factor 2")
-
-                result += label
-            }
-            if(dataGiaoNhan === false) result += '*(-1)'
-        }
-        return result
-    }
     
     render() {
         const bankerId = _get(this.props.initialValues, 'company.value')
         const optFormulaType = this.props.optFormulaType.filter(item => item.banker_id === bankerId)
         const dataFormulaType = _get(this.props.initialValues, 'formula_type')
-        this.renderFormulaName()
         return (
             <form name="form_assign_formula_group">
                 <div className="form-body">
@@ -171,6 +101,7 @@ class FormAssignFormulaGroupContainer extends Component {
                                 component={renderSelectField}
                                 isSearchable={true}
                                 options={optFormulaType}
+                                menuPosition="fixed"
                                 />
                             <span className="input-group-btn">
                                 <button className="btn green" type="button" onClick={_ => null}><i className="fa fa-plus" /></button>
@@ -186,6 +117,7 @@ class FormAssignFormulaGroupContainer extends Component {
                             component={renderSelectField}
                             isSearchable={true}
                             options={optFormulaType}
+                            menuPosition="fixed"
                             />
                     </div>
                     <div className="form-group">
@@ -197,6 +129,7 @@ class FormAssignFormulaGroupContainer extends Component {
                                 component={renderSelectField}
                                 isSearchable={true}
                                 options={optFormulaType}
+                                menuPosition="fixed"
                                 />
                             <span className="input-group-btn">
                                 <button className="btn green" type="button" onClick={_ => this.props.toggleModalFormula()}><i className="fa fa-plus" /></button>
@@ -276,8 +209,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        saveFormula: payload => dispatch(saveFormula(payload)),
-        requestInitFormData: _ => dispatch(requestInitFormData()),
+        initFormulaGroup: _ => dispatch(initFormulaGroup()),
+        initFormulaGroupDetail: _ => dispatch(initFormulaGroupDetail()),
+        initFormulaList: params => dispatch(initFormulaList(params)),
         // Handel Modal Form Formula
         toggleModalFormula:  _ => dispatch(toggleModalFormula()),
     };

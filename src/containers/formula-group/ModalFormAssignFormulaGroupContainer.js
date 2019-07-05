@@ -11,8 +11,8 @@ import { toggleModalAssignFormulaGroup } from 'my-actions/formula-group/FormulaG
 class ModalFormAssignFormulaGroupContainer extends Component {
     modalTitle = ''
     componentDidMount() {
-        if(this.props.formType === "create") this.modalTitle = <TransComponent i18nKey="Create formula" />
-        if(this.props.formType === "update") this.modalTitle = <TransComponent i18nKey="Update formula" />
+        if(this.props.formType === "create") this.modalTitle = <TransComponent i18nKey="create formula group" />
+        if(this.props.formType === "update") this.modalTitle = <TransComponent i18nKey="update formula group" />
     }
 
     componentDidUpdate(){
