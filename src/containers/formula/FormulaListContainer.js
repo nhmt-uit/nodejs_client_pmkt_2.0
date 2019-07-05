@@ -16,9 +16,10 @@ import Select from 'react-select';
 
 import { TransComponent, LoadingComponent } from 'my-components';
 import { getFormula, setFormulaSelected } from 'my-actions/formula/FormulaAction';
-import { FormulaItemContainer, FormulaModalContainer } from 'my-containers/formula';
+import { FormulaItemContainer, FormulaModalContainer, ModalFormFormulaContainer } from 'my-containers/formula';
 import { FormulaService } from 'my-services/formula';
 import { MemberService } from 'my-services/member';
+import { toggleModalFormula} from 'my-actions/formula/FormulaAction'
 
 class FormulaListContainer extends Component {
     static propTypes = {
@@ -38,13 +39,16 @@ class FormulaListContainer extends Component {
             bankerId: 'all',
             keySearch: '',
             isOpenAccountModal: false,
+            isOpenRelinkModal: false,
             formulaSelected: {},
             listAccDelete: [],
             listAccEdit: [],
             listMemberUpdate: [],
             isLoadingDelete: false,
             isLoadingUpdate: false,
+            isLoadingRelink: false,
             formulaBatchId: null,
+            relinkFormulaId: null,
         };
     }
 
@@ -92,6 +96,13 @@ class FormulaListContainer extends Component {
         });
     }
 
+    handleToggleRelinkModal = (formula) => {
+        this.setState({
+            isOpenRelinkModal: true,
+            formulaSelected: formula
+        });
+    }
+
     renderBody() {
         const { isFetching } = this.props;
 
@@ -114,6 +125,8 @@ class FormulaListContainer extends Component {
                 formula={item} 
                 order={index + 1}
                 onSetFormulaSelected={this.handleSetFormulaSelected}
+                onToggleRelinkModal={this.handleToggleRelinkModal}
+                onToggleEditModal={() => this.props.toggleModalFormula()}
             />
         );
     }
@@ -256,10 +269,31 @@ class FormulaListContainer extends Component {
         });
     }
 
-    handleChangeFormulaBatch = value => {
+    handleChangeSelect = key => value => {
+        this.setState({ [key]: value.value });
+    }
+
+    handleRelinkFormula = () => {
+        const { formulaSelected, relinkFormulaId } = this.state;
+
         this.setState({
-            formulaBatchId: value.value
-        });
+            isLoadingRelink: true,
+        })
+
+        FormulaService.relinkFormula({ fromId: formulaSelected.id, toId: relinkFormulaId })
+            .then(res => {
+                if (res.status) {
+                    this.setState({
+                        isLoadingRelink: false,
+                        isOpenRelinkModal: false,
+                    }, () => this.props.getFormula())
+                }
+            })
+            .catch(() => {
+                this.setState({
+                    isLoadingRelink: false,
+                })
+            });
     }
 
     renderBodyAccountModal = () => {
@@ -272,7 +306,7 @@ class FormulaListContainer extends Component {
                 classNamePrefix="select"
                 defaultValue={listOptionFormula[0]}
                 isSearchable={false}
-                onChange={this.handleChangeFormulaBatch}
+                onChange={this.handleChangeSelect('formulaBatchId')}
                 options={listOptionFormula}
                 menuPosition="fixed"
             />
@@ -289,14 +323,14 @@ class FormulaListContainer extends Component {
                             <th className="text-center">{
                                 listAccEdit.length > 0 
                                     ? (
-                                        <button onClick={this.handleSaveMember} className="btn btn-danger">
+                                        <button disabled={isLoadingUpdate} onClick={this.handleSaveMember} className="btn btn-danger">
                                             <TransComponent i18nKey="Save" />&nbsp;{ isLoadingUpdate ? <i className="fa fa-spinner fa-spin" /> : null }
                                         </button>
                                     ) 
                                     : <TransComponent i18nKey={'Edit'} />
                             }</th>
                             <th className="text-center">
-                                <button disabled={!(this.state.listAccDelete.length > 0)} className="btn btn-danger" onClick={this.handleDeleteAccountUseFormula}>
+                                <button disabled={!(this.state.listAccDelete.length > 0) || isLoadingDelete} className="btn btn-danger" onClick={this.handleDeleteAccountUseFormula}>
                                     <TransComponent i18nKey="Delete" />&nbsp;{ isLoadingDelete ? <i className="fa fa-spinner fa-spin" /> : null }
                                 </button>
                                 </th>
@@ -352,9 +386,44 @@ class FormulaListContainer extends Component {
         );
     }
 
-    render() {console.log('render', this.state.isOpenAccountModal)
-        const { banker } = this.props;
-        const { bankerId, isOpenAccountModal } = this.state;
+    renderBodyRelinkModal = () => {
+        const formulaList = this.props.formulaList;
+        const { formulaSelected, relinkFormulaId, isLoadingRelink } = this.state;
+
+        let listOptions = formulaList.filter(item => item.banker_id === formulaSelected.banker_id);
+
+        listOptions = listOptions.map(item => ({ label: item.tenct, value: item.id }));
+
+        return (
+            <>
+                <div className="form-group">
+                    <label><TransComponent i18nKey="Please Chose Formula" /></label>
+                    <Select
+                        className="basic-single color-text-normal"
+                        classNamePrefix="select"
+                        defaultValue={{ label: formulaSelected.tenct, value: formulaSelected.id }}
+                        isSearchable={false}
+                        onChange={this.handleChangeSelect('relinkFormulaId')}
+                        options={listOptions}
+                        menuPosition="fixed"
+                    />
+                </div>
+                <div className="form-group">
+                    <button 
+                        disabled={ !relinkFormulaId || relinkFormulaId === formulaSelected.id || isLoadingRelink } 
+                        className="btn btn-danger"
+                        onClick={this.handleRelinkFormula}
+                    >
+                        <TransComponent i18nKey="Submit" /> &nbsp; { isLoadingRelink ? <i className="fa fa-spinner spin" /> : null }
+                    </button>
+                </div>
+            </>
+        );
+    }
+
+    render() {
+        const { banker } = this.props;console.log(this.state.relinkFormulaId);
+        const { bankerId, isOpenAccountModal, isOpenRelinkModal } = this.state;
 
         return (
             <div className="portlet box blue-hoki">
@@ -399,7 +468,7 @@ class FormulaListContainer extends Component {
                                     i18nKey={'Pay'}/>/<TransComponent i18nKey={'Receive'}/></th>
                                 <th colSpan={"3"} className="text-center"><TransComponent i18nKey={'Info'}/></th>
                                 <th rowSpan={2}><TransComponent i18nKey={'Total used account'}/></th>
-                                <th rowSpan={2}><TransComponent i18nKey={'Relink Formula'}/></th>
+                                <th rowSpan={2} className="text-center"><TransComponent i18nKey={'Relink Formula'}/></th>
                                 <th rowSpan={2}><TransComponent i18nKey={'Edit'}/></th>
                                 <th rowSpan={2} className="text-center"><TransComponent i18nKey={'Delete'}/></th>
                             </tr>
@@ -421,6 +490,13 @@ class FormulaListContainer extends Component {
                     scrollable={true}
                     className="modal-xxl"
                 />
+                <FormulaModalContainer 
+                    isOpen={isOpenRelinkModal} 
+                    header={<strong><TransComponent i18nKey="Relink Formula" /></strong>} 
+                    onToggle={this.handleChangeState({ isOpenRelinkModal: !isOpenRelinkModal })}
+                    body={this.renderBodyRelinkModal()}
+                />
+                <ModalFormFormulaContainer formType="create" />
             </div>
         )
     }
@@ -431,6 +507,9 @@ const mapStateToProps = state => {
         banker: _get(state, 'FormulaReducer.banker', {}),
         formulaList: _get(state, 'FormulaReducer.List', []),
         isFetching: _get(state, 'FormulaReducer.isFetching', false),
+        //Response Modal Formula Saved
+        formFormulaSaveStatus: state.FormulaReducer.formSaveStatus,
+        formFormulaSaveResponse: state.FormulaReducer.formSaveResponse,
     };
 }
 
@@ -438,6 +517,8 @@ const mapDispatchToProps = dispatch => {
     return {
         getFormula: () => dispatch(getFormula()),
         setFormulaSelected: formula => dispatch(setFormulaSelected(formula)),
+        // Handel Modal Form Formula
+        toggleModalFormula:  _ => dispatch(toggleModalFormula()),
     };
 }
 

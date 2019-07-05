@@ -13,14 +13,6 @@ export default class FormulaItemContainer extends Component {
         formula: {}
     };
 
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            listAccDelete: [],
-        };
-    }
-
     render() {
         const { formula, order } = this.props;
         const fieldValueLength = _get(formula, 'field_value.length', 0);
@@ -62,8 +54,14 @@ export default class FormulaItemContainer extends Component {
                     <td rowSpan={fieldValueLength} className={"text-center"}>
                         <span onClick={() => this.props.onSetFormulaSelected(formula)} className="font-green cursor-pointer">{formula.total_account}</span>
                     </td>
-                    <td rowSpan={fieldValueLength} className="text-center">Relink</td>
-                    <td rowSpan={fieldValueLength}>Edit</td>
+                    <td rowSpan={fieldValueLength} className="text-center">
+                        { 
+                            (formula.total_account && formula.total_account > 0) 
+                                ? <i className="fa fa-exchange font-green cursor-pointer" onClick={() => this.props.onToggleRelinkModal(formula)} />
+                                : null
+                        }
+                    </td>
+                    <td rowSpan={fieldValueLength}><i onClick={() => this.props.onToggleEditModal(formula)} className="fa fa-edit font-green" /></td>
                     <td rowSpan={fieldValueLength} className="text-center"><i className="fa fa-trash-o font-red" /></td>
                 </tr>
                 { extraFieldValElement }

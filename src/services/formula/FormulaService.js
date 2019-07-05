@@ -59,6 +59,10 @@ class FormulaService extends BaseService {
     saveFormula(payload) {
         return HttpService.post(`${this.serviceUrl}/formula/action`, payload)
     }
+
+    relinkFormula(payload) {
+        return HttpService.post(`${this.serviceUrl}/formula/relink_formula`, payload);
+    }
 }
 
 export default new FormulaService()
