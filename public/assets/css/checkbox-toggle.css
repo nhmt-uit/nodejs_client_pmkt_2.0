@@ -33,8 +33,10 @@
         -ms-user-select: none;
             user-select: none;
     position: relative;
-    display: flex;
+    display: inline-block;
     align-items: center;
+    width: 135px;
+    cursor: pointer;
   }
   .can-toggle label .can-toggle__label-text {
     flex: 1;

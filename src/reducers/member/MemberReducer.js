@@ -17,7 +17,7 @@ const MemberReducer = (state = defaultState, action) => {
         case MemberActionType.MEMBER_RESET_STORE:
             return {...defaultState}
         case MemberActionType.GET_MEMBER:
-            return {...state, member: action.payload};
+            return {...state, member: action.payload, optMember: action.optMember};
         case MemberActionType.MEMBER_TOGGLE_MODAL_FORM:
             //Reset Store When Modal Close
 			if (!state.isOpenModal === false) return {...defaultState}

@@ -235,7 +235,6 @@ class FormAccountContainer extends Component {
                             name="is_active"
                             className="basic-single"
                             component={renderSelectField}
-                            isSearchable={true}
                             options={optAccountStatus}
                             isDisabled={true}
                             isSearchable={false}

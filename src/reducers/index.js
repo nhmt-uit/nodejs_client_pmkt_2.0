@@ -21,6 +21,7 @@ import TransactionReducer from "./report/TransactionReducer";
 import MemberReducer from "./member/MemberReducer";
 import AccountSubReducer from "./account_sub/AccountSubReducer"
 import FormulaReducer from "./formula/FormulaReducer"
+import FormulaGroupReducer from "./formula-group/FormulaGroupReducer"
 
 const appReducers = combineReducers({
     // Redux form reducer
@@ -30,15 +31,16 @@ const appReducers = combineReducers({
     banker: BankerReducer,
     alert: AlertReducer,
     report_detail: ReportDetailReducer,
-    transaction: TransactionReducer,
     member: MemberReducer,
     // type_of_money: TransactionReducer,
 
     // System reducers
     AppReducer,
     LanguageReducer,
+    MemberReducer,
     AuthReducer,
     AccountSubReducer,
+    TransactionReducer,
     AccountantAssignFormulaReducer,
     // Accountant Reducer
     AccountantReducer, AccountantManualReducer,
@@ -47,7 +49,8 @@ const appReducers = combineReducers({
     ChangeSecureCodeReducer,
     ReportReducer,
     AccountReducer,
-    FormulaReducer
+    FormulaReducer,
+    FormulaGroupReducer
 });
 
 export default appReducers;

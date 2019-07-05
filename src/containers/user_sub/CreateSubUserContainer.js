@@ -1,64 +1,67 @@
 import React, {Component} from 'react'
-import {get, isEmpty} from 'lodash';
 import {withTranslation} from "react-i18next";
 import {compose} from "redux/es/redux";
 import {connect} from "react-redux";
-import { getSuffixesMember } from "my-actions/account_sub/AccountSubAction";
+
+import {TransComponent} from 'my-components'
+import {get as _get} from 'lodash';
+import {renderError} from 'my-utils/components/redux-form/render-form'
+
 import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
+import AccountSubServices from 'my-services/account_sub/AccountSubServices'
+import {reduxForm, Field} from "redux-form";
+
+const optSubMemberNumber = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 class CreateSubUserContainer extends Component {
     constructor(props){
-        super(props)
+        super(props);
         this.state = {
-            isOpenDelModal: false,
-            username: '',
-            s1: '',
-            s2: '',
-            s3: '',
+            isOpenCreateUserModal: false
         }
-
     }
+
     componentWillMount() {
-        this.props.getSuffixesMember();
-    }
-
-    onChangeUserNameS1 = (e) => {
-        this.setState({
-            s1: e.target.value
+        AccountSubServices.getSuffixesMember().then(res =>{
+            if(res.status){
+                this.props.initialize({
+                    ...this.props.initialValues,
+                    username: res.res.username,
+                    s1: res.res.s1,
+                    s2: res.res.s2,
+                    s3: res.res.s3,
+                })
+            }
         })
     }
 
-    onChangeUserNameS2 = (e) => {
-        this.setState({
-            s2: e.target.value
-        })
-    }
-
-    onChangeUserNameS3 = (e) => {
-        this.setState({
-            s3: e.target.value
-        })
-    }
+    // onChangeUserNameS1 = (e) => {
+    //     this.setState({
+    //         s1: e.target.value
+    //     })
+    // }
+    //
+    // onChangeUserNameS2 = (e) => {
+    //     this.setState({
+    //         s2: e.target.value
+    //     })
+    // }
+    //
+    // onChangeUserNameS3 = (e) => {
+    //     this.setState({
+    //         s3: e.target.value
+    //     })
+    // }
 
     createNewSubAccount = () => {
-        var isOpenDelModal = this.state.isOpenDelModal;
+        var isOpenCreateUserModal = this.state.isOpenCreateUserModal;
         this.setState({
-            isOpenDelModal : !isOpenDelModal,
-            s1: '',
-            s2: '',
-            s3: '',
+            isOpenCreateUserModal : !isOpenCreateUserModal,
         })
     }
 
     render() {
-        const {t} = this.props
-        var suffixesMember = this.props.suffixesMember.suffixesMember;
-        if(isEmpty(suffixesMember)){
-            return null;
-        }
-        var Data = suffixesMember.res;
-        const {username, s1, s2, s3} = this.state;
-
+        const { t }  = this.props;
         return (
             <div className="row">
                 <div className="form-group col-xs-11 text-right">
@@ -66,20 +69,25 @@ class CreateSubUserContainer extends Component {
                 </div>
                 <div className="clearfix"></div>
                 <div>
-                    <Modal isOpen={this.state.isOpenDelModal} toggle={() => this.createNewSubAccount()}>
+                    <Modal isOpen={this.state.isOpenCreateUserModal} toggle={() => this.createNewSubAccount()}>
                         <ModalHeader toggle={() => this.createNewSubAccount()} className="text-uppercase">
                             <strong>
                                 {t('Sub Account')}
                             </strong>
                         </ModalHeader>
                         <ModalBody>
-                            <form className="form-horizontal" role="form">
+                            <form className="form_member">
                                 <div className="form-body">
                                     <div className="form-group">
                                         <label className="col-md-3 control-label"> Name </label>
                                         <div className="col-md-9">
                                             <div className="input-group">
-                                                <input type="text" className="form-control" placeholder="Name"/>
+                                                <Field
+                                                    name="name"
+                                                    component="input"
+                                                    className="form-control"
+                                                    type="text"
+                                                />
                                                 <span className="input-group-addon">
                                                     <i className="fa fa-user"></i>
                                                 </span>
@@ -88,77 +96,66 @@ class CreateSubUserContainer extends Component {
                                     </div>
                                     <div className="form-group">
                                         <label className="col-md-3 control-label"> Username </label>
-                                        <div className="col-md-9">
-                                            <div className="form-group col-md-6">
-                                                <input type="text" className="form-control" disabled value={Data.username || username}/>
+                                        <div className="row col-md-9">
+                                            <div className="col-md-5">
+                                                <Field
+                                                    name="username"
+                                                    component="input"
+                                                    className="form-control placeholder-no-fix"
+                                                    autoComplete="off"
+                                                    readOnly={true}
+                                                />
                                             </div>
                                             <div className="col-md-2">
-                                                <div className="style-select">
-                                                    <div className="form-group">
-                                                        <select className="form-control form-control" type="select" value={s1 || Data.s1} onChange={this.onChangeUserNameS1}>
-                                                            <option value="0"> 0 </option>
-                                                            <option value="1"> 1 </option>
-                                                            <option value="2"> 2 </option>
-                                                            <option value="3"> 3 </option>
-                                                            <option value="4"> 4 </option>
-                                                            <option value="5"> 5 </option>
-                                                            <option value="6"> 6 </option>
-                                                            <option value="7"> 7 </option>
-                                                            <option value="8"> 8 </option>
-                                                            <option value="9"> 9 </option>
-                                                        </select>
-                                                    </div>
-                                                </div>
+                                                <Field name="s1" component="select" className="form-control">
+                                                    {
+                                                        optSubMemberNumber.map(item => {
+                                                            return (<option key={item} value={item}>{item}</option>)
+                                                        })
+                                                    }
+                                                </Field>
                                             </div>
                                             <div className="col-md-2">
-                                                <div className="style-select">
-                                                    <div className="form-group">
-                                                        <select className="form-control form-control" type="select" value={s2 || Data.s2} onChange={this.onChangeUserNameS2}>
-                                                            <option value="0"> 0 </option>
-                                                            <option value="1"> 1 </option>
-                                                            <option value="2"> 2 </option>
-                                                            <option value="3"> 3 </option>
-                                                            <option value="4"> 4 </option>
-                                                            <option value="5"> 5 </option>
-                                                            <option value="6"> 6 </option>
-                                                            <option value="7"> 7 </option>
-                                                            <option value="8"> 8 </option>
-                                                            <option value="9"> 9 </option>
-                                                        </select>
-                                                    </div>
-                                                </div>
+                                                <Field name="s2" component="select" className="form-control">
+                                                    {
+                                                        optSubMemberNumber.map(item => {
+                                                            return (<option key={item} value={item}>{item}</option>)
+                                                        })
+                                                    }
+                                                </Field>
                                             </div>
                                             <div className="col-md-2">
-                                                <div className="style-select">
-                                                    <div className="form-group">
-                                                        <select className="form-control form-control" type="select" value={s3 || Data.s3} onChange={this.onChangeUserNameS3}>
-                                                            <option value="0"> 0 </option>
-                                                            <option value="1"> 1 </option>
-                                                            <option value="2"> 2 </option>
-                                                            <option value="3"> 3 </option>
-                                                            <option value="4"> 4 </option>
-                                                            <option value="5"> 5 </option>
-                                                            <option value="6"> 6 </option>
-                                                            <option value="7"> 7 </option>
-                                                            <option value="8"> 8 </option>
-                                                            <option value="9"> 9 </option>
-                                                        </select>
-                                                    </div>
-                                                </div>
+                                                <Field name="s3" component="select" className="form-control">
+                                                    {
+                                                        optSubMemberNumber.map(item => {
+                                                            return (<option key={item} value={item}>{item}</option>)
+                                                        })
+                                                    }
+                                                </Field>
                                             </div>
                                         </div>
                                     </div>
                                     <div className="form-group">
                                         <label className="col-md-3 control-label"> Password </label>
                                         <div className="col-md-9">
-                                            <input type="password" className="form-control" placeholder="Password"/>
+                                            <Field
+                                                name="password"
+                                                component="input"
+                                                className="form-control"
+                                                type="password"
+                                            />
                                         </div>
                                     </div>
                                     <div className="form-group">
-                                        <label className="col-md-3 control-label">re-Password</label>
+                                        <label className="col-md-3 control-label">Re-password</label>
                                         <div className="col-md-9">
                                             <div className="input-icon right">
-                                                <input type="password" className="form-control" placeholder="re-Password"/>
+                                                <Field
+                                                    name="re-password"
+                                                    component="input"
+                                                    className="form-control"
+                                                    type="password"
+                                                />
                                             </div>
                                         </div>
                                     </div>
@@ -177,17 +174,19 @@ class CreateSubUserContainer extends Component {
 
 const mapStateToProps = state => {
     return {
-        suffixesMember: get(state, 'AccountSubReducer',{})
+        initialValues: _get(state, 'form.createSubUser.values'),
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return{
-        getSuffixesMember: params => {dispatch(getSuffixesMember(params))}
     }
 }
 
 export default compose(
+    reduxForm({
+        form: 'createSubUser',
+    }),
     connect(mapStateToProps, mapDispatchToProps),
     withTranslation(),
 )(CreateSubUserContainer);

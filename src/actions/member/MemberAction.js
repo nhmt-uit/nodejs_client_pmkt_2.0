@@ -4,10 +4,16 @@ import MemberService from 'my-services/member/MemberService'
 export const getMember = () => {
     return (dispatch) => {
         return MemberService.getMember().then(res => {
-            dispatch({
-                type: MemberActionType.GET_MEMBER,
-                payload: res,
-            })
+            if(res.status) {
+                const optMember = res.res.data.List.map(item => {
+                    return {value: item.id, label: item.fullname.toUpperCase()}
+                })
+                dispatch({
+                    type: MemberActionType.GET_MEMBER,
+                    payload: res,
+                    optMember: optMember,
+                })
+            }
         })
     }
 };

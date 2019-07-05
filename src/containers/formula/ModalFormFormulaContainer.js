@@ -24,7 +24,7 @@ class ModalFormFormulaContainer extends Component {
 
     render() {
         return (
-            <Modal isOpen={this.props.isOpenModal} toggle={_ => this.props.toggleModalFormula()}>
+            <Modal isOpen={this.props.isOpenModal} toggle={_ => this.props.toggleModalFormula()} scrollable={true}>
                 <ModalHeader toggle={_ => this.props.toggleModalFormula()}>{this.modalTitle}</ModalHeader>
                 <ModalBody>
                     <FormFormulaContainer {...this.props} />

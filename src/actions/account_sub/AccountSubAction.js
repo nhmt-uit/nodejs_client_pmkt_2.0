@@ -24,15 +24,3 @@ export const delMemberSub = (post) => {
         })
     }
 }
-
-export const getSuffixesMember = () => {
-    return (dispatch) => {
-        return AccountSubService.getSuffixesMember().then(res => {
-
-            dispatch({
-                type: AccountSubActionType.GET_SUFFIXES_MEMBER,
-                payload: res,
-            })
-        })
-    }
-}

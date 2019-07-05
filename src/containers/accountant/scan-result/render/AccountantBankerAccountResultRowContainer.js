@@ -15,11 +15,24 @@ class AccountantBankerAccountResultRowContainer extends Component {
     | Call action to scan data
     |--------------------------------------------------------------------------
     */
-    handleRequestScan = _ => {
-        // let finded = this.dynamicColumn.find(item => item.key === key)
+    handleRequestScan = account => {
         if (this.props.bankerAccountType === "resolve") {
+            const get_child_list = {}
+            if(this.props.parents.length) {
+                for(let item of this.props.parents) {
+                    console.log(item)
+                    get_child_list[item.username.toLowerCase()] = true
+                    if(item.username === account.username) break
+                }
+            }
             let ids = [this.props.bankerAccount.id]
-            this.props.socketScanData({ids: ids, from_date: this.props.bankerAccount.from_date, to_date: this.props.bankerAccount.to_date, more_post: this.props.bankerAccount.more_post})
+            const objScan = {ids: ids,
+                            from_date: this.props.bankerAccount.from_date,
+                            to_date: this.props.bankerAccount.to_date,
+                            more_post: this.props.bankerAccount.more_post
+                        }
+            if(!_isEmpty(get_child_list)) objScan.more_post.get_child_list = get_child_list
+            this.props.socketScanData(objScan)
         }
     }
     
@@ -62,7 +75,7 @@ class AccountantBankerAccountResultRowContainer extends Component {
                                     <span className="spacing-0" />
                                     </>
                                 ): <span className="placeholder-parent" />}
-                                <a onClick={this.handleRequestScan}><b>{ item.username }</b></a>
+                                <a onClick={_ => this.handleRequestScan(item)}><b>{ item.username }</b></a>
                             </td>)
 
     
@@ -75,7 +88,7 @@ class AccountantBankerAccountResultRowContainer extends Component {
 
             tbl_col_dynamic.push(<td key={uuidv4()} rowSpan={rowSpanColDynamic}>{obj.reportType.toUpperCase()}</td>)
             let dynamicColmn = dataFieldList.map(key => {
-                return !_isEmpty(obj.reportData[key]) ? <td key={uuidv4()} rowSpan={rowSpanColDynamic} className="text-right">{Helpers.formatMoney(obj.reportData[key], 0)}</td> : null
+                return !_isEmpty(obj.reportData[key]) ? <td key={uuidv4()} rowSpan={rowSpanColDynamic} className="text-right">{Helpers.formatMoney(obj.reportData[key], 2)}</td> : null
             })
             tbl_col_dynamic.push(dynamicColmn)
 

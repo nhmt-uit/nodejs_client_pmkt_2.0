@@ -5,15 +5,15 @@ import { TransComponent } from 'my-components'
 
 export const renderError = props => {
     const {touched, error, warning } = props.meta
-    console.log(error)
     return (
-        error && <span  {...props} className='error'><TransComponent i18nKey={error} /></span> || null
+        error && <span {...props} className='error'><TransComponent i18nKey={error} /></span> || null
     )
 }
 
 export const renderSelectField = props => {
-    const { input, options } = props;
+    const { input, options} = props;
     const {touched, error, warning } = props.meta
+
     return (
         <Select
             {...input}

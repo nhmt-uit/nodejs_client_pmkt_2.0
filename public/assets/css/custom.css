@@ -67,7 +67,8 @@ html {
 }
 .form-group .css-1pahdxg-control, .form-group .css-1pahdxg-control:hover {
 	border-color: #93a1bb;
-	box-shadow: none;
+  box-shadow: none;
+  min-height: 32px;
 }
 .form-group .css-yk16xz-control {
 	border: 1px solid #c2cad8;
@@ -80,6 +81,8 @@ html {
 .form-group .css-1g48xl4-IndicatorsContainer {
 	height: 32px;
 }
+
+.form-group .css-8eqalp{z-index: 10}
 
 .hide-multi .css-1rhbuit-multiValue .css-1alnv5e {
 	display: none;
