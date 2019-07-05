@@ -16,6 +16,19 @@ class AccountSubServices extends BaseService {
         return HttpService.post(`${this.serviceUrl}/member_sub/get_suffixes_member`)
     }
 
+    createMemberSub(post){
+        return HttpService.post(`${this.serviceUrl}/member_sub/create_member`,post)
+    }
+
+    validateMemberSubName(fullname) {
+        const payload = {value: fullname}
+        return HttpService.post(`${this.serviceUrl}/member_sub/validator_member_name`, payload)
+    }
+
+    validateMemberSubUser(username){
+        const payload = {value: username}
+        return HttpService.post(`${this.serviceUrl}/member_sub/validator_member_user`, payload)
+    }
 }
 
 export default new AccountSubServices()

@@ -22,20 +22,28 @@ class TransactionPage extends React.Component{
 
     render() {
         return (
-            <div className='row'>
-                <div className="portlet light bordered" style={{marginLeft: 15, marginRight:15}}>
-                    <div className="caption font-red-sunglo"><h4><span className="caption-subject bold uppercase"> <TransComponent i18nKey="List of Transaction"/> </span></h4></div>
-                    <div className="tools"><span className="collapse"> </span></div>
+            <div className='portlet light bordered'>
+                <div className="portlet-title">
+                    <div className="caption font-red-sunglo">
+                        <span className="caption-subject bold uppercase">
+                            <TransComponent i18nKey="Transaction" />
+                        </span>
+                    </div>
                 </div>
-                <div className="col-xs-5">
-                    <CreateTransaction onRef={ref => (this.child = ref)}
-                                        callParentFromCreateTransaction={this.getDataFromCreateTransaction}/>
-                </div>
-                <div className="col-xs-7">
-                    <BillTransaction onRef={ref => (this.childBillTransaction = ref)}/>
-                </div>
-                <div className="col-xs-12">
-                    <ListOfTransaction handleParent={this.callbackListOfTransaction}/>
+                <div className="portlet-body">
+                    <div className="row">
+                        <div className="col-md-5">
+                            <CreateTransaction onRef={ref => (this.child = ref)}
+                                               callParentFromCreateTransaction={this.getDataFromCreateTransaction}/>
+                        </div>
+                        <div className="col-md-7">
+                            <BillTransaction onRef={ref => (this.childBillTransaction = ref)}/>
+
+                        </div>
+                        <div className="col-md-12">
+                            <ListOfTransaction handleParent={this.callbackListOfTransaction}/>
+                        </div>
+                    </div>
                 </div>
             </div>
         );

@@ -38,12 +38,17 @@ class CreateTransaction extends Component {
             var cycleValues = nextProps.initialValues.cycle;
             var typeOfMoney = nextProps.initialValues.typeOfMoney;
             var transactionMethod = nextProps.initialValues.transactionMethod;
-            var amount = nextProps.initialValues.amount;
+            var amount = Number(nextProps.initialValues.amount);
             if (memberValues && cycleValues && typeOfMoney && transactionMethod && amount !== undefined && amount!==''){
                 this.setState({
                     submit: false
                 })
             } else {
+                this.setState({
+                    submit: true
+                })
+            }
+            if(amount !== '' && Number.isNaN(amount) == true || amount == ''){
                 this.setState({
                     submit: true
                 })
@@ -183,33 +188,34 @@ class CreateTransaction extends Component {
         const {t} = this.props
 
         return (
-            <div className="row">
-                <form action="#" className="form-horizontal form-bordered" onSubmit={this.submitForm}>
+            <div className="col-md-12">
+                <form className="form-horizontal form-bordered" onSubmit={this.submitForm}>
                     <div className="form-body">
                         {this.renderAlert()}
                         <div className="form-group">
-                            <label className="control-label col-md-3"> {t("Member")} </label>
-                            <div className="input-group col-md-8">
-                                <Field
-                                    name="member"
-                                    className="basic-single"
-                                    component={renderSelectField}
-                                    isSearchable={true}
-                                    options={optMember}
-                                    placeholder="--Select Member--"
-                                />
-                                <span className="input-group-btn">
-                                    <button className="btn green" type="button" onClick={_ => this.props.toggleModalMember()}><i className="fa fa-plus"/></button>
-                                </span>
+                            <label> {t("Member")} </label>
+                            <div className="col-md-12">
+                                <div className="input-group">
+                                    <Field
+                                        name="member"
+                                        className="basic-single"
+                                        component={renderSelectField}
+                                        isSearchable={true}
+                                        options={optMember}
+                                        placeholder="--Select Member--"
+                                    />
+                                    <span className="input-group-btn">
+                                <button className="btn green" type="button" onClick={_ => this.props.toggleModalMember()}><i className="fa fa-plus"/></button>
+                            </span>
+                                </div>
                             </div>
-                            <div className="col-md-3"></div>
-                            <div className="col-md-7">
+                            <div className="col-md-12">
                                 <Field name="member" component={renderError}/>
                             </div>
                         </div>
                         <div className="form-group">
-                            <label className="control-label col-md-3">{t("Cycle")}</label>
-                            <div className="input-group col-md-8">
+                            <label>{t("Cycle")}</label>
+                            <div className="col-md-12">
                                 <Field
                                     name="cycle"
                                     className="basic-single"
@@ -217,65 +223,58 @@ class CreateTransaction extends Component {
                                     isSearchable={false}
                                     options={optCycle}
                                     placeholder="-- Select Cycle --"
-
                                 />
                             </div>
-                            <div className="col-md-3"></div>
-                            <div className="col-md-7">
+                            <div className="col-md-12">
                                 <Field name="cycle" component={renderError}/>
                             </div>
                         </div>
                         <div className="form-group">
-                            <label className="control-label col-md-3"> {t("Currency")} </label>
-                            <div className="col-md-8 mt-radio-list">
-                                {optionsMoney}
+                            <label> {t("Currency")} </label>
+                            <div className="col-md-12">
+                                <div className="mt-radio-list">
+                                    {optionsMoney}
+                                </div>
                             </div>
-                            <div className="col-md-3"></div>
-                            <div className="col-md-7">
+                            <div className="col-md-12">
                                 <Field name="typeOfMoney" component={renderError}/>
                             </div>
                         </div>
                         <div className="form-group">
-                            <label className="control-label col-md-3"> {t("Transaction Type")} </label>
-                            <div className="col-md-8">
+                            <label> {t("Transaction Type")} </label>
+                            <div className="col-md-12">
                                 <div className="mt-radio-list">
                                     {optionsTransaction}
                                 </div>
                             </div>
-                            <div className="col-md-3"></div>
-                            <div className="col-md-7">
+                            <div className="col-md-12">
                                 <Field name="transactionMethod" component={renderError}/>
                             </div>
                         </div>
                         <div className="form-group">
-                            <label className="control-label col-md-3"> {t("Amount")} </label>
-                            <div className="col-md-8">
+                            <label className="control-label"> {t("Amount")} </label>
+                            <div className="col-md-12">
                                 <Field className="form-control" component="input" name="amount" type="text"/>
                             </div>
-                            <div className="col-md-3"></div>
-                            <div className="col-md-7">
+                            <div className="col-md-12">
                                 <Field name="amount" component={renderError}/>
                             </div>
                         </div>
                         <div className="form-group">
-                            <label className="control-label col-md-3"> {t("Note")} </label>
-                            <div className="col-md-8">
+                            <label className="control-label"> {t("Note")} </label>
+                            <div className="col-md-12">
                                 <Field className="form-control" component="textarea" name="note"/>
                             </div>
                         </div>
                     </div>
                     <div className="form-actions">
-                        <div className="row">
-                            <div className="col-md-offset-3 col-md-9">
-                                {this.state.isEdit ? (
-                                    <button type="submit" className="btn red" onClick={this.onClickAddNew}>
-                                        <i className="fa fa-plus"></i> {t("Add new")}
-                                    </button>) : ''}
-                                <button type="submit" className="btn dark" disabled={this.state.submit}>
-                                    <i className="fa fa-check"></i> {t("Save")}
-                                </button>
-                            </div>
-                        </div>
+                        {this.state.isEdit ? (
+                            <button type="submit" className="btn green" onClick={this.onClickAddNew}>
+                                <i className="fa fa-plus"></i> {t("Add new")}
+                            </button>) : ''}
+                        <button type="submit" className="btn red" disabled={this.state.submit}>
+                            <i className="fa fa-check"></i> {t("Save")}
+                        </button>
                     </div>
                     <ModalFormMemberContainer />
                 </form>

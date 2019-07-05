@@ -209,6 +209,7 @@ const validate = values => {
 }
 
 const mapStateToProps = state => {
+
     return {
         initialValues: _get(state, 'form.form_member.values'),
     }
