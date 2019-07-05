@@ -59,7 +59,7 @@ const FormulaReducer = (state = defaultState, action) => {
                 banker: state.banker,
                 isFetching: state.isFetching,
                 error: state.error}
-            return {...state, isOpenModal: !state.isOpenModal};
+            return {...state, isOpenModal: !state.isOpenModal, selectedItem: action.selectedItem};
         case FormulaActionType.FORMULA_SAVE_FORM:
             return {...state, formSaveStatus: action.formSaveStatus, formSaveResponse: action.formSaveResponse}
 

@@ -24,10 +24,11 @@ export const resetStoreFormula = () => {
     }
 };
 
-export const toggleModalFormula = () => {
+export const toggleModalFormula = params => {
     return (dispatch) => {
         dispatch({
             type: FormulaActionType.FORMULA_TOGGLE_MODAL_FORM,
+            selectedItem: _get(params, 'selectedItem', {}),
         })
     }
 };
