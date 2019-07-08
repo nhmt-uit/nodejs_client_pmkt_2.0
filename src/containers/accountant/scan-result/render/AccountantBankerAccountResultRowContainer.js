@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux'
 import { isEmpty as _isEmpty, forEach as _forEach, concat as _concat } from 'lodash'
 import uuidv4 from 'uuid/v4'
@@ -20,7 +20,6 @@ class AccountantBankerAccountResultRowContainer extends Component {
             const get_child_list = {}
             if(this.props.parents.length) {
                 for(let item of this.props.parents) {
-                    console.log(item)
                     get_child_list[item.username.toLowerCase()] = true
                     if(item.username === account.username) break
                 }
@@ -55,17 +54,16 @@ class AccountantBankerAccountResultRowContainer extends Component {
     |--------------------------------------------------------------------------
     */
     generateRowData = _ => {
-        const { item, isFullScreen, rootAccInfo } = this.props
+        const { item, rootAccInfo } = this.props
         const { dataFieldList, dataHiddenFields, scanData } = this.props.bankerAccount
         const bankerAccountId = this.props.bankerAccount.id
         
         let xhtml = []
-        let final_xhtml = []
         let tbl_col_username = []
         
         //generate username column
         const col_username = this.calcRowSpanUsername()
-        tbl_col_username.push(<td key={uuidv4()}  rowSpan={col_username}>
+        tbl_col_username.push(<td key={uuidv4()} rowSpan={col_username}>
                                 <span className={`spacing-${item.level}`}></span>
                                 {!_isEmpty(item.child) ? (
                                     <>
@@ -109,21 +107,21 @@ class AccountantBankerAccountResultRowContainer extends Component {
                 let objToggleModalSelectedFomula = {bankerAccountId: bankerAccountId, accInfo: accInfo, rootAccInfo: rootAccInfo, scanData: scanData}
 
                 tbl_col_formula.push(
-                    <>
-                    <td key={uuidv4()}><TransComponent i18nKey="Not have formula yet" /></td> {/* // Column Formula Name */}
+                    <Fragment key={uuidv4()}>
+                    <td><TransComponent i18nKey="Not have formula yet" /></td>
                     
                     <AccountantBankerAccountResultHiddenTableTdContainer dataHiddenFields={dataHiddenFields} />
 
-                    <td key={uuidv4()}></td> {/* // Column Member */}
-                    <td key={uuidv4()}></td> {/* // Column Result */}
-                    <td key={uuidv4()}></td> {/* // Column Currency */}
-                    <td key={uuidv4()} className="text-center" width="45px"></td> {/* // Column +/- Formula (delete) */}
-                    <td key={uuidv4()} className="text-center" width="45px"><a href="#/" onClick={_ => this.props.toggleModalFormFormula(objToggleModalSelectedFomula)} className="font-green-jungle"><i className="fa fa-plus-circle" /></a></td> {/* // Column +/- Formula (add) */}
-                    </>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td className="text-center" width="45px"></td>
+                    <td className="text-center" width="45px"><a href="#/" onClick={_ => this.props.toggleModalFormFormula(objToggleModalSelectedFomula)} className="font-green-jungle"><i className="fa fa-plus-circle" /></a></td>
+                    </Fragment>
                 )
                 
                 xhtml.push(
-                    <tr key={uuidv4()}>
+                    <tr>
                         {idxFormula === 1 ? tbl_col_username : null}
                         {idxDynamic === 1 ? tbl_col_dynamic : null}
                         {tbl_col_formula}
@@ -148,19 +146,15 @@ class AccountantBankerAccountResultRowContainer extends Component {
                     }
 
                     tbl_col_formula.push(
-                        <>
-                        <td key={uuidv4()} className={formula.PRText}>{Helpers.formatFormulaName(formula.formulaName)}</td> {/* // Column Formula Name */}
-                        
-                        {/* Hidden Column */}
-                        <AccountantBankerAccountResultHiddenTableTdContainer dataHiddenFields={dataHiddenFields} formula={formula} />
-                        {/* Hidden Column */}
-
-                        <td key={uuidv4()} ><b>{formula.memberName.toUpperCase()}</b></td> {/* // Column Member */}
-                        <td key={uuidv4()} className={resultClass + " text-right"} >{Helpers.formatMoney(formula.valueRounded, 0)}</td> {/* // Column Result */}
-                        <td key={uuidv4()} className={resultClass}>{formula.currencyName}</td> {/* // Column Currency */}
-                        <td key={uuidv4()} className="text-center" width="45px"><a href="#/" onClick={_ => this.props.toggleModalDeleteFormula(objToggleModalSelectedFomula)} className="font-red-sunglo"><i className="fa fa-times-circle" /></a></td> {/* // Column +/- Formula (delete) */}
-                        {idxDynamic === 1 ? <td key={uuidv4()} className="text-center" width="45px" rowSpan={rowSpanColDynamic}><a href="#/" onClick={_ => this.props.toggleModalFormFormula(objToggleModalSelectedFomula)} className="font-green-jungle"><i className="fa fa-plus-circle" /></a></td> : null} {/* // Column +/- Formula (add) */}
-                        </>
+                        <Fragment key={uuidv4()}>
+                            <td className={formula.PRText}>{Helpers.formatFormulaName(formula.formulaName)}</td>
+                            <AccountantBankerAccountResultHiddenTableTdContainer dataHiddenFields={dataHiddenFields} formula={formula} />
+                            <td ><b>{formula.memberName.toUpperCase()}</b></td>
+                            <td className={resultClass + " text-right"} >{Helpers.formatMoney(formula.valueRounded, 0)}</td>
+                            <td className={resultClass}>{formula.currencyName}</td>
+                            <td className="text-center" width="45px"><a href="#/" onClick={_ => this.props.toggleModalDeleteFormula(objToggleModalSelectedFomula)} className="font-red-sunglo"><i className="fa fa-times-circle" /></a></td>
+                            {idxDynamic === 1 ? <td className="text-center" width="45px" rowSpan={rowSpanColDynamic}><a href="#/" onClick={_ => this.props.toggleModalFormFormula(objToggleModalSelectedFomula)} className="font-green-jungle"><i className="fa fa-plus-circle" /></a></td> : null}
+                        </Fragment>
                     )
 
                     xhtml.push(
@@ -172,9 +166,6 @@ class AccountantBankerAccountResultRowContainer extends Component {
                     )
                 })
             }
-
-            // Generate final html <tbody><tr><td></td></tr></tbody>
-            // final_xhtml.push(xhtml)
         })
         return (
             <tbody>
@@ -184,7 +175,6 @@ class AccountantBankerAccountResultRowContainer extends Component {
     }
     
     render() {
-        const { item } = this.props
         return (
             this.generateRowData()
         )

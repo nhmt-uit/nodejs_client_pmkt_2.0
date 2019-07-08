@@ -60,7 +60,6 @@ class ListFormulaByForumulaGroupContainer extends Component {
         
         const selectedEdit = this.state.selectedFormulas.find(item => item.formula.id === selectedItem.formula.id && !_isEmpty(item.newFormulaId))
         let selectValue = _isEmpty(selectedEdit) ? selectedItem.formula.id : selectedEdit.newFormulaId
-        console.log(this.state.selectedFormulas, selectedEdit, selectedItem, selectValue)
         return (
             <div className="form-group">
                 <select className="form-control" onChange={e => this.handleEditFormula('change', selectedItem, e)} value={selectValue}>
@@ -90,7 +89,6 @@ class ListFormulaByForumulaGroupContainer extends Component {
         }
 
         if(type === 'change') {
-            console.log("fired change")
             selectedFormulas = selectedFormulas.map(item => {
                 if( item.formula.id === selectedItem.formula.id) item.newFormulaId = e.target.value
                 return item
@@ -152,7 +150,7 @@ class ListFormulaByForumulaGroupContainer extends Component {
     }
     
     renderDetailData = formulaPatternList => {
-        let xhtml = null
+        let xhtml = <tr><td className="text-center" colSpan="20"><TransComponent i18nKey="Data Empty" /></td></tr>
         if (formulaPatternList.length) {
             xhtml = formulaPatternList.map((item, idx) => {
                 return (
@@ -204,7 +202,7 @@ class ListFormulaByForumulaGroupContainer extends Component {
                         </div>
                         : null
                     }
-                    <div className="table-scrollable">
+                    <div className="table-responsive">
                         <table className="table table-striped table-bordered table-hover table-animation">
                             <thead>
                                 <tr className="font-red-sunglo">

@@ -26,9 +26,12 @@ class LanguageService extends BaseService {
                         let value = langVals[langKeys[x].id].name
                         key = key.replace('{', '{{')
                         key = key.replace('}', '}}')
-                        // key = key.toLowerCase()
                         value = value.replace('{', '{{')
                         value = value.replace('}', '}}')
+                        listLang[key] = value
+                        
+                        //extra key lowercase
+                        key = key.toLowerCase()
                         listLang[key] = value
                     }
                 }

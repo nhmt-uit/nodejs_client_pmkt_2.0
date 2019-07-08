@@ -12,13 +12,11 @@ import 'my-utils/i18n';
 import * as serviceWorker from './serviceWorker';
 
 
-const flashOptions = { timeout: 5000 }
-
 const store = createStore(
     appReducers,
     compose(
         applyMiddleware(thunk, flashMiddleware()),
-        window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+        window.__REDUX_DEVTOOLS_EXTENSION__ ? window.__REDUX_DEVTOOLS_EXTENSION__() : _ => _
     )
 );
 

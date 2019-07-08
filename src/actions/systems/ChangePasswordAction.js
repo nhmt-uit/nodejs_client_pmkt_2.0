@@ -38,7 +38,7 @@ export const savePassword = (password) => {
 };
 
 export const savePassword2 = (password) => {
-    return (dispatch) => {console.log(ChangePasswordActionType.CHANGE_PASSWORD2_FAIL);
+    return (dispatch) => {
         return ChangePasswordService.savePassword2(password).then(res => {
             if (_get(res, 'status',false)) {
                 dispatch({

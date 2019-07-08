@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
-import { 
-    get as _get, 
+import {
+    get as _get,
     sortBy as _sortBy,
     debounce as _debounce,
     isEmpty as _isEmpty,
@@ -58,7 +58,7 @@ class FormulaListContainer extends Component {
     componentWillReceiveProps(nextProps) {
         if (nextProps.formulaList && !_isEmpty(this.state.formulaSelected)) {
             const newFormulaSelected = _find(nextProps.formulaList, ['id', this.state.formulaSelected.id]);
-            const newState = { 
+            const newState = {
                 formulaSelected: newFormulaSelected,
                 listAccDelete: [],
                 listAccEdit: [],
@@ -100,10 +100,10 @@ class FormulaListContainer extends Component {
         const newState = { formulaSelected: formula };
 
         switch (type) {
-            case 'relink': 
+            case 'relink':
                 newState.isOpenRelinkModal = true;
                 break;
-            case 'delete': 
+            case 'delete':
                 newState.isOpenDeleteModal = true;
                 break;
             default:
@@ -136,10 +136,10 @@ class FormulaListContainer extends Component {
             );
         }
 
-        return formulaList.map((item, index) => 
-            <FormulaItemContainer 
-                key={index} 
-                formula={item} 
+        return formulaList.map((item, index) =>
+            <FormulaItemContainer
+                key={index}
+                formula={item}
                 order={index + 1}
                 onToggle={this.handleToggleModal}
                 onToggleEditModal={this.handleToggleEditModal}
@@ -339,7 +339,7 @@ class FormulaListContainer extends Component {
         const { formulaSelected, listAccDelete, listAccEdit, isLoadingDelete, isLoadingUpdate } = this.state;
         const listAccUse = formulaSelected ? (formulaSelected.list_acc_use || []) : [];
         const listOptionFormula = this.props.formulaList.map(item => { return { label: item.tenct.toUpperCase(), value: item.id } })
-        const selectBatchFormulaElm = listAccEdit.length > 1 
+        const selectBatchFormulaElm = listAccEdit.length > 1
             ? <Select
                 className="basic-single color-text-normal"
                 classNamePrefix="select"
@@ -352,7 +352,7 @@ class FormulaListContainer extends Component {
             : <TransComponent i18nKey={'Formula name'}/>;
 
         return (
-            <div style={{ overflow: 'auto' }}>
+            <div className="table-responsive" style={{ overflow: 'auto' }}>
                 <table className="table table-hover table-formula table-bordered">
                     <thead>
                         <tr>
@@ -360,12 +360,12 @@ class FormulaListContainer extends Component {
                             <th><TransComponent i18nKey="Account" /></th>
                             <th>{selectBatchFormulaElm}</th>
                             <th className="text-center">{
-                                listAccEdit.length > 0 
+                                listAccEdit.length > 0
                                     ? (
                                         <button disabled={isLoadingUpdate} onClick={this.handleSaveMember} className="btn btn-danger">
                                             <TransComponent i18nKey="Save" />&nbsp;{ isLoadingUpdate ? <i className="fa fa-spinner fa-spin" /> : null }
                                         </button>
-                                    ) 
+                                    )
                                     : <TransComponent i18nKey={'Edit'} />
                             }</th>
                             <th className="text-center">
@@ -377,7 +377,7 @@ class FormulaListContainer extends Component {
                     </thead>
                     <tbody>
                         {
-                            listAccUse.map((acc, index) => { 
+                            listAccUse.map((acc, index) => {
                                 const isEdit = listAccEdit.includes(acc.id);
                                 const accEditElement = isEdit
                                     ? <Select
@@ -397,16 +397,16 @@ class FormulaListContainer extends Component {
                                         <td>{ acc.account.acc_name.toUpperCase() }</td>
                                         <td>{ accEditElement }</td>
                                         <td className="text-center">
-                                            { isEdit 
-                                                ? (<span 
-                                                        onClick={this.handleToggleEdit(acc.id, { accountId: acc.account.id, memberId: acc.user.id, formulaId: formulaSelected.id, congthuctinhId: acc.id })} 
+                                            { isEdit
+                                                ? (<span
+                                                        onClick={this.handleToggleEdit(acc.id, { accountId: acc.account.id, memberId: acc.user.id, formulaId: formulaSelected.id, congthuctinhId: acc.id })}
                                                         className="cursor-pointer font-red">
                                                     <TransComponent i18nKey="Close" />
                                                     </span>)
-                                                : <i 
-                                                    onClick={this.handleToggleEdit(acc.id, { accountId: acc.account.id, memberId: acc.user.id, formulaId: formulaSelected.id, congthuctinhId: acc.id })} 
-                                                    className="fa fa-edit font-blue-steel cursor-pointer" 
-                                                /> 
+                                                : <i
+                                                    onClick={this.handleToggleEdit(acc.id, { accountId: acc.account.id, memberId: acc.user.id, formulaId: formulaSelected.id, congthuctinhId: acc.id })}
+                                                    className="fa fa-edit font-blue-steel cursor-pointer"
+                                                />
                                             }
                                         </td>
                                         <td className="text-center">
@@ -452,8 +452,8 @@ class FormulaListContainer extends Component {
                     />
                 </div>
                 <div className="form-group">
-                    <button 
-                        disabled={ !relinkFormulaId || relinkFormulaId === formulaSelected.id || isLoadingRelink } 
+                    <button
+                        disabled={ !relinkFormulaId || relinkFormulaId === formulaSelected.id || isLoadingRelink }
                         className="btn btn-danger"
                         onClick={this.handleRelinkFormula}
                     >
@@ -472,9 +472,9 @@ class FormulaListContainer extends Component {
             <>
                 <p className="text-center"><TransComponent i18nKey="confirm delete {{item}}" i18nObj={{ item: formulaSelected.tenct }} /></p>
                 <p className="text-center">
-                    <button 
-                        disabled={isLoadingDelete} 
-                        onClick={this.handleDeleleFormula} 
+                    <button
+                        disabled={isLoadingDelete}
+                        onClick={this.handleDeleleFormula}
                         className="btn green"
                     >
                         <TransComponent i18nKey="Delete" />&nbsp;{ isLoadingDelete ? <i className="fa fa-spinner spin" /> : null }
@@ -500,7 +500,7 @@ class FormulaListContainer extends Component {
     }
 
     render() {
-        const { banker, formulaList } = this.props;console.log('render');
+        const { banker, formulaList } = this.props
         const { bankerId, isOpenAccountModal, isOpenRelinkModal, isOpenDeleteModal, isEdit, currentPage } = this.state;
 
         return (
@@ -521,7 +521,7 @@ class FormulaListContainer extends Component {
                                 <select className="form-control" value={bankerId} onChange={this.handleChangeSelectBanker}>
                                     <option value="all">{this.props.t('ALL')}</option>
                                     {
-                                        Object.keys(banker).map(id => 
+                                        Object.keys(banker).map(id =>
                                             <option className="text-uppercase" key={id} value={id}>
                                                 {banker[id].toUpperCase()}
                                             </option>
@@ -533,59 +533,61 @@ class FormulaListContainer extends Component {
                     </div>
                 </div>
                 <div className="portlet-body">
-                    <table className="table table-hover table-formula">
-                        <thead>
-                            <tr>
-                                <th rowSpan={2}>#</th>
-                                <th rowSpan={2}>
-                                    <TransComponent i18nKey={'Formula name'}/>
-                                </th>
-                                <th rowSpan={2}><TransComponent i18nKey="Book" /></th>
-                                <th rowSpan={2}><TransComponent i18nKey={'Company'}/></th>
-                                <th rowSpan={2}><TransComponent i18nKey={'Currency'}/></th>
-                                <th rowSpan={2}><TransComponent
-                                    i18nKey={'Pay'}/>/<TransComponent i18nKey={'Receive'}/></th>
-                                <th colSpan={"3"} className="text-center"><TransComponent i18nKey={'Info'}/></th>
-                                <th rowSpan={2}><TransComponent i18nKey={'Total used account'}/></th>
-                                <th rowSpan={2} className="text-center"><TransComponent i18nKey={'Relink Formula'}/></th>
-                                <th rowSpan={2}><TransComponent i18nKey={'Edit'}/></th>
-                                <th rowSpan={2} className="text-center"><TransComponent i18nKey={'Delete'}/></th>
-                            </tr>
-                            <tr>
-                                <th className="text-center"><TransComponent i18nKey={'Type name'}/></th>
-                                <th className="text-center" colSpan={"2"}><TransComponent i18nKey={'Value'}/></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            { this.renderBody() }
-                        </tbody>
-                    </table>
+                    <div className="table-responsive">
+                        <table className="table table-hover table-formula">
+                            <thead>
+                                <tr>
+                                    <th rowSpan={2}>#</th>
+                                    <th rowSpan={2}>
+                                        <TransComponent i18nKey={'Formula name'}/>
+                                    </th>
+                                    <th rowSpan={2}><TransComponent i18nKey="Book" /></th>
+                                    <th rowSpan={2}><TransComponent i18nKey={'Company'}/></th>
+                                    <th rowSpan={2}><TransComponent i18nKey={'Currency'}/></th>
+                                    <th rowSpan={2}><TransComponent
+                                        i18nKey={'Pay'}/>/<TransComponent i18nKey={'Receive'}/></th>
+                                    <th colSpan={"3"} className="text-center"><TransComponent i18nKey={'Info'}/></th>
+                                    <th rowSpan={2}><TransComponent i18nKey={'Total used account'}/></th>
+                                    <th rowSpan={2} className="text-center"><TransComponent i18nKey={'Relink Formula'}/></th>
+                                    <th rowSpan={2}><TransComponent i18nKey={'Edit'}/></th>
+                                    <th rowSpan={2} className="text-center"><TransComponent i18nKey={'Delete'}/></th>
+                                </tr>
+                                <tr>
+                                    <th className="text-center"><TransComponent i18nKey={'Type name'}/></th>
+                                    <th className="text-center" colSpan={"2"}><TransComponent i18nKey={'Value'}/></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                { this.renderBody() }
+                            </tbody>
+                        </table>
+                    </div>
                     <div className="text-center">
-                        <PaginationComponent 
-                            currentPage={this.state.currentPage} 
-                            total={this.filterFormula(formulaList).length} 
+                        <PaginationComponent
+                            currentPage={this.state.currentPage}
+                            total={this.filterFormula(formulaList).length}
                             perPage={10}
                             onClickPage={this.handleChangePage}
                         />
                     </div>
                 </div>
-                <FormulaModalContainer 
-                    isOpen={isOpenAccountModal} 
-                    header={<strong><TransComponent i18nKey="Formula" /></strong>} 
+                <FormulaModalContainer
+                    isOpen={isOpenAccountModal}
+                    header={<strong><TransComponent i18nKey="Formula" /></strong>}
                     onToggle={this.handleChangeState({ isOpenAccountModal: !isOpenAccountModal })}
                     body={this.renderBodyAccountModal()}
                     scrollable={true}
                     className="modal-xxl"
                 />
-                <FormulaModalContainer 
-                    isOpen={isOpenRelinkModal} 
-                    header={<strong><TransComponent i18nKey="Relink Formula" /></strong>} 
+                <FormulaModalContainer
+                    isOpen={isOpenRelinkModal}
+                    header={<strong><TransComponent i18nKey="Relink Formula" /></strong>}
                     onToggle={this.handleChangeState({ isOpenRelinkModal: !isOpenRelinkModal })}
                     body={this.renderBodyRelinkModal()}
                 />
-                <FormulaModalContainer 
-                    isOpen={isOpenDeleteModal} 
-                    header={<strong><TransComponent i18nKey="xac nhan" /></strong>} 
+                <FormulaModalContainer
+                    isOpen={isOpenDeleteModal}
+                    header={<strong><TransComponent i18nKey="xac nhan" /></strong>}
                     onToggle={this.handleChangeState({ isOpenDeleteModal: !isOpenDeleteModal })}
                     body={this.renderBodyDeleteModal()}
                 />

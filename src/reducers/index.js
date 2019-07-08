@@ -22,6 +22,7 @@ import MemberReducer from "./member/MemberReducer";
 import AccountSubReducer from "./account_sub/AccountSubReducer"
 import FormulaReducer from "./formula/FormulaReducer"
 import FormulaGroupReducer from "./formula-group/FormulaGroupReducer"
+import ConfigurationReducer from './manage/ConfigurationReducer'
 
 const appReducers = combineReducers({
     // Redux form reducer
@@ -50,7 +51,8 @@ const appReducers = combineReducers({
     ReportReducer,
     AccountReducer,
     FormulaReducer,
-    FormulaGroupReducer
+    FormulaGroupReducer,
+    ConfigurationReducer
 });
 
 export default appReducers;

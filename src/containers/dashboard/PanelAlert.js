@@ -1,21 +1,25 @@
 import React, {Component} from 'react';
-import {connect} from "react-redux";
 import { get as _get, isEmpty as _isEmpty} from 'lodash'
 
-import {getAlert} from "my-actions/systems/AlertAction";
 import { TransComponent } from 'my-components'
+import AlertService from 'my-services/systems/AlertService'
 
 class PanelAlert extends Component{
+    state = {
+        listNotify: []
+    }
+
     componentWillMount() {
-        this.props.getAlert()
+        AlertService.getAlert().then(res => {
+            if(res.status){
+                this.setState({listNotify: res.res.data})
+            }
+        })
     }
 
     render() {
-        const DATA = _get(this.props, "alert.payload")
-        if(_isEmpty(DATA)){
-            return null;
-        }
-        var List = DATA.res.data;
+        const listNotify =  this.state.listNotify
+        if(_isEmpty(listNotify)) return null;
         return (
             <div className="row widget-row">
                 <div className="col-xs-6">
@@ -40,7 +44,7 @@ class PanelAlert extends Component{
                         </div>
                         <div className="portlet-body">
                             <div className="mt-btm-transform">
-                                Content OVERVIEW
+                                
                             </div>
                         </div>
                     </div>
@@ -53,10 +57,10 @@ class PanelAlert extends Component{
                                 <span className="caption-subject font-dark bold uppercase"> <TransComponent i18nKey="Alert" /></span>
                             </div>
                         </div>
-                        <div className="portlet-body table-scrollable" style={{maxHeight:"400px", overflowY: 'scroll'}}>
+                        <div className="portlet-body table-responsive" style={{maxHeight:"400px", overflowY: 'scroll'}}>
                             <div className="mt-btm-transform ">
                                 {/*====================================================================*/}
-                                {List.map(function (items) {
+                                {listNotify.map(function (items) {
                                     return(
                                         <div className="portlet box blue-hoki" key={items.created}>
                                             <div className="portlet-title">
@@ -88,10 +92,5 @@ class PanelAlert extends Component{
 }
 
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        getAlert: params => {dispatch(getAlert(params))}
-    }
-};
 
-export default connect(null, mapDispatchToProps)(PanelAlert)
+export default PanelAlert

@@ -1,3 +1,4 @@
+import AccountantDashboardContainer from './AccountantDashboardContainer'
 import AccountantFormScanContainer from './form-scan/AccountantFormScanContainer'
 import AccountantFormScanButtonContainer from './form-scan/AccountantFormScanButtonContainer'
 import AccountantFormButtonFullScreenContainer from './form-scan/AccountantFormButtonFullScreenContainer'
@@ -32,6 +33,7 @@ import ModalDeleteFormulaByAccountContainer from './form-assign-formula/ModalDel
 
 
 export {
+    AccountantDashboardContainer,
     AccountantFormScanContainer, AccountantFormScanButtonContainer, AccountantFormButtonFullScreenContainer,
     AccountantListBankerContainer, AccountanItemBankerContainer, AccountantItemBankerCheckboxContainer, AccountantListBankerUtilContainer,
     AccountantListBankerAccountContainer, AccountantItemBankerAccountContainer, AccountantItemBankerAccountCheckboxContainer,

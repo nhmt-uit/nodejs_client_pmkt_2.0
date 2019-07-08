@@ -23,7 +23,7 @@ class AccountantListBankerUtilContainer extends Component {
         const isCollapseAll = _isEmpty(this.props.banker.filter(item => !item.collapse)) ? true : false
         return (
             <div className="row">
-                <div className="form-group col-md-4 col-sm-4">
+                <div className="form-group col-xs-4 col-md-4">
                     <label className="mt-checkbox uppercase">
                         <input type="checkbox" onChange={_ => this.props.checkBankerAccount('check_all', {isCheckAll: !isCheckAll})} checked={isCheckAll} /> <TransComponent i18nKey="Select All" />
                         <span></span>

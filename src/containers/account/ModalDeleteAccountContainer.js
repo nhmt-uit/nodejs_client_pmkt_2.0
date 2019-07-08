@@ -13,7 +13,6 @@ class ModalDeleteAccountContainer extends Component {
         // Hide modal after delete success
         
         if(this.props.formDeleteStatus && this.props.isOpenModalDelete) {
-            console.log('hide modal', this.props)
             this.props.toggleModalDeleteAccount()
         }
     }

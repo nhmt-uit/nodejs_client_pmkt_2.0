@@ -17,6 +17,7 @@ import * as MemberActionType from './MemberActionType'
 import * as AccountSubActionType from './AccountSubActionType'
 import * as FormulaActionType from './FormulaActionType'
 import * as FormulaGroupActionType from './FormulaGroupActionType'
+import * as ConfigurationActionType from './ConfigurationActionType';
 export {
     AppActionType,
     LanguageActionType,
@@ -36,5 +37,6 @@ export {
     MemberActionType,
     AccountSubActionType,
     FormulaActionType,
-    FormulaGroupActionType
+    FormulaGroupActionType,
+    ConfigurationActionType
 }

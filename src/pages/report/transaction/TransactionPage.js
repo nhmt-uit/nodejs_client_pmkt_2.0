@@ -34,16 +34,17 @@ class TransactionPage extends React.Component{
                         <ButtonBackTransaction/>
                     </div>
                 </div>
-                <div className="portlet-body">
+                <div className="portlet-body form">
                     <div className="row">
-                        <div className="col-md-5">
+                        <div className="col-md-4">
                             <CreateTransaction onRef={ref => (this.child = ref)}
                                                callParentFromCreateTransaction={this.getDataFromCreateTransaction}/>
                         </div>
-                        <div className="col-md-7">
+                        <div className="col-md-8">
                             <BillTransaction onRef={ref => (this.childBillTransaction = ref)}/>
 
                         </div>
+                        <div className="clearFix"></div>
                         <div className="col-md-12">
                             <ListOfTransaction handleParent={this.callbackListOfTransaction}/>
                         </div>

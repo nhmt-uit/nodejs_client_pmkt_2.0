@@ -2,26 +2,27 @@ import React, { Component } from 'react';
 import { Route, Link } from "react-router-dom";
 
 import { RoutesService } from 'my-routes';
+import { TransComponent } from 'my-components'
 
 
-const menus = [
+export const menus = [
     { to: RoutesService.getPath('ADMIN', 'DASHBOARD'), exact: true, name: 'Dashboard', icon: 'fa fa-pie-chart'},
     { to: RoutesService.getPath('ADMIN', 'ACCOUNTANT_DASHBOARD'), exact: false, name: 'Accountant', icon: 'fa fa-bar-chart',
         sub_menus: [
-            { to: RoutesService.getPath('ADMIN', 'ACCOUNTANT_LIST'), exact: true, name: 'Accountant' },
-            { to: RoutesService.getPath('ADMIN', 'ACCOUNTANT_MANUAL'), exact: false, name: 'Accountant Manual' },
-            { to: RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT'), exact: false, name: 'Report' },
+            { to: RoutesService.getPath('ADMIN', 'ACCOUNTANT_LIST'), exact: true, name: 'Accountant', icon: 'fa fa-bar-chart' },
+            { to: RoutesService.getPath('ADMIN', 'ACCOUNTANT_MANUAL'), exact: false, name: 'Accountant Manual', icon: 'fa fa-line-chart' },
+            { to: RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT'), exact: false, name: 'Report', icon: 'fa fa-calendar-check-o' },
         ],
     },
     { to: RoutesService.getPath('ADMIN', 'MANAGE_DASHBOARD'), exact: false, name: 'Manage', icon: 'fa fa-gears',
         sub_menus: [
-            { to: RoutesService.getPath('ADMIN', 'MANAGE_CREATE_NEW'), exact: true, name: 'Create New' },
-            { to: RoutesService.getPath('ADMIN', 'MANAGE_CONFIGURATION'), exact: true, name: 'Configuration' },
-            { to: RoutesService.getPath('ADMIN', 'MANAGE_FORMULA'), exact: true, name: 'Formula' },
-            { to: RoutesService.getPath('ADMIN', 'MANAGE_FORMULA_GROUP'), exact: true, name: 'Formula Group' },
-            { to: RoutesService.getPath('ADMIN', 'MANAGE_MEMBER'), exact: true, name: 'Member' },
-            { to: RoutesService.getPath('ADMIN', 'MANAGE_ACCOUNT'), exact: true, name: 'Account' },
-            { to: RoutesService.getPath('ADMIN', 'MANAGE_ACCOUNT_SUB'), exact: true, name: 'Sub accounts' },
+            { to: RoutesService.getPath('ADMIN', 'MANAGE_CREATE_NEW'), exact: true, name: 'create new', icon: 'fa fa-user-plus' },
+            { to: RoutesService.getPath('ADMIN', 'MANAGE_CONFIGURATION'), exact: true, name: 'Configuration', icon: 'fa fa-cog' },
+            { to: RoutesService.getPath('ADMIN', 'MANAGE_FORMULA'), exact: true, name: 'Formula', icon: 'fa fa-sliders' },
+            { to: RoutesService.getPath('ADMIN', 'MANAGE_FORMULA_GROUP'), exact: true, name: 'formula group', icon: 'fa fa-sliders' },
+            { to: RoutesService.getPath('ADMIN', 'MANAGE_MEMBER'), exact: true, name: 'Member', icon: 'fa fa-users' },
+            { to: RoutesService.getPath('ADMIN', 'MANAGE_ACCOUNT'), exact: true, name: 'Account', icon: 'fa fa-user' },
+            { to: RoutesService.getPath('ADMIN', 'MANAGE_ACCOUNT_SUB'), exact: true, name: 'create sub', icon: 'fa fa-user-plus' },
         ],
     },
 ]
@@ -52,7 +53,7 @@ const MenuLink = ({ menu }) => (
                             className="nav-link text-uppercase text-expanded"
                         >
                             <i className={menu.icon}></i>
-                            <span className="title">{menu.name}</span>
+                            <span className="title"><TransComponent i18nKey={menu.name} /></span>
                             {sub_menus ? <span className="arrow"></span> : ""}
                         </Link>
                         {sub_menus ? <ul className="sub-menu">
@@ -81,7 +82,7 @@ const SubMenuLink = ({ menu }) => (
                             to={menu.to}
                             className="nav-link"
                         >
-                            <span className="title">{menu.name}</span>
+                            <span className="title"><TransComponent i18nKey={menu.name} /></span>
                         </Link>
                     </li>
                 )

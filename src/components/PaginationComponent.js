@@ -14,6 +14,21 @@ const defaultProps = {
     currentPage: 1,
 };
 
+const DOT_LEFT = "DOT_LEFT"
+const DOT_RIGHT = "DOT_RIGHT"
+
+const range = (from, to, step = 1) => {
+    let i = from;
+    const range = [];
+  
+    while (i <= to) {
+      range.push(i);
+      i += step;
+    }
+  
+    return range;
+  };
+
 class PaginationComponent extends Component {
     constructor(props) {
         super(props);
@@ -35,54 +50,62 @@ class PaginationComponent extends Component {
 
     renderItem() {
         const { total, perPage } = this.props;
+        const totalPages = Math.ceil(total/perPage);
         const currentPage = this.state.currentPage;
-        const totalPage = Math.ceil(total/perPage);
+        const pageNeighbours = 1;
 
-        let elementEllipsis = [];
-        let elementFirst = [];
-        let elementSecond = [];
-        
-        if (totalPage > 6) {
-            elementSecond = [
-                <PaginationItem active={currentPage === totalPage - 1}>
-                    <PaginationLink href="/" onClick={e => this.handleClick(e, totalPage - 1)}>
-                        {totalPage - 1}
-                    </PaginationLink>
-                </PaginationItem>,
-                <PaginationItem active={currentPage === totalPage}>
-                    <PaginationLink href="/" onClick={e => this.handleClick(e, totalPage)}>
-                        {totalPage}
-                    </PaginationLink>
-                </PaginationItem>
-            ];
-            elementEllipsis = [(
-                <PaginationItem >
-                    <PaginationLink href="/" >
-                    ...
-                    </PaginationLink>
-                </PaginationItem>
-            )];
+        const totalNumbers = pageNeighbours * 2 + 1;
+        const totalBlocks = totalNumbers - 1;
 
-            for (let i = 1; i < 5; i++) {
-                elementFirst.push(
-                    <PaginationItem key={i} active={currentPage === i}>
-                        <PaginationLink href="/" onClick={e => this.handleClick(e, i)}>
-                            {i}
-                        </PaginationLink>
-                    </PaginationItem>
-                );
+        if (totalPages > totalBlocks) {
+            let pages = [];
+      
+            const leftBound = currentPage - pageNeighbours;
+            const rightBound = currentPage + pageNeighbours;
+            const beforeLastPage = totalPages;
+      
+            const startPage = leftBound > 2 ? leftBound : 2;
+            const endPage = rightBound < beforeLastPage ? rightBound : beforeLastPage;
+      
+            pages = range(startPage, endPage);
+      
+            const pagesCount = pages.length;
+            const singleSpillOffset = totalNumbers - pagesCount - 1;
+      
+            const leftSpill = startPage > 2;
+            const rightSpill = endPage < beforeLastPage;
+      
+
+            if (leftSpill && !rightSpill) {
+              const extraPages = range(startPage - singleSpillOffset, startPage - 1);
+              pages = [1, DOT_LEFT , ...extraPages, ...pages];
+            } else if (!leftSpill && rightSpill) {
+              const extraPages = range(endPage + 1, endPage + singleSpillOffset);
+              pages = [1, ...pages, ...extraPages, DOT_RIGHT, totalPages];
+            } else if (leftSpill && rightSpill) {
+              pages = [1, DOT_LEFT, ...pages, DOT_RIGHT, totalPages];
             }
-        }
+            
+            return [
+                pages.map(item => {
+                    let pageNumber = item
+                    let handleEvent = this.handleClick
+                    if(item === DOT_LEFT || item === DOT_RIGHT) {
+                        pageNumber = '...'
+                        handleEvent = _ => null
+                    }
 
-        if (totalPage < 2) {
-            return null;
+                    return (
+                        <PaginationItem key={item} active={currentPage === item}>
+                            <PaginationLink href="#/" onClick={e => handleEvent(e, item)}>
+                                {pageNumber}
+                            </PaginationLink>
+                        </PaginationItem>
+                    )
+                })
+            ]
         }
-
-        return [ 
-            ...elementFirst,
-            ...elementEllipsis,
-            ...elementSecond 
-        ];
+        return null
     }
 
     render() {
@@ -90,14 +113,18 @@ class PaginationComponent extends Component {
         const totalPage = Math.ceil(total/perPage);
         const currentPage = this.state.currentPage;
 
+        if (totalPage < 2) {
+            return null;
+        }
+
         return (
             <Pagination aria-label="Page navigation example">
                 <PaginationItem>
-                    <PaginationLink first href="/" onClick={e => this.handleClick(e, 1)} />
+                    <PaginationLink first href="#/" onClick={e => this.handleClick(e, 1)} />
                 </PaginationItem>
                 <PaginationItem>
                     <PaginationLink
-                        previous href="#"
+                        previous href="#/"
                         onClick={
                             e => this.handleClick(e, currentPage <= 1 ? 1 : (currentPage - 1))
                         }
@@ -106,14 +133,14 @@ class PaginationComponent extends Component {
                 {this.renderItem()}
                 <PaginationItem>
                     <PaginationLink
-                        next href="#"
+                        next href="#/"
                         onClick={
                             e => this.handleClick(e, currentPage >= totalPage ? totalPage : (currentPage + 1))
                         }
                     />
                 </PaginationItem>
                 <PaginationItem>
-                    <PaginationLink last href="#" onClick={e => this.handleClick(e, totalPage)} />
+                    <PaginationLink last href="#/" onClick={e => this.handleClick(e, totalPage)} />
                 </PaginationItem>
             </Pagination>
         );
