@@ -20,7 +20,7 @@ class AccountantManualBankerPage extends Component {
         var List = DATA.res.data.List;
         var item = List.map(function (item, index) {
             return (
-                <div key={index} className="col-xs-4 col-md-4">
+                <div key={index} className="col-xs-6 col-md-4">
                     <Link to={RoutesService.getPath('ADMIN', 'ACCOUNTANT_MANUAL_PROCESS', {bankerName: item.name.toLowerCase(), type: 'login' })} >
                         <div className="widget-thumb margin-bottom-20 bordered">
                             <div className="widget-thumb-wrap text-center">

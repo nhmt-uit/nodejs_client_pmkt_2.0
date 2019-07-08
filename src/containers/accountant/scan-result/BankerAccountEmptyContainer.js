@@ -61,7 +61,7 @@ class BankerAccountEmptyContainer extends Component {
         this.checkItem = this.props.isOpenModal || this.props.isOpenModalDelete ? this.checkItem : null
         return bankerAccounts.map((item, idx) => {
             return (
-                <div key={idx} className="form-group col-md-4" style={{marginBottom: '5px'}} >
+                <div key={idx} className="form-group col-xs-4 col-md-4" style={{marginBottom: '5px'}} >
                     <label className="mt-radio" onClick={e => this.handelToggleModal(e, item) } style={{marginBottom: '0px'}} >
                         {this.state.isUpdate || this.state.isDelete ? <input type="radio" name="optionsRadios" onChange={_ => null} checked={item.id === this.checkItem} /> : null }
                         <b className="uppercase">{item.acc_name}</b>
