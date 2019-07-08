@@ -117,7 +117,7 @@ class Header extends Component {
                                             </li>
                                         </Fragment>
                                         <li>
-                                            <a onClick={this.handleLogout}> <i className="icon-key" /><TransComponent i18nKey="Log Out" /></a>
+                                            <a onClick={this.handleLogout}> <i className="icon-key" /><TransComponent i18nKey="Logout" /></a>
                                         </li>
                                     </ul>
                                 </li>
