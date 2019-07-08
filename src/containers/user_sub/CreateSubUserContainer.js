@@ -78,7 +78,7 @@ class CreateSubUserContainer extends Component {
         return (
             <div className="row">
                 <div className="form-group col-xs-11 text-right">
-                    <a href="#/" type="submit" className="btn btn-default red" onClick={this.changeIsOpenCreateUserModal}><TransComponent i18nKey="Add new"/></a>
+                    <a type="submit" className="btn btn-default red" onClick={this.changeIsOpenCreateUserModal}><TransComponent i18nKey="Add new"/></a>
                 </div>
                 <div className="clearfix"></div>
                 <div>

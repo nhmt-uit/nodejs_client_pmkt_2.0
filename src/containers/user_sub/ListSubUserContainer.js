@@ -108,8 +108,8 @@ class ListSubUserContainer extends Component{
                                                 <td className="text-center uppercase"> {item.username} </td>
                                                 <td className="text-center"> {item.status === 1 ? "Online" : "Offline"} </td>
                                                 <td className="text-center"> {item.active_password2 === 1 ? (<span className="btn btn-danger label-active-pass2"> Activate </span>) : <span />} </td>
-                                                <td className="text-center"> <button className="text-success btn btn-link">
-                                                                                     onClick={ () => self.toggleEditMemberSub(item)} <i className="fa fa-edit"></i> </button> </td>
+                                                <td className="text-center"> <button className="text-success btn btn-link"
+                                                                                     onClick={ () => self.toggleEditMemberSub(item)}> <i className="fa fa-edit"></i> </button> </td>
                                                 <td className="text-center"> <button className="text-success btn btn-link font-red"
                                                                                      onClick={ () => self.toggleDelMemberSubModal(item.id)}> <i className="fa fa-close"></i> </button> </td>
                                             </tr>

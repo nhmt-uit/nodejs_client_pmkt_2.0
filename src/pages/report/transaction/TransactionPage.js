@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {ListOfTransaction, CreateTransaction, BillTransaction} from "my-containers/report/transaction";
 import { TransComponent } from 'my-components'
+import ButtonBackTransaction from "my-containers/report/transaction/ButtonBackTransaction";
 
 
 class TransactionPage extends React.Component{
@@ -28,6 +29,9 @@ class TransactionPage extends React.Component{
                         <span className="caption-subject bold uppercase">
                             <TransComponent i18nKey="Transaction" />
                         </span>
+                    </div>
+                    <div className="actions">
+                        <ButtonBackTransaction/>
                     </div>
                 </div>
                 <div className="portlet-body">

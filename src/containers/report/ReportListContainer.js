@@ -14,6 +14,8 @@ import { getCyclePage, getReport, getReportByBanker, getReportByMember } from 'm
 import { LoadingComponent, PaginationComponent } from 'my-components';
 import { ReportService } from 'my-services/report';
 import { CookieService } from 'my-utils/core';
+import {RoutesService} from 'my-routes';
+import {Link} from "react-router-dom";
 
 class ReportListContainer extends Component {
     constructor(props) {
@@ -315,7 +317,10 @@ class ReportListContainer extends Component {
                         <span className="caption-subject font-red bold uppercase">{t('report')}</span>
                     </div>
                     <div className="actions">
-                        <button className="btn btn-danger">{t('Add')}</button>
+                        <Link to={RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT_TRANSACTION')} className="btn btn-danger">
+                            <span className="ladda-label"> {t("Add")}</span>
+                            <span className="ladda-spinner"></span>
+                        </Link>
                     </div>
                 </div>
                 <div className="portlet-body ">
