@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import { Route, Link } from "react-router-dom";
+
 import { menus } from 'my-pages/layouts/partials/MainNavigation';
+import { TransComponent } from 'my-components'
 
 /*===============================
  * Custom HTML Link Router
@@ -18,7 +20,7 @@ const SelectMenuLink = ({ menu }) => (
                             className="btn-tile"
                         >
                             <div><i className={menu.icon}></i></div>
-                            <div>{menu.name}</div>
+                            <div><TransComponent i18nKey={menu.name} /></div>
                         </Link>
                     </div>
                 )

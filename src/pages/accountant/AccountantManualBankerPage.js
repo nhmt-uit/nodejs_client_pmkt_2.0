@@ -44,7 +44,7 @@ class AccountantManualBankerPage extends Component {
                 <div className="portlet-body">
                     <div className="row">
                         <div className="col-xs-12">
-                            <h5 className="margin-bottom"> <TransComponent i18nKey="Please chooose company to login: " /></h5>
+                            <h5 className="margin-bottom"> <TransComponent i18nKey="Please chooose company to login" /> : </h5>
                             <div className="row widget-row">
                                 {item}
                             </div>
