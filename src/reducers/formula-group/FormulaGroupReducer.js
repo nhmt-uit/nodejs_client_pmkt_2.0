@@ -5,6 +5,9 @@ let defaultState = {
 	optBanker: [],
     optFormula: [],
 
+    formulaGroupList: [],
+    bankerList: [],
+
     // Handle Formua List
     optFormulaPatternList: [],
     formulaPatternList: [],
@@ -32,6 +35,9 @@ let defaultState = {
 const FormulaGroupReducer = (state = defaultState, action) => {
 
     switch (action.type) {
+        case FormulaGroupActionType.GET_FORMULA_GROUP:
+            return {...state, formulaGroupList: action.formulaGroupList, bankerList: action.bankerList}
+
         case FormulaGroupActionType.FORMULA_RESET_STORE: {
             return {...defaultState}
         }

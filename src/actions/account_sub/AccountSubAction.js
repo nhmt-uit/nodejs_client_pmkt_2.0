@@ -37,3 +37,11 @@ export const createMemberSub = (post) => {
         })
     }
 }
+
+export const resetFormSaveResponse = (params) => {
+    return (dispatch) => {
+        dispatch({
+            type: AccountSubActionType.RESET_FORM_SAVE_ACCOUNT_SUB,
+        });
+    }
+}

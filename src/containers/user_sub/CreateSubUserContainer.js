@@ -70,7 +70,6 @@ class CreateSubUserContainer extends Component {
             .catch(function (err) {
                 console.log(err)
             })
-
     }
 
     render() {
@@ -213,9 +212,6 @@ const validate = values => {
     if (!values.fullname) {
         errors.fullname = '"fullname" is not allowed to be empty'
     }
-    if (!values.member) {
-        errors.member = '"member" is not allowed to be empty'
-    }
 
     if (!values.password) {
         errors.password = '"Password" is not allowed to be empty'
@@ -230,7 +226,6 @@ const validate = values => {
 };
 
 const mapStateToProps = state => {
-    console.log(state)
     return {
         initialValues: _get(state, 'form.createSubUser.values'),
         formSaveStatus: state.AccountSubReducer.formSaveStatus,

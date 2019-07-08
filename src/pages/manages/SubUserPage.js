@@ -10,7 +10,7 @@ class SubUserPage extends Component{
                 <div className="portlet-title">
                     <div className="caption font-red-sunglo">
                         <span className="caption-subject bold uppercase">
-                            <TransComponent i18nKey="Sub Account" />
+                            <TransComponent i18nKey="create sub" />
                         </span>
                     </div>
                 </div>

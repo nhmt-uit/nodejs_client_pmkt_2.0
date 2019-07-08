@@ -14,6 +14,8 @@ const AccountSubReducer = (state = defaultState, action) => {
             return {...state,};
         case AccountSubActionType.CREATE_MEMBER_SUB:
             return {...state, formSaveStatus: action.formSaveStatus, formSaveResponse: action.formSaveResponse}
+        case AccountSubActionType.RESET_FORM_SAVE_ACCOUNT_SUB:
+            return {...state, formSaveStatus: null, formSaveResponse: {}}
         default:
             return {...state};
     }

@@ -6,6 +6,7 @@ import {compose} from "redux/es/redux";
 import {connect} from "react-redux";
 import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 import {withTranslation} from "react-i18next";
+import ModalFormEditSubUserContainer from "my-containers/user_sub/ModalFormEditSubUserContainer"
 
 class ListSubUserContainer extends Component{
     constructor(props) {
@@ -28,7 +29,8 @@ class ListSubUserContainer extends Component{
     }
 
     toggleEditMemberSub = (item) => {
-        console.log(item)
+        var isOpenModalEdit = true;
+        this.childModalFormEditSubUserContainer.callEditMemberSub(item, isOpenModalEdit);
     }
 
     toggleDelMemberSubModal = value_id => {
@@ -77,25 +79,27 @@ class ListSubUserContainer extends Component{
                 <div className="portlet light bordered">
                     <div className="portlet-title">
                         <div className="caption">
-                            <span className="caption-subject font-dark bold"> {t("List of sub user accounts")} </span>
+                            <span className="caption-subject font-dark bold"> {t("sub list")} </span>
                         </div>
-                    </div>
-                    <div className="input-icon right">
-                        <i className="icon-magnifier"></i>
-                        <input type="text" className="form-control" placeholder={t("Sub user accounts")} value={this.state.filterText} onChange={this.handleSearchChange}/>
+                        <div className="actions">
+                            <div className="input-icon right">
+                                <i className="icon-magnifier"></i>
+                                <input type="text" className="form-control" placeholder={t("Sub user accounts")} value={this.state.filterText} onChange={this.handleSearchChange}/>
+                            </div>
+                        </div>
                     </div>
                     <div className="portlet-body">
                         <table className="table table-striped table-bordered table-hover dataTable no-footer dtr-inline">
                             <thead>
-                            <tr role="row">
-                                <th className="caption-subject font-red text-center"> # </th>
-                                <th className="caption-subject font-red text-center"> {t("Name")} </th>
-                                <th className="caption-subject font-red text-center"> {t("Username")} </th>
-                                <th className="caption-subject font-red text-center"> {t("Status")} </th>
-                                <th className="caption-subject font-red text-center"> {t("Password")} 2 </th>
-                                <th className="caption-subject font-red text-center"> {t("Edit")} </th>
-                                <th className="caption-subject font-red text-center"> {t("Delete")} </th>
-                            </tr>
+                                <tr role="row">
+                                    <th className="caption-subject font-red text-center"> # </th>
+                                    <th className="caption-subject font-red text-center"> {t("Name")} </th>
+                                    <th className="caption-subject font-red text-center"> {t("Username")} </th>
+                                    <th className="caption-subject font-red text-center"> {t("Status")} </th>
+                                    <th className="caption-subject font-red text-center"> {t("Password")} 2 </th>
+                                    <th className="caption-subject font-red text-center"> {t("Edit")} </th>
+                                    <th className="caption-subject font-red text-center"> {t("Delete")} </th>
+                                </tr>
                             </thead>
                             <tbody>
                             {
@@ -137,6 +141,7 @@ class ListSubUserContainer extends Component{
                         </div>
                     </div>
                 </div>
+                <ModalFormEditSubUserContainer onRef={ref => (this.childModalFormEditSubUserContainer = ref)}/>
             </div>
         );
     }

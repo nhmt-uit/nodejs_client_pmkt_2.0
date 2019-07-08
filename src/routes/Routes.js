@@ -8,6 +8,7 @@ import { ReportPage, ReportDetailPage } from 'my-pages/report';
 import TransactionPage from "my-pages/report/transaction/TransactionPage";
 import { CreateNewPage, SubUserPage } from 'my-pages/manages';
 import { FormulaPage } from 'my-pages/formula';
+import FormulaGroupPage from "../pages/formula-group/FormulaGroupPage";
 
 const Routes = [
 	{
@@ -105,6 +106,11 @@ const Routes = [
 		path: RoutesService.getPath('ADMIN', 'MANAGE_FORMULA'),
 		exact: true,
 		component: FormulaPage,
+	},
+	{
+		path: RoutesService.getPath('ADMIN', 'MANAGE_FORMULA_GROUP'),
+		exact: true,
+		component: FormulaGroupPage,
 	},
 	{
 		path: '*',
