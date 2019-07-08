@@ -4,7 +4,7 @@ import { Route, Link } from "react-router-dom";
 import { RoutesService } from 'my-routes';
 
 
-const menus = [
+export const menus = [
     { to: RoutesService.getPath('ADMIN', 'DASHBOARD'), exact: true, name: 'Dashboard', icon: 'fa fa-pie-chart'},
     { to: RoutesService.getPath('ADMIN', 'ACCOUNTANT_DASHBOARD'), exact: false, name: 'Accountant', icon: 'fa fa-bar-chart',
         sub_menus: [
