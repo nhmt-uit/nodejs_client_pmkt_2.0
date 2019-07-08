@@ -59,7 +59,7 @@ class FormLoginContainer extends React.Component {
                         </a>
                     </div>
                     <form className="login-form" onSubmit={this.handleSubmit} onKeyDown={e => this.handleKeyDown(e)}>
-                        <h3 className="form-title font-red"><TransComponent i18nKey="Login to VW3 Application" /></h3>
+                        <h3 className="form-title font-red">Login to VW3 Application</h3>
                         <div className="alert alert-danger display-hide">
                             <button className="close" data-close="alert" />
                             <span> <TransComponent i18nKey={this.props.auth.errors.error_description} /> </span>
