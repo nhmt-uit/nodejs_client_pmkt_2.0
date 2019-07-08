@@ -49,7 +49,6 @@ class ListCurrencyComponent extends Component {
                     post.push({name: item.name, id: item.id})
                 }
             });
-            console.log('Save data...', post);
             this.props.saveCurrencyConfig({data: JSON.stringify(post)});
             //Action.save({data: JSON.stringify(post)})
         }
@@ -106,7 +105,6 @@ class ListCurrencyComponent extends Component {
     }
 
     showHideForm = (item, show) => () => {
-        console.log('item...', item)
         this.setState({isOpen: show, itemSelected: item})
     }
 
@@ -136,31 +134,33 @@ class ListCurrencyComponent extends Component {
                     })
         }
         return (
-            <div>
+            <>
                 <div className="btn-group-top text-right">
                     <Button color="success" onClick={this.handleSave.bind(this)}>{t('Save')}</Button>
                 </div>
-                <Table>
-                    <thead>
-                        <tr>
-                            <th>
-                                <label className="mt-checkbox mt-checkbox-outline">&nbsp;
-                                    <Input type="checkbox" onChange={this.handleCheckAll.bind(this)} checked={checkAll}/>
-                                    <span></span>
-                                </label>
-                            </th>
-                            <th className={"user_fn"}>{t('Name')}</th>
-                            <th className={"user_un"}>{t('Num formula')}</th>
-                            <th className={"user_sts"}>{t('Round')}</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {xhtml}
-                    </tbody>
-                </Table>
+                <div className="table-responsive">
+                    <Table>
+                        <thead>
+                            <tr>
+                                <th>
+                                    <label className="mt-checkbox mt-checkbox-outline">&nbsp;
+                                        <Input type="checkbox" onChange={this.handleCheckAll.bind(this)} checked={checkAll}/>
+                                        <span></span>
+                                    </label>
+                                </th>
+                                <th className={"user_fn"}>{t('Name')}</th>
+                                <th className={"user_un"}>{t('Num formula')}</th>
+                                <th className={"user_sts"}>{t('Round')}</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {xhtml}
+                        </tbody>
+                    </Table>
+                </div>
                 <EditForm isOpen={this.state.isOpen} showHideForm={this.showHideForm} item={this.state.itemSelected}/>
-            </div>
+            </>
         );
 
     }

@@ -27,14 +27,14 @@ const SelectMenuLink = ({ menu }) => (
     />
 );
 
-class ManageContainer extends Component {
+class AccountantDashboardContainer extends Component {
 
     /*====================================
      * Initial Menu Elements
      *====================================*/
     initMenus(menus) {
         let xhtml = null
-        let manageMenu = menus[2];
+        let manageMenu = menus[1];
         if (manageMenu && manageMenu.sub_menus && manageMenu.sub_menus.length) {
             xhtml = manageMenu.sub_menus.map((menu, index) => {
                 return (
@@ -54,4 +54,4 @@ class ManageContainer extends Component {
     }
 }
 
-export default ManageContainer
+export default AccountantDashboardContainer

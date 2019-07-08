@@ -3,10 +3,10 @@ import { LoginPage, SecureCodePage, ResetSecurePasswordPage } from 'my-pages/aut
 import { ChangePasswordPage, ChangePassword2Page, ChangeSecureCodePage } from 'my-pages/navigation';
 
 import RoutesService from './RoutesService'
-import { AccountantListPage, AccountantManualBankerPage, AccountantManualLoginPage, AccountantManualPage } from 'my-pages/accountant';
+import { AccountantDashboardPage, AccountantListPage, AccountantManualBankerPage, AccountantManualLoginPage, AccountantManualPage } from 'my-pages/accountant';
 import { ReportPage, ReportDetailPage } from 'my-pages/report';
 import TransactionPage from "my-pages/report/transaction/TransactionPage";
-import { CreateNewPage, SubUserPage, ConfigurationPage } from 'my-pages/manages';
+import { ManagePage, CreateNewPage, SubUserPage, ConfigurationPage } from 'my-pages/manages';
 import { FormulaPage } from 'my-pages/formula';
 
 const Routes = [
@@ -35,6 +35,11 @@ const Routes = [
 		path: RoutesService.getPath('ADMIN', 'DASHBOARD'),
 		exact: true,
 		component: DashboardPage,
+	},
+	{
+		path: RoutesService.getPath('ADMIN', 'ACCOUNTANT_DASHBOARD'),
+		exact: true,
+		component: AccountantDashboardPage,
 	},
 	{
 		path: RoutesService.getPath('ADMIN', 'ACCOUNTANT_LIST'),
@@ -91,11 +96,21 @@ const Routes = [
 	| Manage Routes Area
 	|--------------------------------------------------------------------------
 	*/
+    {
+        path: RoutesService.getPath('ADMIN', 'MANAGE_DASHBOARD'),
+        exact: true,
+        component: ManagePage,
+    },
 	{
 		path: RoutesService.getPath('ADMIN', 'MANAGE_CREATE_NEW'),
 		exact: true,
 		component: CreateNewPage,
 	},
+    {
+        path: RoutesService.getPath('ADMIN', 'MANAGE_CONFIGURATION'),
+        exact: true,
+        component: ConfigurationPage,
+    },
 	{
 		path: RoutesService.getPath('ADMIN', 'MANAGE_ACCOUNT_SUB'),
 		exact: true,
@@ -106,11 +121,6 @@ const Routes = [
 		exact: true,
 		component: FormulaPage,
 	},
-    {
-        path: RoutesService.getPath('ADMIN', 'MANAGE_CONFIGURATION'),
-        exact: true,
-        component: ConfigurationPage,
-    },
 	{
 		path: '*',
 		exact: true,

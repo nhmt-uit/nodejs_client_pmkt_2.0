@@ -28,7 +28,6 @@ class ListSubUserContainer extends Component{
     }
 
     toggleEditMemberSub = (item) => {
-        console.log(item)
     }
 
     toggleDelMemberSubModal = value_id => {
@@ -85,7 +84,8 @@ class ListSubUserContainer extends Component{
                         <input type="text" className="form-control" placeholder={t("Sub user accounts")} value={this.state.filterText} onChange={this.handleSearchChange}/>
                     </div>
                     <div className="portlet-body">
-                        <table className="table table-striped table-bordered table-hover dataTable no-footer dtr-inline">
+                        <div className="table-responsive">
+                            <table className="table table-striped table-bordered table-hover dataTable no-footer dtr-inline">
                             <thead>
                             <tr role="row">
                                 <th className="caption-subject font-red text-center"> # </th>
@@ -119,6 +119,7 @@ class ListSubUserContainer extends Component{
                             }
                             </tbody>
                         </table>
+                        </div>
                         <div>
                             <Modal isOpen={this.state.isOpenDelModal} toggle={() => this.toggleDelMemberSubModal()}>
                                 <ModalHeader toggle={() => this.toggleDelMemberSubModal()} className="text-uppercase">

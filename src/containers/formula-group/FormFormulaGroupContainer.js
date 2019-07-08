@@ -27,13 +27,11 @@ class FormFormulaGroupContainer extends Component {
         const payload = {
             name: _get(this.props.initialValues, 'name'),
         }
-        console.log(payload)
         this.props.saveFormulaGroupDetail(payload)
     }
 
     renderAlert = _ => {
         const { formFormulaGroupSaveStatus, formFormulaGroupSaveResponse } = this.props
-        console.log(formFormulaGroupSaveStatus)
         if(formFormulaGroupSaveStatus === false) {
             return (
                 <div className="alert alert-danger">

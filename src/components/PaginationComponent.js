@@ -57,10 +57,7 @@ class PaginationComponent extends Component {
         const totalNumbers = pageNeighbours * 2 + 1;
         const totalBlocks = totalNumbers - 1;
 
-        console.log("test", totalPages, totalBlocks)
-
         if (totalPages > totalBlocks) {
-            console.log("test")
             let pages = [];
       
             const leftBound = currentPage - pageNeighbours;
@@ -69,7 +66,6 @@ class PaginationComponent extends Component {
       
             const startPage = leftBound > 2 ? leftBound : 2;
             const endPage = rightBound < beforeLastPage ? rightBound : beforeLastPage;
-            console.log(endPage)
       
             pages = range(startPage, endPage);
       

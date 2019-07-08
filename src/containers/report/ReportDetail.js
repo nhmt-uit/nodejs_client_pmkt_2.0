@@ -12,7 +12,6 @@ import { AuthService } from 'my-services/systems'
 class ReportDetail extends Component {
     componentWillMount() {
         var chuky_id = window.location.pathname.split('/')[4];
-        // console.log(window.location.pathname);
         this.props.getReportDetail(chuky_id)
     }
 
@@ -133,7 +132,7 @@ class ReportDetail extends Component {
         })
         return(
             <div>
-                <div className="table-scrollable">
+                <div className="table-responsive">
                     <table className="table table-striped table-bordered table-hover dataTable no-footer dtr-inline">
                         <thead>
                             <tr role="row">

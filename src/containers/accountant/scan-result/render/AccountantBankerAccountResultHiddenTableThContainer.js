@@ -14,10 +14,10 @@ class AccountantBankerAccountResultHiddenTableThContainer extends Component {
         const { dataHiddenFields } = this.props
         return (
             <>
-                {dataHiddenFields.formatName ? <th className="column-hidden"><TransComponent i18nKey="Type" /></th> : null} {/* formatName */}
-                {dataHiddenFields.he_so  ? <th className="column-hidden"><TransComponent i18nKey="Ratio" /></th> : null}  {/* he_so */}
-                {dataHiddenFields.gia_thau  ? <th className="column-hidden"><TransComponent i18nKey="Price" /></th> : null} {/* gia_thau */}
-                {dataHiddenFields.PRText  ? <th className="column-hidden"><TransComponent i18nKey="Pay/Rec" /></th> : null} {/* PRText */}
+                {dataHiddenFields.formatName ? <th className="column-hidden"><TransComponent i18nKey="Type" /></th> : null}
+                {dataHiddenFields.he_so  ? <th className="column-hidden"><TransComponent i18nKey="Ratio" /></th> : null}
+                {dataHiddenFields.gia_thau  ? <th className="column-hidden"><TransComponent i18nKey="Price" /></th> : null}
+                {dataHiddenFields.PRText  ? <th className="column-hidden"><TransComponent i18nKey="Pay/Rec" /></th> : null}
             </>
         )
     }

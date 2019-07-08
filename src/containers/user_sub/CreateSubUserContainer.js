@@ -230,7 +230,6 @@ const validate = values => {
 };
 
 const mapStateToProps = state => {
-    console.log(state)
     return {
         initialValues: _get(state, 'form.createSubUser.values'),
         formSaveStatus: state.AccountSubReducer.formSaveStatus,

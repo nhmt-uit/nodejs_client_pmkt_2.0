@@ -66,7 +66,6 @@ class FormAssignFormulaGroupContainer extends Component {
 
     handleInitialValue = _ =>{
         if(this.props.formType === "create") {
-            // console.log(this.props, this.props.defaultBankerId)
             const defaultBanker = !_isEmpty(this.props.defaultBankerId) ? this.props.optBanker.find(item => item.id === this.props.defaultBankerId) : this.props.optBanker[0]
             const optFormula = this.props.optFormula.filter(item => item.banker_id === defaultBanker.value)
             this.props.initialize({...this.props.initialValues,

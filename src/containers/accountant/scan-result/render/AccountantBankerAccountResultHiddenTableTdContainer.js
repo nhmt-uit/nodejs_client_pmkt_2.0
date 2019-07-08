@@ -21,18 +21,18 @@ class AccountantBankerAccountResultHiddenTableTdContainer extends Component {
                     !_isEmpty(formula) ?
                         (
                             <>
-                            {dataHiddenFields.formatName ? <td className={formula.PRText + " column-hidden"}>{formula.formatName}</td> : null} {/* formatName */}
-                            {dataHiddenFields.he_so ? <td className={formula.PRText + " column-hidden text-right"}>{formula.he_so}</td> : null}  {/* he_so */}
-                            {dataHiddenFields.gia_thau ? <td className={formula.PRText + " column-hidden text-right"}>{formula.gia_thau}</td> : null} {/* gia_thau */}
-                            {dataHiddenFields.PRText ? <td className={formula.PRText + " column-hidden"}>{formula.PRText === 'rec' ? <TransComponent i18nKey="Receive" /> : <TransComponent i18nKey="Pay" />}</td> : null} {/* PRText */}
+                            {dataHiddenFields.formatName ? <td className={formula.PRText + " column-hidden"}>{formula.formatName}</td> : null}
+                            {dataHiddenFields.he_so ? <td className={formula.PRText + " column-hidden text-right"}>{formula.he_so}</td> : null}
+                            {dataHiddenFields.gia_thau ? <td className={formula.PRText + " column-hidden text-right"}>{formula.gia_thau}</td> : null}
+                            {dataHiddenFields.PRText ? <td className={formula.PRText + " column-hidden"}>{formula.PRText === 'rec' ? <TransComponent i18nKey="Receive" /> : <TransComponent i18nKey="Pay" />}</td> : null}
                             </>
                         )
                     : (
                         <>
-                        {dataHiddenFields.formatName ? <td className="column-hidden" /> : null} {/* formatName */}
-                        {dataHiddenFields.he_so ? <td className="column-hidden" /> : null}  {/* he_so */}
-                        {dataHiddenFields.gia_thau ? <td className="column-hidden" /> : null} {/* gia_thau */}
-                        {dataHiddenFields.PRText ? <td className="column-hidden" /> : null} {/* PRText */}
+                        {dataHiddenFields.formatName ? <td className="column-hidden" /> : null}
+                        {dataHiddenFields.he_so ? <td className="column-hidden" /> : null}
+                        {dataHiddenFields.gia_thau ? <td className="column-hidden" /> : null}
+                        {dataHiddenFields.PRText ? <td className="column-hidden" /> : null}
                         </>
                     )
                 }

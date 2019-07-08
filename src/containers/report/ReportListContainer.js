@@ -313,8 +313,6 @@ class ReportListContainer extends Component {
             );
         }
 
-        console.log("render")
-
         return (
             <div className="portlet light bordered">
                 <div className="portlet-title">

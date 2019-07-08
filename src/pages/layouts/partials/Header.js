@@ -56,10 +56,10 @@ class Header extends Component {
                         {/*=========================================*/}
                         <div className="top-menu">
                             <ul className="nav navbar-nav pull-right">
-                                <li className="dropdown dropdown-user">
-                                    <a href="/assets/images/HDSD PMKT VERSION 3.3.pdf" className="dropdown-toggle" target="_bank">
-                                        <span className="username"> <TransComponent i18nKey="document for new features" /> </span>
-
+                                <li className="dropdown dropdown-document">
+                                    <a href="/assets/images/HDSD PMKT VERSION 3.3.pdf" target="_blank" className="dropdown-toggle">
+                                            <span className="fa fa-book"/> &nbsp;
+                                            <span className="hide-on-mobile"><TransComponent i18nKey="document for new features" /></span>
                                     </a>
                                 </li>
                                 <ZopimChat />

@@ -4,7 +4,9 @@ import { ManageContainer } from "my-containers/manage"
 class ManagePage extends Component {
     render() {
         return (
-            <ManageContainer/>
+            <>
+                <ManageContainer/>
+            </>
         );
     }
 }

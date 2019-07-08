@@ -12,8 +12,6 @@ import 'my-utils/i18n';
 import * as serviceWorker from './serviceWorker';
 
 
-const flashOptions = { timeout: 5000 }
-
 const store = createStore(
     appReducers,
     compose(

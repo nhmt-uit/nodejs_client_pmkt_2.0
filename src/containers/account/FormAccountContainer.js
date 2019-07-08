@@ -100,9 +100,6 @@ class FormAccountContainer extends Component {
 
 
     render() {
-        
-        console.log(this.props.initialValues)
-        
         const {optBanker, formType} = this.props
         const company = _get(this.props.initialValues, 'company')
         const optAccountBelong = [{value: "root", label: <TransComponent i18nKey="Is root account" toUpperCase />}].concat(this.props.optAccountBelong.filter(item => item.value === _get(company, 'value')))

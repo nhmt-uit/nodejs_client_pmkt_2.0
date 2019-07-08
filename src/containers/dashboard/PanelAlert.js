@@ -57,7 +57,7 @@ class PanelAlert extends Component{
                                 <span className="caption-subject font-dark bold uppercase"> <TransComponent i18nKey="Alert" /></span>
                             </div>
                         </div>
-                        <div className="portlet-body table-scrollable" style={{maxHeight:"400px", overflowY: 'scroll'}}>
+                        <div className="portlet-body table-responsive" style={{maxHeight:"400px", overflowY: 'scroll'}}>
                             <div className="mt-btm-transform ">
                                 {/*====================================================================*/}
                                 {listNotify.map(function (items) {

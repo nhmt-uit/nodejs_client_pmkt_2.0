@@ -38,7 +38,6 @@ class ConfigurationContainer extends Component {
     }
     render() {
         const { t, configuration } = this.props;
-        console.log('configuration', configuration);
         return (
             <div className="config portlet light bordered">
                     <div className="portlet-title">

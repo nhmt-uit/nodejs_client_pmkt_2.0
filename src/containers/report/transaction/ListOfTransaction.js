@@ -79,7 +79,7 @@ class ListOfTransaction extends Component {
 
         var self = this;
         return (
-            <div className="table-scrollable">
+            <div className="table-responsive">
                 <table className="table table-striped table-bordered table-hover dataTable no-footer dtr-inline">
                     <thead>
                     <tr role="row">
@@ -97,7 +97,7 @@ class ListOfTransaction extends Component {
                     {
                         listTransaction.map(function (item, index) {
                             var showCurrenciesValues = currencies.map(function (obj, index) {
-                                if(obj.id == item.dv_tien_te_id){
+                                if(obj.id === item.dv_tien_te_id){
                                     return(
                                         <td key={index} className="text-right"> {Helpers.formatMoney(item.result ,0)} </td>
                                     )

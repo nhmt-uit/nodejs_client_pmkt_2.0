@@ -375,6 +375,8 @@ h5.modal-title {font-size: 16px; font-weight: bold;}
 }
 
 .page-header.navbar .top-menu .navbar-nav>li.dropdown>.dropdown-toggle:last-child{padding-right: 10px;}
+.dropdown-document > a { font-size: 14px;color: #c6cfda; }
+.dropdown-live-chat > a { font-size: 14px;color: red; }
 
 /* Full screen */
 .btn-fullscreen i.fa {margin-right: 5px}
@@ -444,4 +446,10 @@ h5.modal-title {font-size: 16px; font-weight: bold;}
   position: absolute;
   top: -65px;
   right: 0;
+}
+
+@media (max-width: 580px) {
+  .hide-on-mobile {
+      display: none !important;
+  }
 }

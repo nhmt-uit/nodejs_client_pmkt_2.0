@@ -84,7 +84,7 @@ class ListFormulaByAccountContainer extends Component {
                     </div>
                 </div>
                 <div className="portlet-body">
-                    <div className="table-scrollable">
+                    <div className="table-responsive">
                         <table className="table table-striped table-bordered table-hover table-animation">
                             <thead>
                                 <tr className="font-red-sunglo">

@@ -18,7 +18,6 @@ class ModalFormFormulaContainer extends Component {
     componentDidUpdate(){
         // Hide modal after save success
         if(this.props.formSaveStatus && this.props.isOpenModal) {
-            console.log("fireddd", this.props)
             this.props.toggleModalFormula()
         }
     }
