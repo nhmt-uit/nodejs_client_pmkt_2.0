@@ -36,11 +36,11 @@ class TransactionPage extends React.Component{
                 </div>
                 <div className="portlet-body">
                     <div className="row">
-                        <div className="col-md-5">
+                        <div className="col-md-4">
                             <CreateTransaction onRef={ref => (this.child = ref)}
                                                callParentFromCreateTransaction={this.getDataFromCreateTransaction}/>
                         </div>
-                        <div className="col-md-7">
+                        <div className="col-md-8">
                             <BillTransaction onRef={ref => (this.childBillTransaction = ref)}/>
 
                         </div>

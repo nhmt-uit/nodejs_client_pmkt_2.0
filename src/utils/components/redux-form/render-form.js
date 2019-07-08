@@ -6,7 +6,7 @@ import { TransComponent } from 'my-components'
 export const renderError = props => {
     const {touched, error, warning } = props.meta
     return (
-        error && <span {...props} className='error'><TransComponent i18nKey={error} /></span> || null
+        error && <section><span {...props} className='error'><TransComponent i18nKey={error} /></span></section> || null
     )
 }
 

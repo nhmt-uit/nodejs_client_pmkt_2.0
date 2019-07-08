@@ -79,7 +79,8 @@ export const initFormulaGroup = (params) => {
                 let listData = res.res.data.List
                 const optFormula = listData.map(item => {
                     let bankerId = !_isEmpty(item.child) ? item.child[0].banker.id : null
-                    return {value: item.id, label: item.name.toUpperCase(), bankerId: bankerId}
+                    let bankerIds = !_isEmpty(item.child) ? item.child.map(child => child.banker.id) : null
+                    return {value: item.id, label: item.name.toUpperCase(), bankerId: bankerId, bankerIds: bankerIds}
                 })
 
                 // Dispatch data to reducer

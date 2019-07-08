@@ -291,7 +291,10 @@ class ReportListContainer extends Component {
             (Number(roles) === 11 || Number(roles) === 12)
                 ? null
                 : (<div className="actions">
-                    <button className="btn btn-danger">{t('Add')}</button>
+                    <Link to={RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT_TRANSACTION')} className="btn btn-danger">
+                        <span className="ladda-label"> {t("Add")}</span>
+                        <span className="ladda-spinner"></span>
+                    </Link>
                 </div>);
 
         if (isFetching) {
@@ -309,6 +312,8 @@ class ReportListContainer extends Component {
                 </div>
             );
         }
+
+        console.log("render")
 
         return (
             <div className="portlet light bordered">

@@ -152,7 +152,7 @@ class ListFormulaByForumulaGroupContainer extends Component {
     }
     
     renderDetailData = formulaPatternList => {
-        let xhtml = null
+        let xhtml = <tr><td className="text-center" colSpan="20"><TransComponent i18nKey="Data Empty" /></td></tr>
         if (formulaPatternList.length) {
             xhtml = formulaPatternList.map((item, idx) => {
                 return (

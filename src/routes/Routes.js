@@ -6,12 +6,8 @@ import RoutesService from './RoutesService'
 import { AccountantListPage, AccountantManualBankerPage, AccountantManualLoginPage, AccountantManualPage } from 'my-pages/accountant';
 import { ReportPage, ReportDetailPage } from 'my-pages/report';
 import TransactionPage from "my-pages/report/transaction/TransactionPage";
-<<<<<<< HEAD
-import { CreateNewPage, SubUserPage } from 'my-pages/manages';
+import { CreateNewPage, SubUserPage, ConfigurationPage } from 'my-pages/manages';
 import { FormulaPage } from 'my-pages/formula';
-=======
-import { ManagePage, CreateNewPage, ConfigurationPage } from 'my-pages/manage';
->>>>>>> 6dcb95c6733d5af63f7c6523758c41b2c94f120d
 
 const Routes = [
 	{
@@ -90,7 +86,6 @@ const Routes = [
 		exact: true,
 		component: TransactionPage,
 	},
-<<<<<<< HEAD
 	/*
 	|--------------------------------------------------------------------------
 	| Manage Routes Area
@@ -111,23 +106,11 @@ const Routes = [
 		exact: true,
 		component: FormulaPage,
 	},
-=======
     {
-        path: RoutesService.getPath('ADMIN', 'MANAGE_DASHBOARD'),
-        exact: true,
-        component: ManagePage,
-    },
-    {
-        path: RoutesService.getPath('ADMIN', 'CREATE_NEW'),
-        exact: true,
-        component: CreateNewPage,
-    },
-    {
-        path: RoutesService.getPath('ADMIN', 'CONFIGURATION'),
+        path: RoutesService.getPath('ADMIN', 'MANAGE_CONFIGURATION'),
         exact: true,
         component: ConfigurationPage,
     },
->>>>>>> 6dcb95c6733d5af63f7c6523758c41b2c94f120d
 	{
 		path: '*',
 		exact: true,

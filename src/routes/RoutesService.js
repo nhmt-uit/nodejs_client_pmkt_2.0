@@ -33,15 +33,9 @@ const listAdminRoutes = [
     /*==========================================================================*/
     { name: "MANAGE_DASHBOARD", path: "/manage", language: "en"},
     /*==========================================================================*/
-<<<<<<< HEAD
     { name: "MANAGE_CREATE_NEW", path: "/manage/create_new", language: "en"},
     /*==========================================================================*/
     { name: "MANAGE_CONFIGURATION", path: "/manage/configuration", language: "en"},
-=======
-    { name: "CREATE_NEW", path: "/manage/create_new", language: "en"},
-    /*==========================================================================*/
-    { name: "CONFIGURATION", path: "/manage/configuration", language: "en"},
->>>>>>> 6dcb95c6733d5af63f7c6523758c41b2c94f120d
     /*==========================================================================*/
     { name: "MANAGE_FORMULA", path: "/manage/formula", language: "en"},
     /*==========================================================================*/
