@@ -12,6 +12,8 @@ const AccountSubReducer = (state = defaultState, action) => {
             return {...state, memberSub: action.payload};
         case AccountSubActionType.DEL_MEMBER_SUB:
             return {...state,};
+        case AccountSubActionType.CREATE_MEMBER_SUB:
+            return {...state, formSaveStatus: action.formSaveStatus, formSaveResponse: action.formSaveResponse}
         default:
             return {...state};
     }

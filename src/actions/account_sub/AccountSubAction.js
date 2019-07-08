@@ -24,3 +24,16 @@ export const delMemberSub = (post) => {
         })
     }
 }
+
+export const createMemberSub = (post) => {
+    return (dispatch) => {
+        return AccountSubService.createMemberSub(post).then(res => {
+            console.log("res",res)
+            dispatch({
+                type: AccountSubActionType.CREATE_MEMBER_SUB,
+                formSaveStatus: res.status,
+                formSaveResponse: res.res
+            })
+        })
+    }
+}

@@ -46,11 +46,16 @@ class BillTransaction extends Component {
                 rowInTable: true,
             })
         }
+        if(Number.isNaN(amount)){
+            this.setState({
+                rowInTable: false,
+            })
+        }
     };
 
     render() {
         var self = this;
-        const {currencyMap, result, total} = this.props;
+        const {currencyMap, result, total, optMoney} = this.props;
         if (isEmpty(currencyMap) || isEmpty(result) || isEmpty(total)) {
             return null;
         }
@@ -59,12 +64,6 @@ class BillTransaction extends Component {
         let currencyIDs = currencyMap.map(function (currency) {
             return currency.dv_tien_te_id;
         }).sort().reverse();
-
-        let headers = currencyIDs.map(function (id) {
-            return (
-                <th key={id} className="caption-subject font-red text-center"> {map_currency[id].dv_tien_te} </th>
-            )
-        });
 
         var typeOfMoney = this.state.typeOfMoney;
         var transactionMethod = this.state.transactionMethod;
@@ -75,6 +74,13 @@ class BillTransaction extends Component {
         } else {
             transaction = "Other";
         }
+        let mapOptMoney = keyBy(optMoney, 'value')
+        let headers = currencyIDs.map(function (id) {
+            return(
+                <th key={id} className="caption-subject font-red text-center"> {map_currency[id].dv_tien_te} </th>
+            )
+        });
+
         let test = currencyIDs.map(function (id) {
             return(
                 <td key={id} className="caption-subject font-green text-center">
@@ -87,7 +93,6 @@ class BillTransaction extends Component {
         let rows = currencyIDs.map(function (id) {
             return (
                 <td key={id} className="caption-subject font-green text-center">
-                    {/*{total[id].result < 0 ? <span className="font-red"> {Helpers.formatMoney(total[id].result,0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney(total[id].result,0)} </span>}*/}
                     {self.state.rowInTable ?
                         (typeOfMoney === id ? (Number(total[id].result) + Number(amount)) < 0 ? <span className="font-red"> {Helpers.formatMoney((Number(total[id].result) + Number(amount)),0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney((Number(total[id].result) + Number(amount)),0)} </span>
                             : total[id].result < 0 ? <span className="font-red"> {Helpers.formatMoney(total[id].result,0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney(total[id].result,0)} </span>)
@@ -160,6 +165,7 @@ const mapStateToProps = state => {
         currencyMap: state.TransactionReducer.currencyMap,
         result: state.TransactionReducer.result,
         total: state.TransactionReducer.total,
+        optMoney: state.TransactionReducer.optMoney,
     }
 }
 

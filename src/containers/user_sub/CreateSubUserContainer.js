@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import {withTranslation} from "react-i18next";
 import {compose} from "redux/es/redux";
 import {connect} from "react-redux";
 
@@ -8,10 +7,11 @@ import {get as _get} from 'lodash';
 import {renderError} from 'my-utils/components/redux-form/render-form'
 
 import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
-import AccountSubServices from 'my-services/account_sub/AccountSubServices'
+import AccountSubServices from 'my-services/account_sub/AccountSubServices';
+import { createMemberSub, getMemberSub } from 'my-actions/account_sub/AccountSubAction'
 import {reduxForm, Field} from "redux-form";
 
-const optSubMemberNumber = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+const optSubMemberNumber = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 class CreateSubUserContainer extends Component {
     constructor(props){
@@ -35,29 +35,42 @@ class CreateSubUserContainer extends Component {
         })
     }
 
-    // onChangeUserNameS1 = (e) => {
-    //     this.setState({
-    //         s1: e.target.value
-    //     })
-    // }
-    //
-    // onChangeUserNameS2 = (e) => {
-    //     this.setState({
-    //         s2: e.target.value
-    //     })
-    // }
-    //
-    // onChangeUserNameS3 = (e) => {
-    //     this.setState({
-    //         s3: e.target.value
-    //     })
-    // }
-
-    createNewSubAccount = () => {
+    changeIsOpenCreateUserModal = () =>{
         var isOpenCreateUserModal = this.state.isOpenCreateUserModal;
         this.setState({
             isOpenCreateUserModal : !isOpenCreateUserModal,
         })
+    }
+
+    createNewSubAccount = () => {
+        var isOpenCreateUserModal = this.state.isOpenCreateUserModal;
+        var self = this;
+        const post = {
+            status: _get(this.props.initialValues, 'status', false),
+            fullname: _get(this.props.initialValues, 'fullname'),
+            username: _get(this.props.initialValues, 'username'),
+            s1: _get(this.props.initialValues, 's1'),
+            s2: _get(this.props.initialValues, 's2'),
+            s3: _get(this.props.initialValues, 's3'),
+            password: _get(this.props.initialValues, 'password'),
+            re_password: _get(this.props.initialValues, 're_password'),
+        }
+        this.props.createMemberSub(post)
+            .then(function () {
+                self.props.getMemberSub()
+            })
+            .then(function () {
+                self.setState({
+                    isOpenCreateUserModal : !isOpenCreateUserModal,
+                })
+            })
+            .then(function () {
+                self.props.reset('createSubUser');
+            })
+            .catch(function (err) {
+                console.log(err)
+            })
+
     }
 
     render() {
@@ -65,48 +78,43 @@ class CreateSubUserContainer extends Component {
         return (
             <div className="row">
                 <div className="form-group col-xs-11 text-right">
-                    <a href="#/" type="submit" className="btn btn-default red" onClick={this.createNewSubAccount}> Add new </a>
+                    <a type="submit" className="btn btn-default red" onClick={this.changeIsOpenCreateUserModal}><TransComponent i18nKey="Add new"/></a>
                 </div>
                 <div className="clearfix"></div>
                 <div>
-                    <Modal isOpen={this.state.isOpenCreateUserModal} toggle={() => this.createNewSubAccount()}>
-                        <ModalHeader toggle={() => this.createNewSubAccount()} className="text-uppercase">
+                    <Modal isOpen={this.state.isOpenCreateUserModal} toggle={() => this.changeIsOpenCreateUserModal()}>
+                        <ModalHeader toggle={() => this.changeIsOpenCreateUserModal()} className="text-uppercase">
                             <strong>
-                                {t('Sub Account')}
+                                <TransComponent i18nKey="Sub account"/>
                             </strong>
                         </ModalHeader>
                         <ModalBody>
-                            <form className="form_member">
+                            <form name="form_member">
                                 <div className="form-body">
                                     <div className="form-group">
-                                        <label className="col-md-3 control-label"> Name </label>
-                                        <div className="col-md-9">
-                                            <div className="input-group">
-                                                <Field
-                                                    name="name"
-                                                    component="input"
-                                                    className="form-control"
-                                                    type="text"
-                                                />
-                                                <span className="input-group-addon">
-                                                    <i className="fa fa-user"></i>
-                                                </span>
-                                            </div>
-                                        </div>
+                                        <label><TransComponent i18nKey="Full name"/></label>
+                                        <Field
+                                            name="fullname"
+                                            type="text"
+                                            component="input"
+                                            className="form-control form-control-solid placeholder-no-fix"
+                                            autoComplete="off"
+                                        />
+                                        <Field name="fullname" component={renderError}/>
                                     </div>
                                     <div className="form-group">
-                                        <label className="col-md-3 control-label"> Username </label>
-                                        <div className="row col-md-9">
-                                            <div className="col-md-5">
+                                        <label><TransComponent i18nKey="Username"/></label>
+                                        <div className="row">
+                                            <div className="col-md-4" style={{paddingRight: '0px'}}>
                                                 <Field
                                                     name="username"
                                                     component="input"
-                                                    className="form-control placeholder-no-fix"
+                                                    className="form-control form-control-solid placeholder-no-fix"
                                                     autoComplete="off"
                                                     readOnly={true}
                                                 />
                                             </div>
-                                            <div className="col-md-2">
+                                            <div className="col-md-2" style={{paddingRight: '0px'}}>
                                                 <Field name="s1" component="select" className="form-control">
                                                     {
                                                         optSubMemberNumber.map(item => {
@@ -115,7 +123,7 @@ class CreateSubUserContainer extends Component {
                                                     }
                                                 </Field>
                                             </div>
-                                            <div className="col-md-2">
+                                            <div className="col-md-2" style={{paddingRight: '0px'}}>
                                                 <Field name="s2" component="select" className="form-control">
                                                     {
                                                         optSubMemberNumber.map(item => {
@@ -124,7 +132,7 @@ class CreateSubUserContainer extends Component {
                                                     }
                                                 </Field>
                                             </div>
-                                            <div className="col-md-2">
+                                            <div className="col-md-2" style={{paddingRight: '0px'}}>
                                                 <Field name="s3" component="select" className="form-control">
                                                     {
                                                         optSubMemberNumber.map(item => {
@@ -134,36 +142,36 @@ class CreateSubUserContainer extends Component {
                                                 </Field>
                                             </div>
                                         </div>
+                                        <Field name="username" component={renderError}/>
                                     </div>
                                     <div className="form-group">
-                                        <label className="col-md-3 control-label"> Password </label>
-                                        <div className="col-md-9">
-                                            <Field
-                                                name="password"
-                                                component="input"
-                                                className="form-control"
-                                                type="password"
-                                            />
-                                        </div>
+                                        <label><TransComponent i18nKey="Password"/></label>
+                                        <Field
+                                            name="password"
+                                            type="password"
+                                            component="input"
+                                            className="form-control form-control-solid placeholder-no-fix"
+                                            autoComplete="off"
+                                        />
+                                        <Field name="password" component={renderError}/>
                                     </div>
                                     <div className="form-group">
-                                        <label className="col-md-3 control-label">Re-password</label>
-                                        <div className="col-md-9">
-                                            <div className="input-icon right">
-                                                <Field
-                                                    name="re-password"
-                                                    component="input"
-                                                    className="form-control"
-                                                    type="password"
-                                                />
-                                            </div>
-                                        </div>
+                                        <label><TransComponent i18nKey="Re-password"/></label>
+                                        <Field
+                                            name="re_password"
+                                            type="password"
+                                            component="input"
+                                            className="form-control form-control-solid placeholder-no-fix"
+                                            autoComplete="off"
+                                        />
+                                        <Field name="re_password" component={renderError}/>
                                     </div>
                                 </div>
                             </form>
                         </ModalBody>
                         <ModalFooter>
-                            <Button className="bg-red font-white" onClick={this.createNewSubAccount}> {t('Save')} </Button>
+                            <Button type="button" className="bg-red font-white" disabled={this.props.invalid}
+                                    onClick={this.createNewSubAccount}><TransComponent i18nKey="Save"/></Button>
                         </ModalFooter>
                     </Modal>
                 </div>
@@ -172,21 +180,78 @@ class CreateSubUserContainer extends Component {
     }
 }
 
+const asyncValidate = (values, dispatch, props, currentFieldName) => {
+    const errors = {}
+    return new Promise((resolve, reject) => {
+        //Validate fullname
+        if (currentFieldName === "fullname") {
+            AccountSubServices.validateMemberSubName(values.fullname).then(res => {
+                if (res.status === false) {
+                    errors.fullname = res.res.data.message
+                    return reject(errors)
+                }
+            })
+        }
+
+        //Validate username suffixes
+        if (["s1", "s2", "s3"].includes(currentFieldName)) {
+            const username = values.username + values.s1 + values.s2 + values.s3
+            AccountSubServices.validateMemberSubUser(username).then(res => {
+                if (res.status === false) {
+                    errors.username = res.res.data.message
+                    return reject(errors)
+                } else {
+                    return resolve()
+                }
+            })
+        }
+    });
+}
+
+const validate = values => {
+    const errors = {}
+    if (!values.fullname) {
+        errors.fullname = '"fullname" is not allowed to be empty'
+    }
+    if (!values.member) {
+        errors.member = '"member" is not allowed to be empty'
+    }
+
+    if (!values.password) {
+        errors.password = '"Password" is not allowed to be empty'
+    } else if (!(/^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%])[0-9A-Za-z!@#$%]{8,}$/).test(values.password)) {
+        errors.password = '"password" had at least 8 char & contain 1 uppercase letter, 1 lowercase letter, 1 number, 1 special letter'
+    }
+
+    if (!values.re_password || values.re_password !== values.password) {
+        errors.re_password = 'confirm password fail'
+    }
+    return errors
+};
+
 const mapStateToProps = state => {
+    console.log(state)
     return {
         initialValues: _get(state, 'form.createSubUser.values'),
+        formSaveStatus: state.AccountSubReducer.formSaveStatus,
+        formSaveResponse: state.AccountSubReducer.formSaveResponse,
+
     }
-}
+};
 
 const mapDispatchToProps = dispatch => {
     return{
+        createMemberSub: post => dispatch(createMemberSub(post)),
+        getMemberSub: params => {dispatch(getMemberSub(params))},
     }
-}
+};
 
 export default compose(
     reduxForm({
         form: 'createSubUser',
+        validate,
+        asyncValidate: asyncValidate,
+        asyncChangeFields: ['fullname', 's1', 's2', 's3']
     }),
     connect(mapStateToProps, mapDispatchToProps),
-    withTranslation(),
 )(CreateSubUserContainer);
