@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Route, Link } from "react-router-dom";
 
 import { RoutesService } from 'my-routes';
+import { TransComponent } from 'my-components'
 
 
 export const menus = [
@@ -15,13 +16,13 @@ export const menus = [
     },
     { to: RoutesService.getPath('ADMIN', 'MANAGE_DASHBOARD'), exact: false, name: 'Manage', icon: 'fa fa-gears',
         sub_menus: [
-            { to: RoutesService.getPath('ADMIN', 'MANAGE_CREATE_NEW'), exact: true, name: 'Create new', icon: 'fa fa-user-plus' },
+            { to: RoutesService.getPath('ADMIN', 'MANAGE_CREATE_NEW'), exact: true, name: 'create new', icon: 'fa fa-user-plus' },
             { to: RoutesService.getPath('ADMIN', 'MANAGE_CONFIGURATION'), exact: true, name: 'Configuration', icon: 'fa fa-cog' },
-            { to: RoutesService.getPath('ADMIN', 'MANAGE_FORMULA'), exact: true, name: 'Formular', icon: 'fa fa-sliders' },
-            { to: RoutesService.getPath('ADMIN', 'MANAGE_FORMULA_GROUP'), exact: true, name: 'Formula Group', icon: 'fa fa-sliders' },
+            { to: RoutesService.getPath('ADMIN', 'MANAGE_FORMULA'), exact: true, name: 'Formula', icon: 'fa fa-sliders' },
+            { to: RoutesService.getPath('ADMIN', 'MANAGE_FORMULA_GROUP'), exact: true, name: 'formula group', icon: 'fa fa-sliders' },
             { to: RoutesService.getPath('ADMIN', 'MANAGE_MEMBER'), exact: true, name: 'Member', icon: 'fa fa-users' },
             { to: RoutesService.getPath('ADMIN', 'MANAGE_ACCOUNT'), exact: true, name: 'Account', icon: 'fa fa-user' },
-            { to: RoutesService.getPath('ADMIN', 'MANAGE_ACCOUNT_SUB'), exact: true, name: 'Create Sub', icon: 'fa fa-user-plus' },
+            { to: RoutesService.getPath('ADMIN', 'MANAGE_ACCOUNT_SUB'), exact: true, name: 'create sub', icon: 'fa fa-user-plus' },
         ],
     },
 ]
@@ -52,7 +53,7 @@ const MenuLink = ({ menu }) => (
                             className="nav-link text-uppercase text-expanded"
                         >
                             <i className={menu.icon}></i>
-                            <span className="title">{menu.name}</span>
+                            <span className="title"><TransComponent i18nKey={menu.name} /></span>
                             {sub_menus ? <span className="arrow"></span> : ""}
                         </Link>
                         {sub_menus ? <ul className="sub-menu">
@@ -81,7 +82,7 @@ const SubMenuLink = ({ menu }) => (
                             to={menu.to}
                             className="nav-link"
                         >
-                            <span className="title">{menu.name}</span>
+                            <span className="title"><TransComponent i18nKey={menu.name} /></span>
                         </Link>
                     </li>
                 )

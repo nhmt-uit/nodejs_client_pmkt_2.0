@@ -149,7 +149,7 @@ export const AccountantReducer = (state = defaultState, action) => {
 				var objIndex = newBankerAccount.findIndex((obj => obj.id === action.payload[x]))
 				if (objIndex !== -1) {
 					newBankerAccount[objIndex].type = "notify"
-					newBankerAccount[objIndex].message = "Sending request"
+					newBankerAccount[objIndex].message = "sending request"
 					newBankerAccount[objIndex].uuid = x
 				}
 			}
