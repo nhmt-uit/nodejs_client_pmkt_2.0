@@ -36,7 +36,7 @@ class AccountantItemBankerAccountContainer extends Component {
                 <div className="panel panel-default">
                     <div className="panel-heading">
                         <h4 className="panel-title">
-                            <div className="col-sm-6">
+                            <div className="col-xs-6 col-md-6">
                                 <label className="mt-checkbox uppercase">
                                     <AccountantItemBankerAccountCheckboxContainer bankerAccountId={bankerAccount.id} />
                                     {bankerAccount.acc_name}
@@ -44,10 +44,10 @@ class AccountantItemBankerAccountContainer extends Component {
                                     <span></span>
                                 </label>
                             </div>
-                            <div className="col-sm-5"><label className="mt-checkbox "> {bankerAccount.note}</label></div>
-                            <div className="col-sm-1 text-right">
+                            <div className="col-xs-4 col-md-5" style={{paddingLeft: '0px'}}><label className="mt-checkbox "> {bankerAccount.note}</label></div>
+                            <div className="col-xs-2 col-md-1 text-right">
                             {bankerAccount.data ?
-                                <label className="mt-checkbox" onClick={_ => this.props.collapseBankerAccount(bankerAccount.id)}>
+                                <label className="mt-checkbox" onClick={_ => this.props.collapseBankerAccount(bankerAccount.id)} style={{paddingLeft: '0px'}}>
                                     {bankerAccount.collapse ?  <i className="fa fa-minus"/> : <i className="fa fa-plus"/>}
                                 </label>
                                 : null }
