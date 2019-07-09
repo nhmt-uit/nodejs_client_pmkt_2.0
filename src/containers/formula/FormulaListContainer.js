@@ -535,7 +535,7 @@ class FormulaListContainer extends Component {
                 <div className="portlet-body">
                     <table className="table table-hover table-formula">
                         <thead>
-                            <tr>
+                            <tr className="font-red-sunglo">
                                 <th rowSpan={2}>#</th>
                                 <th rowSpan={2}>
                                     <TransComponent i18nKey={'Formula name'}/>
