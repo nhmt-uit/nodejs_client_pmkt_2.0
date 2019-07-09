@@ -18,6 +18,8 @@ let defaultState = {
 	//Handel Save Form
 	formSaveStatus: null,
 	formSaveResponse: {},
+
+	lstTab: [],
 }
 
 export const AccountReducer = (state = defaultState, action) => {
@@ -54,7 +56,13 @@ export const AccountReducer = (state = defaultState, action) => {
 		case AccountActionType.ACCOUNT_DELETE_ITEM:
 			return {...state, formDeleteStatus: action.formDeleteStatus, formDeleteResponse: action.formDeleteResponse}
 		case AccountActionType.ACCOUNT_RESET_FORM_RESPONSE:
-			return {...state, formSaveStatus: null, formSaveResponse: {}}
+			return {...state, formSaveStatus: null, formSaveResponse: {}};
+
+		case AccountActionType.GET_TAB_SUCCESS:
+			return { ...state, lstTab: action.payload, error: null };
+		case AccountActionType.GET_TAB_FAIL:
+			return { ...state, error: action.payload };
+
 		default:
 			return {...state}
 	}

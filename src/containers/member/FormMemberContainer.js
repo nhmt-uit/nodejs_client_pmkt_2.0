@@ -159,7 +159,6 @@ class FormMemberContainer extends Component {
 }
 
 const asyncValidate = (values, dispatch, props, currentFieldName) => {
-    console.log(currentFieldName)
     const errors = {}
     return new Promise((resolve, reject) => {
         //Validate fullname
@@ -209,6 +208,7 @@ const validate = values => {
 }
 
 const mapStateToProps = state => {
+
     return {
         initialValues: _get(state, 'form.form_member.values'),
     }

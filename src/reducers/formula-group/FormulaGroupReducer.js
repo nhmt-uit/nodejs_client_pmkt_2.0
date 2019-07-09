@@ -5,21 +5,39 @@ let defaultState = {
 	optBanker: [],
     optFormula: [],
 
-    // Handel Formua List
+    formulaGroupList: [],
+    bankerList: [],
+
+    // Handle Formua List
     optFormulaPatternList: [],
     formulaPatternList: [],
-    
-    //Handle Modal Form Member
-    isOpenModalAssign: false,
 
-    //Handel Save Form Assign
+    
+    //Handle Modal Form Formula Group
+    isOpenModal: false,
+    //Handle Save Form Assign
 	formSaveStatus: null,
 	formSaveResponse: {},
+    
+    //Handle Modal Form Assign Formula Group - Formula
+    isOpenModalAssign: false,
+    
+
+    //Handle Save Form Assign
+	formAssignSaveStatus: null,
+    formAssignSaveResponse: {},
+    
+    // Handle Modal Delete Formula
+    isOpenModalDeleteFormula: false,
+	paramsDeleteFormula: {}
 }
 
 const FormulaGroupReducer = (state = defaultState, action) => {
 
     switch (action.type) {
+        case FormulaGroupActionType.GET_FORMULA_GROUP:
+            return {...state, formulaGroupList: action.formulaGroupList, bankerList: action.bankerList}
+
         case FormulaGroupActionType.FORMULA_RESET_STORE: {
             return {...defaultState}
         }
@@ -70,13 +88,26 @@ const FormulaGroupReducer = (state = defaultState, action) => {
             if (!state.isOpenModalAssign === false) return {...defaultState}
             return {...state, isOpenModalAssign: !state.isOpenModalAssign};
         }
-        case FormulaGroupActionType.FORMULA_TOGGLE_MODAL_FORM: {
+        case FormulaGroupActionType.FORMULA_GROUP_SAVE_FORM_ASSIGN: {
+            return {...state, formAssignSaveStatus: action.formAssignSaveStatus, formAssignSaveResponse: action.formAssignSaveResponse}
+        }
+        case FormulaGroupActionType.FORMULA_GROUP_RESET_FORM_ASSIGN_RESPONSE: {
+            return {...state, formAssignSaveStatus: null, formAssignSaveResponse: {}}
+        }
+        case FormulaGroupActionType.FORMULA_GROUP_TOGGLE_MODAL_FORM: {
             //Reset Store When Modal Close
-			if (!state.isOpenModal === false) return {...defaultState}
+            if (!state.isOpenModal === false) return {...state, isOpenModal: false, formSaveStatus: null, formSaveResponse: {} }
             return {...state, isOpenModal: !state.isOpenModal};
         }
-        case FormulaGroupActionType.FORMULA_SAVE_FORM: {
+        case FormulaGroupActionType.FORMULA_GROUP_SAVE_FORM: {
             return {...state, formSaveStatus: action.formSaveStatus, formSaveResponse: action.formSaveResponse}
+        }
+        case FormulaGroupActionType.FORMULA_GROUP_RESET_FORM_RESPONSE: {
+            return {...state, formSaveStatus: null, formSaveResponse: {}}
+        }
+        case FormulaGroupActionType.FORMULA_GROUP_TOGGLE_MODAL_DELETE_FORMULA: {
+            // Handle Modal Delete Formula
+            return {...state, isOpenModalDeleteFormula: !state.isOpenModalDeleteFormula, paramsDeleteFormula: action.paramsDeleteFormula}
         }
         default:
             return {...state};

@@ -21,7 +21,7 @@ class BankerListContainer extends React.Component{
         return(
             <div>
                 <div className="col-xs-12 portlet light bordered">
-                    <div className="table-scrollable">
+                    <div className="table-responsive">
                         <table className="table table-hover">
                             <tbody>
                             {List.map(function (items) {

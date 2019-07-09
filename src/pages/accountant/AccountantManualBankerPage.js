@@ -20,7 +20,7 @@ class AccountantManualBankerPage extends Component {
         var List = DATA.res.data.List;
         var item = List.map(function (item, index) {
             return (
-                <div key={index} className="col-xs-4 col-md-4">
+                <div key={index} className="col-xs-6 col-md-4">
                     <Link to={RoutesService.getPath('ADMIN', 'ACCOUNTANT_MANUAL_PROCESS', {bankerName: item.name.toLowerCase(), type: 'login' })} >
                         <div className="widget-thumb margin-bottom-20 bordered">
                             <div className="widget-thumb-wrap text-center">
@@ -33,16 +33,22 @@ class AccountantManualBankerPage extends Component {
         })
 
         return (
-            <div className="row">
-                <div className="portlet light bordered" style={{marginLeft: 15, marginRight:15}}>
-                    <div className="caption font-red-sunglo"><h4><span className="caption-subject bold uppercase"><TransComponent i18nKey="Accountant Manual" /></span></h4></div>
-                    <div className="tools"><span className="collapse"> </span></div>
+            <div className='portlet light bordered'>
+                <div className="portlet-title">
+                    <div className="caption font-red-sunglo">
+                        <span className="caption-subject bold uppercase">
+                            <TransComponent i18nKey="Accountant Manual" />
+                        </span>
+                    </div>
                 </div>
-
-                <div className="col-xs-12">
-                    <h5 className="margin-bottom"> <TransComponent i18nKey="Please chooose company to login: " /></h5>
-                    <div className="row widget-row">
-                        {item}
+                <div className="portlet-body">
+                    <div className="row">
+                        <div className="col-xs-12">
+                            <h5 className="margin-bottom"> <TransComponent i18nKey="Please chooose company to login" /> : </h5>
+                            <div className="row widget-row">
+                                {item}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

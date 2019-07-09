@@ -59,10 +59,15 @@ class ReportStatisticContainer extends Component {
 
     renderTabReport(type) {
         const t = this.props.t;
-        const { currencyMap, totalAccounting, totalReport, total } = this.props.reportStore;
-        const title = type === 'accounting' ? t('REPORT OF ACCOUNTING') : t('SYNTHESIS OF REPORT');
-        const totalTab = type === 'accounting' ? totalAccounting : type === 'member' ? total : totalReport;
-        const className = type === 'accounting' ? 'tab-accountant' : 'tab-report';
+        const { currencyMap, totalAccounting, totalReport, total, itemActive } = this.props.reportStore;
+        const title = 
+            (type === 'accounting' || type === 'banker') 
+                ? t('REPORT OF ACCOUNTING') 
+                : (type === 'member') 
+                    ? `${t('REPORT')} ${itemActive.memberName}`
+                    : t('SYNTHESIS OF REPORT');
+        const totalTab = (type === 'accounting' || type === 'banker') ? totalAccounting : type === 'member' ? total : totalReport;
+        const className = (type === 'accounting') ? 'tab-accountant' : 'tab-report';
 
         if (!currencyMap) {
             return (
@@ -107,7 +112,7 @@ class ReportStatisticContainer extends Component {
                     <div className="col-md-12">
                         <div className="tabbable-line tabbable-custom-profile tabbable-book">
                             <ul className="nav nav-tabs tabs-reversed">
-                                <li className="title-accountant"><a href="javascript:;">{ itemActive.name || '' }</a></li>
+                                <li className="title-accountant"><a href="#/">{ itemActive.name || '' }</a></li>
                                 {
                                     (type === 'accounting' && hasReportDetailFeature === 1)
                                         ? <li className="title-accountant">
@@ -176,7 +181,7 @@ class ReportStatisticContainer extends Component {
             if (reportType === 'banker') {
                 bookElement = (
                     <li key={'other'} className="active">
-                        <a className="text-capitalize" href="javascript:;" data-toggle="tab">{t('Other')}</a>
+                        <a className="text-capitalize" href="#/" data-toggle="tab">{t('Other')}</a>
                     </li>
                 );
             } else {
@@ -255,7 +260,7 @@ class ReportStatisticContainer extends Component {
         let accountingList = _sortBy(_toArray(data), 'name');
 
         if (type === 'accounting') {
-            total = id === -1 ? totalAccounting : (totalByBook[id] || []);
+            total = (id === -1 || id === 'banker') ? totalAccounting : (totalByBook[id] || []);
         } else {
             const bookId = id.split('_')[2] || '';
             total = id === 'tab_synthesis_all' ? totalReport : (totalByTypeReport[Number(bookId) === 1 ? 0 : bookId] || {})
@@ -268,7 +273,7 @@ class ReportStatisticContainer extends Component {
         return (
             <div className={`tab-pane ${classActive}`} id={id} key={id}>
                 <ButtonMoneyExchange
-                    toggleBtnMoneyExchange={this.handleToggleStatusBtnMoneyExchange} 
+                    toggleBtnMoneyExchange={this.handleToggleStatusBtnMoneyExchange}
                     isChecked={false}
                     onToggleModalMoneyExchange={this.toggleModalMoneyExchange}
                     onToggleShowAll={this.toggleShowAll}
@@ -276,56 +281,58 @@ class ReportStatisticContainer extends Component {
                     tabActive={id}
                 />
                 <div className="portlet-body">
-                    <table className="table table-striped table-bordered table-hover">
-                        <thead className="font-red">
-                            <tr>
-                                <td><span className="glyphicon glyphicon-sort-by-alphabet" /></td>
-                                <th className="font-red">{t('Member')}</th>
-                                { currencyMap.map((item, index) => <th className="font-red text-right" key={index}>{item.dv_tien_te}</th>) }
-                                <th className="max-width-40" />
-                                <th className="max-width-40" />
-                            </tr>
-                        </thead>
-                        <tbody>
-                        {
-                            Object.keys(accountingList).map((account, index) => {
-                                const accountElm = accountingList[account];
-                                const visible = this.state.visible;
+                    <div className="table-responsive">
+                        <table className="table table-striped table-bordered table-hover">
+                            <thead className="font-red">
+                                <tr>
+                                    <td><span className="glyphicon glyphicon-sort-by-alphabet" /></td>
+                                    <th className="font-red">{t('Member')}</th>
+                                    { currencyMap.map((item, index) => <th className="font-red text-right" key={index}>{item.dv_tien_te}</th>) }
+                                    <th className="max-width-40" />
+                                    <th className="max-width-40" />
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {
+                                Object.keys(accountingList).map((account, index) => {
+                                    const accountElm = accountingList[account];
+                                    const visible = this.state.visible;
 
-                                return <ReportAccountContainer 
-                                    key={index}
-                                    item={accountElm}
-                                    visible={visible}
-                                    currencyMap={currencyMap}
-                                    order={index + 1}
-                                    tabActive={id}
-                                    onToggleAccount={this.handleToggleAccount}
-                                    onDeleteMoneyExchange={this.handleDeleteMoneyExchange}
-                                    onToggleCheckMoneyExchange={this.handleToggleCheckMoneyExchange}
-                                    btnMoneyExchangeClicked={statusBtnMoneyExchange !== undefined ? statusBtnMoneyExchange : false}
-                                />
-                            })
-                        }
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td />
-                                <td><TransComponent i18nKey="Total" /></td>
-                                {
-                                    currencyMap.map(function (item, index) {
-                                        const value = total && total[item.dv_tien_te_id] ? total[item.dv_tien_te_id].result : 0;
-                                        const classCurrency = Number(value) < 0 ? 'font-red' : 'font-blue-steel';
+                                    return <ReportAccountContainer
+                                        key={index}
+                                        item={accountElm}
+                                        visible={visible}
+                                        currencyMap={currencyMap}
+                                        order={index + 1}
+                                        tabActive={id}
+                                        onToggleAccount={this.handleToggleAccount}
+                                        onDeleteMoneyExchange={this.handleDeleteMoneyExchange}
+                                        onToggleCheckMoneyExchange={this.handleToggleCheckMoneyExchange}
+                                        btnMoneyExchangeClicked={statusBtnMoneyExchange !== undefined ? statusBtnMoneyExchange : false}
+                                    />
+                                })
+                            }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td />
+                                    <td><TransComponent i18nKey="Total" /></td>
+                                    {
+                                        currencyMap.map(function (item, index) {
+                                            const value = total && total[item.dv_tien_te_id] ? total[item.dv_tien_te_id].result : 0;
+                                            const classCurrency = Number(value) < 0 ? 'font-red' : 'font-blue-steel';
 
-                                        return <td className={`${classCurrency} text-right`} key={index}>
-                                            { Helpers.formatMoney(value, 0) }
-                                        </td>
-                                    })
-                                }
-                                <td/>
-                                <td/>
-                            </tr>
-                        </tfoot>
-                    </table>
+                                            return <td className={`${classCurrency} text-right`} key={index}>
+                                                { Helpers.formatMoney(value, 0) }
+                                            </td>
+                                        })
+                                    }
+                                    <td/>
+                                    <td/>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
                 </div>
             </div>
         );
@@ -337,12 +344,12 @@ class ReportStatisticContainer extends Component {
         const mapAccount = (data, id, parent) => {
             data = _cloneDeep(data);
 
-            const currentRs = { 
-                name: data.name, 
-                order: data.level, 
-                total: {}, 
-                id: data.id, 
-                state: id + data.id, 
+            const currentRs = {
+                name: data.name,
+                order: data.level,
+                total: {},
+                id: data.id,
+                state: id + data.id,
                 parent,
                 tranId: data.tranId || null,
                 user_id: data.user_id || null,
@@ -480,7 +487,7 @@ class ReportStatisticContainer extends Component {
 
         if (tabReportActive === 'accounting') {
             result = accountingList.filter(item => {
-                const currentItem = item.child.accounting; 
+                const currentItem = item.child.accounting;
 
                 let flag = !(tabBookActive !== 'banker' && tabBookActive !== -1 && !_get(currentItem, `child[${tabBookActive}]`, false));
 
@@ -488,7 +495,7 @@ class ReportStatisticContainer extends Component {
                     flag = flag && Object.keys(_get(item, 'child.accounting.total', {})).some(function (elm) {
                         return Number(item.child.accounting.total[elm].result) !== 0;
                     });
-                } 
+                }
 
                 return flag;
             });
@@ -524,12 +531,12 @@ class ReportStatisticContainer extends Component {
 
     handleMoneyExchange = (data) => {
         const { itemActive, reportType } = this.props.reportStore;
-        const params = { 
+        const params = {
             from_currency_id: data.from,
             to_currency_id: data.to,
             rate: data.rate,
-            chuky_id: itemActive.id, 
-            user_ids: JSON.stringify(data.moneyExchangeIds) 
+            chuky_id: itemActive.id,
+            user_ids: JSON.stringify(data.moneyExchangeIds)
         };
 
         return ReportService.moneyExchange(params)
@@ -586,7 +593,7 @@ class ReportStatisticContainer extends Component {
                 break;
             case 'banker':
                 tabContent = this.renderTabReportContent('accounting', true);
-                tabReport = <li className="active tab-report-detail">{ this.renderTabReport('accounting') }</li>;
+                tabReport = <li className="active tab-report-detail">{ this.renderTabReport('banker') }</li>;
                 break;
             default:
                 tabContent = <ReportByMember reportStore={this.props.reportStore} />
@@ -620,8 +627,8 @@ class ReportStatisticContainer extends Component {
                     </div>
                 </div>
                 <ModalMoneyExchange
-                    onToggleModalMoneyExchange={this.toggleModalMoneyExchange} 
-                    isOpenModalMoneyExchange={this.state.isOpenModalMoneyExchange} 
+                    onToggleModalMoneyExchange={this.toggleModalMoneyExchange}
+                    isOpenModalMoneyExchange={this.state.isOpenModalMoneyExchange}
                     currencyMap={currencyMap}
                     onMoneyExchange={this.handleMoneyExchange}
                 />

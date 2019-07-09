@@ -4,8 +4,6 @@ import ReportDetailService from 'my-services/report/ReportDetailService'
 export const getReportDetail = (chuky_id) => {
     return (dispatch) => {
         chuky_id = chuky_id || "5c6b823b79282518c5a00a55";
-
-        console.log("Chu ki ID: ", chuky_id)
         return ReportDetailService.getReportDetail(chuky_id).then(res => {
 
             dispatch({

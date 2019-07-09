@@ -49,7 +49,7 @@ class ListFormulaByAccountContainer extends Component {
     }
     
     renderDetailData = formulaPayload => {
-        let xhtml = null
+        let xhtml = <tr><td className="text-center" colSpan="20"><TransComponent i18nKey="Data Empty" /></td></tr>
         if (formulaPayload.length) {
             xhtml = formulaPayload.map((item, idx) => {
                 return (
@@ -84,7 +84,7 @@ class ListFormulaByAccountContainer extends Component {
                     </div>
                 </div>
                 <div className="portlet-body">
-                    <div className="table-scrollable">
+                    <div className="table-responsive">
                         <table className="table table-striped table-bordered table-hover table-animation">
                             <thead>
                                 <tr className="font-red-sunglo">

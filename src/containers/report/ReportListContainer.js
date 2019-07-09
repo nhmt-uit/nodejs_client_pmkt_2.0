@@ -14,6 +14,8 @@ import { getCyclePage, getReport, getReportByBanker, getReportByMember } from 'm
 import { LoadingComponent, PaginationComponent } from 'my-components';
 import { ReportService } from 'my-services/report';
 import { CookieService } from 'my-utils/core';
+import {RoutesService} from 'my-routes';
+import {Link} from "react-router-dom";
 
 class ReportListContainer extends Component {
     constructor(props) {
@@ -53,10 +55,25 @@ class ReportListContainer extends Component {
         const collapse = this.state.collapse;
 
         if (!item.child) {
-            return <a href="/#" target="_blank">{item.name}</a>;
+            return <a className="text-capitalize" href="/#" target="_blank">{item.name}</a>;
+        }
+
+        if (item.level === 1) {
+            item.child = sortBy(item.child, function (a) {
+                if (a.book_name === 'sportsbook') return -1;
+                if (a.book_name === 'other') return 1;
+
+                return 0;
+            });
+        }
+
+        if (item.level === 2) {
+            item.child = sortBy(item.child, 'name');
         }
 
         if (item.level === 3) {
+            item.child = sortBy(item.child, 'name');
+
             return Object.keys(item.child).map((elm, index) => {
                 const child = item.child[elm];
                 const key = child.id;
@@ -65,10 +82,10 @@ class ReportListContainer extends Component {
                 return isOpen ? (
                     <div key={key} className="margin-top-15">
                         <div className="margin-top-10 margin-bottom-10">
-                            <a href="#" onClick={this.handleGetReport({ chuky_id: id, memberName: child.name }, { ...itemActive, member_name: child.name }, 'member')} >{index + 1} - {child.name}</a>
+                            <a className="text-capitalize" href="#" onClick={this.handleGetReport({ chuky_id: id, member_name: child.name }, { ...itemActive, memberName: child.name }, 'member')} >{index + 1} - {child.name}</a>
                             { isExported
                                 ? ''
-                                : <span className="icon-close float-right color-red cursor-pointer" onClick={this.toggleDelModal(child.name, { chuky_id: id, acc_name: child.name })} />
+                                : <span className="text-capitalize icon-close float-right color-red cursor-pointer" onClick={this.toggleDelModal(child.name, { chuky_id: id, acc_name: child.name })} />
                             }
                         </div>
                     </div>
@@ -96,8 +113,8 @@ class ReportListContainer extends Component {
                         &nbsp;&nbsp;
                         {
                             child.level === 3
-                                ? <a href="#" onClick={this.handleGetReport({ chuky_id: id, bankerId: child.id }, { ...itemActive, banker_id: child.id }, 'banker')} >{child.name}</a>
-                                : <span>{child.name}</span>
+                                ? <a className="text-capitalize" href="#" onClick={this.handleGetReport({ chuky_id: id, banker_id: child.id }, { ...itemActive, banker_id: child.id }, 'banker')} >{child.name}</a>
+                                : <span className="text-capitalize">{child.name}</span>
                         }
                         {collapseElement}
                     </div>
@@ -289,7 +306,10 @@ class ReportListContainer extends Component {
             (Number(roles) === 11 || Number(roles) === 12)
                 ? null
                 : (<div className="actions">
-                    <button className="btn btn-danger">{t('Add')}</button>
+                    <Link to={RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT_TRANSACTION')} className="btn btn-danger">
+                        <span className="ladda-label"> {t("Add")}</span>
+                        <span className="ladda-spinner"></span>
+                    </Link>
                 </div>);
 
         if (isFetching) {
@@ -315,7 +335,10 @@ class ReportListContainer extends Component {
                         <span className="caption-subject font-red bold uppercase">{t('report')}</span>
                     </div>
                     <div className="actions">
-                        <button className="btn btn-danger">{t('Add')}</button>
+                        <Link to={RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT_TRANSACTION')} className="btn btn-danger">
+                            <span className="ladda-label"> {t("Add")}</span>
+                            <span className="ladda-spinner"></span>
+                        </Link>
                     </div>
                 </div>
                 <div className="portlet-body ">

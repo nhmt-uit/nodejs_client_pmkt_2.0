@@ -6,7 +6,7 @@ import { TransComponent } from 'my-components'
 export const renderError = props => {
     const {touched, error, warning } = props.meta
     return (
-        error && <span {...props} className='error'><TransComponent i18nKey={error} /></span> || null
+        error && <section><span {...props} className='error'><TransComponent i18nKey={error} /></span></section> || null
     )
 }
 
@@ -14,12 +14,14 @@ export const renderSelectField = props => {
     const { input, options} = props;
     const {touched, error, warning } = props.meta
 
+    console.log(input)
     return (
         <Select
             {...input}
             {...props}
             onChange={value => input.onChange(value)}
-            onBlur={() => input.onBlur(input.value)}
+            onBlur={e => e.preventDefault()}
+            onFocus={e => e.preventDefault()}
             options={options}
         />
     )

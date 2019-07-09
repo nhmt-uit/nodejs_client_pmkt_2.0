@@ -38,12 +38,17 @@ class CreateTransaction extends Component {
             var cycleValues = nextProps.initialValues.cycle;
             var typeOfMoney = nextProps.initialValues.typeOfMoney;
             var transactionMethod = nextProps.initialValues.transactionMethod;
-            var amount = nextProps.initialValues.amount;
+            var amount = Number(nextProps.initialValues.amount);
             if (memberValues && cycleValues && typeOfMoney && transactionMethod && amount !== undefined && amount!==''){
                 this.setState({
                     submit: false
                 })
             } else {
+                this.setState({
+                    submit: true
+                })
+            }
+            if(amount !== '' && Number.isNaN(amount) == true || amount == ''){
                 this.setState({
                     submit: true
                 })
@@ -152,7 +157,7 @@ class CreateTransaction extends Component {
         }
         var optionsMoney = optMoney.map(item => {
             return (
-                <label key={item.value} className="mt-radio mt-radio-outline col-md-6">
+                <label key={item.value} className="mt-radio">
                     <Field
                         name="typeOfMoney"
                         component="input"
@@ -167,7 +172,7 @@ class CreateTransaction extends Component {
 
         var optionsTransaction = typeOfTransaction.map(item => {
             return (
-                <label key={item.value} className="mt-radio mt-radio-outline">
+                <label key={item.value} className="mt-radio">
                     <Field
                         name="transactionMethod"
                         component="input"
@@ -183,103 +188,74 @@ class CreateTransaction extends Component {
         const {t} = this.props
 
         return (
-            <div className="row">
-                <form action="#" className="form-horizontal form-bordered" onSubmit={this.submitForm}>
-                    <div className="form-body">
-                        {this.renderAlert()}
-                        <div className="form-group">
-                            <label className="control-label col-md-3"> {t("Member")} </label>
-                            <div className="input-group col-md-8">
-                                <Field
-                                    name="member"
-                                    className="basic-single"
-                                    component={renderSelectField}
-                                    isSearchable={true}
-                                    options={optMember}
-                                    placeholder="--Select Member--"
-                                />
-                                <span className="input-group-btn">
-                                    <button className="btn green" type="button" onClick={_ => this.props.toggleModalMember()}><i className="fa fa-plus"/></button>
-                                </span>
-                            </div>
-                            <div className="col-md-3"></div>
-                            <div className="col-md-7">
-                                <Field name="member" component={renderError}/>
-                            </div>
+            <form className="" onSubmit={this.submitForm}>
+                <div className="form-body">
+                    {this.renderAlert()}
+                    <div className="form-group">
+                        <label> {t("Member")} </label>
+                            <div className="input-group">
+                            <Field
+                                name="member"
+                                className="basic-single"
+                                component={renderSelectField}
+                                isSearchable={true}
+                                options={optMember}
+                                placeholder="--Select Member--"
+                            />
+                            <span className="input-group-btn">
+                                <button className="btn green" type="button" onClick={_ => this.props.toggleModalMember()}><i className="fa fa-plus"/></button>
+                            </span>
                         </div>
-                        <div className="form-group">
-                            <label className="control-label col-md-3">{t("Cycle")}</label>
-                            <div className="input-group col-md-8">
-                                <Field
-                                    name="cycle"
-                                    className="basic-single"
-                                    component={renderSelectField}
-                                    isSearchable={false}
-                                    options={optCycle}
-                                    placeholder="-- Select Cycle --"
-
-                                />
-                            </div>
-                            <div className="col-md-3"></div>
-                            <div className="col-md-7">
-                                <Field name="cycle" component={renderError}/>
-                            </div>
+                        <Field name="member" component={renderError}/>
+                    </div>
+                    <div className="form-group">
+                        <label>{t("Cycle")}</label>
+                        <Field
+                            name="cycle"
+                            className="basic-single"
+                            component={renderSelectField}
+                            isSearchable={false}
+                            options={optCycle}
+                            placeholder="-- Select Cycle --"
+                        />
+                        <Field name="cycle" component={renderError}/>
+                    </div>
+                    <div className="form-group">
+                        <label> {t("Currency")} </label>
+                        <div className="mt-radio-inline">
+                            {optionsMoney}
+                            <Field name="typeOfMoney" component={renderError}/>
                         </div>
-                        <div className="form-group">
-                            <label className="control-label col-md-3"> {t("Currency")} </label>
-                            <div className="col-md-8 mt-radio-list">
-                                {optionsMoney}
-                            </div>
-                            <div className="col-md-3"></div>
-                            <div className="col-md-7">
-                                <Field name="typeOfMoney" component={renderError}/>
-                            </div>
+                    </div>
+                    <div className="form-group">
+                        <label> {t("Transaction Type")} </label>
+                        <div className="mt-radio-inline">
+                            {optionsTransaction}
+                            <Field name="transactionMethod" component={renderError}/>
                         </div>
-                        <div className="form-group">
-                            <label className="control-label col-md-3"> {t("Transaction Type")} </label>
-                            <div className="col-md-8">
-                                <div className="mt-radio-list">
-                                    {optionsTransaction}
-                                </div>
-                            </div>
-                            <div className="col-md-3"></div>
-                            <div className="col-md-7">
-                                <Field name="transactionMethod" component={renderError}/>
-                            </div>
-                        </div>
-                        <div className="form-group">
-                            <label className="control-label col-md-3"> {t("Amount")} </label>
-                            <div className="col-md-8">
-                                <Field className="form-control" component="input" name="amount" type="text"/>
-                            </div>
-                            <div className="col-md-3"></div>
-                            <div className="col-md-7">
-                                <Field name="amount" component={renderError}/>
-                            </div>
-                        </div>
-                        <div className="form-group">
-                            <label className="control-label col-md-3"> {t("Note")} </label>
-                            <div className="col-md-8">
-                                <Field className="form-control" component="textarea" name="note"/>
-                            </div>
-                        </div>
+                    </div>
+                    <div className="form-group">
+                        <label className="control-label"> {t("Amount")} </label>
+                        <Field className="form-control" component="input" name="amount" type="text"/>
+                        <Field name="amount" component={renderError}/>
+                    </div>
+                    <div className="form-group">
+                        <label className="control-label"> {t("Note")} </label>
+                        <Field className="form-control" component="textarea" name="note"/>
                     </div>
                     <div className="form-actions">
-                        <div className="row">
-                            <div className="col-md-offset-3 col-md-9">
-                                {this.state.isEdit ? (
-                                    <button type="submit" className="btn red" onClick={this.onClickAddNew}>
-                                        <i className="fa fa-plus"></i> {t("Add new")}
-                                    </button>) : ''}
-                                <button type="submit" className="btn dark" disabled={this.state.submit}>
-                                    <i className="fa fa-check"></i> {t("Save")}
-                                </button>
-                            </div>
-                        </div>
+                        {this.state.isEdit ? (
+                            <button type="submit" className="btn green" onClick={this.onClickAddNew}>
+                                <i className="fa fa-plus"></i> {t("Add new")}
+                            </button>) : ''}
+                        <button type="submit" className="btn red" disabled={this.state.submit}>
+                            <i className="fa fa-check"></i> {t("Save")}
+                        </button>
                     </div>
-                    <ModalFormMemberContainer />
-                </form>
-            </div>
+                </div>
+
+                <ModalFormMemberContainer />
+            </form>
         );
     }
 }

@@ -22,7 +22,6 @@ const optFormulaType = [{value: 1, label: <TransComponent i18nKey="-- formula --
 class FormAssignContainer extends Component {
 
     componentWillMount() {
-        console.log(this.props.rootAccInfo)
         //First Init Select When Call Component From Accountant Scan
         if(!_isEmpty(this.props.selectedAccount)) {
             this.props.initialize({...this.props.initialValues,
@@ -47,6 +46,14 @@ class FormAssignContainer extends Component {
         this.props.resetData()
     }
 
+    componentWillReceiveProps(newProps) {
+        if(newProps.isOpenModalAssignFormulaGroup === false
+            && newProps.isOpenModalAssignFormulaGroup !== this.props.isOpenModalAssignFormulaGroup){
+                this.props.onChangeFormulaType(_get(this.props.initialValues, 'formula_type.value'))
+                this.props.initFormulaByAccount(_get(this.props.initialValues, 'account.value'))
+        }
+    }
+
     componentDidUpdate() {
         if(this.props.formMemberSaveStatus === true) {
             this.props.initMember()
@@ -59,7 +66,6 @@ class FormAssignContainer extends Component {
         if(this.props.formFormulaSaveStatus === true) {
             const newFormulaId = this.props.formFormulaSaveResponse.data.formulaId
             this.props.initFormula().then(_ => {
-                console.log(this.props.optFormula)
                 this.props.initialize({...this.props.initialValues,
                     formula: this.props.optFormula.find(item => item.value === newFormulaId),
                 })
@@ -191,13 +197,19 @@ class FormAssignContainer extends Component {
 
     render() {
         const { optMember } = this.props
+        const selectedFormulaTypeValue = _get(this.props.initialValues, 'formula_type.value')
         let optFormula = this.props.optFormula
 
         const selectedAccountBankerId = _get(this.props.initialValues, 'account.bankerId')
         if(selectedAccountBankerId) {
-            optFormula = this.props.optFormula.filter(item => item.bankerId === selectedAccountBankerId)
+            if (selectedFormulaTypeValue === 1) {
+                // Formula
+                optFormula = this.props.optFormula.filter(item => item.bankerId === selectedAccountBankerId)
+            } else {
+                // Formula group
+                optFormula = this.props.optFormula.filter(item => !_isEmpty(item.bankerIds) && item.bankerIds.includes(selectedAccountBankerId))
+            }
         }
-        const selectedFormulaTypeValue = _get(this.props.initialValues, 'formula_type.value')
 
         return (
             <form name="form_assign_formula" onSubmit={this.handleSubmit}>
@@ -214,8 +226,8 @@ class FormAssignContainer extends Component {
                                 name="member"
                                 className="basic-single"
                                 component={renderSelectField}
-                                isSearchable={true}
                                 options={optMember}
+                                isSearchable={true}
                                 placeholder={<TransComponent i18nKey="Member" />}
                                 />
                             <span className="input-group-btn">
@@ -245,8 +257,8 @@ class FormAssignContainer extends Component {
                                         name='formula'
                                         className="basic-single"
                                         component={renderSelectField}
-                                        isSearchable={true}
                                         options={optFormula}
+                                        isSearchable={true}
                                         placeholder={<TransComponent i18nKey="-- select formula --" />}
                                         />
                                     <span className="input-group-btn">
@@ -263,8 +275,8 @@ class FormAssignContainer extends Component {
                                     name='formula_group'
                                     className="basic-single"
                                     component={renderSelectField}
-                                    isSearchable={true}
                                     options={optFormula}
+                                    isSearchable={true}
                                     placeholder={<TransComponent i18nKey="-- Select formula group --" />}
                                     />
                                 <span className="input-group-btn">
@@ -315,6 +327,7 @@ const mapStateToProps = state => {
         optFormula: state.AccountantAssignFormulaReducer.optFormula,
         formSaveStatus: state.AccountantAssignFormulaReducer.formSaveStatus,
         formSaveResponse: state.AccountantAssignFormulaReducer.formSaveResponse,
+        isOpenModalAssignFormulaGroup: state.FormulaGroupReducer.isOpenModalAssign,
 
         //Response Modal Member Saved
         formMemberSaveStatus: state.member.formSaveStatus,

@@ -42,7 +42,7 @@ class DashboardPage extends Component {
                     <div className="col-md-3">
                         {/* BEGIN WIDGET THUMB */}
                         <div className="widget-thumb widget-bg-color-white text-uppercase margin-bottom-20 bordered">
-                            <h4 className="widget-thumb-heading"> { t("Last week win/lose") } </h4>
+                            <h4 className="widget-thumb-heading"> { t("Last week win/loose") } </h4>
                             <div className="widget-thumb-wrap">
                                 <i className="widget-thumb-icon bg-purple icon-screen-desktop" />
                                 <div className="widget-thumb-body">
