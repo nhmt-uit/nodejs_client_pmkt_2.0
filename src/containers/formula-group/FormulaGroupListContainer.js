@@ -5,7 +5,8 @@ import {compose} from "redux/es/redux";
 import {connect} from "react-redux";
 
 import {withTranslation} from "react-i18next";
-import { getFormulaGroup } from 'my-actions/formula-group/FormulaGroupAction';
+import { getFormulaGroup, delFormulaGroup } from 'my-actions/formula-group/FormulaGroupAction';
+import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 
 class FormulaGroupListContainer extends Component {
     constructor(props) {
@@ -13,11 +14,54 @@ class FormulaGroupListContainer extends Component {
         this.state = {
             filterText: '',
             bankerId: 'ALL',
+            delValueID: '',
+            isOpenDelModal: false,
+            visible: {},
         }
     }
 
     componentWillMount() {
         this.props.getFormulaGroup()
+    }
+
+    handleShowDetail = id => {
+        const visible = this.state.visible;
+
+        visible[id] = visible[id] !== undefined ? !visible[id] : true;
+
+        this.setState({
+            visible: visible
+        });
+    }
+
+    handleOpenModelDel = id => {
+        if(id){
+            this.setState({
+                delValueID: id,
+            })
+        }
+        var isOpenDelModal = this.state.isOpenDelModal;
+        this.setState({
+            isOpenDelModal : !isOpenDelModal,
+        })
+    }
+
+    handleDelFormulaGroup = () => {
+        var payload = {
+            id: this.state.delValueID
+        }
+        this.props.delFormulaGroup(payload)
+            .then( () => {
+                this.setState({
+                    isOpenDelModal: !this.state.isOpenDelModal
+                })
+            })
+            .then( () => {
+                this.props.getFormulaGroup()
+            })
+            .catch((err) => {
+                console.log(err)
+            })
     }
 
     handleSearchChange = (e) => {
@@ -35,8 +79,54 @@ class FormulaGroupListContainer extends Component {
     render() {
         const { t } = this.props;
         const { formulaGroupList, bankerList } = this.props;
-        const { bankerId, filterText } = this.state;
-        var formulaGroupListDetail = [];
+        const { bankerId, filterText, visible } = this.state;
+        let level = 0;
+        const tbody = [];
+
+        formulaGroupList.forEach( (item, index) => {
+            if(item.name.toUpperCase().indexOf(filterText.toUpperCase()) > -1){
+                const formulaGroupDetail = (item, level, id) => {
+                    const marginLeft = `${level * 10}px`;
+                    const iconChild = visible[item.id] ? <i style={{ marginLeft }} className="fa fa-chevron-down" /> : <i style={{ marginLeft }} className="fa fa-chevron-right" />;
+                    const elmDOM = (
+                        <tr key={item.id} >
+                            <td className="text-center"> { level === 0 ? index + 1 : null } </td>
+                            <td className="cursor-pointer" onClick={ () => this.handleShowDetail(item.id)}>
+                                {
+                                    level === 0 ?
+                                        item.child.length > 0 ?
+                                            <>{ iconChild }<span>&nbsp;&nbsp;{item.name}</span></>
+                                            : <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{item.name}</span>
+                                        : ''
+                                }
+                            </td>
+                            <td className="text-center"> {level === 0 ? null : item.banker.name} </td>
+                            <td className="text-center"> {item.num_of_formula} </td>
+                            <td className="text-center">
+                                <button className="text-success btn btn-link">
+                                    <i className="fa fa-edit"></i></button>
+                            </td>
+                            <td className="text-center">
+                                <button className="text-success btn btn-link font-red">
+                                    <i className="fa fa-close" onClick={ () => this.handleOpenModelDel(item.id)}></i></button>
+                            </td>
+                        </tr>
+                    );
+
+                    if (level === 0 || visible[id]){
+                        tbody.push(elmDOM);
+                        if (item.child) {
+                            item.child.forEach(childItem => {
+                                formulaGroupDetail(childItem, level + 1, item.id);
+                            });
+                        }
+                    }
+                    return tbody;
+                }
+            formulaGroupDetail(item, level)
+            }
+        })
+
         return(
             <div className="portlet box blue-hoki position-relative">
                 <div className="portlet-title">
@@ -46,7 +136,7 @@ class FormulaGroupListContainer extends Component {
                             <div className="form-group">
                                 <div className="input-icon right">
                                     <i className="fa fa-search"></i>
-                                    <input className="form-control" type="text" placeholder="formula group name" value={this.state.filterText} onChange={this.handleSearchChange}/>
+                                    <input className="form-control" type="text" placeholder={t("formula group name")} value={this.state.filterText} onChange={this.handleSearchChange}/>
                                 </div>
                             </div>
                             <div className="form-group">
@@ -69,38 +159,33 @@ class FormulaGroupListContainer extends Component {
                         <thead>
                             <tr role="row">
                                 <th className="caption-subject font-red text-center"> # </th>
-                                <th className="caption-subject font-red text-center"> {t("formula group name")} </th>
-                                <th className="caption-subject font-red text-center"> {t("Company")} </th>
-                                <th className="caption-subject font-red text-center"> {t("Total")} </th>
-                                <th className="caption-subject font-red text-center"> {t("Edit")} </th>
-                                <th className="caption-subject font-red text-center"> {t("Delete")} </th>
+                                <th className="caption-subject font-red text-center"><TransComponent i18nKey="formula group name"/></th>
+                                <th className="caption-subject font-red text-center"><TransComponent i18nKey="Company"/></th>
+                                <th className="caption-subject font-red text-center"><TransComponent i18nKey="Total"/></th>
+                                <th className="caption-subject font-red text-center"><TransComponent i18nKey="Edit"/></th>
+                                <th className="caption-subject font-red text-center"><TransComponent i18nKey="Delete"/></th>
                             </tr>
                         </thead>
                         <tbody>
-                        {
-                            formulaGroupList.map(function (item, index) {
-                                if(item.name.toUpperCase().indexOf(filterText.toUpperCase()) > -1){
-                                    return (
-                                        <tr key={index}>
-                                            <td className="text-center"> {index + 1} </td>
-                                            <td className="text-center uppercase"> {item.name} </td>
-                                            <td className="text-center"></td>
-                                            <td className="text-center"> {item.num_of_formula} </td>
-                                            <td className="text-center">
-                                                <button className="text-success btn btn-link"><i
-                                                    className="fa fa-edit"></i></button>
-                                            </td>
-                                            <td className="text-center">
-                                                <button className="text-success btn btn-link font-red"><i
-                                                    className="fa fa-close"></i></button>
-                                            </td>
-                                        </tr>
-                                    )
-                                }
-                            })
-                        }
+                        {tbody}
                         </tbody>
                     </table>
+                </div>
+                <div>
+                    <Modal isOpen={this.state.isOpenDelModal} toggle={() => this.handleOpenModelDel()}>
+                        <ModalHeader toggle={() => this.handleOpenModelDel()} className="text-uppercase">
+                            <strong>
+                                <TransComponent i18nKey="xac nhan"/>
+                            </strong>
+                        </ModalHeader>
+                        <ModalBody>
+                            <TransComponent i18nKey="Are you sure want to delete ?"/>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button className="bg-red font-white" onClick={this.handleDelFormulaGroup}><TransComponent i18nKey="Yes"/></Button>
+                            <Button color="secondary" onClick={() => this.handleOpenModelDel()}><TransComponent i18nKey="Cancel"/></Button>
+                        </ModalFooter>
+                    </Modal>
                 </div>
             </div>
         )
@@ -117,6 +202,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         getFormulaGroup: () => dispatch(getFormulaGroup()),
+        delFormulaGroup: params => dispatch(delFormulaGroup(params))
     };
 }
 

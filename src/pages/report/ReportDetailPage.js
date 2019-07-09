@@ -11,9 +11,7 @@ class ReportDetailPage extends Component {
 
     render() {
         return (
-            <div className="row">
-                    <ReportDetail />
-            </div>
+            <ReportDetail />
         );
     }
 }

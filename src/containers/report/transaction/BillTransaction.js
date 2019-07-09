@@ -108,8 +108,8 @@ class BillTransaction extends Component {
                     <div className="caption">
                         <i className="icon-social-dribbble font-green hide"></i>
                         <span className="caption-subject font-dark bold">
-                            <i className="fa fa-calculator" />
-                            <TransComponent i18nKey="Bill" />
+                            <i className="fa fa-calculator" />&nbsp;&nbsp;
+                            <TransComponent i18nKey="invoice" />
                         </span>
                     </div>
                 </div>
@@ -125,14 +125,14 @@ class BillTransaction extends Component {
                             <tbody>
                             {this.state.rowInTable ?
                                 <tr>
-                                    <td> {transaction} </td>
+                                    <td> <TransComponent i18nKey={transaction}/> </td>
                                     {test}
                                 </tr> : <tr></tr>}
                             {resultMap.map( (item, index) => {
                                 var total = item[1].total;
                                 return (
                                     <tr key={index}>
-                                        <td> {item[1].name}</td>
+                                        <td> <TransComponent i18nKey={item[1].name}/></td>
                                         {
                                             currencyIDs.map(id => {
                                                 return (
@@ -152,7 +152,7 @@ class BillTransaction extends Component {
                                 )
                             })}
                             <tr>
-                                <td> Total</td>
+                                <td><TransComponent i18nKey="Total"/></td>
                                 {rows}
                             </tr>
                             </tbody>

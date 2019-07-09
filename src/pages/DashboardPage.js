@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {compose} from "redux/es/redux";
 import {withTranslation} from "react-i18next";
+import {TransComponent} from 'my-components'
 
 import { QuickActivitiesContainer, PanelAlert } from "my-containers/dashboard"
 
@@ -16,7 +17,7 @@ class DashboardPage extends Component {
                     <div className="col-md-3">
                         {/* BEGIN WIDGET THUMB */}
                         <div className="widget-thumb widget-bg-color-white text-uppercase margin-bottom-20 bordered">
-                            <h4 className="widget-thumb-heading"> { t("Total User") } </h4>
+                            <h4 className="widget-thumb-heading"><TransComponent i18nKey="Total Users"/></h4>
                             <div className="widget-thumb-wrap">
                                 <i className="widget-thumb-icon bg-green icon-user" />
                                 <div className="widget-thumb-body">
@@ -29,7 +30,7 @@ class DashboardPage extends Component {
                     <div className="col-md-3">
                         {/* BEGIN WIDGET THUMB */}
                         <div className="widget-thumb widget-bg-color-white text-uppercase margin-bottom-20 bordered">
-                            <h4 className="widget-thumb-heading"> { t("Total Tickets") } </h4>
+                            <h4 className="widget-thumb-heading"><TransComponent i18nKey="Total Tickets"/></h4>
                             <div className="widget-thumb-wrap">
                                 <i className="widget-thumb-icon bg-red icon-layers" />
                                 <div className="widget-thumb-body">
@@ -42,7 +43,7 @@ class DashboardPage extends Component {
                     <div className="col-md-3">
                         {/* BEGIN WIDGET THUMB */}
                         <div className="widget-thumb widget-bg-color-white text-uppercase margin-bottom-20 bordered">
-                            <h4 className="widget-thumb-heading"> { t("Last week win/loose") } </h4>
+                            <h4 className="widget-thumb-heading"><TransComponent i18nKey="Last week win/loose"/></h4>
                             <div className="widget-thumb-wrap">
                                 <i className="widget-thumb-icon bg-purple icon-screen-desktop" />
                                 <div className="widget-thumb-body">
@@ -55,7 +56,7 @@ class DashboardPage extends Component {
                     <div className="col-md-3">
                         {/* BEGIN WIDGET THUMB */}
                         <div className="widget-thumb widget-bg-color-white text-uppercase margin-bottom-20 bordered">
-                            <h4 className="widget-thumb-heading"> { t("Last week income") } </h4>
+                            <h4 className="widget-thumb-heading"><TransComponent i18nKey="Last week income"/></h4>
                             <div className="widget-thumb-wrap">
                                 <i className="widget-thumb-icon bg-purple icon-screen-desktop" />
                                 <div className="widget-thumb-body">

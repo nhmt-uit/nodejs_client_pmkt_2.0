@@ -75,8 +75,8 @@ class CreateSubUserContainer extends Component {
     render() {
         const { t }  = this.props;
         return (
-            <div className="row">
-                <div className="form-group col-xs-11 text-right">
+            <div className="col-md-12">
+                <div className="form-group text-right">
                     <a type="submit" className="btn btn-default red" onClick={this.changeIsOpenCreateUserModal}><TransComponent i18nKey="Add new"/></a>
                 </div>
                 <div className="clearfix"></div>
@@ -84,7 +84,7 @@ class CreateSubUserContainer extends Component {
                     <Modal isOpen={this.state.isOpenCreateUserModal} toggle={() => this.changeIsOpenCreateUserModal()}>
                         <ModalHeader toggle={() => this.changeIsOpenCreateUserModal()} className="text-uppercase">
                             <strong>
-                                <TransComponent i18nKey="Sub account"/>
+                                <TransComponent i18nKey="Create sub"/>
                             </strong>
                         </ModalHeader>
                         <ModalBody>

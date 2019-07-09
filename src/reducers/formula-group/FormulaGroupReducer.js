@@ -37,6 +37,8 @@ const FormulaGroupReducer = (state = defaultState, action) => {
     switch (action.type) {
         case FormulaGroupActionType.GET_FORMULA_GROUP:
             return {...state, formulaGroupList: action.formulaGroupList, bankerList: action.bankerList}
+        case FormulaGroupActionType.DEL_FORMULA_GROUP:
+            return {...state,}
 
         case FormulaGroupActionType.FORMULA_RESET_STORE: {
             return {...defaultState}

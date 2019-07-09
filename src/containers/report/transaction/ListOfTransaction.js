@@ -1,9 +1,11 @@
 import React, {Component} from 'react'
 import {compose} from "redux/es/redux";
-import {withTranslation} from "react-i18next";
-import {reduxForm} from "redux-form";
 import {connect} from "react-redux";
 import {get as _get, isEmpty} from 'lodash'
+import {reduxForm} from "redux-form";
+
+import {withTranslation} from "react-i18next";
+import {TransComponent} from 'my-components'
 
 import { Helpers } from 'my-utils'
 import { getAllTransaction} from "my-actions/report/TransactionAction";
@@ -84,13 +86,13 @@ class ListOfTransaction extends Component {
                     <thead>
                     <tr role="row">
                         <th className="caption-subject font-red text-center"> # </th>
-                        <th className="caption-subject font-red text-center"> {t("Member")}</th>
+                        <th className="caption-subject font-red text-center"> <TransComponent i18nKey="Member"/> </th>
                         {showCurrencies}
-                        <th className="caption-subject font-red text-center"> {t("Transaction")} </th>
-                        <th className="caption-subject font-red text-center"> {t("Note")} </th>
-                        <th className="caption-subject font-red text-center"> {t("Created")} </th>
-                        <th className="caption-subject font-red text-center"> {t("Edit")} </th>
-                        <th className="caption-subject font-red text-center"> {t("Delete")} </th>
+                        <th className="caption-subject font-red text-center"><TransComponent i18nKey="Transaction"/></th>
+                        <th className="caption-subject font-red text-center"><TransComponent i18nKey="Note"/></th>
+                        <th className="caption-subject font-red text-center"><TransComponent i18nKey="Created"/></th>
+                        <th className="caption-subject font-red text-center"><TransComponent i18nKey="Edit"/></th>
+                        <th className="caption-subject font-red text-center"><TransComponent i18nKey="Delete"/></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -129,15 +131,15 @@ class ListOfTransaction extends Component {
                     <Modal isOpen={this.state.isOpenDelModal} toggle={() => this.toggleDelTransactionModal()}>
                         <ModalHeader toggle={() => this.toggleDelTransactionModal()} className="text-uppercase">
                             <strong>
-                                {t('Confirm')}
+                                <TransComponent i18nKey="xac nhan"/>
                             </strong>
                         </ModalHeader>
                         <ModalBody>
-                            {t('Are you sure ?')}
+                            <TransComponent i18nKey="Are you sure want to delete ?"/>
                         </ModalBody>
                         <ModalFooter>
-                            <Button className="bg-red font-white" onClick={this.handleDelTransaction}> {t('Yes')} </Button>
-                            <Button color="secondary" onClick={() => this.toggleDelTransactionModal()}>{t('Cancel')}</Button>
+                            <Button className="bg-red font-white" onClick={this.handleDelTransaction}><TransComponent i18nKey="Yes"/></Button>
+                            <Button color="secondary" onClick={() => this.toggleDelTransactionModal()}><TransComponent i18nKey="Cancel"/></Button>
                         </ModalFooter>
                     </Modal>
                 </div>
