@@ -20,6 +20,7 @@ let defaultState = {
 	formSaveResponse: {},
 
 	lstTab: [],
+	lstAccount: [],
 }
 
 export const AccountReducer = (state = defaultState, action) => {
@@ -62,6 +63,13 @@ export const AccountReducer = (state = defaultState, action) => {
 			return { ...state, lstTab: action.payload, error: null };
 		case AccountActionType.GET_TAB_FAIL:
 			return { ...state, error: action.payload };
+
+		case AccountActionType.GET_ACCOUNT:
+			return { ...state, error: null, isFetchingAccount: true };
+		case AccountActionType.GET_ACCOUNT_SUCCESS:
+			return { ...state, lstAccount: action.payload, isFetchingAccount: false, error: null };
+		case AccountActionType.GET_ACCOUNT_FAIL:
+			return { ...state, isFetchingAccount: false, error: action.payload };
 
 		default:
 			return {...state}

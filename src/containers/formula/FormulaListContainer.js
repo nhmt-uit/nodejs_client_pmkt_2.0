@@ -8,7 +8,8 @@ import {
     isEmpty as _isEmpty,
     find as _find,
     isEqual as _isEqual,
-    findIndex as _findIndex
+    findIndex as _findIndex,
+    cloneDeep
 } from 'lodash';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -52,6 +53,7 @@ class FormulaListContainer extends Component {
             relinkFormulaId: null,
             isEdit: false,
             currentPage: 1,
+            perPage: 10,
         };
     }
 
@@ -120,13 +122,14 @@ class FormulaListContainer extends Component {
     }
 
     renderBody() {
+        const { currentPage, perPage } = this.state;
         const { isFetching } = this.props;
 
-        let { formulaList } = this.props;
+        let formulaList = cloneDeep(this.props.formulaList);
 
         formulaList = this.filterFormula(formulaList);
         formulaList = _sortBy(formulaList, ['giaonhan', 'tenct']);
-        formulaList = formulaList.splice(this.state.currentPage - 1, 10);
+        formulaList = formulaList.splice((currentPage - 1) * 10, perPage);
 
         if (isFetching && !this.state.isOpenAccountModal) {
             return (
@@ -144,7 +147,7 @@ class FormulaListContainer extends Component {
             <FormulaItemContainer
                 key={index}
                 formula={item}
-                order={index + 1}
+                order={(index + 1) + (perPage * (currentPage - 1))}
                 onToggle={this.handleToggleModal}
                 onToggleEditModal={this.handleToggleEditModal}
             />
@@ -153,6 +156,8 @@ class FormulaListContainer extends Component {
 
     filterFormula(formulaList) {
         const { keySearch, bankerId } = this.state;
+
+        formulaList = [...formulaList];
 
         if (!keySearch && (!bankerId || bankerId === 'all')) {
             return formulaList;
@@ -505,7 +510,7 @@ class FormulaListContainer extends Component {
 
     render() {
         const { banker, formulaList } = this.props
-        const { bankerId, isOpenAccountModal, isOpenRelinkModal, isOpenDeleteModal, isEdit, currentPage } = this.state;
+        const { bankerId, isOpenAccountModal, isOpenRelinkModal, isOpenDeleteModal, isEdit, currentPage, perPage } = this.state;
 
         return (
             <div className="portlet box blue-hoki position-relative">
@@ -523,7 +528,7 @@ class FormulaListContainer extends Component {
                             </div>
                             <div className="form-group">
                                 <select className="form-control" value={bankerId} onChange={this.handleChangeSelectBanker}>
-                                    <option value="all">{this.props.t('ALL')}</option>
+                                    <option value="all">{this.props.t('All')}</option>
                                     {
                                         Object.keys(banker).map(id =>
                                             <option className="text-uppercase" key={id} value={id}>
@@ -568,9 +573,9 @@ class FormulaListContainer extends Component {
                     </div>                     
                     <div className="text-center">
                         <PaginationComponent
-                            currentPage={this.state.currentPage}
+                            currentPage={currentPage}
                             total={this.filterFormula(formulaList).length}
-                            perPage={10}
+                            perPage={perPage}
                             onClickPage={this.handleChangePage}
                         />
                     </div>
