@@ -11,7 +11,7 @@ import { toggleModalMember } from 'my-actions/member/MemberAction'
 class ModalFormMemberContainer extends Component {
     modalTitle = ''
     componentDidMount() {
-        if(this.props.formType === "create") this.modalTitle = <TransComponent i18nKey="Create member" />
+        if(this.props.formType === "create") this.modalTitle = <TransComponent i18nKey="Create sub" />
         if(this.props.formType === "update") this.modalTitle = <TransComponent i18nKey="Update member" />
     }
 

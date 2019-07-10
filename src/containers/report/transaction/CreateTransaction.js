@@ -256,7 +256,7 @@ class CreateTransaction extends Component {
                     </div>
                 </div>
 
-                <ModalFormMemberContainer />
+                <ModalFormMemberContainer formType="create" />
             </form>
         );
     }

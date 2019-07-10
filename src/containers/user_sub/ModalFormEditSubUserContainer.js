@@ -38,7 +38,6 @@ class ModalFormEditSubUserContainer extends Component{
 
     onClickSaveEditAccount = (e) =>{
         e.preventDefault();
-        var self = this;
         var isOpenModalEdit = this.state.isOpenModalEdit;
         var post = {
             id: _get(this.props.initialValues, 'id'),
@@ -56,8 +55,8 @@ class ModalFormEditSubUserContainer extends Component{
             re_password: _get(this.props.initialValues, 're_password', ''),
         }
         this.props.createMemberSub(post)
-            .then(function () {
-                self.props.getMemberSub()
+            .then( () => {
+                this.props.getMemberSub()
             })
             .catch(function (err) {
                 console.log(err)
@@ -71,7 +70,6 @@ class ModalFormEditSubUserContainer extends Component{
         var suffixes = item.username.slice(-3);
         var subUserStatus = item.status === 1;
         var username = subUserName.replace(suffixes,'');
-        console.log(suffixes)
         this.props.initialize({
             ...this.props.initialValues,
             id: subUserId,

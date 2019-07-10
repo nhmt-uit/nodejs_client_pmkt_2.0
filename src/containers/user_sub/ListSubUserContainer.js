@@ -150,7 +150,8 @@ class ListSubUserContainer extends Component{
 
 const mapStateToProps = state => {
     return {
-        memberSub: get(state,'AccountSubReducer', {})
+        memberSub: get(state,'AccountSubReducer', {}),
+        formMemberSubSaveStatus: state.AccountSubReducer.formSaveStatus,
     }
 };
 
