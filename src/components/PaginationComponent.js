@@ -38,6 +38,14 @@ class PaginationComponent extends Component {
         };
     }
 
+    componentDidUpdate() {
+        if(this.props.currentPage !== this.state.currentPage) {
+            this.setState({
+                currentPage: this.props.currentPage,
+            })
+        }
+    }
+
     handleClick = (e, currentPage) => {
         e.preventDefault();
 
@@ -55,16 +63,15 @@ class PaginationComponent extends Component {
         const pageNeighbours = 1;
 
         const totalNumbers = pageNeighbours * 2 + 1;
-        const totalBlocks = totalNumbers - 1;
 
-        if (totalPages > totalBlocks) {
+        if (totalPages > 1) {
             let pages = [];
       
             const leftBound = currentPage - pageNeighbours;
             const rightBound = currentPage + pageNeighbours;
             const beforeLastPage = totalPages;
       
-            const startPage = leftBound > 2 ? leftBound : 2;
+            const startPage = leftBound > 2 ? leftBound : 1;
             const endPage = rightBound < beforeLastPage ? rightBound : beforeLastPage;
       
             pages = range(startPage, endPage);
@@ -74,18 +81,21 @@ class PaginationComponent extends Component {
       
             const leftSpill = startPage > 2;
             const rightSpill = endPage < beforeLastPage;
-      
 
             if (leftSpill && !rightSpill) {
-              const extraPages = range(startPage - singleSpillOffset, startPage - 1);
-              pages = [1, DOT_LEFT , ...extraPages, ...pages];
+                const extraPages = range(startPage - singleSpillOffset, startPage - 1);
+                pages = [1, DOT_LEFT , ...extraPages, ...pages];
             } else if (!leftSpill && rightSpill) {
-              const extraPages = range(endPage + 1, endPage + singleSpillOffset);
-              pages = [1, ...pages, ...extraPages, DOT_RIGHT, totalPages];
+                const extraPages = range(endPage + 1, endPage + singleSpillOffset);
+                pages = [...pages, ...extraPages, DOT_RIGHT, totalPages];
             } else if (leftSpill && rightSpill) {
-              pages = [1, DOT_LEFT, ...pages, DOT_RIGHT, totalPages];
+                if(pages.indexOf(totalPages-1) !== -1 ) {
+                    pages = [1, DOT_LEFT, ...pages, totalPages];
+                } else {
+                    pages = [1, DOT_LEFT, ...pages, DOT_RIGHT, totalPages];
+                }
             }
-            
+
             return [
                 pages.map(item => {
                     let pageNumber = item
@@ -113,6 +123,7 @@ class PaginationComponent extends Component {
         const totalPage = Math.ceil(total/perPage);
         const currentPage = this.state.currentPage;
 
+        console.log(totalPage)
         if (totalPage < 2) {
             return null;
         }

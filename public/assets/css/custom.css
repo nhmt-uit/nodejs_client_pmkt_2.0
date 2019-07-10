@@ -38,6 +38,8 @@ html {
 
 .table th, .table td {
   vertical-align: middle !important;
+  font-size: 12px !important;
+  padding: 5px !important;
 }
 
 h5.modal-title {font-size: 16px; font-weight: bold;}
@@ -380,7 +382,7 @@ h5.modal-title {font-size: 16px; font-weight: bold;}
 
 /* Full screen */
 .btn-fullscreen i.fa {margin-right: 5px}
-.full-screen .page-header, .full-screen .page-sidebar-wrapper {display: none}
+.full-screen .page-header, .full-screen .page-sidebar-wrapper {display: none;}
 .full-screen .page-container {margin-top: 0px}
 .full-screen th.column-hidden, .full-screen td.column-hidden {display: table-cell; }
 .tbl-scan-result .column-hidden{display: none}

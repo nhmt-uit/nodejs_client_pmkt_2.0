@@ -93,7 +93,7 @@ class ModalFormEditSubUserContainer extends Component{
             return (
                 <div className="alert alert-danger">
                     <button className="close" onClick={this.props.resetFormSaveResponse}/>
-                    <span><b> {formSaveResponse.data.message} </b></span>
+                    <span><b> <TransComponent i18nKey={formSaveResponse.data.message}/>  </b></span>
                 </div>
             )
         } else if (formSaveStatus === true) {
@@ -275,11 +275,11 @@ const validate = values => {
     if (!values.password) {
         errors.password = '"Password" is not allowed to be empty'
     } else if (!(/^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%])[0-9A-Za-z!@#$%]{8,}$/).test(values.password)) {
-        errors.password = '"password" had at least 8 char & contain 1 uppercase letter, 1 lowercase letter, 1 number, 1 special letter'
+        errors.password = '"password" fails to match the required pattern: /^(?=.*\\d)(?=.*[a-z])(?=.*[a-z])(?=.*[!@#$%])[0-9a-za-z!@#$%]{{8,}}$/'
     }
 
     if (!values.re_password || values.re_password !== values.password) {
-        errors.re_password = 'confirm password fail'
+        errors.re_password = '"confirm password" must be one of [ref:new_password]'
     }
     return errors
 };

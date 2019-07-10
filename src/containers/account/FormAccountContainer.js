@@ -84,14 +84,14 @@ class FormAccountContainer extends Component {
             return (
                 <div className="alert alert-danger">
                     <button className="close" onClick={this.props.resetFormSaveResponse} />
-                    <span><b> {formSaveResponse.data.message} </b></span>
+                    <span><b> <TransComponent i18nKey={formSaveResponse.data.message}/>  </b></span>
                 </div>
             )
         } else if(formSaveStatus === true) {
             return (
                 <div className="alert bg-success">
                     <button className="close" onClick={this.props.resetFormSaveResponse} />
-                    <span><b> {formSaveResponse.data.message} </b></span>
+                    <span><b> <TransComponent i18nKey={formSaveResponse.data.message}/>  </b></span>
                 </div>
             )
         }

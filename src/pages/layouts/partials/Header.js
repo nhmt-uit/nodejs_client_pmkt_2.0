@@ -8,7 +8,7 @@ import { ZopimChat, Notification } from 'my-components/navigation'
 import BankerListContainer from "my-containers/banker/BankerListContainer"
 import { CookieService } from 'my-utils/core'
 import { RoutesService } from 'my-routes'
-import InfoUserContainer from "my-containers/infoUser/InfoUserContainer"
+import InfoUserContainer from "my-containers/info-user/InfoUserContainer"
 import 'my-styles/reactstrap-modal.css'
 import { changeLanguage } from 'my-actions/systems/LanguageAction'
 import { AuthService } from 'my-services/systems'

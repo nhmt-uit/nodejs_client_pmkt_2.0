@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {Field, reduxForm, reset} from "redux-form";
 import {connect} from "react-redux";
 import {compose} from "redux";
+import {isEmpty, get as _get} from 'lodash'
 
 import {withTranslation} from "react-i18next";
 import {renderSelectField, renderError} from 'my-utils/components/redux-form/render-form'
@@ -9,7 +10,7 @@ import { ModalFormMemberContainer } from 'my-containers/member'
 
 import {getCycle, getTypeOfMoney, saveTransaction, resetFormSaveResponse, getAllTransaction} from "my-actions/report/TransactionAction";
 import {getMember, toggleModalMember} from "my-actions/member/MemberAction";
-import {isEmpty, get as _get} from 'lodash'
+import {TransComponent} from 'my-components'
 
 class CreateTransaction extends Component {
     constructor(props) {
@@ -132,7 +133,7 @@ class CreateTransaction extends Component {
             return (
                 <div className="alert alert-danger">
                     <button className="close" onClick={this.props.resetFormSaveResponse}/>
-                    <span><b> {formSaveResponse.data.message} </b></span>
+                    <span><b> <TransComponent i18nKey={formSaveResponse.data.message}/>  </b></span>
                 </div>
             )
         } else if (formSaveStatus === true) {
