@@ -8,6 +8,10 @@ class FormulaGroupService extends BaseService {
         return HttpService.post(`${this.serviceUrl}/formula_group`)
     }
 
+    delFormulaGroup(payload){
+        return HttpService.post(`${this.serviceUrl}/formula_group_detail/delete`, payload)
+    }
+
     getInitForm() {
         return HttpService.post(`${this.serviceUrl}/formula_group/init_form`)
     }

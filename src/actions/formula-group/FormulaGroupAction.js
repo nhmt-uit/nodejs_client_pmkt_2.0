@@ -18,6 +18,17 @@ export const getFormulaGroup = () => {
     }
 }
 
+export const delFormulaGroup = (payload) => {
+    return (dispatch) => {
+        return FormulaGroupService.delFormulaGroup(payload).then(res => {
+
+            dispatch({
+                type: FormulaGroupActionType.DEL_FORMULA_GROUP,
+            })
+        })
+    }
+}
+
 export const initFormulaGroup = () => {
     return (dispatch) => {
         return FormulaGroupService.getInitForm().then(res => {

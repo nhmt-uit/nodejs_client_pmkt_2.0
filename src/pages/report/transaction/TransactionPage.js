@@ -27,7 +27,7 @@ class TransactionPage extends React.Component{
                 <div className="portlet-title">
                     <div className="caption font-red-sunglo">
                         <span className="caption-subject bold uppercase">
-                            <TransComponent i18nKey="Transaction" />
+                            <TransComponent i18nKey="LIST OF TRANSACTION" />
                         </span>
                     </div>
                     <div className="actions">

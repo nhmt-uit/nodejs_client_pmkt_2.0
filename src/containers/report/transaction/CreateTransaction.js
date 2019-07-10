@@ -5,6 +5,8 @@ import {compose} from "redux";
 import {isEmpty, get as _get} from 'lodash'
 
 import {withTranslation} from "react-i18next";
+import {TransComponent} from 'my-components'
+
 import {renderSelectField, renderError} from 'my-utils/components/redux-form/render-form'
 import { ModalFormMemberContainer } from 'my-containers/member'
 
@@ -193,7 +195,7 @@ class CreateTransaction extends Component {
                 <div className="form-body">
                     {this.renderAlert()}
                     <div className="form-group">
-                        <label> {t("Member")} </label>
+                        <label><TransComponent i18nKey="Member"/></label>
                             <div className="input-group">
                             <Field
                                 name="member"
@@ -201,7 +203,7 @@ class CreateTransaction extends Component {
                                 component={renderSelectField}
                                 isSearchable={true}
                                 options={optMember}
-                                placeholder="--Select Member--"
+                                placeholder={t("-- select member --")}
                             />
                             <span className="input-group-btn">
                                 <button className="btn green" type="button" onClick={_ => this.props.toggleModalMember()}><i className="fa fa-plus"/></button>
@@ -210,52 +212,52 @@ class CreateTransaction extends Component {
                         <Field name="member" component={renderError}/>
                     </div>
                     <div className="form-group">
-                        <label>{t("Cycle")}</label>
+                        <label><TransComponent i18nKey="Cycle"/></label>
                         <Field
                             name="cycle"
                             className="basic-single"
                             component={renderSelectField}
                             isSearchable={false}
                             options={optCycle}
-                            placeholder="-- Select Cycle --"
+                            placeholder={t("select_cycle")}
                         />
                         <Field name="cycle" component={renderError}/>
                     </div>
                     <div className="form-group">
-                        <label> {t("Currency")} </label>
+                        <label><TransComponent i18nKey="Currency"/></label>
                         <div className="mt-radio-inline">
                             {optionsMoney}
                             <Field name="typeOfMoney" component={renderError}/>
                         </div>
                     </div>
                     <div className="form-group">
-                        <label> {t("Transaction Type")} </label>
+                        <label><TransComponent i18nKey="Transaction Type"/></label>
                         <div className="mt-radio-inline">
                             {optionsTransaction}
                             <Field name="transactionMethod" component={renderError}/>
                         </div>
                     </div>
                     <div className="form-group">
-                        <label className="control-label"> {t("Amount")} </label>
+                        <label className="control-label"><TransComponent i18nKey="amount"/></label>
                         <Field className="form-control" component="input" name="amount" type="text"/>
                         <Field name="amount" component={renderError}/>
                     </div>
                     <div className="form-group">
-                        <label className="control-label"> {t("Note")} </label>
+                        <label className="control-label"><TransComponent i18nKey="Note"/></label>
                         <Field className="form-control" component="textarea" name="note"/>
                     </div>
                     <div className="form-actions">
                         {this.state.isEdit ? (
                             <button type="submit" className="btn green" onClick={this.onClickAddNew}>
-                                <i className="fa fa-plus"></i> {t("Add new")}
+                                <i className="fa fa-plus"></i><TransComponent i18nKey="Add new"/>
                             </button>) : ''}
                         <button type="submit" className="btn red" disabled={this.state.submit}>
-                            <i className="fa fa-check"></i> {t("Save")}
+                            <i className="fa fa-check"></i><TransComponent i18nKey="Save"/>
                         </button>
                     </div>
                 </div>
 
-                <ModalFormMemberContainer />
+                <ModalFormMemberContainer formType="create" />
             </form>
         );
     }

@@ -25,7 +25,7 @@ class QuickActivitiesContainer extends Component {
                     </Link>
                     <Link to="/winloss" className="icon-btn">
                         <i className="fa fa-usd" />
-                        <div><TransComponent i18nKey="win/lose" /></div>
+                        <div><TransComponent i18nKey="Win/Lose" /></div>
                     </Link>
                     <Link to="/outstanding" className="icon-btn">
                         <i className="fa fa-server" />

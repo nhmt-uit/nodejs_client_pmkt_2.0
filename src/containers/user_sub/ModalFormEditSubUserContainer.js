@@ -9,6 +9,7 @@ import { createMemberSub, getMemberSub, resetFormSaveResponse } from 'my-actions
 import AccountSubServices from 'my-services/account_sub/AccountSubServices';
 import {renderError} from 'my-utils/components/redux-form/render-form'
 import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
+const optSubMemberNumber = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 class ModalFormEditSubUserContainer extends Component{
     constructor(props) {
@@ -37,7 +38,6 @@ class ModalFormEditSubUserContainer extends Component{
 
     onClickSaveEditAccount = (e) =>{
         e.preventDefault();
-        var self = this;
         var isOpenModalEdit = this.state.isOpenModalEdit;
         var post = {
             id: _get(this.props.initialValues, 'id'),
@@ -55,8 +55,8 @@ class ModalFormEditSubUserContainer extends Component{
             re_password: _get(this.props.initialValues, 're_password', ''),
         }
         this.props.createMemberSub(post)
-            .then(function () {
-                self.props.getMemberSub()
+            .then( () => {
+                this.props.getMemberSub()
             })
             .catch(function (err) {
                 console.log(err)
@@ -115,7 +115,7 @@ class ModalFormEditSubUserContainer extends Component{
                 <Modal isOpen={this.state.isOpenModalEdit} toggle={() => this.changeIsOpenModalEdit()}>
                     <ModalHeader toggle={() => this.changeIsOpenModalEdit()} className="text-uppercase">
                         <strong>
-                            <TransComponent i18nKey="Sub account"/>
+                            <TransComponent i18nKey="Update sub"/>
                         </strong>
                     </ModalHeader>
                     <ModalBody>
@@ -152,7 +152,14 @@ class ModalFormEditSubUserContainer extends Component{
                                                 className="form-control form-control-solid placeholder-no-fix"
                                                 autoComplete="off"
                                                 readOnly={true}
-                                            />
+                                                disabled={true}
+                                            >
+                                                {
+                                                    optSubMemberNumber.map(item => {
+                                                        return (<option key={item} value={item}>{item}</option>)
+                                                    })
+                                                }
+                                            </Field>
                                         </div>
                                         <div className="col-md-2" style={{paddingRight: '0px'}}>
                                             <Field
@@ -161,7 +168,14 @@ class ModalFormEditSubUserContainer extends Component{
                                                 className="form-control form-control-solid placeholder-no-fix"
                                                 autoComplete="off"
                                                 readOnly={true}
-                                            />
+                                                disabled={true}
+                                            >
+                                                {
+                                                    optSubMemberNumber.map(item => {
+                                                        return (<option key={item} value={item}>{item}</option>)
+                                                    })
+                                                }
+                                            </Field>
                                         </div>
                                         <div className="col-md-2" style={{paddingRight: '0px'}}>
                                             <Field
@@ -170,7 +184,14 @@ class ModalFormEditSubUserContainer extends Component{
                                                 className="form-control form-control-solid placeholder-no-fix"
                                                 autoComplete="off"
                                                 readOnly={true}
-                                            />
+                                                disabled={true}
+                                            >
+                                                {
+                                                    optSubMemberNumber.map(item => {
+                                                        return (<option key={item} value={item}>{item}</option>)
+                                                    })
+                                                }
+                                            </Field>
                                         </div>
                                     </div>
                                     <Field name="username" component={renderError}/>
@@ -204,7 +225,7 @@ class ModalFormEditSubUserContainer extends Component{
                                             type="checkbox"
                                             component="input"
                                             autoComplete="off"
-                                        /> <TransComponent i18nKey="Click here if you want to change password"/>
+                                        /> <TransComponent i18nKey="Click here to change password"/>
                                         <span></span>
                                     </label>
                                 </div>
@@ -285,7 +306,6 @@ const validate = values => {
 };
 
 const mapStateToProps = state => {
-    console.log(state)
     return {
         initialValues: _get(state, 'form.editSubUser.values'),
         formSaveStatus: state.AccountSubReducer.formSaveStatus,
