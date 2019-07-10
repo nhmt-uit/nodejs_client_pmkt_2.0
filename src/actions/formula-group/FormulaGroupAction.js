@@ -2,6 +2,33 @@ import { FormulaGroupActionType } from 'my-constants/action-types'
 import FormulaGroupService from 'my-services/formula-group/FormulaGroupService'
 import { Helpers } from 'my-utils'
 
+export const getFormulaGroup = () => {
+    return (dispatch) => {
+        return FormulaGroupService.getFormulaGroup().then(res => {
+            if(res.status){
+                var formulaGroupList = res.res.data.List;
+                var bankerList = res.res.data.bankerList;
+                dispatch({
+                    type: FormulaGroupActionType.GET_FORMULA_GROUP,
+                    formulaGroupList: formulaGroupList,
+                    bankerList: bankerList
+                })
+            }
+        })
+    }
+}
+
+export const delFormulaGroup = (payload) => {
+    return (dispatch) => {
+        return FormulaGroupService.delFormulaGroup(payload).then(res => {
+
+            dispatch({
+                type: FormulaGroupActionType.DEL_FORMULA_GROUP,
+            })
+        })
+    }
+}
+
 export const initFormulaGroup = () => {
     return (dispatch) => {
         return FormulaGroupService.getInitForm().then(res => {

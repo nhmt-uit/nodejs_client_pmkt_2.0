@@ -13,6 +13,25 @@ export const getMemberSub = () => {
     }
 }
 
+export const getSuffixesMember = () => {
+    return (dispatch) => {
+        return AccountSubService.getSuffixesMember().then(res => {
+            if(res.status) {
+                const suffixesMember = {
+                    s1: res.res.s1,
+                    s2: res.res.s2,
+                    s3: res.res.s3,
+                    username: res.res.username,
+                }
+                dispatch({
+                    type: AccountSubActionType.GET_SUFFIXES_MEMBER,
+                    suffixesMember: suffixesMember,
+                })
+            }
+        })
+    }
+}
+
 export const delMemberSub = (post) => {
     return (dispatch) => {
         return AccountSubService.delMemberSub(post).then(res => {
@@ -34,5 +53,21 @@ export const createMemberSub = (post) => {
                 formSaveResponse: res.res
             })
         })
+    }
+}
+
+export const toggleModalMemberSub = () => {
+    return (dispatch) => {
+        dispatch({
+            type: AccountSubActionType.MEMBER_SUB_TOGGLE_MODAL_FORM,
+        })
+    }
+};
+
+export const resetFormSaveResponse = (params) => {
+    return (dispatch) => {
+        dispatch({
+            type: AccountSubActionType.RESET_FORM_SAVE_ACCOUNT_SUB,
+        });
     }
 }

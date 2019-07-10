@@ -1,8 +1,11 @@
 import React, {Component} from 'react';
 import {compose} from "redux";
-import {reduxForm} from "redux-form";
 import {connect} from "react-redux";
+import {reduxForm} from "redux-form";
+
 import {withTranslation} from "react-i18next";
+import {TransComponent} from 'my-components'
+
 import { getReportDetail} from "my-actions/report/ReportDetailAction";
 import {isEmpty, keyBy, sortBy} from "lodash";
 
@@ -131,49 +134,47 @@ class ReportDetail extends Component {
             }
         })
         return(
-            <div>
-                <div className="table-responsive">
-                    <table className="table table-striped table-bordered table-hover dataTable no-footer dtr-inline">
-                        <thead>
-                            <tr role="row">
-                                <th className="caption-subject font-red text-center bold uppercase"> # </th>
-                                <th className="caption-subject font-red text-center bold uppercase"> ID PMKT </th>
-                                <th className="caption-subject font-red text-center bold uppercase"> {t("Member")} </th>
-                                <th className="caption-subject font-red text-center bold uppercase"> {t("Type")} </th>
-                                <th className="caption-subject font-red text-center bold uppercase"> {t("Account")}</th>
-                                <th className="caption-subject font-red text-center bold uppercase"> {t("VND")} </th>
-                                <th className="caption-subject font-red text-center bold uppercase"> {t("USD")} </th>
-                                <th className="caption-subject font-red text-center bold uppercase"> {t("RM")} </th>
-                                <th className="caption-subject font-red text-center bold uppercase"> {t("THB")} </th>
+            <div className="table-responsive">
+                <table className="table table-striped table-bordered table-hover dataTable no-footer dtr-inline">
+                    <thead>
+                        <tr role="row">
+                            <th className="caption-subject font-red text-center bold uppercase"> # </th>
+                            <th className="caption-subject font-red text-center bold uppercase"><TransComponent i18nKey="id pmkt"/></th>
+                            <th className="caption-subject font-red text-center bold uppercase"><TransComponent i18nKey="Member"/></th>
+                            <th className="caption-subject font-red text-center bold uppercase"><TransComponent i18nKey="Type"/></th>
+                            <th className="caption-subject font-red text-center bold uppercase"><TransComponent i18nKey="Account"/></th>
+                            <th className="caption-subject font-red text-center bold uppercase"><TransComponent i18nKey="vnd"/></th>
+                            <th className="caption-subject font-red text-center bold uppercase"><TransComponent i18nKey="usd"/></th>
+                            <th className="caption-subject font-red text-center bold uppercase"><TransComponent i18nKey="rm"/></th>
+                            <th className="caption-subject font-red text-center bold uppercase"><TransComponent i18nKey="thb"/></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {
+                        // rows
+                        arr.map(function (item, index) {
+                            return <tr key={index}>
+                                <td className="text-center"> {item.index} </td>
+                                <td className="text-center font-dark uppercase"> {username} </td>
+                                <td className="text-center font-dark uppercase"> {item.member_name} </td>
+                                <td className="text-center font-dark uppercase"> { item.book_type === "ALL" ? <span className="font-red bold uppercase"> {item.book_type} </span> : <span> {item.book_type} </span> } </td>
+                                <td className="text-center font-dark uppercase"> {item.account} </td>
+                                <td className="text-right"> {
+                                    item.VND < 0 ? <span className="font-red"> {Helpers.formatMoney(item.VND,0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney(item.VND,0)} </span>
+                                }
+                                </td>
+
+                                <td className="text-right"> {
+                                    item.USD < 0 ? <span className="font-red"> {Helpers.formatMoney(item.USD,0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney(item.USD,0)} </span>
+                                } </td>
+
+                                <td className="text-right"> 0 </td>
+                                <td className="text-right"> 0 </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                        {
-                            // rows
-                            arr.map(function (item, index) {
-                                return <tr key={index}>
-                                    <td className="text-center"> {item.index} </td>
-                                    <td className="text-center font-dark uppercase"> {username} </td>
-                                    <td className="text-center font-dark uppercase"> {item.member_name} </td>
-                                    <td className="text-center font-dark uppercase"> { item.book_type === "ALL" ? <span className="font-red bold uppercase"> {item.book_type} </span> : <span> {item.book_type} </span> } </td>
-                                    <td className="text-center font-dark uppercase"> {item.account} </td>
-                                    <td className="text-right"> {
-                                        item.VND < 0 ? <span className="font-red"> {Helpers.formatMoney(item.VND,0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney(item.VND,0)} </span>
-                                    }
-                                    </td>
-
-                                    <td className="text-right"> {
-                                        item.USD < 0 ? <span className="font-red"> {Helpers.formatMoney(item.USD,0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney(item.USD,0)} </span>
-                                    } </td>
-
-                                    <td className="text-right"> 0 </td>
-                                    <td className="text-right"> 0 </td>
-                                </tr>
-                            })
-                        }
-                        </tbody>
-                    </table>
-                </div>
+                        })
+                    }
+                    </tbody>
+                </table>
             </div>
         )
     }

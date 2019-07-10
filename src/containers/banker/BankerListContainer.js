@@ -19,27 +19,24 @@ class BankerListContainer extends React.Component{
         }
         var List = DATA.res.data.List;
         return(
-            <div>
-                <div className="col-xs-12 portlet light bordered">
-                    <div className="table-responsive">
-                        <table className="table table-hover">
-                            <tbody>
-                            {List.map(function (items) {
-                                var url = items.logo.replace(".", "")
-                                return(
-                                    <tr key={items.name}>
-                                        <td><img src={"/assets" + url} alt={items.name} style={{height:60, width:120}} /></td>
-                                        <td><a href={items.member_url} target="_blank" rel="noopener noreferrer"> {items.member_url} </a> </td>
-                                    </tr>
-                                )
-                            })}
-                            </tbody>
-                        </table>
-                    </div>
+            <div className="col-md-12 portlet light bordered">
+                <div className="table-responsive">
+                    <table className="table table-striped table-bordered table-hover dataTable no-footer dtr-inline">
+                        <thead></thead>
+                        <tbody>
+                        {List.map(function (items) {
+                            var url = items.logo.replace(".", "")
+                            return(
+                                <tr key={items.name} role="row" className="odd">
+                                    <td><img src={"/assets" + url} alt={items.name} style={{height:60, width:120}} /></td>
+                                    <td><a href={items.agent_url} target="_blank" rel="noopener noreferrer"> {items.agent_url} </a> </td>
+                                </tr>
+                            )
+                        })}
+                        </tbody>
+                    </table>
                 </div>
             </div>
-
-
         )
     }
 }

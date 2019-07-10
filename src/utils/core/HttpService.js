@@ -103,7 +103,7 @@ class HttpService {
         // Helpers.hideLoading();
         let responstStatus = _get(error, 'response.status')
 		const pathname = window.location.pathname;
-        if ( responstStatus === 401 || responstStatus === 400 && !pathname.match(/\/auth\/login/i) ) {
+        if ( (responstStatus === 401 || responstStatus === 400) && !pathname.match(/\/auth\/login/i) ) {
             CookieService.removeAll()
             window.history.pushState(null, null, '/auth/login')
             window.location.reload()

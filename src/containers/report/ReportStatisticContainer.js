@@ -59,10 +59,15 @@ class ReportStatisticContainer extends Component {
 
     renderTabReport(type) {
         const t = this.props.t;
-        const { currencyMap, totalAccounting, totalReport, total } = this.props.reportStore;
-        const title = type === 'accounting' ? t('REPORT OF ACCOUNTING') : t('SYNTHESIS OF REPORT');
-        const totalTab = type === 'accounting' ? totalAccounting : type === 'member' ? total : totalReport;
-        const className = type === 'accounting' ? 'tab-accountant' : 'tab-report';
+        const { currencyMap, totalAccounting, totalReport, total, itemActive } = this.props.reportStore;
+        const title = 
+            (type === 'accounting' || type === 'banker') 
+                ? t('REPORT OF ACCOUNTING') 
+                : (type === 'member') 
+                    ? `${t('REPORT')} ${itemActive.memberName}`
+                    : t('SYNTHESIS OF REPORT');
+        const totalTab = (type === 'accounting' || type === 'banker') ? totalAccounting : type === 'member' ? total : totalReport;
+        const className = (type === 'accounting') ? 'tab-accountant' : 'tab-report';
 
         if (!currencyMap) {
             return (
@@ -107,7 +112,7 @@ class ReportStatisticContainer extends Component {
                     <div className="col-md-12">
                         <div className="tabbable-line tabbable-custom-profile tabbable-book">
                             <ul className="nav nav-tabs tabs-reversed">
-                                <li className="title-accountant"><a href="javascript:;">{ itemActive.name || '' }</a></li>
+                                <li className="title-accountant"><a href="#/">{ itemActive.name || '' }</a></li>
                                 {
                                     (type === 'accounting' && hasReportDetailFeature === 1)
                                         ? <li className="title-accountant">
@@ -176,7 +181,7 @@ class ReportStatisticContainer extends Component {
             if (reportType === 'banker') {
                 bookElement = (
                     <li key={'other'} className="active">
-                        <a className="text-capitalize" href="javascript:;" data-toggle="tab">{t('Other')}</a>
+                        <a className="text-capitalize" href="#/" data-toggle="tab">{t('Other')}</a>
                     </li>
                 );
             } else {
@@ -255,7 +260,7 @@ class ReportStatisticContainer extends Component {
         let accountingList = _sortBy(_toArray(data), 'name');
 
         if (type === 'accounting') {
-            total = id === -1 ? totalAccounting : (totalByBook[id] || []);
+            total = (id === -1 || id === 'banker') ? totalAccounting : (totalByBook[id] || []);
         } else {
             const bookId = id.split('_')[2] || '';
             total = id === 'tab_synthesis_all' ? totalReport : (totalByTypeReport[Number(bookId) === 1 ? 0 : bookId] || {})
@@ -588,7 +593,7 @@ class ReportStatisticContainer extends Component {
                 break;
             case 'banker':
                 tabContent = this.renderTabReportContent('accounting', true);
-                tabReport = <li className="active tab-report-detail">{ this.renderTabReport('accounting') }</li>;
+                tabReport = <li className="active tab-report-detail">{ this.renderTabReport('banker') }</li>;
                 break;
             default:
                 tabContent = <ReportByMember reportStore={this.props.reportStore} />

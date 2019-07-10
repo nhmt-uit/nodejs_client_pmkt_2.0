@@ -13,9 +13,9 @@ import { ModalFormMemberContainer } from 'my-containers/member'
 import { ModalFormFormulaContainer } from 'my-containers/formula'
 import { ModalFormAssignFormulaGroupContainer } from 'my-containers/formula-group'
 
-import { toggleModalMember} from 'my-actions/member/MemberAction'
-import { toggleModalAccount} from 'my-actions/AccountAction'
-import { toggleModalFormula} from 'my-actions/formula/FormulaAction'
+import { toggleModalMember } from 'my-actions/member/MemberAction'
+import { toggleModalAccount } from 'my-actions/AccountAction'
+import { toggleModalFormula } from 'my-actions/formula/FormulaAction'
 import { toggleModalAssignFormulaGroup} from 'my-actions/formula-group/FormulaGroupAction'
 
 const optFormulaType = [{value: 1, label: <TransComponent i18nKey="-- formula --" />}, {value: 2, label: <TransComponent i18nKey="-- formula group --" />}]
@@ -320,6 +320,7 @@ const validate = values => {
 }
 
 const mapStateToProps = state => {
+    console.log(state)
     return {
         initialValues: _get(state, 'form.form_assign_formula.values'),
         optAccount: state.AccountantAssignFormulaReducer.optAccount,

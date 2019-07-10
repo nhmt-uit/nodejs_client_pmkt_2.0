@@ -2,14 +2,16 @@ import React, {Component} from 'react'
 import {Field, reduxForm, reset} from "redux-form";
 import {connect} from "react-redux";
 import {compose} from "redux";
+import {isEmpty, get as _get} from 'lodash'
 
 import {withTranslation} from "react-i18next";
+import {TransComponent} from 'my-components'
+
 import {renderSelectField, renderError} from 'my-utils/components/redux-form/render-form'
 import { ModalFormMemberContainer } from 'my-containers/member'
 
 import {getCycle, getTypeOfMoney, saveTransaction, resetFormSaveResponse, getAllTransaction} from "my-actions/report/TransactionAction";
 import {getMember, toggleModalMember} from "my-actions/member/MemberAction";
-import {isEmpty, get as _get} from 'lodash'
 
 class CreateTransaction extends Component {
     constructor(props) {
@@ -132,7 +134,7 @@ class CreateTransaction extends Component {
             return (
                 <div className="alert alert-danger">
                     <button className="close" onClick={this.props.resetFormSaveResponse}/>
-                    <span><b> {formSaveResponse.data.message} </b></span>
+                    <span><b> <TransComponent i18nKey={formSaveResponse.data.message}/>  </b></span>
                 </div>
             )
         } else if (formSaveStatus === true) {
@@ -188,75 +190,74 @@ class CreateTransaction extends Component {
         const {t} = this.props
 
         return (
-            <div className="col-md-12">
-                <form className="form-horizontal form-bordered" onSubmit={this.submitForm}>
-                    <div className="form-body">
-                        {this.renderAlert()}
-                        <div className="form-group">
-                            <label> {t("Member")} </label>
-                                <div className="input-group">
-                                <Field
-                                    name="member"
-                                    className="basic-single"
-                                    component={renderSelectField}
-                                    isSearchable={true}
-                                    options={optMember}
-                                    placeholder="--Select Member--"
-                                />
-                                <span className="input-group-btn">
-                                    <button className="btn green" type="button" onClick={_ => this.props.toggleModalMember()}><i className="fa fa-plus"/></button>
-                                </span>
-                            </div>
-                            <Field name="member" component={renderError}/>
-                        </div>
-                        <div className="form-group">
-                            <label>{t("Cycle")}</label>
+            <form className="" onSubmit={this.submitForm}>
+                <div className="form-body">
+                    {this.renderAlert()}
+                    <div className="form-group">
+                        <label><TransComponent i18nKey="Member"/></label>
+                            <div className="input-group">
                             <Field
-                                name="cycle"
+                                name="member"
                                 className="basic-single"
                                 component={renderSelectField}
-                                isSearchable={false}
-                                options={optCycle}
-                                placeholder="-- Select Cycle --"
+                                isSearchable={true}
+                                options={optMember}
+                                placeholder={t("-- select member --")}
                             />
-                            <Field name="cycle" component={renderError}/>
+                            <span className="input-group-btn">
+                                <button className="btn green" type="button" onClick={_ => this.props.toggleModalMember()}><i className="fa fa-plus"/></button>
+                            </span>
                         </div>
-                        <div className="form-group">
-                            <label> {t("Currency")} </label>
-                            <div className="mt-radio-inline">
-                                {optionsMoney}
-                                <Field name="typeOfMoney" component={renderError}/>
-                            </div>
+                        <Field name="member" component={renderError}/>
+                    </div>
+                    <div className="form-group">
+                        <label><TransComponent i18nKey="Cycle"/></label>
+                        <Field
+                            name="cycle"
+                            className="basic-single"
+                            component={renderSelectField}
+                            isSearchable={false}
+                            options={optCycle}
+                            placeholder={t("select_cycle")}
+                        />
+                        <Field name="cycle" component={renderError}/>
+                    </div>
+                    <div className="form-group">
+                        <label><TransComponent i18nKey="Currency"/></label>
+                        <div className="mt-radio-inline">
+                            {optionsMoney}
+                            <Field name="typeOfMoney" component={renderError}/>
                         </div>
-                        <div className="form-group">
-                            <label> {t("Transaction Type")} </label>
-                            <div className="mt-radio-inline">
-                                {optionsTransaction}
-                                <Field name="transactionMethod" component={renderError}/>
-                            </div>
+                    </div>
+                    <div className="form-group">
+                        <label><TransComponent i18nKey="Transaction Type"/></label>
+                        <div className="mt-radio-inline">
+                            {optionsTransaction}
+                            <Field name="transactionMethod" component={renderError}/>
                         </div>
-                        <div className="form-group">
-                            <label className="control-label"> {t("Amount")} </label>
-                            <Field className="form-control" component="input" name="amount" type="text"/>
-                            <Field name="amount" component={renderError}/>
-                        </div>
-                        <div className="form-group">
-                            <label className="control-label"> {t("Note")} </label>
-                            <Field className="form-control" component="textarea" name="note"/>
-                        </div>
+                    </div>
+                    <div className="form-group">
+                        <label className="control-label"><TransComponent i18nKey="amount"/></label>
+                        <Field className="form-control" component="input" name="amount" type="text"/>
+                        <Field name="amount" component={renderError}/>
+                    </div>
+                    <div className="form-group">
+                        <label className="control-label"><TransComponent i18nKey="Note"/></label>
+                        <Field className="form-control" component="textarea" name="note"/>
                     </div>
                     <div className="form-actions">
                         {this.state.isEdit ? (
                             <button type="submit" className="btn green" onClick={this.onClickAddNew}>
-                                <i className="fa fa-plus"></i> {t("Add new")}
+                                <i className="fa fa-plus"></i><TransComponent i18nKey="Add new"/>
                             </button>) : ''}
                         <button type="submit" className="btn red" disabled={this.state.submit}>
-                            <i className="fa fa-check"></i> {t("Save")}
+                            <i className="fa fa-check"></i><TransComponent i18nKey="Save"/>
                         </button>
                     </div>
-                    <ModalFormMemberContainer />
-                </form>
-            </div>
+                </div>
+
+                <ModalFormMemberContainer formType="create" />
+            </form>
         );
     }
 }

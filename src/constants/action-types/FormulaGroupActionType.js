@@ -1,3 +1,5 @@
+export const GET_FORMULA_GROUP                                  = 'GET_FORMULA_GROUP'
+export const DEL_FORMULA_GROUP                                  = 'DEL_FORMULA_GROUP'
 export const FORMULA_GROUP_INIT_FORM_DATA                       = 'FORMULA_GROUP_INIT_FORM_DATA'
 export const FORMULA_GROUP_TOGGLE_MODAL_FORM_ASSIGN             = 'FORMULA_GROUP_TOGGLE_MODAL_FORM_ASSIGN'
 export const FORMULA_GROUP_TOGGLE_MODAL_FORM                    = 'FORMULA_GROUP_TOGGLE_MODAL_FORM'

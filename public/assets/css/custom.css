@@ -38,6 +38,8 @@ html {
 
 .table th, .table td {
   vertical-align: middle !important;
+  font-size: 12px !important;
+  padding: 5px !important;
 }
 
 h5.modal-title {font-size: 16px; font-weight: bold;}
@@ -380,7 +382,7 @@ h5.modal-title {font-size: 16px; font-weight: bold;}
 
 /* Full screen */
 .btn-fullscreen i.fa {margin-right: 5px}
-.full-screen .page-header, .full-screen .page-sidebar-wrapper {display: none}
+.full-screen .page-header, .full-screen .page-sidebar-wrapper {display: none;}
 .full-screen .page-container {margin-top: 0px}
 .full-screen th.column-hidden, .full-screen td.column-hidden {display: table-cell; }
 .tbl-scan-result .column-hidden{display: none}
@@ -431,7 +433,6 @@ h5.modal-title {font-size: 16px; font-weight: bold;}
 
 .table-formula thead tr th {
   vertical-align: middle;
-  color: #d9312a;
 }
 
 .table-formula tbody tr td {
@@ -452,4 +453,65 @@ h5.modal-title {font-size: 16px; font-weight: bold;}
   .hide-on-mobile {
       display: none !important;
   }
+}
+
+.padding-top-0 {
+  padding-top: 0!important;
+}
+
+.padding-tb-6 {
+  padding-top: 6px;
+  padding-bottom: 6px
+}
+
+.margin-right-10 {
+  margin-right: 10px;
+}
+
+.min-height-60 {
+  min-height: 60px;
+}
+
+.font-bold {
+  font-weight: bold
+}
+
+.margin-left-10 {
+  margin-left: 10px;
+}
+
+.wrap-tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.content-tooltip {
+  display: none;
+  position: absolute;
+  top: 1.5rem;
+  left: -0.8rem;
+  padding: .7rem;
+}
+
+.wrap-tooltip:hover .hovered {
+  display: block;
+}
+
+.tooltip-account {
+  min-width: 200px;
+  left: -5.8rem;
+}
+
+.tooltip-arrow {
+  display: none;
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  top: 1.2rem;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 0 5px 5px;
+  border-bottom-color: #e26a6a;
 }

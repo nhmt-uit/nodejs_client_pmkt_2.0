@@ -6,7 +6,7 @@ export const getMember = () => {
         return MemberService.getMember().then(res => {
             if(res.status) {
                 const optMember = res.res.data.List.map(item => {
-                    return {value: item.id, label: item.fullname.toUpperCase()}
+                    return {...item, value: item.id, label: item.fullname.toUpperCase()}
                 })
                 dispatch({
                     type: MemberActionType.GET_MEMBER,
@@ -18,6 +18,23 @@ export const getMember = () => {
     }
 };
 
+export const getFormulaByMember = (params) => {
+    return (dispatch) => {
+        return MemberService.getFormulaByMember(params).then(res => {
+            if(res.status) {
+                dispatch({
+                    type: MemberActionType.GET_FORMULA_BY_MEMBER,
+                    payload: res.res.data.List,
+                    selectedItemList: params.selectedItemList,
+                })
+            }
+        })
+    }
+};
+
+
+
+
 export const resetStoreMember = () => {
     return (dispatch) => {
         dispatch({
@@ -26,10 +43,20 @@ export const resetStoreMember = () => {
     }
 };
 
-export const toggleModalMember = () => {
+export const toggleModalMember = (params = {}) => {
     return (dispatch) => {
         dispatch({
             type: MemberActionType.MEMBER_TOGGLE_MODAL_FORM,
+            selectedItem: params.selectedItem,
+        })
+    }
+};
+
+export const toggleModalDeleteMember = (params = {}) => {
+    return (dispatch) => {
+        dispatch({
+            type: MemberActionType.MEMBER_TOGGLE_MODAL_DELETE,
+            selectedItem: params.selectedItem,
         })
     }
 };
@@ -46,3 +73,25 @@ export const saveMember = (payload) => {
         })
     }
 };
+
+export const resetFormSaveResponse = (params) => {
+    return (dispatch) => {
+        dispatch({
+            type: MemberActionType.MEMBER_RESET_FORM_RESPONSE_FORMULA,
+        });
+    }
+}
+
+export const deleteMember = params => {
+    return (dispatch) => {
+        MemberService.deleteMember(params.id).then(res => {
+            dispatch({
+                type: MemberActionType.MEMBER_DELETE_MEMBER,
+                formDeleteStatus: res.status,
+                formDeleteResponse: res.res
+            })
+        })
+    }
+}
+
+

@@ -8,7 +8,7 @@ import { ZopimChat, Notification } from 'my-components/navigation'
 import BankerListContainer from "my-containers/banker/BankerListContainer"
 import { CookieService } from 'my-utils/core'
 import { RoutesService } from 'my-routes'
-import InfoUserContainer from "my-containers/infoUser/InfoUserContainer"
+import InfoUserContainer from "my-containers/info-user/InfoUserContainer"
 import 'my-styles/reactstrap-modal.css'
 import { changeLanguage } from 'my-actions/systems/LanguageAction'
 import { AuthService } from 'my-services/systems'
@@ -132,7 +132,7 @@ class Header extends Component {
 
                 {/* Modal Banker */}
                 <Modal isOpen={this.state.isOpenModalBaner} toggle={this.toggleModalBanker} scrollable={true}>
-                    <ModalHeader toggle={this.toggleModalBanker} ><i className="icon-social-dribbble font-green"></i><span className="caption-subject font-green bold uppercase"><TransComponent i18nKey="Company" /></span></ModalHeader>
+                    <ModalHeader toggle={this.toggleModalBanker} ><i className="icon-social-dribbble font-green"></i>&nbsp;&nbsp;<span className="caption-subject font-green bold uppercase"><TransComponent i18nKey="Company" /></span></ModalHeader>
                     <ModalBody>
                         <BankerListContainer />
                     </ModalBody>

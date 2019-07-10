@@ -5,7 +5,9 @@ import {connect} from "react-redux";
 import {withTranslation} from "react-i18next";
 import { Helpers } from 'my-utils'
 import {get as _get, isEmpty, keyBy} from 'lodash'
+
 import {getDetailReport} from "my-actions/report/TransactionAction";
+import { TransComponent } from 'my-components'
 
 class BillTransaction extends Component {
     constructor(props) {
@@ -54,7 +56,6 @@ class BillTransaction extends Component {
     };
 
     render() {
-        var self = this;
         const {currencyMap, result, total, optMoney} = this.props;
         if (isEmpty(currencyMap) || isEmpty(result) || isEmpty(total)) {
             return null;
@@ -90,10 +91,10 @@ class BillTransaction extends Component {
             )
         })
 
-        let rows = currencyIDs.map(function (id) {
+        let rows = currencyIDs.map(id => {
             return (
-                <td key={id} className="caption-subject font-green text-center">
-                    {self.state.rowInTable ?
+                <td key={id} className="caption-subject font-green text-right">
+                    {this.state.rowInTable ?
                         (typeOfMoney === id ? (Number(total[id].result) + Number(amount)) < 0 ? <span className="font-red"> {Helpers.formatMoney((Number(total[id].result) + Number(amount)),0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney((Number(total[id].result) + Number(amount)),0)} </span>
                             : total[id].result < 0 ? <span className="font-red"> {Helpers.formatMoney(total[id].result,0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney(total[id].result,0)} </span>)
                         : total[id].result < 0 ? <span className="font-red"> {Helpers.formatMoney(total[id].result,0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney(total[id].result,0)} </span>
@@ -106,8 +107,10 @@ class BillTransaction extends Component {
                 <div className="portlet-title">
                     <div className="caption">
                         <i className="icon-social-dribbble font-green hide"></i>
-                        <span className="caption-subject font-dark bold"> <i
-                            className="fa fa-calculator"></i> Bill </span>
+                        <span className="caption-subject font-dark bold">
+                            <i className="fa fa-calculator" />&nbsp;&nbsp;
+                            <TransComponent i18nKey="invoice" />
+                        </span>
                     </div>
                 </div>
                 <div className="portlet-body">
@@ -122,19 +125,19 @@ class BillTransaction extends Component {
                             <tbody>
                             {this.state.rowInTable ?
                                 <tr>
-                                    <td> {transaction} </td>
+                                    <td> <TransComponent i18nKey={transaction}/> </td>
                                     {test}
                                 </tr> : <tr></tr>}
-                            {resultMap.map(function (item, index) {
+                            {resultMap.map( (item, index) => {
                                 var total = item[1].total;
                                 return (
                                     <tr key={index}>
-                                        <td> {item[1].name}</td>
+                                        <td> <TransComponent i18nKey={item[1].name}/></td>
                                         {
-                                            currencyIDs.map(function (id) {
+                                            currencyIDs.map(id => {
                                                 return (
-                                                    <td key={id} className="caption-subject font-green text-center">
-                                                        {self.state.rowInTable ?
+                                                    <td key={id} className="caption-subject font-green text-right">
+                                                        {this.state.rowInTable ?
                                                             item[1].name == transaction ?
                                                                 (typeOfMoney === id ? (total[id] && Number(total[id].result) + Number(amount) || 0 + Number(amount)) < 0 ? <span className="font-red"> {Helpers.formatMoney((total[id] && Number(total[id].result) + Number(amount) || 0 + Number(amount)),0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney((total[id] && Number(total[id].result) + Number(amount) || 0 + Number(amount)),0)} </span>
                                                                     : (total[id] && total[id].result || 0) < 0 ? <span className="font-red"> {Helpers.formatMoney((total[id] && total[id].result || 0),0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney((total[id] && total[id].result || 0),0)} </span>)
@@ -149,7 +152,7 @@ class BillTransaction extends Component {
                                 )
                             })}
                             <tr>
-                                <td> Total</td>
+                                <td><TransComponent i18nKey="Total"/></td>
                                 {rows}
                             </tr>
                             </tbody>

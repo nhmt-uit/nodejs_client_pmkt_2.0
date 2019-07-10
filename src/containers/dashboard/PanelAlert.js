@@ -22,15 +22,15 @@ class PanelAlert extends Component{
         if(_isEmpty(listNotify)) return null;
         return (
             <div className="row widget-row">
-                <div className="col-xs-6">
+                <div className="col-xs-12 col-md-6">
                     <div className="portlet light bordered">
                         <div className="portlet-title">
-                            <div className="col-xs-9 caption">
+                            <div className="col-xs-6 col-md-9 caption">
                                 <i className="icon-social-dribbble font-green hide"></i>
                                 <span className="caption-subject font-dark bold uppercase"> <TransComponent i18nKey="Overview" /></span>
                             </div>
                             <div>
-                                <ul className="col-xs-3 nav nav-tabs">
+                                <ul className="col-xs-6 col-md-3 nav nav-tabs">
                                     <li>
                                         <i className="fa fa-minus font-green-haze"></i>
                                         <span> <TransComponent i18nKey="Turnover" /></span>
@@ -49,7 +49,7 @@ class PanelAlert extends Component{
                         </div>
                     </div>
                 </div>
-                <div className="col-xs-6">
+                <div className="col-xs-12 col-md-6">
                     <div className="portlet light bordered">
                         <div className="portlet-title">
                             <div className="caption">

@@ -4,6 +4,7 @@ import ListFormulaByForumulaGroupContainer from './ListFormulaByForumulaGroupCon
 import ModalFormFormulaGroupContainer from './ModalFormFormulaGroupContainer'
 import FormFormulaGroupContainer from './FormFormulaGroupContainer'
 import ModalDeleteFormulaByFormulaGroupContainer from './ModalDeleteFormulaByFormulaGroupContainer'
+import FormulaGroupListContainer from './FormulaGroupListContainer'
 
 export {
     ModalFormAssignFormulaGroupContainer,
@@ -12,4 +13,5 @@ export {
     ModalFormFormulaGroupContainer,
     FormFormulaGroupContainer,
     ModalDeleteFormulaByFormulaGroupContainer,
+    FormulaGroupListContainer,
 }
