@@ -2,9 +2,24 @@ import { MemberActionType } from 'my-constants/action-types';
 
 let defaultState = {
     member: {},
+    optMember: [],
+
+    // Handle List
+    selectedItemList: {},
+
+    // Handle List Formula By Banker
+    bankerList: [],
+    formulaByMemberList: [],
 
     //Handle Modal Form Member
     isOpenModal: false,
+    selectedItem: {},
+
+    
+    //Handle Modal Form Member
+    isOpenModalDelete: false,
+	formDeleteStatus: null,
+	formDeleteResponse: null,
 
     //Handel Save Form
 	formSaveStatus: null,
@@ -20,10 +35,26 @@ const MemberReducer = (state = defaultState, action) => {
             return {...state, member: action.payload, optMember: action.optMember};
         case MemberActionType.MEMBER_TOGGLE_MODAL_FORM:
             //Reset Store When Modal Close
-			if (!state.isOpenModal === false) return {...defaultState}
-            return {...state, isOpenModal: !state.isOpenModal};
+			if (!state.isOpenModal === false) return {...state, isOpenModal: false, formSaveStatus: null, formSaveResponse: {}, selectedItem: {}}
+            return {...state, isOpenModal: !state.isOpenModal, selectedItem: action.selectedItem};
+        case MemberActionType.MEMBER_TOGGLE_MODAL_DELETE:
+            //Reset Store When Modal Close
+			if (!state.isOpenModalDelete === false) return {...state, isOpenModalDelete: false, formDeleteStatus: null, formDeleteResponse: {}, selectedItem: {}}
+            return {...state, isOpenModalDelete: !state.isOpenModalDelete, selectedItem: action.selectedItem};
         case MemberActionType.MEMBER_SAVE_FORM:
             return {...state, formSaveStatus: action.formSaveStatus, formSaveResponse: action.formSaveResponse}
+        case MemberActionType.MEMBER_DELETE_MEMBER:
+            return {...state, formDeleteStatus: action.formDeleteStatus, formDeleteResponse: action.formDeleteResponse}
+        case MemberActionType.GET_FORMULA_BY_MEMBER:
+            if(action.payload) {
+                let newBankerList = action.payload.listBanker
+                let newFormulaByMemberList = action.payload.memberDetail
+                return {...state, bankerList: newBankerList, formulaByMemberList: newFormulaByMemberList, selectedItemList: action.selectedItemList}
+            }
+            return {...state}
+
+        case MemberActionType.MEMBER_RESET_FORM_RESPONSE_FORMULA:
+            return {...state, formSaveStatus: null, formSaveResponse: {}}
         default:
             return {...state};
     }

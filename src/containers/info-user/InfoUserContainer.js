@@ -8,7 +8,7 @@ class InfoUserContainer extends Component {
         const username = AuthService.getUsername();
         const expires = AuthService.getExpires();
         return (
-            <div className="col-md-4" style={{paddingTop: "10px", fontSize: '12px'}}>
+            <div className="col-md-4 hide-on-mobile" style={{paddingTop: "10px", fontSize: '12px'}}>
                 <div className="font-white"><span><TransComponent i18nKey="hello: " /> </span><span> {username} </span></div>
                 <div className="font-white"><span><TransComponent i18nKey="expires day: " /> </span><span> {expires} </span></div>
             </div>

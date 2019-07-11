@@ -5,8 +5,13 @@ class TransComponent extends Component {
     render() {
         const {t, i18nKey} = this.props
         const i18nObj = this.props.i18nObj || {}
-
-        const keyLower = typeof i18nKey !== "undefined" ? i18nKey.toLowerCase() : i18nKey
+        let keyLower = i18nKey
+        
+        try {
+            keyLower = i18nKey.toLowerCase()
+        } catch (e) {
+            console.log(e)
+        }
         return (
             t(keyLower, i18nObj)
         );

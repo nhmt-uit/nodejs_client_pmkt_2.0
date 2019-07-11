@@ -53,6 +53,12 @@ class AccountService extends BaseService {
     validatorAccount(payload) {
         return HttpService.post(`${this.serviceUrl}/validator_account`, payload)
     }
+
+    checkLogin(accId) {
+        const payload = { accId };
+
+        return HttpService.post(`${this.serviceUrl}/check_login`, payload);
+    }
 }
 
 export default new AccountService()

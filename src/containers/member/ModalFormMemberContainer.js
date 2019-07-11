@@ -9,12 +9,6 @@ import { FormMemberContainer } from 'my-containers/member'
 import { toggleModalMember } from 'my-actions/member/MemberAction'
 
 class ModalFormMemberContainer extends Component {
-    modalTitle = ''
-    componentDidMount() {
-        if(this.props.formType === "create") this.modalTitle = <TransComponent i18nKey="Create sub" />
-        if(this.props.formType === "update") this.modalTitle = <TransComponent i18nKey="Update member" />
-    }
-
     componentDidUpdate(){
         // Hide modal after save success
         if(this.props.formSaveStatus && this.props.isOpenModal) {
@@ -23,9 +17,10 @@ class ModalFormMemberContainer extends Component {
     }
 
     render() {
+        const modalTitle = (this.props.formType === "create") ? <TransComponent i18nKey="Create member" /> : <TransComponent i18nKey="Update member" />
         return (
             <Modal isOpen={this.props.isOpenModal} toggle={_ => this.props.toggleModalMember()}>
-                <ModalHeader toggle={_ => this.props.toggleModalMember()}>{this.modalTitle}</ModalHeader>
+                <ModalHeader toggle={_ => this.props.toggleModalMember()}>{modalTitle}</ModalHeader>
                 <ModalBody>
                     <FormMemberContainer {...this.props} />
                 </ModalBody>

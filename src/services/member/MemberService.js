@@ -32,6 +32,24 @@ class MemberService extends BaseService {
 
         return HttpService.post(`${this.serviceUrl}/member/update_multi_cong_thuc_tinh`, payload);
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | @input: memberId
+    |--------------------------------------------------------------------------
+    */
+    getFormulaByMember(payload) {
+        return HttpService.post(`${this.serviceUrl}/member/get_link_formula_detail`, payload)
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | @input: id
+    |--------------------------------------------------------------------------
+    */
+    deleteMember(id) {
+        return HttpService.post(`${this.serviceUrl}/member/delete_member`, {id: id})
+    }
 }
 
 export default new MemberService()
