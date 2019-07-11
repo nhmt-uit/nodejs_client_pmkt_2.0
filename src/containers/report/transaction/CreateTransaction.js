@@ -110,18 +110,18 @@ class CreateTransaction extends Component {
             isEdit: _get(this.props.initialValues, 'isEdit', false),
             id: _get(this.props.initialValues, 'idEdit', null),
         }
-        var self = this;
         this.props.saveTransaction({data: JSON.stringify(post)})
-            .then(function () {
-                self.props.destroy('createTransaction');
+            .then( () => {
+                this.props.destroy('createTransaction');
+                this.props.callParentFromCreateTransaction()
             })
-            .then(function () {
-                self.setState({
+            .then( () => {
+                this.setState({
                     isEdit: false,
                 })
             })
-            .then(function () {
-                self.props.getAllTransaction()
+            .then( () => {
+                this.props.getAllTransaction()
             })
             .catch(function (err) {
                 console.log(err)

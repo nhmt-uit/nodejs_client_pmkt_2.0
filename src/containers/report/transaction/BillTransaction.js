@@ -28,6 +28,12 @@ class BillTransaction extends Component {
         this.props.onRef(undefined)
     }
 
+    changeStateBillTransaction = (rowInTable) => {
+        this.setState({
+            rowInTable: rowInTable
+        })
+    }
+
     callBillTransaction = (memberValues, cycleValues, typeOfMoney, transactionMethod, amount) => {
         if(memberValues){
             var memberId = memberValues.value;
@@ -76,12 +82,27 @@ class BillTransaction extends Component {
             transaction = "Other";
         }
         let mapOptMoney = keyBy(optMoney, 'value')
+        mapOptMoney = Object.entries(mapOptMoney);
+
+
+        var i = 0, header_temp;
         let headers = currencyIDs.map(function (id) {
+            if(typeOfMoney === id){
+                i++;
+            }
             return(
                 <th key={id} className="caption-subject font-red text-center"> {map_currency[id].dv_tien_te} </th>
             )
         });
-
+        if(i === 0){
+            header_temp = mapOptMoney.map(function (item) {
+                if(item[1].value == typeOfMoney){
+                    return(
+                        <th key={typeOfMoney} className="caption-subject font-red text-center"> {item[1].label} </th>
+                    )
+                }
+            })
+        }
         let test = currencyIDs.map(function (id) {
             return(
                 <td key={id} className="caption-subject font-green text-center">
@@ -120,6 +141,7 @@ class BillTransaction extends Component {
                             <tr role="row">
                                 <th></th>
                                 {headers}
+                                {header_temp}
                             </tr>
                             </thead>
                             <tbody>

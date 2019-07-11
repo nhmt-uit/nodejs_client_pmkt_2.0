@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {get, isEmpty} from 'lodash';
 
-import {getMemberSub, delMemberSub} from "my-actions/account_sub/AccountSubAction";
+import {getMemberSub, delMemberSub, toggleModalMemberSub} from "my-actions/account_sub/AccountSubAction";
 import {compose} from "redux/es/redux";
 import {connect} from "react-redux";
 import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
@@ -30,8 +30,7 @@ class ListSubUserContainer extends Component{
     }
 
     toggleEditMemberSub = (item) => {
-        var isOpenModalEdit = true;
-        this.childModalFormEditSubUserContainer.callEditMemberSub(item, isOpenModalEdit);
+        this.childModalFormEditSubUserContainer.callEditMemberSub(item);
     }
 
     toggleDelMemberSubModal = value_id => {
@@ -74,7 +73,6 @@ class ListSubUserContainer extends Component{
         var listMemberSub = DATA.res.data.List;
         const filterTextChange = this.state.filterText;
 
-        var self = this;
         return (
             <div className="col-xs-12">
                 <div className="portlet light bordered">
@@ -104,7 +102,7 @@ class ListSubUserContainer extends Component{
                             </thead>
                             <tbody>
                             {
-                                listMemberSub.map(function (item, index) {
+                                listMemberSub.map((item, index) => {
                                     if(item.fullname.toUpperCase().indexOf(filterTextChange.toUpperCase()) > -1){
                                         return(
                                             <tr key={index}>
@@ -114,9 +112,9 @@ class ListSubUserContainer extends Component{
                                                 <td className="text-center"> {item.status === 1 ? "Online" : "Offline"} </td>
                                                 <td className="text-center"> {item.active_password2 === 1 ? (<span className="btn btn-danger label-active-pass2"> <TransComponent i18nKey="activate"/> </span>) : <span />} </td>
                                                 <td className="text-center"> <button className="text-success btn btn-link"
-                                                                                     onClick={ () => self.toggleEditMemberSub(item)}> <i className="fa fa-edit"></i> </button> </td>
+                                                                                     onClick={ () => this.toggleEditMemberSub(item)}> <i className="fa fa-edit"></i> </button> </td>
                                                 <td className="text-center"> <button className="text-success btn btn-link font-red"
-                                                                                     onClick={ () => self.toggleDelMemberSubModal(item.id)}> <i className="fa fa-close"></i> </button> </td>
+                                                                                     onClick={ () => this.toggleDelMemberSubModal(item.id)}> <i className="fa fa-close"></i> </button> </td>
                                             </tr>
                                         )
                                     }
@@ -159,6 +157,7 @@ const mapDispatchToProps = dispatch => {
     return{
         getMemberSub: params => {dispatch(getMemberSub(params))},
         delMemberSub: params => dispatch(delMemberSub(params)),
+        toggleModalMemberSub:  params => dispatch(toggleModalMemberSub(params)),
     };
 };
 

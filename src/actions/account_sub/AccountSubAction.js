@@ -64,6 +64,14 @@ export const toggleModalMemberSub = () => {
     }
 };
 
+export const toggleModalEditMemberSub = () => {
+    return (dispatch) => {
+        dispatch({
+            type: AccountSubActionType.MEMBER_SUB_TOGGLE_MODAL_EDIT_FORM,
+        })
+    }
+};
+
 export const resetFormSaveResponse = (params) => {
     return (dispatch) => {
         dispatch({

@@ -1,6 +1,8 @@
 import { AccountSubActionType } from 'my-constants/action-types';
+import {isObjectPattern} from "@babel/types";
 
 let defaultState = {
+    isOpenEditModal: false,
     isOpenModal: false,
     memberSub: {},
     suffixesMember: {},
@@ -23,8 +25,17 @@ const AccountSubReducer = (state = defaultState, action) => {
             return {...state, formSaveStatus: null, formSaveResponse: {}};
         case AccountSubActionType.MEMBER_SUB_TOGGLE_MODAL_FORM:
             //Reset Store When Modal Close
-            // if (!state.isOpenModal === false) return {isOpenModal: false}
+            if (state.isOpenModal === true){
+                var isOpenModal = !state.isOpenModal
+                return {...state, isOpenModal: isOpenModal, formSaveStatus: null};
+            }
             return {...state, isOpenModal: !state.isOpenModal};
+        case AccountSubActionType.MEMBER_SUB_TOGGLE_MODAL_EDIT_FORM:
+            if (state.isOpenModal === true){
+                var isOpenEditModal = !state.isOpenEditModal
+                return {...state, isOpenEditModal: isOpenEditModal, formSaveStatus: null};
+            }
+            return {...state, isOpenEditModal: !state.isOpenEditModal};
         default:
             return {...state};
     }

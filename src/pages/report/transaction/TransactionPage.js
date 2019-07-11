@@ -18,6 +18,10 @@ class TransactionPage extends React.Component{
     };
 
     getDataFromCreateTransaction = (memberValues, cycleValues, typeOfMoney, transactionMethod, amount) => {
+        if(memberValues === undefined){
+            var rowInTable = false
+            this.childBillTransaction.changeStateBillTransaction(rowInTable)
+        }
         this.childBillTransaction.callBillTransaction(memberValues, cycleValues, typeOfMoney, transactionMethod, amount)
     };
 
