@@ -21,7 +21,7 @@ let defaultState = {
 
 	lstTab: [],
 	lstAccount: [],
-}
+};
 
 export const AccountReducer = (state = defaultState, action) => {
 	switch(action.type){
@@ -46,9 +46,15 @@ export const AccountReducer = (state = defaultState, action) => {
 			return {...state, initFormData: action.initFormData, optBanker: optBanker, optAccountBelong: optAccountBelong}
 		case AccountActionType.ACCOUNT_TOGGLE_MODAL_FORM:
 			//Reset Store When Modal Close
-			if (!state.isOpenModal === false) return {...defaultState}
+			if (!state.isOpenModal === false) return {
+				...defaultState,
+				lstTab: state.lstTab,
+				lstAccount: state.lstAccount,
+			};
 			return {...state, selectedItem: action.selectedItem, isOpenModal: !state.isOpenModal};
+
 		case AccountActionType.ACCOUNT_TOGGLE_MODAL_DELETE:
+			//Reset Store When Modal Close
 			//Reset Store When Modal Close
 			if (!state.isOpenModalDelete === false) return {...defaultState}
 			return {...state, selectedItem: action.selectedItem, isOpenModalDelete: !state.isOpenModalDelete};

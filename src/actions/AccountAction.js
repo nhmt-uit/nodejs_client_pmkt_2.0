@@ -36,7 +36,7 @@ export const getAccount = () => {
                 });
             });
     }
-}
+};
 
 export const requestInitFormData = (bankerAccount) => {
     return (dispatch) => {
@@ -50,7 +50,7 @@ export const requestInitFormData = (bankerAccount) => {
             }
         })
     }
-}
+};
 
 export const resetStoreAccount = () => {
     return (dispatch) => {

@@ -5,14 +5,28 @@ import { withTranslation } from 'react-i18next';
 import { sortBy as _sortBy } from 'lodash';
 
 import { TransComponent, LoadingComponent } from 'my-components';
-import { BookTabContentContainer } from 'my-containers/account';
-import { getTab, getAccount } from 'my-actions/AccountAction';
+import { BookTabContentContainer, ModalByActionContainer } from 'my-containers/account';
+import { getTab, getAccount, toggleModalAccount } from 'my-actions/AccountAction';
 
 class AccountListContainer extends Component {
     componentDidMount() {
         this.props.getTab();
         this.props.getAccount();
     }
+
+    state = {
+        isOpenModal: false,
+    };
+
+    filterAccountByBook(lstAccount, id) {
+        return lstAccount.filter(account => {
+            return account.book_id === id;
+        });
+    }
+
+    handleOpenCreateNewModal = () => {
+        this.props.toggleModalAccount();
+    };
 
     renderTabContent() {
         const { lstTab, isFetchingAccount } = this.props;
@@ -30,7 +44,7 @@ class AccountListContainer extends Component {
                 <BookTabContentContainer lstAccount={lstAccount} id="all" isActive={true} data={{}} />
                 {
                     lstTab.map(item => (
-                        <BookTabContentContainer lstAccount={lstAccount} key={item.id} id={item.id} data={{}} />
+                        <BookTabContentContainer lstAccount={this.filterAccountByBook(lstAccount, item.id)} key={item.id} id={item.id} data={{}} />
                     ))
                 }
             </>
@@ -38,17 +52,18 @@ class AccountListContainer extends Component {
     }
 
     render() {
-        const { t, lstTab } = this.props;
+        const { t, lstTab } = this.props;console.log('render==')
 
         return (
-            <div className="portlet box blue-hoki">
+            <div className="portlet box blue-hoki position-relative">
+                <button onClick={this.handleOpenCreateNewModal} className="btn btn-danger btn-add-formula"><TransComponent i18nKey="Add new" /></button>
                 <div className="portlet-title tabbable-line padding-top-0">
                     <div className="caption">
                         <span className="caption-subject bold uppercase font-size-15"><TransComponent i18nKey="Account list" /></span>
                     </div>
                     <ul className="nav nav-tabs">
                         <li className="text-capitalize active">
-                            <a href="all" data-toggle="tab"><strong><TransComponent i18nKey="All" /></strong></a>
+                            <a href="#all" data-toggle="tab"><strong><TransComponent i18nKey="All" /></strong></a>
                         </li>
                         {
                             lstTab.map((item) => (
@@ -60,7 +75,7 @@ class AccountListContainer extends Component {
                     </ul>
                     <div className="float-right padding-tb-6 margin-right-10">
                         <div className="input-icon right">
-                            <i className="fa fa-search"></i>
+                            <i className="fa fa-search" />
                             <input className="form-control" onChange={e => void(0)} placeholder={t('member name')} type="text" />
                         </div>
                     </div>
@@ -70,6 +85,7 @@ class AccountListContainer extends Component {
                         { this.renderTabContent() }
                     </div>
                 </div>
+                <ModalByActionContainer />
             </div>
         )
     }
@@ -87,6 +103,7 @@ const mapDispatchToProps = dispatch => {
     return {
         getTab: () => dispatch(getTab()),
         getAccount: () => dispatch(getAccount()),
+        toggleModalAccount: () => dispatch(toggleModalAccount()),
     };
 };
 

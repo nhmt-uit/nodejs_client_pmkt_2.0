@@ -4,6 +4,9 @@ import FormAccountContainer from './FormAccountContainer'
 import AccountListContainer from './AccountListContainer'
 import BookTabContentContainer from './BookTabContentContainer'
 import AccountItemContainer from './AccountItemContainer'
+import ButtonCheckLoginContainer from './ButtonCheckLoginContainer'
+import AccountModalContainer from './AccountModalContainer'
+import ModalByActionContainer from './ModalByActionContainer'
 
 export {
     ModalDeleteAccountContainer,
@@ -11,5 +14,8 @@ export {
     FormAccountContainer,
     AccountListContainer,
     BookTabContentContainer,
-    AccountItemContainer
+    AccountItemContainer,
+    ButtonCheckLoginContainer,
+    AccountModalContainer,
+    ModalByActionContainer,
 }
