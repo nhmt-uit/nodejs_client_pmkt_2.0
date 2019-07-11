@@ -12,7 +12,6 @@ import { ModalFormMemberContainer } from 'my-containers/member'
 
 import {getCycle, getTypeOfMoney, saveTransaction, resetFormSaveResponse, getAllTransaction} from "my-actions/report/TransactionAction";
 import {getMember, toggleModalMember} from "my-actions/member/MemberAction";
-import {TransComponent} from 'my-components'
 
 class CreateTransaction extends Component {
     constructor(props) {

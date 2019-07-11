@@ -81,14 +81,14 @@ const mapStateToProps = state => {
         lstAccount: state.AccountReducer.lstAccount || [],
         isFetchingAccount: state.AccountReducer.isFetchingAccount || false,
     };
-}
+};
 
 const mapDispatchToProps = dispatch => {
     return {
         getTab: () => dispatch(getTab()),
         getAccount: () => dispatch(getAccount()),
     };
-}
+};
 
 export default compose(
     withTranslation(),
