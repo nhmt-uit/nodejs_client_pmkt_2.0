@@ -152,6 +152,7 @@ class ReportDetail extends Component {
                     <tbody>
                     {
                         // rows
+                        arr.length ?
                         arr.map(function (item, index) {
                             return <tr key={index}>
                                 <td className="text-center"> {item.index} </td>
@@ -172,6 +173,7 @@ class ReportDetail extends Component {
                                 <td className="text-right"> 0 </td>
                             </tr>
                         })
+                            : <tr><td className="text-center" colSpan="20"><TransComponent i18nKey="Data Empty" /></td></tr>
                     }
                     </tbody>
                 </table>

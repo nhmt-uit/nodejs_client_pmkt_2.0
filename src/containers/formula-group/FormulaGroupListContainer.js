@@ -188,7 +188,10 @@ class FormulaGroupListContainer extends Component {
                             </tr>
                         </thead>
                         <tbody>
-                        {tbody}
+                        {
+                            formulaGroupList.length ?
+                                tbody : <tr><td className="text-center" colSpan="20"><TransComponent i18nKey="Data Empty" /></td></tr>
+                        }
                         </tbody>
                     </table>
                 </div>

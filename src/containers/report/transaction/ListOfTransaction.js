@@ -94,6 +94,7 @@ class ListOfTransaction extends Component {
                     </thead>
                     <tbody>
                     {
+                        listTransaction.length ?
                         listTransaction.map( (item, index) => {
                             var showCurrenciesValues = currencies.map(function (obj, index) {
                                 if(obj.id === item.dv_tien_te_id){
@@ -121,6 +122,7 @@ class ListOfTransaction extends Component {
                                 </tr>
                             )
                         })
+                        : <tr><td className="text-center" colSpan="20"><TransComponent i18nKey="Data Empty" /></td></tr>
                     }
                     </tbody>
                 </table>

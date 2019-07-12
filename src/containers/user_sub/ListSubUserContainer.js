@@ -101,6 +101,7 @@ class ListSubUserContainer extends Component{
                             </thead>
                             <tbody>
                             {
+                                listMemberSub.length ?
                                 listMemberSub.map((item, index) => {
                                     if(item.fullname.toUpperCase().indexOf(filterTextChange.toUpperCase()) > -1){
                                         return(
@@ -118,6 +119,7 @@ class ListSubUserContainer extends Component{
                                         )
                                     }
                                 })
+                                : <tr><td className="text-center" colSpan="20"><TransComponent i18nKey="Data Empty" /></td></tr>
                             }
                             </tbody>
                         </table>

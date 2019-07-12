@@ -3,6 +3,7 @@ import {compose} from "redux";
 import {reduxForm} from "redux-form";
 import {connect} from "react-redux";
 import { getBanker } from "my-actions/banker/BankerAction";
+import {TransComponent} from 'my-components'
 
 import { isEmpty} from 'lodash'
 
@@ -24,15 +25,18 @@ class BankerListContainer extends React.Component{
                     <table className="table table-striped table-bordered table-hover dataTable no-footer dtr-inline">
                         <thead></thead>
                         <tbody>
-                        {List.map(function (items) {
+                        {
+                            List.length ?
+                            List.map(function (items) {
                             var url = items.logo.replace(".", "")
                             return(
                                 <tr key={items.name} role="row" className="odd">
                                     <td><img src={"/assets" + url} alt={items.name} style={{height:60, width:120}} /></td>
                                     <td><a href={items.agent_url} target="_blank" rel="noopener noreferrer"> {items.agent_url} </a> </td>
                                 </tr>
-                            )
-                        })}
+                            )})
+                            : <tr><td className="text-center" colSpan="20"><TransComponent i18nKey="Data Empty" /></td></tr>
+                        }
                         </tbody>
                     </table>
                 </div>

@@ -46,7 +46,7 @@ class AccountantManualBankerPage extends Component {
                         <div className="col-xs-12">
                             <h5 className="margin-bottom"> <TransComponent i18nKey="Please chooose company to login" /> : </h5>
                             <div className="row widget-row">
-                                {item}
+                                {List.length ? item : <tr><td className="text-center" colSpan="20"><TransComponent i18nKey="Data Empty" /></td></tr>}
                             </div>
                         </div>
                     </div>

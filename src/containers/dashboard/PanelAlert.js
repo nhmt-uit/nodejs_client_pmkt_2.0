@@ -60,7 +60,9 @@ class PanelAlert extends Component{
                         <div className="portlet-body table-responsive" style={{maxHeight:"400px", overflowY: 'scroll'}}>
                             <div className="mt-btm-transform ">
                                 {/*====================================================================*/}
-                                {listNotify.map(function (items) {
+                                {
+                                    listNotify.length ?
+                                    listNotify.map(function (items) {
                                     return(
                                         <div className="portlet box blue-hoki" key={items.created}>
                                             <div className="portlet-title">
@@ -79,8 +81,8 @@ class PanelAlert extends Component{
                                                 </div>
                                             </div>
                                         </div>
-                                    )
-                                })}
+                                    )}) : <tr><td className="text-center" colSpan="20"><TransComponent i18nKey="Data Empty" /></td></tr>
+                                }
                                 {/*====================================================================*/}
                             </div>
                         </div>
