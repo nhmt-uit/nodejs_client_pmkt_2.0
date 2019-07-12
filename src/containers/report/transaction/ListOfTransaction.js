@@ -31,15 +31,14 @@ class ListOfTransaction extends Component {
         var delValueID = {
             id: this.state.delValueID
         }
-        var self = this;
         this.props.delTransaction(delValueID)
-            .then(function () {
-                self.setState({
-                    isOpenDelModal: !self.state.isOpenDelModal
+            .then( () => {
+                this.setState({
+                    isOpenDelModal: !this.state.isOpenDelModal
                 })
             })
-            .then(function () {
-                self.props.getAllTransaction()
+            .then( () => {
+                this.props.getAllTransaction()
             })
             .catch(function (err) {
                 console.log(err)
@@ -78,8 +77,6 @@ class ListOfTransaction extends Component {
             )
         })
 
-
-        var self = this;
         return (
             <div className="table-responsive">
                 <table className="table table-striped table-bordered table-hover dataTable no-footer dtr-inline">
@@ -97,7 +94,7 @@ class ListOfTransaction extends Component {
                     </thead>
                     <tbody>
                     {
-                        listTransaction.map(function (item, index) {
+                        listTransaction.map( (item, index) => {
                             var showCurrenciesValues = currencies.map(function (obj, index) {
                                 if(obj.id === item.dv_tien_te_id){
                                     return(
@@ -118,9 +115,9 @@ class ListOfTransaction extends Component {
                                     <td className="text-center"> {item.note} </td>
                                     <td className="text-center"> {item.created} </td>
                                     <td className="text-center"> <button className="text-success btn btn-link"
-                                                                         onClick={ () => self.toggleEditTransactionModal(item)}> <i className="fa fa-edit"></i> </button> </td>
+                                                                         onClick={ () => this.toggleEditTransactionModal(item)}> <i className="fa fa-edit"></i> </button> </td>
                                     <td className="text-center"> <button className="text-success btn btn-link font-red"
-                                                                         onClick={ () => self.toggleDelTransactionModal(item.id)}> <i className="fa fa-close"></i> </button> </td>
+                                                                         onClick={ () => this.toggleDelTransactionModal(item.id)}> <i className="fa fa-close"></i> </button> </td>
                                 </tr>
                             )
                         })

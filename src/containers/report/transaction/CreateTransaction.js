@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {Field, reduxForm, reset} from "redux-form";
 import {connect} from "react-redux";
 import {compose} from "redux";
-import {isEmpty, get as _get} from 'lodash'
+import {isEmpty, get as _get, sortBy} from 'lodash'
 
 import {withTranslation} from "react-i18next";
 import {TransComponent} from 'my-components'
@@ -131,6 +131,10 @@ class CreateTransaction extends Component {
     renderAlert = _ => {
         const {formSaveStatus, formSaveResponse} = this.props
         if (formSaveStatus === false) {
+            //setTimeout close alert
+            setTimeout(()=>{
+                this.props.resetFormSaveResponse();
+            }, 3000);
             return (
                 <div className="alert alert-danger">
                     <button className="close" onClick={this.props.resetFormSaveResponse}/>
@@ -138,6 +142,9 @@ class CreateTransaction extends Component {
                 </div>
             )
         } else if (formSaveStatus === true) {
+            setTimeout(()=>{
+                this.props.resetFormSaveResponse();
+            }, 3000);
             return (
                 <div className="alert bg-success">
                     <button className="close" onClick={this.props.resetFormSaveResponse} />
@@ -152,7 +159,9 @@ class CreateTransaction extends Component {
             {value: "9", label: 'Other'}
         ]
         //Get data Cycle
-        const {optCycle, optMoney, optMember} = this.props
+        const {optCycle, optMoney, optMember} = this.props;
+        // sort optCycle by Date closest to farthest
+        var Cycle = sortBy(optCycle, ['label']).reverse();
 
         if (isEmpty(optMoney) || isEmpty(optCycle)) {
             return null;
@@ -217,7 +226,7 @@ class CreateTransaction extends Component {
                             className="basic-single"
                             component={renderSelectField}
                             isSearchable={false}
-                            options={optCycle}
+                            options={Cycle}
                             placeholder={t("select_cycle")}
                         />
                         <Field name="cycle" component={renderError}/>

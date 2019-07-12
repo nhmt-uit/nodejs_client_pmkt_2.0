@@ -49,15 +49,14 @@ class ListSubUserContainer extends Component{
         var post = {
             id: this.state.delValueID
         }
-        var self = this;
         this.props.delMemberSub(post)
-            .then(function () {
-                self.setState({
-                    isOpenDelModal: !self.state.isOpenDelModal
+            .then( () => {
+                this.setState({
+                    isOpenDelModal: !this.state.isOpenDelModal
                 })
             })
-            .then(function () {
-                self.props.getMemberSub()
+            .then( () => {
+                this.props.getMemberSub()
             })
             .catch(function (err) {
                 console.log(err)
