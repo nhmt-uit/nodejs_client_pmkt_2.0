@@ -5,7 +5,7 @@ import { withTranslation } from 'react-i18next';
 import { sortBy as _sortBy } from 'lodash';
 
 import { TransComponent, LoadingComponent } from 'my-components';
-import { BookTabContentContainer, ModalByActionContainer } from 'my-containers/account';
+import { BookTabContentContainer, ModalByActionContainer, LinkFormulaModalContainer } from 'my-containers/account';
 import { getTab, getAccount, toggleModalAccount } from 'my-actions/AccountAction';
 
 class AccountListContainer extends Component {
@@ -86,6 +86,7 @@ class AccountListContainer extends Component {
                     </div>
                 </div>
                 <ModalByActionContainer />
+                <LinkFormulaModalContainer />
             </div>
         )
     }

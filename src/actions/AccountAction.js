@@ -64,7 +64,8 @@ export const toggleModalAccount = (params) => {
     return (dispatch) => {
         dispatch({
             type: AccountActionType.ACCOUNT_TOGGLE_MODAL_FORM,
-            selectedItem: _get(params, 'selectedItem', {})
+            selectedItem: _get(params, 'selectedItem', {}),
+            isModalLinkFormula: _get(params, 'isModalLinkFormula', false),
         })
     }
 };
@@ -142,4 +143,4 @@ export const getTab = () => {
             });
         });
     }
-}
+};

@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty as _isEmpty } from 'lodash';
+import { connect } from 'react-redux';
 
 import { TransComponent } from 'my-components';
 import { ButtonCheckLoginContainer } from 'my-containers/account';
+import { toggleModalAccount } from 'my-actions/AccountAction';
 
-export default class AccountItemContainer extends Component {
+class AccountItemContainer extends Component {
     static propTypes = {
         account: PropTypes.object,
         isCheckLogin: PropTypes.bool,
@@ -37,7 +39,11 @@ export default class AccountItemContainer extends Component {
     };
 
     handleOpenUpdateModal = selectedItem => () => {
-        return this.props.onChangeProps({ updateState: { selectedItem, isOpenModal: true } });
+        return this.props.toggleModalAccount({ selectedItem });
+    };
+
+    handleOpenLinkFormulaModal = selectedItem => () => {
+        return this.props.toggleModalAccount({ selectedItem, isModalLinkFormula: true });
     };
 
     renderTR(item) {
@@ -80,7 +86,7 @@ export default class AccountItemContainer extends Component {
                 </td>
                 <td className="text-center">{item.is_active.toString()}</td>
                 <td className="text-center">
-                    <i className="fa fa-plus-circle font-green" />
+                    <i className="fa fa-plus-circle font-green cursor-pointer" onClick={this.handleOpenLinkFormulaModal(item)} />
                 </td>
                 <td className="text-center">
                     <i className="fa fa-edit font-green cursor-pointer" onClick={this.handleOpenUpdateModal(item)} />
@@ -117,3 +123,11 @@ export default class AccountItemContainer extends Component {
         return this.renderRecursiveItem(account);
     }
 }
+
+const mapDispatchToProps = dispatch => {
+    return {
+        toggleModalAccount: params => dispatch(toggleModalAccount(params)),
+    };
+};
+
+export default connect(null, mapDispatchToProps)(AccountItemContainer);

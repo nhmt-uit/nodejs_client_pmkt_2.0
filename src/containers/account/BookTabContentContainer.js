@@ -2,9 +2,10 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { isPlainObject as _isPlainObject, merge as _merge } from 'lodash';
 import {connect} from "react-redux";
+import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 import { TransComponent } from 'my-components';
-import { AccountItemContainer, AccountModalContainer, ModalFormAccountContainer } from 'my-containers/account';
+import { AccountItemContainer } from 'my-containers/account';
 import { AccountService } from 'my-services/account';
 import { getAccount, toggleModalAccount } from 'my-actions/AccountAction';
 
@@ -28,19 +29,7 @@ class BookTabContentContainer extends Component {
             name: '',
             isLoading: false,
         },
-        updateState: {
-            isOpenModal: false,
-            selectedItem: {},
-        },
     };
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.state.updateState.isOpenModal) {
-            this.handleChangeState({ updateState: { isOpenModal: false } }, () => {
-                return this.props.toggleModalAccount({ selectedItem: this.state.updateState.selectedItem });
-            })();
-        }
-    }
 
     handleChangeState = (state, cb) => () => {
         const oldState = this.state;
@@ -148,12 +137,10 @@ class BookTabContentContainer extends Component {
                         </tbody>
                     </table>
                 </div>
-                <AccountModalContainer
-                    isOpen={deleteState.isOpenModal}
-                    onToggle={this.handleChangeState({ deleteState: { ...deleteState, isOpenModal: !deleteState.isOpenModal } })}
-                    header={<TransComponent i18nKey="xac nhan" />}
-                    body={<><TransComponent i18nKey="are you sure delete" />&nbsp;<span className="text-uppercase">{deleteState.name}</span></>}
-                    footer={
+                <Modal isOpen={deleteState.isOpenModal} toggle={this.handleChangeState({ deleteState: { ...deleteState, isOpenModal: !deleteState.isOpenModal } })} >
+                    <ModalHeader toggle={this.handleChangeState({ deleteState: { ...deleteState, isOpenModal: !deleteState.isOpenModal } })}><TransComponent i18nKey="xac nhan" /></ModalHeader>
+                    <ModalBody><TransComponent i18nKey="are you sure delete" />&nbsp;<span className="text-uppercase">{deleteState.name}</span></ModalBody>
+                    <ModalFooter>
                         <div className="text-center">
                             <button className="btn btn-primary" disabled={deleteState.isLoading} onClick={this.handleDeleteAccount}>
                                 <TransComponent i18nKey="Delete" />{ deleteState.isLoading ? <i className="fa fa-spinner fa-spin" /> : null }
@@ -162,8 +149,8 @@ class BookTabContentContainer extends Component {
                                 <TransComponent i18nKey="Cancel" />
                             </button>
                         </div>
-                    }
-                />
+                    </ModalFooter>
+                </Modal>
             </div>
         )
     }
