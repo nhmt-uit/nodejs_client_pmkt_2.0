@@ -7,6 +7,7 @@ import AccountItemContainer from './AccountItemContainer'
 import ButtonCheckLoginContainer from './ButtonCheckLoginContainer'
 import ModalByActionContainer from './ModalByActionContainer'
 import LinkFormulaModalContainer from './LinkFormulaModalContainer'
+import AccountDetailItemContainer from './AccountDetailItemContainer'
 
 export {
     ModalDeleteAccountContainer,
@@ -17,5 +18,6 @@ export {
     AccountItemContainer,
     ButtonCheckLoginContainer,
     ModalByActionContainer,
-    LinkFormulaModalContainer
+    LinkFormulaModalContainer,
+    AccountDetailItemContainer
 }

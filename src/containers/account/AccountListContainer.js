@@ -52,7 +52,7 @@ class AccountListContainer extends Component {
     }
 
     render() {
-        const { t, lstTab } = this.props;console.log('render==')
+        const { t, lstTab } = this.props;
 
         return (
             <div className="portlet box blue-hoki position-relative">

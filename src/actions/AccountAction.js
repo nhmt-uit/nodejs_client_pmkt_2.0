@@ -114,7 +114,7 @@ export const resetFormSaveResponse = (params) => {
             type: AccountActionType.ACCOUNT_RESET_FORM_RESPONSE,
         });
     }
-}
+};
 
 export const getTab = () => {
     return (dispatch) => {
