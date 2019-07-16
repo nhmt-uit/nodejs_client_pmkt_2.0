@@ -6,7 +6,7 @@ import {compose} from "redux/es/redux";
 import {connect} from "react-redux";
 import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 import {withTranslation} from "react-i18next";
-import {TransComponent} from 'my-components'
+import {TransComponent, LoadingComponent} from 'my-components'
 import ModalFormEditSubUserContainer from "my-containers/user_sub/ModalFormEditSubUserContainer"
 
 class ListSubUserContainer extends Component{
@@ -64,14 +64,10 @@ class ListSubUserContainer extends Component{
     }
 
     render() {
-        const {t} = this.props
-        var DATA = this.props.memberSub.memberSub;
-        if(isEmpty(DATA)){
-            return null;
-        }
-        var listMemberSub = DATA.res.data.List;
+        const {t, memberSub} = this.props
+        var listMemberSub = memberSub
         const filterTextChange = this.state.filterText;
-
+        var x = 0;
         return (
             <div className="col-xs-12">
                 <div className="portlet light bordered">
@@ -104,17 +100,18 @@ class ListSubUserContainer extends Component{
                                 listMemberSub.length ?
                                 listMemberSub.map((item, index) => {
                                     if(item.fullname.toUpperCase().indexOf(filterTextChange.toUpperCase()) > -1){
+                                        x++;
                                         return(
                                             <tr key={index}>
-                                                <td className="text-center"> {index + 1} </td>
+                                                <td className="text-center"> {x} </td>
                                                 <td className="text-center uppercase"> {item.fullname} </td>
                                                 <td className="text-center uppercase"> {item.username} </td>
-                                                <td className="text-center"> {item.status === 1 ? "Online" : "Offline"} </td>
+                                                <td className="text-center"> {item.status === 1 ? t("Online") : t("Offline")} </td>
                                                 <td className="text-center"> {item.active_password2 === 1 ? (<span className="btn btn-danger label-active-pass2"> <TransComponent i18nKey="activate"/> </span>) : <span />} </td>
                                                 <td className="text-center"> <button className="text-success btn btn-link"
-                                                                                     onClick={ () => this.toggleEditMemberSub(item)}> <i className="fa fa-edit"></i> </button> </td>
+                                                                                     onClick={ () => this.toggleEditMemberSub(item)}> <i className="fa fa-edit font-green cursor-pointer"></i> </button> </td>
                                                 <td className="text-center"> <button className="text-success btn btn-link font-red"
-                                                                                     onClick={ () => this.toggleDelMemberSubModal(item.id)}> <i className="fa fa-close"></i> </button> </td>
+                                                                                     onClick={ () => this.toggleDelMemberSubModal(item.id)}> <i className="fa fa-times-circle cursor-pointer"></i> </button> </td>
                                             </tr>
                                         )
                                     }
@@ -149,7 +146,7 @@ class ListSubUserContainer extends Component{
 
 const mapStateToProps = state => {
     return {
-        memberSub: get(state,'AccountSubReducer', {}),
+        memberSub: state.AccountSubReducer.memberSub,
         formMemberSubSaveStatus: state.AccountSubReducer.formSaveStatus,
     }
 };

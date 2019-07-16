@@ -14,7 +14,7 @@ const AccountSubReducer = (state = defaultState, action) => {
 
     switch (action.type) {
         case AccountSubActionType.GET_MEMBER_SUB:
-            return {...state, memberSub: action.payload};
+            return {...state, memberSub: action.memberSub};
         case AccountSubActionType.GET_SUFFIXES_MEMBER:
             return {...state, suffixesMember: action.suffixesMember}
         case AccountSubActionType.DEL_MEMBER_SUB:
@@ -31,7 +31,7 @@ const AccountSubReducer = (state = defaultState, action) => {
             }
             return {...state, isOpenModal: !state.isOpenModal};
         case AccountSubActionType.MEMBER_SUB_TOGGLE_MODAL_EDIT_FORM:
-            if (state.isOpenModal === true){
+            if (state.isOpenEditModal === true){
                 var isOpenEditModal = !state.isOpenEditModal
                 return {...state, isOpenEditModal: isOpenEditModal, formSaveStatus: null};
             }

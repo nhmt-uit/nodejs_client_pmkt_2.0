@@ -15,7 +15,6 @@ const optSubMemberNumber = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 class FormSubUserContainer extends Component {
 
     componentWillMount() {
-        console.log("Props", this.props)
         const {formType, item} = this.props
         if (formType === "create") {
             AccountSubServices.getSuffixesMember().then(res => {
