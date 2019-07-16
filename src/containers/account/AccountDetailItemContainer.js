@@ -26,7 +26,14 @@ class AccountDetailItemContainer extends Component {
         isLoadingDelete: false,
         formulaSelected: null,
         memberSelected: null,
+        isSaved: true,
     };
+
+    componentWillReceiveProps(nextProps, nextContext) {
+        if ((this.props.isSaved !== nextProps.isSaved) && nextProps.isSaved) {
+            this.setState({ isEdit: !nextProps.isSaved })
+        }
+    }
 
     handleChangeState = (state, cb) => () => {
         this.setState(state, () => {
@@ -105,7 +112,7 @@ class AccountDetailItemContainer extends Component {
             placeholder={<TransComponent i18nKey="Formula" />}
             noOptionsMessage={() => <TransComponent i18nKey="Empty data" />}
             options={optFormula}
-            value={this.state.formulaSelected || formula}
+            defaultValue={formula}
             isSearchable={false}
             className="basic-single"
             menuPosition="fixed"
@@ -127,7 +134,7 @@ class AccountDetailItemContainer extends Component {
             placeholder={<TransComponent i18nKey="Member" />}
             noOptionsMessage={() => <TransComponent i18nKey="Empty data" />}
             options={optMember}
-            value={this.state.memberSelected || member}
+            defaultValue={member}
             isSearchable={false}
             className="basic-single"
             menuPosition="fixed"
@@ -187,7 +194,7 @@ class AccountDetailItemContainer extends Component {
                         { this._renderTd({ rowSpan: fieldValueLength, className: 'min-width-170', content: this.renderOptionFormula(formula) }) }
                         { this._renderTd({ rowSpan: fieldValueLength, content: (formula.banker_name || '').toUpperCase() }) }
                         { this._renderTd({ rowSpan: fieldValueLength, content: formula.currency_name || '' }) }
-                        { this._renderTd({ rowSpan: fieldValueLength, content: formula.giaonhan ? <TransComponent i18nKey="Pay" /> : <TransComponent i18nKey="Receive"/> }) }
+                        { this._renderTd({ rowSpan: fieldValueLength, content: formula.giaonhan === 1 ? <TransComponent i18nKey="Pay" /> : <TransComponent i18nKey="Receive"/> }) }
                         { this._renderTd({ rowSpan: fieldValueLength, content: formula.format_name }) }
                         { subItemIn }
                         { this._renderTd({ rowSpan: fieldValueLength, className: 'text-center', content: this._renderEditButton() }) }
