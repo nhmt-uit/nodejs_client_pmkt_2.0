@@ -18,10 +18,10 @@ class AccountantBankerAccountResultRowContainer extends Component {
     handleRequestScan = account => {
         if (this.props.bankerAccountType === "resolve") {
             const get_child_list = {}
-            if(this.props.parents.length) {
-                for(let item of this.props.parents) {
-                    get_child_list[item.username.toLowerCase()] = true
-                    if(item.username === account.username) break
+            const nestedAccount = this.findParents([this.props.rootAccInfoFull], account.username)
+            if(!_isEmpty(nestedAccount)) {
+                for(let x in nestedAccount) {
+                    get_child_list[nestedAccount[x].toLowerCase()] = true
                 }
             }
             let ids = [this.props.bankerAccount.id]
@@ -33,6 +33,20 @@ class AccountantBankerAccountResultRowContainer extends Component {
             if(!_isEmpty(get_child_list)) objScan.more_post.get_child_list = get_child_list
             this.props.socketScanData(objScan)
         }
+    }
+
+    findParents = (array, username) => {
+        if (typeof array != 'undefined') {
+            for (let i = 0; i < array.length; i++) {
+                if (array[i].username == username) return [username];
+                let a = this.findParents(array[i].child, username);
+                if (a != null) {
+                    a.unshift(array[i].username);
+                    return a;
+                }
+            }
+        }
+        return null;
     }
     
     /*
@@ -54,7 +68,7 @@ class AccountantBankerAccountResultRowContainer extends Component {
     |--------------------------------------------------------------------------
     */
     generateRowData = _ => {
-        const { item, rootAccInfo } = this.props
+        const { item, rootAccInfo, rootAccInfoFull} = this.props
         const { dataFieldList, dataHiddenFields, scanData } = this.props.bankerAccount
         const bankerAccountId = this.props.bankerAccount.id
         
@@ -104,7 +118,7 @@ class AccountantBankerAccountResultRowContainer extends Component {
                 if (idxDynamic > rowSpanColDynamic ) idxDynamic = 1
                 let tbl_col_formula = []
 
-                let objToggleModalSelectedFomula = {bankerAccountId: bankerAccountId, accInfo: accInfo, rootAccInfo: rootAccInfo, scanData: scanData}
+                let objToggleModalSelectedFomula = {bankerAccountId: bankerAccountId, accInfo: accInfo, rootAccInfo: rootAccInfo, rootAccInfoFull: rootAccInfoFull, scanData: scanData}
 
                 tbl_col_formula.push(
                     <Fragment key={uuidv4()}>
@@ -141,6 +155,7 @@ class AccountantBankerAccountResultRowContainer extends Component {
                         bankerAccountId: bankerAccountId,
                         accInfo: accInfo,
                         rootAccInfo: rootAccInfo,
+                        rootAccInfoFull: rootAccInfoFull,
                         formulaDetail: formula,
                         scanData: scanData
                     }

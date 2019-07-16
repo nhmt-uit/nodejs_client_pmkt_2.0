@@ -28,6 +28,12 @@ class BillTransaction extends Component {
         this.props.onRef(undefined)
     }
 
+    changeStateBillTransaction = (rowInTable) => {
+        this.setState({
+            rowInTable: rowInTable
+        })
+    }
+
     callBillTransaction = (memberValues, cycleValues, typeOfMoney, transactionMethod, amount) => {
         if(memberValues){
             var memberId = memberValues.value;
@@ -76,13 +82,19 @@ class BillTransaction extends Component {
             transaction = "Other";
         }
         let mapOptMoney = keyBy(optMoney, 'value')
+        mapOptMoney = Object.entries(mapOptMoney);
+
+        var found = false;
         let headers = currencyIDs.map(function (id) {
+            if(typeOfMoney === id){
+                found = true
+            }
             return(
                 <th key={id} className="caption-subject font-red text-center"> {map_currency[id].dv_tien_te} </th>
             )
         });
-
-        let test = currencyIDs.map(function (id) {
+        //Khai bao Header
+        let rowNew = currencyIDs.map(function (id) {
             return(
                 <td key={id} className="caption-subject font-green text-center">
                     {typeOfMoney === id ?
@@ -90,8 +102,49 @@ class BillTransaction extends Component {
                 </td>
             )
         })
-
-        let rows = currencyIDs.map(id => {
+        //Khai bao Content
+        let tdMain;
+        let rowMain = resultMap.map( (item, index) => {
+            var total = item[1].total;
+            tdMain = currencyIDs.map(id => {
+                return (
+                    <td key={id} className="caption-subject font-green text-right">
+                        {this.state.rowInTable ?
+                            item[1].name == transaction ?
+                                (typeOfMoney === id ? (total[id] && Number(total[id].result) + Number(amount) || 0 + Number(amount)) < 0 ? <span className="font-red"> {Helpers.formatMoney((total[id] && Number(total[id].result) + Number(amount) || 0 + Number(amount)),0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney((total[id] && Number(total[id].result) + Number(amount) || 0 + Number(amount)),0)} </span>
+                                    : (total[id] && total[id].result || 0) < 0 ? <span className="font-red"> {Helpers.formatMoney((total[id] && total[id].result || 0),0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney((total[id] && total[id].result || 0),0)} </span>)
+                                : (total[id] && total[id].result || 0) < 0 ? <span className="font-red"> {Helpers.formatMoney((total[id] && total[id].result || 0),0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney((total[id] && total[id].result || 0),0)} </span>
+                            : (total[id] && total[id].result || 0) < 0 ? <span className="font-red"> {Helpers.formatMoney((total[id] && total[id].result || 0),0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney((total[id] && total[id].result || 0),0)} </span>
+                        }
+                    </td>
+            )})
+            //Them column cho loai tien moi
+            if(!found){
+                if(amount){
+                    if(item[1].name == transaction){
+                        tdMain.push(
+                            <td key={typeOfMoney} className="caption-subject font-green text-right">
+                                {amount < 0 ? <span className="font-red"> {Helpers.formatMoney(amount,0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney(amount,0)} </span>}
+                            </td>
+                        )
+                    } else {
+                        tdMain.push(
+                            <td key={typeOfMoney} className="caption-subject font-green text-right">
+                                <span className="font-blue-steel"> 0 </span>
+                            </td>
+                        )
+                    }
+                }
+            }
+            return (
+                <tr key={index}>
+                    <td> <TransComponent i18nKey={item[1].name}/></td>
+                    {tdMain}
+                </tr>
+            )
+        });
+        //Khai bao Total
+        let rowTotal = currencyIDs.map(id => {
             return (
                 <td key={id} className="caption-subject font-green text-right">
                     {this.state.rowInTable ?
@@ -102,6 +155,35 @@ class BillTransaction extends Component {
                 </td>
             )
         });
+        //Them giao dich cho loai tien moi
+        var itemNew = null;
+        if(!found){
+            mapOptMoney.forEach(function (item) {
+                if(item[1].value == typeOfMoney){
+                    itemNew = item;
+                    return true;
+                }
+                return false;
+            })
+            if(itemNew){
+                headers.push(
+                    <th key={itemNew.value} className="caption-subject font-red text-center"> {itemNew[1].label} </th>
+                )
+
+                rowNew.push(
+                    <td className="caption-subject font-green text-center">
+                        {amount < 0 ? <span className="font-red"> {Helpers.formatMoney(amount,0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney(amount,0)} </span>}
+                    </td>
+                )
+
+                rowTotal.push(
+                    <td className="caption-subject font-green text-right">
+                        {amount < 0 ? <span className="font-red"> {Helpers.formatMoney(amount,0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney(amount,0)} </span>}
+                    </td>
+                )
+            }
+        }
+
         return (
             <div className="portlet light bordered">
                 <div className="portlet-title">
@@ -126,34 +208,12 @@ class BillTransaction extends Component {
                             {this.state.rowInTable ?
                                 <tr>
                                     <td> <TransComponent i18nKey={transaction}/> </td>
-                                    {test}
+                                    {rowNew}
                                 </tr> : <tr></tr>}
-                            {resultMap.map( (item, index) => {
-                                var total = item[1].total;
-                                return (
-                                    <tr key={index}>
-                                        <td> <TransComponent i18nKey={item[1].name}/></td>
-                                        {
-                                            currencyIDs.map(id => {
-                                                return (
-                                                    <td key={id} className="caption-subject font-green text-right">
-                                                        {this.state.rowInTable ?
-                                                            item[1].name == transaction ?
-                                                                (typeOfMoney === id ? (total[id] && Number(total[id].result) + Number(amount) || 0 + Number(amount)) < 0 ? <span className="font-red"> {Helpers.formatMoney((total[id] && Number(total[id].result) + Number(amount) || 0 + Number(amount)),0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney((total[id] && Number(total[id].result) + Number(amount) || 0 + Number(amount)),0)} </span>
-                                                                    : (total[id] && total[id].result || 0) < 0 ? <span className="font-red"> {Helpers.formatMoney((total[id] && total[id].result || 0),0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney((total[id] && total[id].result || 0),0)} </span>)
-                                                                : (total[id] && total[id].result || 0) < 0 ? <span className="font-red"> {Helpers.formatMoney((total[id] && total[id].result || 0),0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney((total[id] && total[id].result || 0),0)} </span>
-                                                            : (total[id] && total[id].result || 0) < 0 ? <span className="font-red"> {Helpers.formatMoney((total[id] && total[id].result || 0),0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney((total[id] && total[id].result || 0),0)} </span>
-                                                        }
-                                                    </td>
-                                                )
-                                            })
-                                        }
-                                    </tr>
-                                )
-                            })}
+                            {rowMain}
                             <tr>
                                 <td><TransComponent i18nKey="Total"/></td>
-                                {rows}
+                                {rowTotal}
                             </tr>
                             </tbody>
                         </table>

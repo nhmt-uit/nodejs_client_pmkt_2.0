@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
-import { get as _get } from 'lodash'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
 import 'my-styles/reactstrap-modal.css'
 
@@ -10,14 +9,7 @@ import { toggleModalAccount} from 'my-actions/AccountAction'
 import { TransComponent } from 'my-components'
 
 class ModalFormAccountContainer extends Component {
-    modalTitle = ''
-    componentDidMount() {
-        if(this.props.formType === "create") this.modalTitle = <TransComponent i18nKey="Create account" />
-        if(this.props.formType === "update") this.modalTitle = <TransComponent i18nKey="Update account" />
-    }
-
-    
-    componentDidUpdate(){
+    componentDidUpdate() {
         // Hide modal after save success
         if(this.props.formSaveStatus && this.props.isOpenModal) {
             this.props.toggleModalAccount()
@@ -25,9 +17,11 @@ class ModalFormAccountContainer extends Component {
     }
 
     render() {
+        const modalTitle = this.props.formType === "create" ? <TransComponent i18nKey="Create account" /> : <TransComponent i18nKey="Update account" />;
+
         return (
             <Modal isOpen={this.props.isOpenModal} toggle={_ => this.props.toggleModalAccount()} scrollable={true}>
-                <ModalHeader toggle={_ => this.props.toggleModalAccount()}>{this.modalTitle}</ModalHeader>
+                <ModalHeader toggle={_ => this.props.toggleModalAccount()}>{modalTitle}</ModalHeader>
                 <ModalBody>
                     <FormAccountContainer {...this.props} />
                 </ModalBody>
@@ -45,7 +39,7 @@ const mapStateToProps = state => {
         isOpenModal: state.AccountReducer.isOpenModal,
         formSaveStatus: state.AccountReducer.formSaveStatus,
     }
-}
+};
 
 const mapDispatchToProps = (dispatch) => {
     return {

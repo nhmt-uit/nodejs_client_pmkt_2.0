@@ -1,11 +1,11 @@
 import React, {Component} from 'react'
 import {compose} from "redux/es/redux";
 import {connect} from "react-redux";
-import {get as _get, isEmpty} from 'lodash'
+import {get as _get} from 'lodash'
 import {reduxForm} from "redux-form";
 
 import {withTranslation} from "react-i18next";
-import {TransComponent} from 'my-components'
+import {TransComponent, LoadingComponent} from 'my-components'
 
 import { Helpers } from 'my-utils'
 import { getAllTransaction} from "my-actions/report/TransactionAction";
@@ -31,15 +31,14 @@ class ListOfTransaction extends Component {
         var delValueID = {
             id: this.state.delValueID
         }
-        var self = this;
         this.props.delTransaction(delValueID)
-            .then(function () {
-                self.setState({
-                    isOpenDelModal: !self.state.isOpenDelModal
+            .then( () => {
+                this.setState({
+                    isOpenDelModal: !this.state.isOpenDelModal
                 })
             })
-            .then(function () {
-                self.props.getAllTransaction()
+            .then( () => {
+                this.props.getAllTransaction()
             })
             .catch(function (err) {
                 console.log(err)
@@ -67,19 +66,13 @@ class ListOfTransaction extends Component {
 
     render() {
         const { t } = this.props;
-
-        const {currencies, listTransaction} = this.props
-        if (isEmpty(currencies) || isEmpty(listTransaction)) {
-            return null;
-        }
+        const {currencies, listTransaction} = this.props;
         var showCurrencies = currencies.map(function (item, index) {
             return(
                 <th key={index} className="caption-subject font-red text-center"> {item.name} </th>
             )
         })
 
-
-        var self = this;
         return (
             <div className="table-responsive">
                 <table className="table table-striped table-bordered table-hover dataTable no-footer dtr-inline">
@@ -97,7 +90,8 @@ class ListOfTransaction extends Component {
                     </thead>
                     <tbody>
                     {
-                        listTransaction.map(function (item, index) {
+                        listTransaction.length ?
+                        listTransaction.map( (item, index) => {
                             var showCurrenciesValues = currencies.map(function (obj, index) {
                                 if(obj.id === item.dv_tien_te_id){
                                     return(
@@ -112,18 +106,19 @@ class ListOfTransaction extends Component {
                             return(
                                 <tr key={index}>
                                     <td className="text-center"> {index + 1} </td>
-                                    <td className="text-center uppercase"> {item.customer_name} </td>
+                                    <td className="text-left uppercase"> {item.customer_name} </td>
                                     {showCurrenciesValues}
                                     <td className="text-center font-dark"> {item.transaction_type} </td>
                                     <td className="text-center"> {item.note} </td>
                                     <td className="text-center"> {item.created} </td>
                                     <td className="text-center"> <button className="text-success btn btn-link"
-                                                                         onClick={ () => self.toggleEditTransactionModal(item)}> <i className="fa fa-edit"></i> </button> </td>
+                                                                         onClick={ () => this.toggleEditTransactionModal(item)}> <i className="fa fa-edit font-green cursor-pointer"></i> </button> </td>
                                     <td className="text-center"> <button className="text-success btn btn-link font-red"
-                                                                         onClick={ () => self.toggleDelTransactionModal(item.id)}> <i className="fa fa-close"></i> </button> </td>
+                                                                         onClick={ () => this.toggleDelTransactionModal(item.id)}> <i className="fa fa-times-circle cursor-pointer"></i> </button> </td>
                                 </tr>
                             )
                         })
+                        : <tr><td className="text-center" colSpan="20"><TransComponent i18nKey="Data Empty" /></td></tr>
                     }
                     </tbody>
                 </table>

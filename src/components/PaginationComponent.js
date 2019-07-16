@@ -123,7 +123,6 @@ class PaginationComponent extends Component {
         const totalPage = Math.ceil(total/perPage);
         const currentPage = this.state.currentPage;
 
-        console.log(totalPage)
         if (totalPage < 2) {
             return null;
         }

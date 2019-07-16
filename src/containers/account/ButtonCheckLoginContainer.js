@@ -5,44 +5,63 @@ import { AccountService } from 'my-services/account';
 
 export default class ButtonCheckLoginContainer extends Component {
     static propTypes = {
-        id: PropTypes.string.isRequired
-    }
+        id: PropTypes.string.isRequired,
+        isCheck: PropTypes.bool,
+    };
+
+    static defaultProps = {
+        isCheck: false,
+    };
 
     state = {
         isChecking: false,
-        isSuccess: false,
+        status: null,
     };
+
+    componentWillReceiveProps(nextProps, nextContext) {
+        if (nextProps.isCheck) {
+            this.handleCheckLogin(this.props.id)();
+        }
+    }
 
     handleCheckLogin = id => () => {
         this.setState({ 
             isChecking: true
         }, ()=> {
-            let isChecking = true;
-            let isSuccess = false;
-
-            AccountService.checkLogin(id)
+            return AccountService.checkLogin(id)
                 .then(res => {
                     if (res.status) {
-                        isChecking = false;
-                        isSuccess = true;
+                        this.setState({
+                            isChecking: false,
+                            status: 'success',
+                        });
                     } else {
-                        isChecking = false;
-                        isSuccess = false;
+                        this.setState({
+                            isChecking: false,
+                            status: 'err',
+                        });
                     }
                 })
-                .catch(e => {
-                    isChecking = false;
-                    isSuccess = false;
+                .catch(() => {
+                    this.setState({
+                        isChecking: false,
+                        status: 'err',
+                    });
                 });
-
-            this.setState({
-                isChecking,
-                isSuccess
-            });
         });
-    }
+    };
 
     render() {
-        return <i className="fa fa-recycle" onClick={this.handleCheckLogin(this.props.id)} />
+        const { isChecking, status } = this.state;
+
+        let classIcon = 'fa-recycle';
+
+        if (isChecking) {
+            classIcon = 'fa-spinner fa-spin';
+        } else if (status) {
+            classIcon = status === 'success' ? 'fa-check font-green' : 'fa-close font-red';
+        }
+
+        return <i className={ `fa ${classIcon} cursor-pointer` } onClick={this.handleCheckLogin(this.props.id)} />
     }
 }

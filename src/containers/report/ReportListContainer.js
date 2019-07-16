@@ -296,7 +296,7 @@ class ReportListContainer extends Component {
     render() {
         const { t, cyclePage, isFetching } = this.props;
         const { itemPerPage, currentPage } = this.state;
-
+        console.log(cyclePage)
         let cycleList = cyclePage.data || {};
 
         cycleList = sortBy(cycleList, 'sort_value').reverse();

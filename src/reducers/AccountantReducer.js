@@ -259,6 +259,16 @@ export const AccountantReducer = (state = defaultState, action) => {
 			if (objIndex !== -1){
 				newBankerAccount[objIndex].data.accountant = handleProcessDataWhenToggleShowHideChild(newBankerAccount[objIndex].data.accountant, action.username)
 			}
+			
+
+		case AccountantActionType.ACCOUNTANT_RESET_WHEN_CHANGE_DATE:
+			newBankerAccount = newBankerAccount.map(item => {
+				item.type = null
+				item.message = null
+				item.uuid = null
+				item.data = null
+				return item
+			})
 			return {...state, bankerAccount: newBankerAccount}
 		default:
 			return {...state}

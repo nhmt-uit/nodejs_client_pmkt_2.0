@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {Field, reduxForm, reset} from "redux-form";
 import {connect} from "react-redux";
 import {compose} from "redux";
-import {isEmpty, get as _get} from 'lodash'
+import {isEmpty, get as _get, sortBy} from 'lodash'
 
 import {withTranslation} from "react-i18next";
 import {TransComponent} from 'my-components'
@@ -110,18 +110,18 @@ class CreateTransaction extends Component {
             isEdit: _get(this.props.initialValues, 'isEdit', false),
             id: _get(this.props.initialValues, 'idEdit', null),
         }
-        var self = this;
         this.props.saveTransaction({data: JSON.stringify(post)})
-            .then(function () {
-                self.props.destroy('createTransaction');
+            .then( () => {
+                this.props.destroy('createTransaction');
+                this.props.callParentFromCreateTransaction()
             })
-            .then(function () {
-                self.setState({
+            .then( () => {
+                this.setState({
                     isEdit: false,
                 })
             })
-            .then(function () {
-                self.props.getAllTransaction()
+            .then( () => {
+                this.props.getAllTransaction()
             })
             .catch(function (err) {
                 console.log(err)
@@ -131,6 +131,10 @@ class CreateTransaction extends Component {
     renderAlert = _ => {
         const {formSaveStatus, formSaveResponse} = this.props
         if (formSaveStatus === false) {
+            //setTimeout close alert
+            setTimeout(()=>{
+                this.props.resetFormSaveResponse();
+            }, 3000);
             return (
                 <div className="alert alert-danger">
                     <button className="close" onClick={this.props.resetFormSaveResponse}/>
@@ -138,6 +142,9 @@ class CreateTransaction extends Component {
                 </div>
             )
         } else if (formSaveStatus === true) {
+            setTimeout(()=>{
+                this.props.resetFormSaveResponse();
+            }, 3000);
             return (
                 <div className="alert bg-success">
                     <button className="close" onClick={this.props.resetFormSaveResponse} />
@@ -152,7 +159,9 @@ class CreateTransaction extends Component {
             {value: "9", label: 'Other'}
         ]
         //Get data Cycle
-        const {optCycle, optMoney, optMember} = this.props
+        const {optCycle, optMoney, optMember} = this.props;
+        // sort optCycle by Date closest to farthest
+        var Cycle = sortBy(optCycle, ['label']).reverse();
 
         if (isEmpty(optMoney) || isEmpty(optCycle)) {
             return null;
@@ -217,7 +226,7 @@ class CreateTransaction extends Component {
                             className="basic-single"
                             component={renderSelectField}
                             isSearchable={false}
-                            options={optCycle}
+                            options={Cycle}
                             placeholder={t("select_cycle")}
                         />
                         <Field name="cycle" component={renderError}/>
@@ -268,7 +277,7 @@ const validate = values => {
         errors.cycle = '"Cycle" is not allowed to be empty!'
     }
     if (!values.member) {
-        errors.member = '"Member" is not allowed to be empty!'
+        errors.member = '"member" is required'
     }
     if (!values.typeOfMoney) {
         errors.typeOfMoney = 'You need to choose a currency!'

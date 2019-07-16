@@ -149,7 +149,7 @@ class ListCurrencyComponent extends Component {
                                     </label>
                                 </th>
                                 <th className={"user_fn"}>{t('Name')}</th>
-                                <th className={"user_un"}>{t('Num formula')}</th>
+                                <th className={"user_un"}>{t('Số công thức')}</th>
                                 <th className={"user_sts"}>{t('Round')}</th>
                                 <th></th>
                             </tr>

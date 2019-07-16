@@ -5,8 +5,9 @@ import { isEmpty as _isEmpty} from 'lodash'
 import { Link } from 'react-router-dom'
 
 import { getBankerByMember } from "my-actions/banker/BankerAction";
-import { TransComponent } from 'my-components'
+import { TransComponent, LoadingComponent } from 'my-components'
 import { RoutesService } from 'my-routes'
+import BankerReducer from "../../reducers/banker/BankerReducer";
 
 class AccountantManualBankerPage extends Component {
 
@@ -15,23 +16,7 @@ class AccountantManualBankerPage extends Component {
     }
 
     render() {
-        const DATA = this.props.payloadByMember;
-        if(_isEmpty(DATA)) return null
-        var List = DATA.res.data.List;
-        var item = List.map(function (item, index) {
-            return (
-                <div key={index} className="col-xs-6 col-md-4">
-                    <Link to={RoutesService.getPath('ADMIN', 'ACCOUNTANT_MANUAL_PROCESS', {bankerName: item.name.toLowerCase(), type: 'login' })} >
-                        <div className="widget-thumb margin-bottom-20 bordered">
-                            <div className="widget-thumb-wrap text-center">
-                                <img src={"/assets/images/logo/" + item.logo} alt={item.name} title={item.name} style={{height:33, width:"auto"}}/>
-                            </div>
-                        </div>
-                    </Link>
-                </div>
-            )
-        })
-
+        const {bankerList} = this.props;
         return (
             <div className='portlet light bordered'>
                 <div className="portlet-title">
@@ -46,7 +31,21 @@ class AccountantManualBankerPage extends Component {
                         <div className="col-xs-12">
                             <h5 className="margin-bottom"> <TransComponent i18nKey="Please chooose company to login" /> : </h5>
                             <div className="row widget-row">
-                                {item}
+                                {bankerList.length ?
+                                    bankerList.map(function (item, index) {
+                                        return (
+                                            <div key={index} className="col-xs-6 col-md-4">
+                                                <Link to={RoutesService.getPath('ADMIN', 'ACCOUNTANT_MANUAL_PROCESS', {bankerName: item.name.toLowerCase(), type: 'login' })} >
+                                                    <div className="widget-thumb margin-bottom-20 bordered">
+                                                        <div className="widget-thumb-wrap text-center">
+                                                            <img src={"/assets/images/logo/" + item.logo} alt={item.name} title={item.name} style={{height:33, width:"auto"}}/>
+                                                        </div>
+                                                    </div>
+                                                </Link>
+                                            </div>
+                                        )
+                                    })
+                                    : <div style={{ height: '100px' }}><LoadingComponent /></div>}
                             </div>
                         </div>
                     </div>
@@ -56,8 +55,10 @@ class AccountantManualBankerPage extends Component {
     }
 }
 const mapStateToProps = state => {
+    console.log(state)
     return {
-        payloadByMember: state.banker.payloadByMember
+        payloadByMember: state.banker.payloadByMember,
+        bankerList: state.banker.bankerList,
     }
 };
 
@@ -66,4 +67,6 @@ const mapDispatchToProps = (dispatch) => {
         getBankerByMember: params => {dispatch(getBankerByMember(params))}
     }
 };
-export default connect(mapStateToProps, mapDispatchToProps)(AccountantManualBankerPage)
+export default connect(
+    mapStateToProps, mapDispatchToProps
+)(AccountantManualBankerPage)

@@ -1,9 +1,15 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux'
 
 import { ListMemberContainer, DetailMemberContainer } from 'my-containers/member'
 import {TransComponent} from 'my-components'
+import {resetStoreMember} from 'my-actions/member/MemberAction'
 
 class MemberPage extends Component {
+    componentWillUnmount() {
+        this.props.resetStoreMember()
+    }
+
     render() {
         return (
             <div className="portlet light bordered">
@@ -29,4 +35,11 @@ class MemberPage extends Component {
     }
 }
 
-export default MemberPage;
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        resetStoreMember: _ => {dispatch(resetStoreMember())},
+    }
+};
+
+export default connect(null, mapDispatchToProps)(MemberPage);

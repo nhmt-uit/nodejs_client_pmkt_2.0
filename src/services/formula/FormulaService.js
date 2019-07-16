@@ -16,8 +16,12 @@ class FormulaService extends BaseService {
         return HttpService.post(`${this.serviceUrl}/create_new/detail`, payload)
     }
 
-    deleteLinkFormulaDetail(congthuctinhId){
-        const payload = {congthuctinhId}
+    /*
+    |--------------------------------------------------------------------------
+    | input: @memberId: string, @congthuctinhId: string
+    |--------------------------------------------------------------------------
+    */
+    deleteLinkFormulaDetail(payload){
         return HttpService.post(`${this.serviceUrl}/create_new/delete_link_formula_detail`, payload)
     }
 
@@ -38,6 +42,16 @@ class FormulaService extends BaseService {
 
     saveFormulaAccount(payload) {
         return HttpService.post(`${this.serviceUrl}/create_new/merge`, payload)
+    }
+
+    getLinkFormulaDetail(id) {
+        const params = { accountId: id };
+
+        return HttpService.post(`${this.serviceUrl}/create_new/get_link_formula_detail`, params);
+    }
+
+    updateLinkFormulaDetail(post) {
+        return HttpService.post(`${this.serviceUrl}/create_new/update_link_formula_detail`, post);
     }
 
     /*

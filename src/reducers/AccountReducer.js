@@ -14,6 +14,7 @@ let defaultState = {
 	//Handle Modal Form Member
 	selectedItem: {},
 	isOpenModal: false,
+	isOpenLinkFormula: false,
 
 	//Handel Save Form
 	formSaveStatus: null,
@@ -21,7 +22,13 @@ let defaultState = {
 
 	lstTab: [],
 	lstAccount: [],
-}
+
+	modalLinkFormula: {
+		lstMember: [],
+		lstFormula: [],
+		lstFormulaGroup: [],
+	}
+};
 
 export const AccountReducer = (state = defaultState, action) => {
 	switch(action.type){
@@ -45,10 +52,25 @@ export const AccountReducer = (state = defaultState, action) => {
 			}
 			return {...state, initFormData: action.initFormData, optBanker: optBanker, optAccountBelong: optAccountBelong}
 		case AccountActionType.ACCOUNT_TOGGLE_MODAL_FORM:
+			let newState = {
+				...defaultState,
+				lstTab: state.lstTab,
+				lstAccount: state.lstAccount,
+			};
+
 			//Reset Store When Modal Close
-			if (!state.isOpenModal === false) return {...defaultState}
-			return {...state, selectedItem: action.selectedItem, isOpenModal: !state.isOpenModal};
+			if (!state.isOpenModal === true && !action.isModalLinkFormula) {
+				newState = {...state, selectedItem: action.selectedItem, isOpenModal: true};
+			}
+
+			if (!state.isOpenLinkFormula === true && action.isModalLinkFormula) {
+				newState = {...state, selectedItem: action.selectedItem, isOpenLinkFormula: true};
+			}
+
+			return newState;
+
 		case AccountActionType.ACCOUNT_TOGGLE_MODAL_DELETE:
+			//Reset Store When Modal Close
 			//Reset Store When Modal Close
 			if (!state.isOpenModalDelete === false) return {...defaultState}
 			return {...state, selectedItem: action.selectedItem, isOpenModalDelete: !state.isOpenModalDelete};
@@ -74,7 +96,7 @@ export const AccountReducer = (state = defaultState, action) => {
 		default:
 			return {...state}
 	}
-}
+};
 
 
 export default AccountReducer;

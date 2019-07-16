@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { TransComponent } from 'my-components';
+import { TransComponent, LoadingComponent } from 'my-components';
 import {get as _get} from "lodash";
 import {compose} from "redux/es/redux";
 import {connect} from "react-redux";
@@ -80,10 +80,9 @@ class FormulaGroupListContainer extends Component {
         const { t } = this.props;
         const { formulaGroupList, bankerList } = this.props;
         const { bankerId, filterText, visible } = this.state;
-        let level = 0;
+        let level = 0, index = 0;
         const tbody = [];
-
-        formulaGroupList.forEach( (item, index) => {
+        formulaGroupList.forEach( (item) => {
             const formulaGroupDetail = (item, level, id) => {
                 const marginLeft = `${level * 10}px`;
                 const iconChild = visible[item.id] ? <i style={{ marginLeft }} className="fa fa-chevron-down" /> : <i style={{ marginLeft }} className="fa fa-chevron-right" />;
@@ -99,15 +98,15 @@ class FormulaGroupListContainer extends Component {
                                     : ''
                             }
                         </td>
-                        <td className="text-center"> {level === 0 ? null : item.banker.name} </td>
+                        <td className="text-center"> {level === 0 ? null : item.banker.name.toUpperCase()} </td>
                         <td className="text-center"> {item.num_of_formula} </td>
                         <td className="text-center">
                             <button className="text-success btn btn-link">
-                                <i className="fa fa-edit"></i></button>
+                                <i className="fa fa-edit font-green cursor-pointer"></i></button>
                         </td>
                         <td className="text-center">
                             <button className="text-success btn btn-link font-red">
-                                <i className="fa fa-close" onClick={ () => this.handleOpenModelDel(item.id)}></i></button>
+                                <i className="fa fa-trash-o font-red cursor-pointer" onClick={ () => this.handleOpenModelDel(item.id)}></i></button>
                         </td>
                     </tr>
                 );
@@ -128,9 +127,10 @@ class FormulaGroupListContainer extends Component {
                         }
                     }
                 }
+                if(level === 0) index++
                 return tbody;
             };
-
+            // call formulaGroupDetail => search data by filterText or bankerId
             if(item.name.toUpperCase().indexOf(filterText.toUpperCase()) > -1){
                 if(bankerId === '' || bankerId === 'all'){
                     formulaGroupDetail(item, level)
@@ -188,7 +188,10 @@ class FormulaGroupListContainer extends Component {
                             </tr>
                         </thead>
                         <tbody>
-                        {tbody}
+                        {
+                            formulaGroupList.length ?
+                                tbody : <tr><td className="text-center" colSpan="20"><TransComponent i18nKey="Data Empty" /></td></tr>
+                        }
                         </tbody>
                     </table>
                 </div>
