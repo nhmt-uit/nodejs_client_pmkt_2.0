@@ -11,17 +11,17 @@ class ChangeSecureCodeContainer extends Component {
     data = [
         {
             name: 'current_secure',
-            label: 'Current Secure',
+            label: 'Current Security Code',
             rules: ['required', 'number', 'maxLength6'],
         },
         {
             name: 'new_secure',
-            label: 'New Secure',
+            label: 'New Security Code',
             rules: ['required', 'number', 'maxLength6'],
         },
         {
             name: 're_new_secure',
-            label: 'Confirm Secure',
+            label: 'Confirm Security Code',
             rules: ['required', 'confirmNewSecure'],
         }
     ];
@@ -41,7 +41,7 @@ class ChangeSecureCodeContainer extends Component {
         return (
             <FormWithReduxForm
                 data={this.data}
-                title="Change Secure Code"
+                title="Change Security Code"
                 onSubmitForm={this.handleSubmitForm}
                 onToggleNotify={this.handleToggleNotify}
                 isShowNotify={dataStore.isShowNotify}

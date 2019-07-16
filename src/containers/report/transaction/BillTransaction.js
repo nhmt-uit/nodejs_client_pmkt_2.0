@@ -123,13 +123,13 @@ class BillTransaction extends Component {
                 if(amount){
                     if(item[1].name == transaction){
                         tdMain.push(
-                            <td key={typeOfMoney} className="caption-subject font-green text-center">
+                            <td key={typeOfMoney} className="caption-subject font-green text-right">
                                 {amount < 0 ? <span className="font-red"> {Helpers.formatMoney(amount,0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney(amount,0)} </span>}
                             </td>
                         )
                     } else {
                         tdMain.push(
-                            <td key={typeOfMoney} className="caption-subject font-green text-center">
+                            <td key={typeOfMoney} className="caption-subject font-green text-right">
                                 <span className="font-blue-steel"> 0 </span>
                             </td>
                         )
@@ -177,7 +177,7 @@ class BillTransaction extends Component {
                 )
 
                 rowTotal.push(
-                    <td className="caption-subject font-green text-center">
+                    <td className="caption-subject font-green text-right">
                         {amount < 0 ? <span className="font-red"> {Helpers.formatMoney(amount,0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney(amount,0)} </span>}
                     </td>
                 )

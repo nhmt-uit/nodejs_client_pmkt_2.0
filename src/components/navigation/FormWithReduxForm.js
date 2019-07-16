@@ -91,7 +91,7 @@ class FormWithReduxForm extends Component {
                                 type: type || 'text',
                                 component: component || 'input',
                                 name: name || '',
-                                label: label || '',
+                                label: <TransComponent i18nKey= {label}/> || '',
                                 ...otherProps,
                             };
 

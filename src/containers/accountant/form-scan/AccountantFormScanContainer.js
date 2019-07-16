@@ -174,7 +174,7 @@ class AccountantFormScanContainer extends Component {
             }
             label = join(labels, ", ")
         }
-        return <span className="uppercase" style={{'color': 'ccc'}}>{label}</span>
+        return <span className="uppercase" style={{'color': 'ccc'}}><TransComponent i18nKey={label}/></span>
     }
 
     handleSelectMember = selected => {
