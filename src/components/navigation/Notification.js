@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { get } from 'lodash';
 import { Link } from 'react-router-dom';
-import { isEqual as _isEqual } from 'lodash'
+import { isEqual as _isEqual } from 'lodash';
 
 import { RoutesService } from 'my-routes';
 import { getMsg, getFriend } from 'my-actions/systems/NotificationAction';
@@ -46,7 +46,7 @@ class Notification extends Component {
                                 count > 0
                                     ? (
                                         <li>
-                                            <Link to={RoutesService.getPath('ADMIN', 'ACCOUNT')}>
+                                            <Link to={RoutesService.getPath('ADMIN', 'MANAGE_ACCOUNT')}>
                                                 <span className="details">
                                                     <TransComponent i18nKey="co {{item}} tai khoan can cap nhat lai sub" i18nObj={{ item: count }} />
                                                 </span>

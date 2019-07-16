@@ -57,10 +57,14 @@ const FormulaReducer = (state = defaultState, action) => {
             return {...state}
         case FormulaActionType.FORMULA_TOGGLE_MODAL_FORM:
             //Reset Store When Modal Close
-			if (!state.isOpenModal === false) return {...defaultState, List: state.List,
+			if (!state.isOpenModal === false) return {
+			    ...defaultState,
+                List: state.List,
                 banker: state.banker,
                 isFetching: state.isFetching,
-                error: state.error}
+                error: state.error,
+                lstAccountDetail: state.lstAccountDetail,
+			};
             return {...state, isOpenModal: !state.isOpenModal, selectedItem: action.selectedItem};
         case FormulaActionType.FORMULA_SAVE_FORM:
             return {...state, formSaveStatus: action.formSaveStatus, formSaveResponse: action.formSaveResponse}

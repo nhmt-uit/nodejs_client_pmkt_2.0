@@ -98,7 +98,7 @@ class FormFormulaContainer extends Component {
             company: _get(this.props.initialValues, 'company.value'),
             formula_type: _get(this.props.initialValues, 'formula_type.value'),
             currency: _get(this.props.initialValues, 'currency.value'),
-            giaonhan: _get(this.props.initialValues, 'giaonhan'),
+            giaonhan: !_get(this.props.initialValues, 'giaonhan'),
         }
 
         if (!_isEmpty(dataFormulaType.data.filter(item => item.dis === "he_so")))

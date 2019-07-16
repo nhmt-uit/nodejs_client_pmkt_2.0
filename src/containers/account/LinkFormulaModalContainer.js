@@ -11,23 +11,28 @@ import {
 } from 'lodash';
 
 import { TransComponent } from 'my-components';
-import { toggleModalAccount } from 'my-actions/AccountAction';
-import { getMember } from 'my-actions/member/MemberAction';
-import { getFormula, getLinkFormulaDetail } from 'my-actions/formula/FormulaAction';
-import { getFormulaGroup } from 'my-actions/formula-group/FormulaGroupAction';
+
 import { FormulaService } from 'my-services/formula';
+
 import { AccountDetailItemContainer } from 'my-containers/account';
+import { ModalFormMemberContainer } from 'my-containers/member';
+import { ModalFormFormulaContainer } from 'my-containers/formula';
+import { ModalFormAssignFormulaGroupContainer } from 'my-containers/formula-group';
+
+import { getFormulaGroup, toggleModalAssignFormulaGroup } from 'my-actions/formula-group/FormulaGroupAction';
+import { toggleModalAccount } from 'my-actions/AccountAction';
+import { getFormula, getLinkFormulaDetail, toggleModalFormula } from 'my-actions/formula/FormulaAction';
+import { getMember } from 'my-actions/member/MemberAction';
+import { toggleModalMember } from 'my-actions/member/MemberAction';
 
 class LinkFormulaModalContainer extends Component {
     constructor(props) {
         super(props);
 
         this.defaultState = {
-            formulaType: { label: <TransComponent i18nKey="-- Formula --" />, value: 1 },
+            formulaType: null,
             memberId: null,
             formulaId: null,
-            optFormula: [],
-            optFormulaGroup: [],
             lstDelete: [],
             lstDetailEdit: [],
         };
@@ -37,6 +42,9 @@ class LinkFormulaModalContainer extends Component {
             isOpenMultiDeleteModal: false,
             isLoadingDeleteMulti: false,
             isLoadingUpdateMulti: false,
+            optFormula: [],
+            optFormulaGroup: [],
+            isSaved: false,
         };
 
         this.optFormulaType = [
@@ -50,15 +58,16 @@ class LinkFormulaModalContainer extends Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        const { isOpenLinkFormula, lstFormula, lstFormulaGroup, selectedItem } = this.props;
+        const { isOpenLinkFormula, lstFormula, lstFormulaGroup, selectedItem, isOpenMemberModal, isOpenFormulaModal, isOpenFormulaGroupModal, isOpenFormulaGroupAssignModal } = this.props;
         const { formulaType } = this.state;
+        const valueFormulaType = (formulaType && formulaType.value) || '';
 
-        if (isOpenLinkFormula && formulaType.value !== _get(prevState, 'formulaType.value', '')) {
-            if (formulaType.value === 1 && _isEmpty(lstFormula)) {
+        if (isOpenLinkFormula && valueFormulaType !== _get(prevState, 'formulaType.value', '')) {
+            if (valueFormulaType === 1 && _isEmpty(lstFormula)) {
                 this.props.getFormula();
             }
 
-            if (formulaType.value === 2 && _isEmpty(lstFormulaGroup)) {
+            if (valueFormulaType === 2 && _isEmpty(lstFormulaGroup)) {
                 this.props.getFormulaGroup();
             }
         }
@@ -68,8 +77,20 @@ class LinkFormulaModalContainer extends Component {
             this.props.getLinkFormulaDetail(selectedItem.id);
         }
 
-        if (!this.props.isOpenLinkFormula && prevProps.isOpenLinkFormula) {
+        if (!isOpenLinkFormula && prevProps.isOpenLinkFormula) {
             this.setState(this.defaultState);
+        }
+
+        if (!isOpenMemberModal && prevProps.isOpenMemberModal) {
+            this.props.getMember();
+        }
+
+        if (!isOpenFormulaModal && prevProps.isOpenFormulaModal) {
+            this.props.getFormula();
+        }
+
+        if ((!isOpenFormulaGroupModal && prevProps.isOpenFormulaGroupModal) || (!isOpenFormulaGroupAssignModal && prevProps.isOpenFormulaGroupAssignModal)) {
+            this.props.getFormulaGroup();
         }
     }
 
@@ -78,13 +99,13 @@ class LinkFormulaModalContainer extends Component {
 
         let newState = {};
 
-        if (nextProps.lstFormula && nextProps.lstFormula.length && _isEmpty(lstFormula)) {
+        if (nextProps.lstFormula && nextProps.lstFormula.length /*&& _isEmpty(lstFormula)*/) {
             newState.optFormula = nextProps.lstFormula
                 .filter(formula => formula.banker_id === selectedItem.banker_id)
                 .map(formula => ({ label: formula.tenct, value: formula.id  }));
         }
 
-        if (nextProps.lstFormulaGroup && nextProps.lstFormula.length && _isEmpty(lstFormulaGroup)) {
+        if (nextProps.lstFormulaGroup && nextProps.lstFormula.length /*&& _isEmpty(lstFormulaGroup)*/) {
             newState.optFormulaGroup =  this._filterFormulaGroupByBankerId(nextProps.lstFormulaGroup, selectedItem.banker_id)
                 .map(formulaGroup => ({ label: formulaGroup.name, value: formulaGroup.formula_group_id }));
         }
@@ -168,15 +189,13 @@ class LinkFormulaModalContainer extends Component {
                 banker_select: selectedItem.banker_id,
                 select_formula_type: formulaType.value,
                 ...formulaSelect,
-            })
-                .then(() => {
-                    this.handleChangeState({ isLoadingMerge: false, ..._cloneDeep(this.defaultState) }, () => {
-                        return this.props.getLinkFormulaDetail(selectedItem.id);
-                    })()
-                })
-                .catch(() => {
-                    this.handleChangeState({ isLoadingMerge: false })()
-                });
+            }).then(() => {
+                this.handleChangeState({ isLoadingMerge: false, ..._cloneDeep(this.defaultState) }, () => {
+                    return this.props.getLinkFormulaDetail(selectedItem.id);
+                })()
+            }).catch(() => {
+                this.handleChangeState({ isLoadingMerge: false })()
+            });
         })();
     };
 
@@ -200,7 +219,7 @@ class LinkFormulaModalContainer extends Component {
     };
 
     renderDetailAccount() {
-        const { lstAccountDetail, lstMember, lstFormula, selectedItem } = this.props;
+        const { lstAccountDetail, lstMember, lstFormula } = this.props;
 
         return (
             <div className="table-responsive">
@@ -243,6 +262,7 @@ class LinkFormulaModalContainer extends Component {
                                 optFormula={this.state.optFormula}
                                 optMember={this.props.optMember}
                                 onChangeLstDetail={this.handleChangeLstDetail}
+                                isSaved={this.state.isSaved}
                             />
                         )
                     }
@@ -284,7 +304,6 @@ class LinkFormulaModalContainer extends Component {
             } catch (e) {
                 this.setState({ isLoadingDeleteMulti: false })
             }
-
         });
     };
 
@@ -295,15 +314,32 @@ class LinkFormulaModalContainer extends Component {
             data: JSON.stringify(this.state.lstDetailEdit)
         };
 
-        this.handleChangeState({ isLoadingUpdateMulti: true }, async () => {
+        this.handleChangeState({ isLoadingUpdateMulti: true, isSaved: false }, async () => {
             try {
                 await FormulaService.updateLinkFormulaDetail(bodyData);
 
-                this.setState({ isLoadingUpdateMulti: false })
+                this.setState({ isLoadingUpdateMulti: false, isSaved: true, lstDetailEdit: [] })
             } catch (e) {
                 this.setState({ isLoadingUpdateMulti: false })
             }
         })()
+    };
+
+    handleToggleFormulaModal = e => {
+        const formulaType = this.state.formulaType;
+        const value = (formulaType && formulaType.value) || '';
+
+        if (!value) {
+            e.preventDefault();
+
+            return;
+        }
+
+        if (value === 1) {
+            return this.props.toggleModalFormula();
+        }
+
+        return this.props.toggleModalAssignFormulaGroup();
     };
 
     render() {
@@ -313,7 +349,11 @@ class LinkFormulaModalContainer extends Component {
             memberId, formulaId, isOpenMultiDeleteModal, isLoadingDeleteMulti,
             isLoadingUpdateMulti, lstDetailEdit
         } = this.state;
-        const optFormulaFiltered = _get(formulaType, 'value', {}) === 1 ? optFormula : optFormulaGroup;
+        const optFormulaFiltered = _get(formulaType, 'value', '') === 1
+            ? optFormula
+            : _get(formulaType, 'value', '') === 2
+                ? optFormulaGroup
+                : [];
 
         return (
             <>
@@ -333,12 +373,21 @@ class LinkFormulaModalContainer extends Component {
                                     })}
                                     {this.renderFormGroup({
                                         label: <TransComponent i18nKey="Member" />,
-                                        content: this.renderSelect({
-                                            options: optMember,
-                                            placeholder: <TransComponent i18nKey="Member" />,
-                                            onChange: this.handleChangeSelect('memberId'),
-                                            value: memberId
-                                        })
+                                        content: (
+                                            <div className="input-group">
+                                                { this.renderSelect({
+                                                    options: optMember,
+                                                    placeholder: <TransComponent i18nKey="Member" />,
+                                                    onChange: this.handleChangeSelect('memberId'),
+                                                    value: memberId
+                                                }) }
+                                                <span className="input-group-btn">
+                                                    <button className="btn btn-secondary border-silver" onClick={() => this.props.toggleModalMember()}>
+                                                        <i className="fa fa-plus font-white" />
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        )
                                     })}
                                     {this.renderFormGroup({
                                         label: <TransComponent i18nKey="Type" />,
@@ -352,17 +401,26 @@ class LinkFormulaModalContainer extends Component {
                                     })}
                                     {this.renderFormGroup({
                                         label: <TransComponent i18nKey="Formula" />,
-                                        content: this.renderSelect({
-                                            placeholder: <TransComponent i18nKey="Formula" />,
-                                            isSearchable: false,
-                                            options: optFormulaFiltered,
-                                            onChange: this.handleChangeSelect('formulaId'),
-                                            value: formulaId
-                                        })
+                                        content: (
+                                            <div className="input-group">
+                                                { this.renderSelect({
+                                                    placeholder: <TransComponent i18nKey="Formula" />,
+                                                    isSearchable: false,
+                                                    options: optFormulaFiltered,
+                                                    onChange: this.handleChangeSelect('formulaId'),
+                                                    value: formulaId
+                                                }) }
+                                                <span className="input-group-btn">
+                                                    <button onClick={e => this.handleToggleFormulaModal(e)} className="btn btn-secondary border-silver">
+                                                        <i className="fa fa-plus font-white" />
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        )
                                     })}
                                     {this.renderFormGroup({
                                         label: <>&nbsp;</>,
-                                        content: <button className="btn btn-danger" onClick={this.handleSaveFormulaAccount}>
+                                        content: <button disabled={isLoadingMerge || !(formulaType && memberId && formulaId)} className="btn btn-danger" onClick={this.handleSaveFormulaAccount}>
                                             <TransComponent i18nKey="Save" />{ isLoadingMerge ? <i className="fa fa-spin fa-spinner" /> : null }
                                         </button>
                                     })}
@@ -396,6 +454,9 @@ class LinkFormulaModalContainer extends Component {
                         <button className="btn btn-danger" onClick={this.handleChangeState({ isOpenMultiDeleteModal: !isOpenMultiDeleteModal })}><TransComponent i18nKey="Cancel"  /></button>
                     </ModalFooter>
                 </Modal>
+                <ModalFormMemberContainer formType="create" />
+                <ModalFormFormulaContainer formType="create" defaultBankerId={selectedItem.banker_id}/>
+                <ModalFormAssignFormulaGroupContainer formType="create" defaultBankerId={selectedItem.banker_id}/>
             </>
         );
     }
@@ -410,6 +471,10 @@ const mapStateToProps = state => {
         lstFormulaGroup: state.FormulaGroupReducer.formulaGroupList || [],
         lstAccountDetail: state.FormulaReducer.lstAccountDetail || [],
         lstMember: _get(state, 'MemberReducer.member.res.data.List', []),
+        isOpenMemberModal: state.MemberReducer.isOpenModal || false,
+        isOpenFormulaModal: state.FormulaReducer.isOpenModal || false,
+        isOpenFormulaGroupModal: state.FormulaGroupReducer.isOpenModal || false,
+        isOpenFormulaGroupAssignModal: state.FormulaGroupReducer.isOpenModalAssign || false,
     };
 };
 
@@ -420,6 +485,9 @@ const mapDispatchToProps = dispatch => {
         getFormula: () => dispatch(getFormula()),
         getFormulaGroup: () => dispatch(getFormulaGroup()),
         getLinkFormulaDetail: id => dispatch(getLinkFormulaDetail(id)),
+        toggleModalMember:  () => dispatch(toggleModalMember()),
+        toggleModalFormula:  () => dispatch(toggleModalFormula()),
+        toggleModalAssignFormulaGroup:  _ => dispatch(toggleModalAssignFormulaGroup()),
     };
 };
 
