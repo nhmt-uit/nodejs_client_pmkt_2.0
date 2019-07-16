@@ -36,7 +36,7 @@ export const getAccount = () => {
                 });
             });
     }
-}
+};
 
 export const requestInitFormData = (bankerAccount) => {
     return (dispatch) => {
@@ -50,7 +50,7 @@ export const requestInitFormData = (bankerAccount) => {
             }
         })
     }
-}
+};
 
 export const resetStoreAccount = () => {
     return (dispatch) => {
@@ -64,7 +64,8 @@ export const toggleModalAccount = (params) => {
     return (dispatch) => {
         dispatch({
             type: AccountActionType.ACCOUNT_TOGGLE_MODAL_FORM,
-            selectedItem: _get(params, 'selectedItem', {})
+            selectedItem: _get(params, 'selectedItem', {}),
+            isModalLinkFormula: _get(params, 'isModalLinkFormula', false),
         })
     }
 };
@@ -113,7 +114,7 @@ export const resetFormSaveResponse = (params) => {
             type: AccountActionType.ACCOUNT_RESET_FORM_RESPONSE,
         });
     }
-}
+};
 
 export const getTab = () => {
     return (dispatch) => {
@@ -142,4 +143,4 @@ export const getTab = () => {
             });
         });
     }
-}
+};

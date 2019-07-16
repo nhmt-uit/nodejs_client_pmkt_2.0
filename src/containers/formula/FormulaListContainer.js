@@ -26,12 +26,12 @@ class FormulaListContainer extends Component {
     static propTypes = {
         banker: PropTypes.object,
         formulaList: PropTypes.array,
-    }
+    };
 
     static defaultProps = {
         banker: {},
         formulaList: [],
-    }
+    };
 
     constructor(props) {
         super(props);
@@ -92,11 +92,7 @@ class FormulaListContainer extends Component {
                 cb();
             }
         });
-    }
-
-    handleGetFormula = () => {
-        return this.props.getFormula();
-    }
+    };
 
     handleToggleModal = (type, formula) => {
         const newState = { formulaSelected: formula };
@@ -113,13 +109,13 @@ class FormulaListContainer extends Component {
         }
                 
         this.setState(newState);
-    }
+    };
 
     handleToggleEditModal = formula => {
         this.setState({ isEdit: true }, () => {
             return this.props.toggleModalFormula(formula);
         });
-    }
+    };
 
     renderBody() {
         const { currentPage, perPage } = this.state;
@@ -188,7 +184,7 @@ class FormulaListContainer extends Component {
         this.setState({
             bankerId: e.target.value
         });
-    }
+    };
 
     handleSearch = _debounce(key => {
         this.setState({ keySearch: key });
@@ -204,7 +200,7 @@ class FormulaListContainer extends Component {
         }
 
         this.setState({ listAccDelete });
-    }
+    };
 
     handleToggleEdit = (id, member) => () => {
         const { listAccEdit, listMemberUpdate } = this.state;
@@ -223,7 +219,7 @@ class FormulaListContainer extends Component {
         }
 
         this.setState({ listAccEdit, listMemberUpdate });
-    }
+    };
 
     handleDeleteAccountUseFormula = () => {
         this.setState({ isLoadingDelete: true }, () => {
@@ -239,7 +235,7 @@ class FormulaListContainer extends Component {
                 this.setState({ isLoadingDelete: false });
             });
         });
-    }
+    };
 
     handleChangeListMember = member => newValue => {
         const listMemberUpdate = this.state.listMemberUpdate;
@@ -264,7 +260,7 @@ class FormulaListContainer extends Component {
         }
 
         this.setState({ listMemberUpdate });
-    }
+    };
 
     handleSaveMember = () => {
         this.setState({
@@ -292,18 +288,18 @@ class FormulaListContainer extends Component {
                     this.setState({ isLoadingUpdate: false });
                 });
         });
-    }
+    };
 
     handleChangeSelect = key => value => {
         this.setState({ [key]: value.value });
-    }
+    };
 
     handleRelinkFormula = () => {
         const { formulaSelected, relinkFormulaId } = this.state;
 
         this.setState({
             isLoadingRelink: true,
-        })
+        });
 
         FormulaService.relinkFormula({ fromId: formulaSelected.id, toId: relinkFormulaId })
             .then(res => {
@@ -319,14 +315,14 @@ class FormulaListContainer extends Component {
                     isLoadingRelink: false,
                 })
             });
-    }
+    };
 
     handleDeleleFormula = () => {
         const { formulaSelected } = this.state;
 
         this.setState({
             isLoadingDelete: true,
-        })
+        });
 
         FormulaService.deleteFormula({ id: formulaSelected.id })
             .then(res => {
@@ -342,7 +338,7 @@ class FormulaListContainer extends Component {
                     isLoadingDelete: false,
                 })
             });
-    }
+    };
 
     renderBodyAccountModal = () => {
         const { formulaSelected, listAccDelete, listAccEdit, isLoadingDelete, isLoadingUpdate } = this.state;
@@ -432,7 +428,7 @@ class FormulaListContainer extends Component {
                 </table>
             </div>
         );
-    }
+    };
 
     renderBodyRelinkModal = () => {
         const formulaList = this.props.formulaList;
@@ -471,7 +467,7 @@ class FormulaListContainer extends Component {
                 </div>
             </>
         );
-    }
+    };
 
     renderBodyDeleteModal = () => {
         const { isLoadingDelete } = this.state;
@@ -492,7 +488,7 @@ class FormulaListContainer extends Component {
                 </p>
             </>
         )
-    }
+    };
 
     handleToggleNewModal = () => {
         this.setState({
@@ -500,13 +496,13 @@ class FormulaListContainer extends Component {
         }, () => {
             return this.props.toggleModalFormula();
         });
-    }
+    };
 
     handleChangePage = currentPage => {
         this.setState({
             currentPage
         });
-    }
+    };
 
     render() {
         const { banker, formulaList } = this.props
@@ -616,7 +612,7 @@ const mapStateToProps = state => {
         formFormulaSaveResponse: state.FormulaReducer.formSaveResponse,
         selectedItem: _get(state, 'FormulaReducer.selectedItem', {}),
     };
-}
+};
 
 const mapDispatchToProps = dispatch => {
     return {
@@ -625,7 +621,7 @@ const mapDispatchToProps = dispatch => {
         // Handel Modal Form Formula
         toggleModalFormula:  formula => dispatch(toggleModalFormula({ selectedItem: formula })),
     };
-}
+};
 
 export default compose(
     withTranslation(),

@@ -14,7 +14,6 @@ export const renderSelectField = props => {
     const { input, options} = props;
     const {touched, error, warning } = props.meta
 
-    console.log(input)
     return (
         <Select
             {...input}

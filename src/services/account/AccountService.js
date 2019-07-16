@@ -32,7 +32,7 @@ class AccountService extends BaseService {
     }
 
     deleteAccount(id) {
-        const payload = {id: id}
+        const payload = {id: id};
         return HttpService.post(`${this.serviceUrl}/delete_account`, payload)
     }
 

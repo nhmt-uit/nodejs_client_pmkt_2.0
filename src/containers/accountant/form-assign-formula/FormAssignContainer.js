@@ -320,7 +320,6 @@ const validate = values => {
 }
 
 const mapStateToProps = state => {
-    console.log(state)
     return {
         initialValues: _get(state, 'form.form_assign_formula.values'),
         optAccount: state.AccountantAssignFormulaReducer.optAccount,

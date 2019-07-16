@@ -515,3 +515,15 @@ h5.modal-title {font-size: 16px; font-weight: bold;}
   border-width: 0 5px 5px;
   border-bottom-color: #e26a6a;
 }
+
+.padding-0 {
+    padding: 0
+}
+
+.min-width-850 {
+    min-width: 850px;
+}
+
+.min-width-170 {
+    min-width: 170px;
+}

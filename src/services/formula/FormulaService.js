@@ -40,6 +40,16 @@ class FormulaService extends BaseService {
         return HttpService.post(`${this.serviceUrl}/create_new/merge`, payload)
     }
 
+    getLinkFormulaDetail(id) {
+        const params = { accountId: id };
+
+        return HttpService.post(`${this.serviceUrl}/create_new/get_link_formula_detail`, params);
+    }
+
+    updateLinkFormulaDetail(post) {
+        return HttpService.post(`${this.serviceUrl}/create_new/update_link_formula_detail`, post);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | @params array congthuctinhIds = []

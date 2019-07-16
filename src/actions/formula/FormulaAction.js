@@ -84,4 +84,34 @@ export const setFormulaSelected = formula => {
         type: FormulaActionType.SET_FORMULA_SELECTED,
         payload: formula
     });
-}
+};
+
+export const getLinkFormulaDetail = id => {
+    return dispatch => {
+        return FormulaService.getLinkFormulaDetail(id)
+            .then(res => {
+                if (res.status) {
+                    dispatch({
+                        type: FormulaActionType.GET_LINK_FORMULA_DETAIL_SUCCESS,
+                        lstAccountDetail: _get(res, 'res.data.List.accountDetail', []),
+                    });
+                } else {
+                    dispatch({
+                        type: FormulaActionType.GET_LINK_FORMULA_DETAIL_FAIL,
+                        payload: {
+                            status: false,
+                            error_description: _get(res, 'res.data.message', '')
+                        },
+                    });
+                }
+            }).catch(e => {
+                dispatch({
+                    type: FormulaActionType.GET_LINK_FORMULA_DETAIL_FAIL,
+                    payload: _get(e, 'response.data', {
+                        status: false,
+                        error_description: e.stack,
+                    }),
+                });
+            });
+    }
+};
