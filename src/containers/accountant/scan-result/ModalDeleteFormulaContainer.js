@@ -23,7 +23,7 @@ class ModalDeleteFormulaContainer extends Component {
         const scanData = payloadSelectedFormula.scanData
         const ctt_id = payloadSelectedFormula.formulaDetail.ctt_id
 
-        await FormulaService.deleteLinkFormulaDetail(ctt_id)
+        await FormulaService.deleteLinkFormulaDetail({congthuctinhId: ctt_id})
         this.props.socketGetReport({id: bankerAccountId, scanData: scanData})
         this.props.toggleModalDeleteFormula()
     }

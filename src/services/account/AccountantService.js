@@ -40,14 +40,14 @@ class AccountantService {
     */
     getDynamicColumn() {
         return [
-            {key: 'turnover', value: 'Turn over'},
-            {key: 'turnoverTT', value: 'TurnoverTT'},
-            {key: 'net_turnover', value: 'Net Turn over'},
-            {key: 'gross_comm', value: 'Gross Comm'},
-            {key: 'member_comm', value: 'MemberComm'},
-            {key: 'win_loss', value: 'Win lose'},
+            {key: 'turnover', value: 'turnover'},
+            {key: 'turnoverTT', value: 'turnovertt'},
+            {key: 'net_turnover', value: 'net_turnover'},
+            {key: 'gross_comm', value: 'grosscomm'},
+            {key: 'member_comm', value: 'membercomm'},
+            {key: 'win_loss', value: 'win_loss'},
             {key: 'company', value: 'Company'},
-            {key: 'ma_total', value: 'Total code'},
+            {key: 'ma_total', value: 'ma_total'},
             {key: 'payout', value: 'Payout'},
             {key: 'master_total', value: 'master_total'},
             {key: 'outstanding', value: 'outstanding'},

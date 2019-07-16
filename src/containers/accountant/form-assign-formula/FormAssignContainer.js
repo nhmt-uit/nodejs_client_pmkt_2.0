@@ -109,9 +109,11 @@ class FormAssignContainer extends Component {
             select_formula_type: _get(this.props.initialValues, 'formula_type.value'),
         }
 
+        
+        const nestedAccount = this.findParents([this.props.rootAccInfoFull], this.props.selectedAccount.label)
         //Incase New Account - account_select = -9999
         if(!_isEmpty(this.props.selectedAccount) && !_isEmpty(this.props.rootAccInfo)) {
-            params.info = JSON.stringify({
+            const objRequest = {
                 is_accountant: true,
                 acc_name: this.props.selectedAccount.label,
                 account_select: this.props.selectedAccount.value,
@@ -120,11 +122,32 @@ class FormAssignContainer extends Component {
                     "0":{"name": this.props.rootAccInfo.acc_name},
                     "1":{"name": this.props.selectedAccount.label}
                 }
-            })
+            }
+
+            if(!_isEmpty(nestedAccount)) {
+                for(let x in nestedAccount) {
+                    objRequest.child[x] = {"name": nestedAccount[x]}
+                }
+            }
+            params.info = JSON.stringify(objRequest)
         }
 
         this.props.saveFormulaAccount(params)
         e.preventDefault();
+    }
+
+    findParents = (array, username) => {
+        if (typeof array != 'undefined') {
+            for (let i = 0; i < array.length; i++) {
+                if (array[i].username == username) return [username];
+                let a = this.findParents(array[i].child, username);
+                if (a != null) {
+                    a.unshift(array[i].username);
+                    return a;
+                }
+            }
+        }
+        return null;
     }
 
     renderAlert = _ => {
@@ -314,7 +337,7 @@ const validate = values => {
         errors.account = '"account" is not allowed to be empty'
     }
     if (!values.member) {
-        errors.member = '"member" is not allowed to be empty'
+        errors.member = '"member" is required'
     }
     return errors
 }

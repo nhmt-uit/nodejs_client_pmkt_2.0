@@ -277,7 +277,7 @@ const validate = values => {
         errors.cycle = '"Cycle" is not allowed to be empty!'
     }
     if (!values.member) {
-        errors.member = '"Member" is not allowed to be empty!'
+        errors.member = '"member" is required'
     }
     if (!values.typeOfMoney) {
         errors.typeOfMoney = 'You need to choose a currency!'

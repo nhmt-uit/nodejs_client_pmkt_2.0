@@ -96,7 +96,6 @@ class ListFormulaByForumulaGroupContainer extends Component {
         }
         
         this.setState({selectedFormulas})
-        
     }
 
     handleUpdateFormula = _ => {

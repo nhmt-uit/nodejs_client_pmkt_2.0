@@ -17,9 +17,17 @@ let defaultState = {
 
     
     //Handle Modal Form Member
+    typeModal: 'single',
     isOpenModalDelete: false,
 	formDeleteStatus: null,
-	formDeleteResponse: null,
+    formDeleteResponse: null,
+    
+    
+    
+    //Handle Modal Form Member
+    isOpenModalDeleteDetail: false,
+	formDeleteDetailStatus: null,
+	formDeleteDetailResponse: null,
 
     //Handel Save Form
 	formSaveStatus: null,
@@ -55,6 +63,13 @@ const MemberReducer = (state = defaultState, action) => {
 
         case MemberActionType.MEMBER_RESET_FORM_RESPONSE_FORMULA:
             return {...state, formSaveStatus: null, formSaveResponse: {}}
+
+        case MemberActionType.MEMBER_TOGGLE_MODAL_DELETE_DETAIL:
+            //Reset Store When Modal Close
+            if (!state.isOpenModalDeleteDetail === false) return {...state, typeModal: 'single', isOpenModalDeleteDetail: false, formDeleteDetailStatus: null, formDeleteDetailResponse: {}, selectedItemDetail: {}}
+            return {...state, typeModal: action.typeModal, isOpenModalDeleteDetail: !state.isOpenModalDeleteDetail, selectedItemDetail: action.selectedItemDetail};
+        case MemberActionType.MEMBER_DELETE_MEMBER_FORMULA:
+            return {...state, formDeleteDetailStatus: action.formDeleteDetailStatus, formDeleteDetailResponse: action.formDeleteDetailResponse}
         default:
             return {...state};
     }

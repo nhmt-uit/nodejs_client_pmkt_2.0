@@ -95,3 +95,45 @@ export const deleteMember = params => {
 }
 
 
+
+export const toggleModalDeleteMemberDetail = (params = {}) => {
+    return (dispatch) => {
+        dispatch({
+            type: MemberActionType.MEMBER_TOGGLE_MODAL_DELETE_DETAIL,
+            typeModal: params.typeModal,
+            selectedItemDetail: params.selectedItemDetail,
+        })
+    }
+};
+
+
+export const deleteMemberFormulaDetail = params => {
+    console.log(params)
+    return (dispatch) => {
+        if(params.typeDelete === "single") {
+            const paramsDelete = {
+                memberId: params.memberId,
+                congthuctinhId: params.congthuctinhId,
+            }
+            MemberService.deleteLinkFormulaDetail(paramsDelete).then(res => {
+                dispatch({
+                    type: MemberActionType.MEMBER_DELETE_MEMBER_FORMULA,
+                    formDeleteDetailStatus: res.status,
+                    formDeleteDetailResponse: res.res
+                })
+            })
+        } else if (params.typeDelete === "multiple") {
+            const paramsDelete = {
+                memberId: params.memberId,
+                'congthuctinhIds[]': params.congthuctinhIds,
+            }
+            MemberService.multipleDeleteLinkFormulaDetail(paramsDelete).then(res => {
+                dispatch({
+                    type: MemberActionType.MEMBER_DELETE_MEMBER_FORMULA,
+                    formDeleteDetailStatus: res.status,
+                    formDeleteDetailResponse: res.res
+                })
+            })
+        }
+    }
+}
