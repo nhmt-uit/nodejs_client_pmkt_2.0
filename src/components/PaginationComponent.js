@@ -107,7 +107,7 @@ class PaginationComponent extends Component {
 
                     return (
                         <PaginationItem key={item} active={currentPage === item}>
-                            <PaginationLink href="#/" onClick={e => handleEvent(e, item)}>
+                            <PaginationLink href="#/" onClick={e => currentPage === item ? null : handleEvent(e, item) }>
                                 {pageNumber}
                             </PaginationLink>
                         </PaginationItem>
@@ -130,13 +130,13 @@ class PaginationComponent extends Component {
         return (
             <Pagination aria-label="Page navigation example">
                 <PaginationItem>
-                    <PaginationLink first href="#/" onClick={e => this.handleClick(e, 1)} />
+                    <PaginationLink first href="#/" onClick={e => currentPage === 1 ? null : this.handleClick(e, 1)} />
                 </PaginationItem>
                 <PaginationItem>
                     <PaginationLink
                         previous href="#/"
                         onClick={
-                            e => this.handleClick(e, currentPage <= 1 ? 1 : (currentPage - 1))
+                            e => currentPage === 1 ? null : this.handleClick(e, currentPage <= 1 ? 1 : (currentPage - 1))
                         }
                     />
                 </PaginationItem>
@@ -145,12 +145,12 @@ class PaginationComponent extends Component {
                     <PaginationLink
                         next href="#/"
                         onClick={
-                            e => this.handleClick(e, currentPage >= totalPage ? totalPage : (currentPage + 1))
+                            e => currentPage === totalPage ? null : this.handleClick(e, currentPage >= totalPage ? totalPage : (currentPage + 1))
                         }
                     />
                 </PaginationItem>
                 <PaginationItem>
-                    <PaginationLink last href="#/" onClick={e => this.handleClick(e, totalPage)} />
+                    <PaginationLink last href="#/" onClick={e => currentPage === totalPage ? null : this.handleClick(e, totalPage)} />
                 </PaginationItem>
             </Pagination>
         );

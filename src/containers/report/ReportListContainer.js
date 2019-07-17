@@ -296,7 +296,7 @@ class ReportListContainer extends Component {
     render() {
         const { t, cyclePage, isFetching } = this.props;
         const { itemPerPage, currentPage } = this.state;
-        console.log(cyclePage)
+console.log(cyclePage)
         let cycleList = cyclePage.data || {};
 
         cycleList = sortBy(cycleList, 'sort_value').reverse();
@@ -308,25 +308,25 @@ class ReportListContainer extends Component {
                 : (<div className="actions">
                     <Link to={RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT_TRANSACTION')} className="btn btn-danger">
                         <span className="ladda-label"> {t("Add")}</span>
-                        <span className="ladda-spinner"></span>
+                        <span className="ladda-spinner" />
                     </Link>
                 </div>);
 
-        if (isFetching) {
-            return (
-                <div className="portlet light bordered">
-                    <div className="portlet-title">
-                        <div className="caption">
-                            <span className="caption-subject font-red bold uppercase">{t('report')}</span>
-                        </div>
-                        {btnAdd}
-                    </div>
-                    <div className="portlet-body position-relative" style={{ minHeight: '60px' }}>
-                        <LoadingComponent />
-                    </div>
-                </div>
-            );
-        }
+        // if (isFetching) {
+        //     return (
+        //         <div className="portlet light bordered">
+        //             <div className="portlet-title">
+        //                 <div className="caption">
+        //                     <span className="caption-subject font-red bold uppercase">{t('report')}</span>
+        //                 </div>
+        //                 {btnAdd}
+        //             </div>
+        //             <div className="portlet-body position-relative" style={{ minHeight: '60px' }}>
+        //                 <LoadingComponent />
+        //             </div>
+        //         </div>
+        //     );
+        // }
 
         return (
             <div className="portlet light bordered">
@@ -334,14 +334,10 @@ class ReportListContainer extends Component {
                     <div className="caption">
                         <span className="caption-subject font-red bold uppercase">{t('report')}</span>
                     </div>
-                    <div className="actions">
-                        <Link to={RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT_TRANSACTION')} className="btn btn-danger">
-                            <span className="ladda-label"> {t("Add")}</span>
-                            <span className="ladda-spinner"></span>
-                        </Link>
-                    </div>
+                    { btnAdd }
                 </div>
-                <div className="portlet-body ">
+                <div className="portlet-body position-relative">
+                    { isFetching ? <LoadingComponent /> : null }
                     <ListGroup>
                         {Object.keys(cycleList).map(item => {
                             return this.renderCycleItem(cycleList[item]);
@@ -365,7 +361,7 @@ class ReportListContainer extends Component {
 
 const mapStateToProps = state => {
     return {
-        cyclePage: _get(state, 'ReportReducer.cyclePage', {}),
+        cyclePage: _get(state, 'ReportReducer.cyclePage', { }),
         isFetching: _get(state, 'ReportReducer.isFetching', false),
     };
 };

@@ -11,7 +11,7 @@
   height: 100%;
   display: block;
   position: absolute;
-  background: #0000001f;
+  background: #ffffff73;
   z-index: 9999;
 }
 .wrap-loader-inside-component .loading {

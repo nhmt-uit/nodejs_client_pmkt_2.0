@@ -600,23 +600,14 @@ class ReportStatisticContainer extends Component {
                 tabReport = <li className="active tab-report-detail">{ this.renderTabReport('member') }</li>;
         }
 
-        if (isFetchingReport) {
-            return (
-                <div className="portlet light bordered">
-                    <div className="portlet-body" style={{ minHeight: '60px' }}>
-                        <LoadingComponent />
-                    </div>
-                </div>
-            );
-        }
-
         if (!currencyMap) {
             return null;
         }
 
         return (
             <div className="portlet light bordered">
-                <div className="portlet-body ">
+                <div className="portlet-body position-relative">
+                    { isFetchingReport ? <LoadingComponent /> : null }
                     <div className="tabbable-line tabbable-full-width tabbable-report">
                         <ul className="nav nav-tabs">
                             { tabReport }

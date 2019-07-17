@@ -49,8 +49,6 @@ class AccountListContainer extends Component {
 
                 return false;
             });
-
-            // return lstAccName;
         };
 
         let resultFilter = id === 'all' ? lstAccount : lstAccount.filter(account => account.book_id === id);
@@ -63,7 +61,6 @@ class AccountListContainer extends Component {
 
                 if (accName.indexOf(keySearch) !== -1) {
                     result.push(item);
-                    // result.push(this.filterAccount([item.acc_name]));
 
                     return;
                 }
@@ -72,7 +69,6 @@ class AccountListContainer extends Component {
                     const lstAccName = searchRecursive(item.child);
 
                     if (lstAccName) {
-                        console.log(lstAccName);
                         result.push(item);
                         // result.push(this.filterAccount(lstAccName));
                     }
@@ -112,15 +108,11 @@ class AccountListContainer extends Component {
     }, 200);
 
     renderTabContent() {
-        const { lstTab, isFetchingAccount } = this.props;
+        const { lstTab } = this.props;
 
         let { lstAccount } = this.props;
 
         lstAccount = _sortBy(lstAccount, ['banker_name', 'acc_name']);
-
-        if (isFetchingAccount) {
-            return <div className="min-height-60 margin-top-15"><LoadingComponent /></div>;
-        }  
 
         return (
             <>
@@ -135,7 +127,7 @@ class AccountListContainer extends Component {
     }
 
     render() {
-        const { t, lstTab } = this.props;
+        const { t, lstTab, isFetchingAccount } = this.props;
 
         return (
             <div className="portlet box blue-hoki position-relative">
@@ -164,6 +156,7 @@ class AccountListContainer extends Component {
                     </div>
                 </div>
                 <div className="portlet-body">
+                    { isFetchingAccount ? <LoadingComponent /> : null }
                     <div className="tab-content">
                         { this.renderTabContent() }
                     </div>

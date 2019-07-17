@@ -10,7 +10,8 @@ import { ReportService } from 'my-services/report';
 export const getCyclePage = (pagination) => {
     return dispatch => {
         dispatch({
-            type: ReportActionType.GET_CYCLE_PAGE,
+            type: ReportActionType.GET_CYCLE_PAGE_SUCCESS,
+            isFetching: true
         });
 
         return ReportService.getCyclePage(pagination)
@@ -19,6 +20,7 @@ export const getCyclePage = (pagination) => {
                     dispatch({
                         type: ReportActionType.GET_CYCLE_PAGE_SUCCESS,
                         payload: res.res || {},
+                        isFetching: false
                     });
                 } else {
                     dispatch({
@@ -27,6 +29,7 @@ export const getCyclePage = (pagination) => {
                             status: false,
                             error_description: _get(res, 'res.data.message', '')
                         },
+                        isFetching: false
                     });
                 }
             })
@@ -37,6 +40,7 @@ export const getCyclePage = (pagination) => {
                         status: false,
                         error_description: e.stack,
                     }),
+                    isFetching: false
                 });
             })
     }
