@@ -8,6 +8,8 @@ import { TransComponent, PaginationComponent } from 'my-components';
 import { getFormula } from 'my-actions/formula/FormulaAction'
 import { ModalDeleteMemberDetailContainer } from 'my-containers/member'
 import { getFormulaByMember, toggleModalDeleteMemberDetail } from 'my-actions/member/MemberAction'
+import MemberService from 'my-services/member/MemberService'
+import { empty } from 'rxjs';
 
 class DetailMemberContainer extends Component {
     state = {
@@ -78,11 +80,54 @@ class DetailMemberContainer extends Component {
         this.setState({congthuctinhIds : this.state.congthuctinhIds})
     }
 
+    
+
+    handleUpdateFormula = _ => {
+        /*
+        |--------------------------------------------------------------------------
+        | @input: {formula_group_id, banker_id, data: [{isEdit, formulaId, formulaAccountGroupId, random}]}
+        |--------------------------------------------------------------------------
+        */
+        const payload = {
+            memberId: this.props.selectedItemList.id,
+            data:[]
+        }
+        this.state.selectedFormulas.forEach(item => {
+            payload.data.push({
+                isEdit: true,
+                formulaId: !_isEmpty(item.newFormulaId) ? item.newFormulaId : item.formmulaId,
+                memberId: !_isEmpty(item.newMemberId) ? item.newMemberId : item.memberId,
+                congthuctinhId: item.id,
+                random: Math.random()
+            })
+        })
+        payload.data = JSON.stringify(payload.data)
+        MemberService.updateLinkFormulaDetail(payload).then(async res => {
+            if(res.status) {
+                this.props.getFormulaByMember({memberId: this.props.selectedItemList.id, selectedItemList: this.props.selectedItemList})
+                // //Render List Formula
+                this.setState({
+                    selectedFormulas: [],
+                })
+            } else {
+               
+            }
+        })
+    }
+
     handleEditFormula = (type, selectedItem, e) => {
+        
+        const selectedItemList = this.props.selectedItemList
         let selectedFormulas = this.state.selectedFormulas
         if(type === 'edit') {
             delete selectedItem.newFormulaId
-            selectedFormulas.push(selectedItem)
+            delete selectedItem.newMemberId
+            selectedFormulas.push({
+                formmulaId: selectedItem.congthucmau_id,
+                congthuctinhId: selectedItem.id,
+                id: selectedItem.id,
+                memberId: selectedItemList.id
+            })
         }
 
         if(type === 'close') {
@@ -90,8 +135,16 @@ class DetailMemberContainer extends Component {
         }
 
         if(type === 'change') {
+            console.log(e.target.formula)
             selectedFormulas = selectedFormulas.map(item => {
                 if( item.id === selectedItem.id) item.newFormulaId = e.target.value
+                return item
+            })
+        }
+
+        if(type === 'change_member') {
+            selectedFormulas = selectedFormulas.map(item => {
+                if( item.id === selectedItem.id) item.newMemberId = e.target.value
                 return item
             })
         }
@@ -103,7 +156,7 @@ class DetailMemberContainer extends Component {
         const formulaList =  this.props.formulaList.filter(obj => obj.banker_id === selectedItem.banker_id)
         
         const selectedEdit = this.state.selectedFormulas.find(item => item.id === selectedItem.id && !_isEmpty(item.newFormulaId))
-        let selectValue = _isEmpty(selectedEdit) ? selectedItem.id : selectedEdit.newFormulaId
+        let selectValue = _isEmpty(selectedEdit) ? selectedItem.congthucmau_id : selectedEdit.newFormulaId
         return (
             <select className="form-control" onChange={e => this.handleEditFormula('change', selectedItem, e)} value={selectValue}>
                 {
@@ -120,12 +173,12 @@ class DetailMemberContainer extends Component {
     }
 
     renderChangeMember = selectedItem => {
+        const selectedItemList = this.props.selectedItemList
         const optMember = this.props.optMember
-        
-        const selectedEdit = this.state.selectedFormulas.find(item => item.id === selectedItem.id && !_isEmpty(item.newFormulaId))
-        let selectValue = _isEmpty(selectedEdit) ? selectedItem.id : selectedEdit.newFormulaId
+        const selectedEdit = this.state.selectedFormulas.find(item => item.id === selectedItem.id && !_isEmpty(item.newMemberId))
+        let selectValue = _isEmpty(selectedEdit) ? selectedItemList.id : selectedEdit.newMemberId
         return (
-            <select className="form-control" onChange={e => this.handleEditFormula('change', selectedItem, e)} value={selectValue}>
+            <select className="form-control" onChange={e => this.handleEditFormula('change_member', selectedItem, e)} value={selectValue}>
                 {
                     optMember.map(item => {
                         return (
@@ -140,6 +193,7 @@ class DetailMemberContainer extends Component {
     }
 
     render() {
+        console.log(this.state.selectedFormulas, this.props.selectedItemList)
         const {currentPage, itemPerPage } = this.state
 
         let formulaByMemberList = _cloneDeep(this.props.formulaByMemberList)
@@ -164,7 +218,7 @@ class DetailMemberContainer extends Component {
             <>
                 <div className="form-group text-right">
                     <button  onClick={_ => this.props.toggleModalDeleteMemberDetail({typeModal: 'multiple', selectedItemDetail: {memberId: selectedItemList.id, congthuctinhIds: this.state.congthuctinhIds}})} className="btn btn-danger" disabled={!this.state.congthuctinhIds.length}><TransComponent i18nKey="Delete Selected" /></button>
-                    <button onClick={_ => null} className="btn btn-danger" disabled={!this.state.selectedFormulas.length}><TransComponent i18nKey="Save" /></button>
+                    <button onClick={_ => this.handleUpdateFormula()} className="btn btn-danger" disabled={!this.state.selectedFormulas.length}><TransComponent i18nKey="Save" /></button>
                 </div>
                 <div className="portlet box blue-hoki position-relative">
                     <div className="portlet-title">
@@ -220,7 +274,14 @@ class DetailMemberContainer extends Component {
                                 {
                                     formulaByMemberList.length ?
                                         formulaByMemberList.map( (item, index) => {
-                                            const formulaDetail = formulaList.find(obj => obj.id === item.congthucmau_id)
+                                            let formulaDetail = formulaList.find(obj => obj.id === item.congthucmau_id)
+                                            const selectedFormulasItem = this.state.selectedFormulas.find(obj => obj.id === item.id)
+
+                                            if(!_isEmpty(selectedFormulasItem) && !_isEmpty(selectedFormulasItem.newFormulaId)) {
+                                                formulaDetail = formulaList.find(obj => obj.id === selectedFormulasItem.newFormulaId)
+                                            }
+
+
                                             if(formulaDetail.field_value.length > 1) {
                                                 return (
                                                     <Fragment key={index}>
@@ -228,14 +289,14 @@ class DetailMemberContainer extends Component {
                                                             <td rowSpan="2"> {itemPerPage * (currentPage - 1) + index + 1} </td>
                                                             <td rowSpan="2" className="uppercase"> {item.acc_name} </td>
                                                             <td rowSpan="2" className="uppercase">
-                                                                { _isEmpty(this.state.selectedFormulas.find(obj => obj.id === item.id)) ?
+                                                                { _isEmpty(selectedFormulasItem) ?
                                                                     selectedItemList.fullname
                                                                     : this.renderChangeMember(item)
                                                                 }
                                                             </td>
                                                             <td rowSpan="2" className="uppercase">{item.formula_group_name}</td>
                                                             <td rowSpan="2">
-                                                                { _isEmpty(this.state.selectedFormulas.find(obj => obj.id === item.id)) ?
+                                                                { _isEmpty(selectedFormulasItem) ?
                                                                     formulaDetail.tenct
                                                                     : this.renderChangeFormula(item)
                                                                 }

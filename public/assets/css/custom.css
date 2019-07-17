@@ -1,6 +1,7 @@
 html {
   font-size: 15px;
 }
+.page-footer .page-footer-inner {float: none; display: block;}
 @media (min-width: 992px) {
   .page-content-wrapper .page-content {
       margin-left: 195px;
