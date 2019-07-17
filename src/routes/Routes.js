@@ -11,6 +11,7 @@ import {
 	SubUserPage, ConfigurationPage,
 	AccountPage,
 } from 'my-pages/manages';
+import { CookieService } from 'my-utils/core';
 import { FormulaPage } from 'my-pages/formula';
 import FormulaGroupPage from "../pages/formula-group/FormulaGroupPage";
 import { MemberPage } from "../pages/member";
@@ -102,21 +103,21 @@ const Routes = [
 	| Manage Routes Area
 	|--------------------------------------------------------------------------
 	*/
-    {
-        path: RoutesService.getPath('ADMIN', 'MANAGE_DASHBOARD'),
-        exact: true,
-        component: ManagePage,
-    },
+	{
+		path: RoutesService.getPath('ADMIN', 'MANAGE_DASHBOARD'),
+		exact: true,
+		component: ManagePage,
+	},
 	{
 		path: RoutesService.getPath('ADMIN', 'MANAGE_CREATE_NEW'),
 		exact: true,
 		component: CreateNewPage,
 	},
-    {
-        path: RoutesService.getPath('ADMIN', 'MANAGE_CONFIGURATION'),
-        exact: true,
-        component: ConfigurationPage,
-    },
+	{
+		path: RoutesService.getPath('ADMIN', 'MANAGE_CONFIGURATION'),
+		exact: true,
+		component: ConfigurationPage,
+	},
 	{
 		path: RoutesService.getPath('ADMIN', 'MANAGE_ACCOUNT_SUB'),
 		exact: true,
@@ -149,4 +150,101 @@ const Routes = [
 	},
 ];
 
-export default Routes;
+const RoutesUnActive = [
+	{
+		path: "/",
+		exact: true,
+		component: DashboardPage,
+	},
+	// authentication
+	{
+		path: RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'login' }),
+		exact: true,
+		component: LoginPage,
+	},
+	{
+		path: RoutesService.getPath('ADMIN', 'DASHBOARD'),
+		exact: true,
+		component: DashboardPage,
+	},
+	{
+		path: '*',
+		exact: true,
+		component: DashboardPage,
+	},
+];
+
+const RoutesRoles11_12 = [
+	{
+		path: "/",
+		exact: true,
+		component: DashboardPage,
+	},
+	// authentication
+	{
+		path: RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'login' }),
+		exact: true,
+		component: LoginPage,
+	},
+	{
+		path: RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'secure' }),
+		exact: true,
+		component: SecureCodePage,
+	},
+	{
+		path: RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'reset-secure-password' }),
+		exact: true,
+		component: ResetSecurePasswordPage,
+	},
+	{
+		path: RoutesService.getPath('ADMIN', 'DASHBOARD'),
+		exact: true,
+		component: DashboardPage,
+	},
+	{
+		path: RoutesService.getPath('ADMIN', 'ACCOUNTANT_DASHBOARD'),
+		exact: true,
+		component: AccountantDashboardPage,
+	},
+	{
+		path: RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT'),
+		exact: true,
+		component: ReportPage,
+	},
+	{
+		path: RoutesService.getPath('ADMIN', 'CHANGE_PASSWORD'),
+		exact: true,
+		component: ChangePasswordPage,
+	},
+	{
+		path: RoutesService.getPath('ADMIN', 'CHANGE_PASSWORD_2'),
+		exact: true,
+		component: ChangePassword2Page,
+	},
+	{
+		path: RoutesService.getPath('ADMIN', 'CHANGE_SECURE_CODE'),
+		exact: true,
+		component: ChangeSecureCodePage,
+	},
+	{
+		path: '*',
+		exact: true,
+		component: DashboardPage,
+	},
+];
+
+let route;
+const status = CookieService.get("status");
+const roles = CookieService.get("roles");
+
+if(status === '1' || status === undefined){
+	if(roles === '11' || roles === '12'){
+		route = RoutesRoles11_12
+	} else {
+		route = Routes
+	}
+} else if(status === '0'){
+	route = RoutesUnActive
+}
+
+export default route;
