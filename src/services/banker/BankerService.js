@@ -22,7 +22,7 @@ class BankerService extends BaseService {
             {bankerName: 'sbobet', account_role: [], flag_type: [{value: 1, label: 'SB & CSN & GAMES-XS & RACING & ESB'}]},
             {bankerName: 'asbobet', account_role: [], flag_type: [{value: 1, label: 'SB & CSN & GAMES-XS & RACING & ESB'}]},
             {bankerName: 'cft3388', account_role: [], flag_type: [{value: 1, label: 'CF & WFC'}]},
-            {bankerName: 'sv388', account_role: [], flag_type: [{value: 1, label: 'Cam & phi & sexy-jdb-jdbf & venus & weather & tbs & sunbet & redtiger & evolution & cq9'}]},
+            {bankerName: 'sv388', account_role: [], flag_type: [{value: 1, label: 'Cam & phi & sexy-jdb-jdbf & venus'}]},
             {bankerName: 'new789', account_role: [], flag_type: [{value: 2, label: 'LOTO-CSN'}]},
         ]
 

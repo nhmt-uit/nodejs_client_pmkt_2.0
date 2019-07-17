@@ -2,14 +2,13 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withTranslation } from 'react-i18next';
-import { isEqual as _isEqual, cloneDeep as _cloneDeep, isEmpty as _isEmpty } from 'lodash'
+import { isEqual as _isEqual, cloneDeep as _cloneDeep, isEmpty as _isEmpty, uniqBy as _uniqBy } from 'lodash'
 
-import { TransComponent, PaginationComponent } from 'my-components';
+import { TransComponent, PaginationComponent, LoadingComponent } from 'my-components';
 import { getFormula } from 'my-actions/formula/FormulaAction'
 import { ModalDeleteMemberDetailContainer } from 'my-containers/member'
 import { getFormulaByMember, toggleModalDeleteMemberDetail } from 'my-actions/member/MemberAction'
 import MemberService from 'my-services/member/MemberService'
-import { empty } from 'rxjs';
 
 class DetailMemberContainer extends Component {
     state = {
@@ -116,13 +115,13 @@ class DetailMemberContainer extends Component {
     }
 
     handleEditFormula = (type, selectedItem, e) => {
-        
         const selectedItemList = this.props.selectedItemList
         let selectedFormulas = this.state.selectedFormulas
         if(type === 'edit') {
             delete selectedItem.newFormulaId
             delete selectedItem.newMemberId
             selectedFormulas.push({
+                bankerId: selectedItem.banker_id,
                 formmulaId: selectedItem.congthucmau_id,
                 congthuctinhId: selectedItem.id,
                 id: selectedItem.id,
@@ -135,9 +134,15 @@ class DetailMemberContainer extends Component {
         }
 
         if(type === 'change') {
-            console.log(e.target.formula)
             selectedFormulas = selectedFormulas.map(item => {
                 if( item.id === selectedItem.id) item.newFormulaId = e.target.value
+                return item
+            })
+        }
+
+        if(type === 'multiple_change') {
+            selectedFormulas = selectedFormulas.map(item => {
+                if( item.bankerId === selectedItem.bankerId) item.newFormulaId = e.target.value
                 return item
             })
         }
@@ -192,8 +197,33 @@ class DetailMemberContainer extends Component {
         )
     }
 
+    renderFormulaHeader = _ => {
+        const selectedFormulas = this.state.selectedFormulas
+        const uniqBanker = _uniqBy(selectedFormulas, 'bankerId')
+        if(uniqBanker.length === 1 && selectedFormulas.length >= 2) {
+            const formulaList =  this.props.formulaList.filter(obj => obj.banker_id === uniqBanker[0].bankerId)
+            return (
+                <select className="form-control" onChange={e => this.handleEditFormula('multiple_change', uniqBanker[0], e)}>
+                    {
+                        formulaList.map(item => {
+                            return (
+                                <option className="text-uppercase" key={item.id} value={item.id}>
+                                    {item.tenct.toUpperCase()}
+                                </option>
+                            )
+                        })
+                    }
+                </select>
+            )
+        } else {
+            return (
+                <TransComponent i18nKey="Formula name" />
+            )
+        }
+        
+    }
+
     render() {
-        console.log(this.state.selectedFormulas, this.props.selectedItemList)
         const {currentPage, itemPerPage } = this.state
 
         let formulaByMemberList = _cloneDeep(this.props.formulaByMemberList)
@@ -221,6 +251,7 @@ class DetailMemberContainer extends Component {
                     <button onClick={_ => this.handleUpdateFormula()} className="btn btn-danger" disabled={!this.state.selectedFormulas.length}><TransComponent i18nKey="Save" /></button>
                 </div>
                 <div className="portlet box blue-hoki position-relative">
+                    {this.props.isInitListMemberDetail ? <LoadingComponent /> : null}
                     <div className="portlet-title">
                         <div className="caption bold uppercase font-size-15"><TransComponent i18nKey="Detail member list" /></div>
                         <div className="actions">
@@ -233,7 +264,7 @@ class DetailMemberContainer extends Component {
                                     </div>
                                 </div>
                                 <div className="form-group">
-                                <select className="form-control" value={bankerId} onChange={this.handleChangeSelectBanker}>
+                                    <select className="form-control" value={bankerId} onChange={this.handleChangeSelectBanker}>
                                         <option value="all">{this.props.t('All')}</option>
                                         {
                                             bankerList.map(banker =>
@@ -256,7 +287,7 @@ class DetailMemberContainer extends Component {
                                         <th rowSpan="2"><TransComponent i18nKey="Account"/></th>
                                         <th rowSpan="2"><TransComponent i18nKey="Member" /></th>
                                         <th rowSpan="2"><TransComponent i18nKey="Formula group" /></th>
-                                        <th rowSpan="2"><TransComponent i18nKey="Formula name" /></th>
+                                        <th rowSpan="2">{this.renderFormulaHeader()}</th>
                                         <th rowSpan="2"><TransComponent i18nKey="Company" /></th>
                                         <th rowSpan="2"><TransComponent i18nKey="Currency" /></th>
                                         <th rowSpan="2"><TransComponent i18nKey="Pay/Rec" /></th>
@@ -418,6 +449,9 @@ class DetailMemberContainer extends Component {
 
 const mapStateToProps = (state) => {
     return {
+        //Handle Loading
+        isInitListMemberDetail: state.MemberReducer.isInitListMemberDetail,
+
         optMember: state.MemberReducer.optMember,
         formulaList: state.FormulaReducer.List,
         bankerList: state.MemberReducer.bankerList,

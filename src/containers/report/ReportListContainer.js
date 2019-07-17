@@ -321,7 +321,7 @@ class ReportListContainer extends Component {
                         </div>
                         {btnAdd}
                     </div>
-                    <div className="portlet-body" style={{ minHeight: '60px' }}>
+                    <div className="portlet-body position-relative" style={{ minHeight: '60px' }}>
                         <LoadingComponent />
                     </div>
                 </div>
