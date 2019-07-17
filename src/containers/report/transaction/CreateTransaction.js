@@ -274,21 +274,21 @@ class CreateTransaction extends Component {
 const validate = values => {
     const errors = {}
     if (!values.cycle) {
-        errors.cycle = '"Cycle" is not allowed to be empty!'
+        errors.cycle = '"cycle" is required'
     }
     if (!values.member) {
         errors.member = '"member" is required'
     }
     if (!values.typeOfMoney) {
-        errors.typeOfMoney = 'You need to choose a currency!'
+        errors.typeOfMoney = 'Currency empty'
     }
     if (!values.amount) {
-        errors.amount = '"Amount" is not allowed to be empty!'
+        errors.amount = 'amount is required'
     } else if (values.amount && isNaN(Number(values.amount))) {
-        errors.amount = '"Amount" must is a number!'
+        errors.amount = '"amount" must be a number'
     }
     if (!values.transactionMethod) {
-        errors.transactionMethod = 'You need to choose a transaction method!'
+        errors.transactionMethod = '"transaction type" is required'
     }
     return errors
 }

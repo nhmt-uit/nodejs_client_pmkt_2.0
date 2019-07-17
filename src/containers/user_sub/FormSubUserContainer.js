@@ -311,7 +311,7 @@ const validate = values => {
     }
 
     if (!values.re_password || values.re_password !== values.password) {
-        errors.re_password = 'confirm password fail'
+        errors.re_password = '"confirm password" must be one of [ref:new_pass]'
     }
     return errors
 };

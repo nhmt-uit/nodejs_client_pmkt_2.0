@@ -39,6 +39,7 @@ class Header extends Component {
     };
 
     render() {
+        const status = CookieService.get("status");
         const lang = this.state.lang
         return (
             <>
@@ -56,71 +57,76 @@ class Header extends Component {
                         {/*=========================================*/}
                         <div className="top-menu">
                             <ul className="nav navbar-nav pull-right">
-                                <li className="dropdown dropdown-document">
-                                    <a href="/assets/images/HDSD PMKT VERSION 3.3.pdf" target="_blank" className="dropdown-toggle">
-                                            <span className="fa fa-book"/> &nbsp;
-                                            <span className="hide-on-mobile"><TransComponent i18nKey="document for new features" /></span>
-                                    </a>
-                                </li>
-                                <ZopimChat />
-                                <Notification />
-                                <li className="dropdown dropdown-extended dropdown-inbox" id="header_inbox_bar">
-                                    <a className="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                                        <i className="icon-globe" />
-                                    </a>
-                                    <ul className="width-auto dropdown-menu dropdown-menu-default">
-                                        <li>
-                                            <ul className="dropdown-menu-list scroller" data-handle-color="#637283">
+                                {
+                                    Number(status) === 1 ?
+                                    <>
+                                        <li className="dropdown dropdown-document">
+                                            <a href="/assets/images/HDSD PMKT VERSION 3.3.pdf" target="_blank" className="dropdown-toggle">
+                                                <span className="fa fa-book"/> &nbsp;
+                                                <span className="hide-on-mobile"><TransComponent i18nKey="document for new features" /></span>
+                                            </a>
+                                        </li>
+                                        <ZopimChat />
+                                        <Notification />
+                                        <li className="dropdown dropdown-extended dropdown-inbox" id="header_inbox_bar">
+                                            <a className="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                                <i className="icon-globe" />
+                                            </a>
+                                            <ul className="width-auto dropdown-menu dropdown-menu-default">
                                                 <li>
-                                                    <a onClick={this.handleChangeLanguage('en')} className="padding-tb-10-important text-uppercase text-center padding-">
-                                                        {(lang && lang.toLowerCase() === 'en') ? <i className="fa fa-check"/> : ''}&nbsp;&nbsp;<TransComponent i18nKey="english" />
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a onClick={this.handleChangeLanguage('vi')} className="padding-tb-10-important text-uppercase text-center">
-                                                        {(lang && lang.toLowerCase() === 'vi') ? <i className="fa fa-check"/> : ''}&nbsp;&nbsp;<TransComponent i18nKey="vietnam" />
-                                                    </a>
+                                                    <ul className="dropdown-menu-list scroller" data-handle-color="#637283">
+                                                        <li>
+                                                            <a onClick={this.handleChangeLanguage('en')} className="padding-tb-10-important text-uppercase text-center padding-">
+                                                                {(lang && lang.toLowerCase() === 'en') ? <i className="fa fa-check"/> : ''}&nbsp;&nbsp;<TransComponent i18nKey="english" />
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a onClick={this.handleChangeLanguage('vi')} className="padding-tb-10-important text-uppercase text-center">
+                                                                {(lang && lang.toLowerCase() === 'vi') ? <i className="fa fa-check"/> : ''}&nbsp;&nbsp;<TransComponent i18nKey="vietnam" />
+                                                            </a>
+                                                        </li>
+                                                    </ul>
                                                 </li>
                                             </ul>
                                         </li>
-                                    </ul>
-                                </li>
-                                {/*=========================================*/}
-                                <li className="dropdown dropdown-extended dropdown-inbox">
-                                    <a href="#/" onClick={this.toggleModalBanker} className="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                                        <i className={'fa fa-bank'}/>
-                                    </a>
-                                </li>
-                                {/*=========================================*/}
-                                <li className="dropdown dropdown-user">
-                                    <a className="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                                        <img className="img-circle" src="/assets/layouts/layout/img/avatar.png" alt="avatar" />
-                                        <span className="username username-hide-on-mobile"> {AuthService.getUsername()} </span>
-                                        <i className="fa fa-angle-down" />
-                                    </a>
-                                    <ul className="dropdown-menu dropdown-menu-default">
-                                        <Fragment>
-                                            <li>
-                                                <Link to={RoutesService.getPath('ADMIN', 'CHANGE_PASSWORD')}>
-                                                    <i className="icon-lock" /> <TransComponent i18nKey="Change Password" />
-                                                </Link>
-                                            </li>
-                                            <li>
-                                                <Link to={RoutesService.getPath('ADMIN', 'CHANGE_PASSWORD_2')}>
-                                                    <i className="icon-lock" /> <TransComponent i18nKey="Change password 2" />
-                                                </Link>
-                                            </li>
-                                            <li>
-                                                <Link to={RoutesService.getPath('ADMIN', 'CHANGE_SECURE_CODE')}>
-                                                    <i className="icon-lock" /> <TransComponent i18nKey="Change Secure Code" />
-                                                </Link>
-                                            </li>
-                                        </Fragment>
-                                        <li>
-                                            <a onClick={this.handleLogout}> <i className="icon-key" /><TransComponent i18nKey="Logout" /></a>
+                                        {/*=========================================*/}
+                                        <li className="dropdown dropdown-extended dropdown-inbox">
+                                            <a href="#/" onClick={this.toggleModalBanker} className="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                                <i className={'fa fa-bank'}/>
+                                            </a>
                                         </li>
-                                    </ul>
-                                </li>
+                                        {/*=========================================*/}
+                                        <li className="dropdown dropdown-user">
+                                            <a className="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                                <img className="img-circle" src="/assets/layouts/layout/img/avatar.png" alt="avatar" />
+                                                <span className="username username-hide-on-mobile"> {AuthService.getUsername()} </span>
+                                                <i className="fa fa-angle-down" />
+                                            </a>
+                                            <ul className="dropdown-menu dropdown-menu-default">
+                                                <Fragment>
+                                                    <li>
+                                                        <Link to={RoutesService.getPath('ADMIN', 'CHANGE_PASSWORD')}>
+                                                            <i className="icon-lock" /> <TransComponent i18nKey="Change Password" />
+                                                        </Link>
+                                                    </li>
+                                                    <li>
+                                                        <Link to={RoutesService.getPath('ADMIN', 'CHANGE_PASSWORD_2')}>
+                                                            <i className="icon-lock" /> <TransComponent i18nKey="Change password 2" />
+                                                        </Link>
+                                                    </li>
+                                                    <li>
+                                                        <Link to={RoutesService.getPath('ADMIN', 'CHANGE_SECURE_CODE')}>
+                                                            <i className="icon-lock" /> <TransComponent i18nKey="Change Secure Code" />
+                                                        </Link>
+                                                    </li>
+                                                </Fragment>
+                                                <li>
+                                                    <a onClick={this.handleLogout}> <i className="icon-key" /><TransComponent i18nKey="Logout" /></a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </> : null
+                                }
                                 <li className="dropdown dropdown-quick-sidebar-toggler">
                                     <a href="#/" className="dropdown-toggle"  onClick={this.handleLogout}><i className="icon-logout" /></a>
                                 </li>
