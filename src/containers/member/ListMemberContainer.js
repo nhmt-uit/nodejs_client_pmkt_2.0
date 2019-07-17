@@ -4,7 +4,7 @@ import { compose } from 'redux';
 import { withTranslation } from 'react-i18next';
 import { isEmpty as _isEmpty, cloneDeep as _cloneDeep } from 'lodash'
 
-import { TransComponent, PaginationComponent } from 'my-components';
+import { TransComponent, PaginationComponent, LoadingComponent } from 'my-components';
 import { getMember, getFormulaByMember, toggleModalMember, toggleModalDeleteMember } from "my-actions/member/MemberAction";
 import { ModalFormMemberContainer, ModalDeleteMemberContainer } from 'my-containers/member'
 
@@ -66,7 +66,8 @@ class ListMemberContainer extends Component {
                 <div className="form-group text-right">
                     <button onClick={_ => this.props.toggleModalMember()} className="btn btn-danger"><TransComponent i18nKey="Add new" /></button>
                 </div>
-                <div className="portlet box blue-hoki">
+                <div className="portlet box blue-hoki position-relative">
+                    {this.props.isInitListMember ? <LoadingComponent /> : null }
                     <div className="portlet-title">
                         <div className="caption bold uppercase font-size-15"><TransComponent i18nKey="Member list" /></div>
                         <div className="actions">
@@ -150,6 +151,10 @@ class ListMemberContainer extends Component {
 
 const mapStateToProps = (state) => {
     return {
+        //Handle Loading
+        isInitListMember: state.MemberReducer.isInitListMember,
+
+
         optMember: state.MemberReducer.optMember,
         isOpenModal: state.MemberReducer.isOpenModal,
         selectedItem: state.MemberReducer.selectedItem,

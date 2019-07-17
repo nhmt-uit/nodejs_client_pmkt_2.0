@@ -144,7 +144,7 @@ class AccountDetailItemContainer extends Component {
     handleDelete = () => {
         this.handleChangeState({ isLoadingDelete: true }, async () => {
             try {
-                await FormulaService.deleteLinkFormulaDetail(this.props.dataItem.id);
+                await FormulaService.deleteLinkFormulaDetail({congthuctinhId: this.props.dataItem.id});
 
                 this.handleChangeState({ isLoadingDelete: false, isOpenModal: false }, () => {
                     return this.props.onReGetLinkFormulaDetail();

@@ -16,8 +16,12 @@ class FormulaService extends BaseService {
         return HttpService.post(`${this.serviceUrl}/create_new/detail`, payload)
     }
 
-    deleteLinkFormulaDetail(congthuctinhId){
-        const payload = {congthuctinhId}
+    /*
+    |--------------------------------------------------------------------------
+    | input: @memberId: string, @congthuctinhId: string
+    |--------------------------------------------------------------------------
+    */
+    deleteLinkFormulaDetail(payload){
         return HttpService.post(`${this.serviceUrl}/create_new/delete_link_formula_detail`, payload)
     }
 

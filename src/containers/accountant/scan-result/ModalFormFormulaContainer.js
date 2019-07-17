@@ -23,13 +23,14 @@ class ModalFormFormulaContainer extends Component {
         const { isOpenModalFormFormula, payloadSelectedFormula } = this.props
         const selectedAccount = {value: _get(payloadSelectedFormula, 'accInfo.id'), label: _get(payloadSelectedFormula, 'accInfo.acc_name'), bankerId: _get(payloadSelectedFormula, 'accInfo.banker') }
         const rootAccInfo =  _get(payloadSelectedFormula, 'rootAccInfo')
+        const rootAccInfoFull =  _get(payloadSelectedFormula, 'rootAccInfoFull')
         return (
             <Modal isOpen={isOpenModalFormFormula} toggle={_ => this.handleToggleModal()} className="modal-lg modal-xxl">
                 <ModalHeader toggle={_ => this.handleToggleModal()}><TransComponent i18nKey="confirm" /></ModalHeader>
                 <ModalBody>
                     <div className="row">
                         <div className="col-md-4">
-                            <FormAssignContainer selectedAccount={selectedAccount} rootAccInfo={rootAccInfo} />
+                            <FormAssignContainer selectedAccount={selectedAccount} rootAccInfo={rootAccInfo} rootAccInfoFull={rootAccInfoFull} />
                         </div>
                         <div className="col-md-8">
                             <ListFormulaByAccountContainer />

@@ -2,7 +2,7 @@ import { BankerActionType } from 'my-constants/action-types';
 
 let defaultState = {
     payload: {},
-    payloadByMember: {},
+    bankerList: {},
 }
 
 const BankerReducer = (state = defaultState, action) => {
@@ -11,7 +11,7 @@ const BankerReducer = (state = defaultState, action) => {
         case BankerActionType.GET_BANKER:
             return {...state, payload: action.payload};
         case BankerActionType.GET_BANKER_BY_MEMBER:
-            return {...state, payloadByMember: action.payload};
+            return {...state, bankerList: action.bankerList};
         default:
             return {...state};
     }

@@ -57,6 +57,22 @@ class BankerLoginContainer extends Component {
         const bankerName = this.props.match.params.bankerName
         const errorSubmit = _get(payload, 'err')
         const isLoginSuccess = _get(payload, 'loginSuccess', false)
+        const needCaptcha = _get(payload, 'captcha', false)
+        const needSecurity = _get(banker, 'need_security', false)
+
+        var captcha = _get(this.props.initialValues, 'captcha');
+        var subCode = _get(this.props.initialValues, 'sub_code');
+        var subPass = _get(this.props.initialValues, 'sub_pass');
+        var subUser = _get(this.props.initialValues, 'sub_user');
+
+        var onSubmit = true;
+        if(!subUser || !subPass) onSubmit = false
+        if(needCaptcha){
+            if(!captcha) onSubmit = false
+        }
+        if(needSecurity){
+            if(!subCode) onSubmit = false
+        }
 
         if(isLoginSuccess) {
             this.props.history.push(RoutesService.getPath('ADMIN', 'ACCOUNTANT_MANUAL_PROCESS', { bankerName: bankerName, type: '' }))
@@ -159,7 +175,7 @@ class BankerLoginContainer extends Component {
                             :null
                         }
                         <div className="form-actions text-center input-group-btn">
-                            <button type="submit" className="btn red uppercase" disabled={!isRenderFinish || !_isEmpty(payload_reject)}>
+                            <button type="submit" className="btn red uppercase" disabled={!isRenderFinish || !_isEmpty(payload_reject) || !onSubmit}>
                                 { isRenderFinish ? <TransComponent i18nKey="Login" /> : <TransComponent i18nKey="Please wait" /> }
                                 { !isRenderFinish ? <i className="fa fa-spinner spinner-animate" style={{marginLeft: '5px'}} /> : null }
                             </button>

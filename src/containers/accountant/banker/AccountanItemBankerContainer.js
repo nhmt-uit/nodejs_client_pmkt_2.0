@@ -5,7 +5,6 @@ import { isEmpty as _isEmpty, isEqual as _isEqual } from 'lodash'
 import uuidv4 from 'uuid/v4'
 
 import { collapseBanker, checkBankerAccount } from 'my-actions/AccountantAction';
-import { LoadingComponent } from 'my-components';
 import { AccountantListBankerAccountContainer, AccountantItemBankerCheckboxContainer } from 'my-containers/accountant';
 
 

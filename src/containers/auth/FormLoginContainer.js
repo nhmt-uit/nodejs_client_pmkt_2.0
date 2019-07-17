@@ -36,6 +36,13 @@ class FormLoginContainer extends React.Component {
     }
 
     render() {
+        var password = _get(this.props.initialValues, 'password');
+        var username = _get(this.props.initialValues, 'username');
+        var onSubmit = false;
+        if(password && username){
+            onSubmit = true
+        }
+
         const { auth } = this.props;
         if (auth.login_status) {
             $('div.alert').fadeIn();
@@ -93,7 +100,7 @@ class FormLoginContainer extends React.Component {
                             </Field>
                         </div>
                         <div className="form-actions text-center">
-                            <button type="submit" className="btn red uppercase"><TransComponent i18nKey="Login" /></button>
+                            <button type="submit" className="btn red uppercase" disabled={!onSubmit}><TransComponent i18nKey="Login" /></button>
                         </div>
                     </form>
                 </div>

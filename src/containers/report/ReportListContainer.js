@@ -296,7 +296,7 @@ class ReportListContainer extends Component {
     render() {
         const { t, cyclePage, isFetching } = this.props;
         const { itemPerPage, currentPage } = this.state;
-
+        console.log(cyclePage)
         let cycleList = cyclePage.data || {};
 
         cycleList = sortBy(cycleList, 'sort_value').reverse();
@@ -321,7 +321,7 @@ class ReportListContainer extends Component {
                         </div>
                         {btnAdd}
                     </div>
-                    <div className="portlet-body" style={{ minHeight: '60px' }}>
+                    <div className="portlet-body position-relative" style={{ minHeight: '60px' }}>
                         <LoadingComponent />
                     </div>
                 </div>

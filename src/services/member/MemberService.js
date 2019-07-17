@@ -33,6 +33,10 @@ class MemberService extends BaseService {
         return HttpService.post(`${this.serviceUrl}/member/update_multi_cong_thuc_tinh`, payload);
     }
 
+    updateLinkFormulaDetail(payload) {
+        return HttpService.post(`${this.serviceUrl}/member/update_link_formula_detail`, payload);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | @input: memberId
@@ -49,6 +53,24 @@ class MemberService extends BaseService {
     */
     deleteMember(id) {
         return HttpService.post(`${this.serviceUrl}/member/delete_member`, {id: id})
+    }
+
+     /*
+    |--------------------------------------------------------------------------
+    | input: @memberId: string, @congthuctinhId: string
+    |--------------------------------------------------------------------------
+    */
+    deleteLinkFormulaDetail(payload){
+        return HttpService.post(`${this.serviceUrl}/member/delete_link_formula_detail`, payload)
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | input: @memberId: string, @congthuctinhIds: array
+    |--------------------------------------------------------------------------
+    */
+    multipleDeleteLinkFormulaDetail(payload){
+        return HttpService.post(`${this.serviceUrl}/member/multi_delete_link_formula_detail`, payload)
     }
 }
 

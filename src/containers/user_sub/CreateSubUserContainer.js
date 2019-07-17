@@ -3,12 +3,17 @@ import {compose} from "redux/es/redux";
 import {connect} from "react-redux";
 
 import {TransComponent} from 'my-components'
-import {renderError} from 'my-utils/components/redux-form/render-form'
 
 import { createMemberSub, getMemberSub, toggleModalMemberSub, getSuffixesMember} from 'my-actions/account_sub/AccountSubAction'
-import ModalFormSubUserContainer from './ModalFormSubUserContainer'
+import ModalFormCreateSubUserContainer from './ModalFormCreateSubUserContainer'
 
 class CreateSubUserContainer extends Component {
+    constructor(props){
+        super(props)
+        this.state = {
+            isOpenModal: false,
+        }
+    }
 
     render() {
         const { t }  = this.props;
@@ -18,7 +23,7 @@ class CreateSubUserContainer extends Component {
                     <a type="submit" className="btn btn-default red" onClick={() => this.props.toggleModalMemberSub()}><TransComponent i18nKey="Add new"/></a>
                 </div>
                 <div className="clearfix"></div>
-                <ModalFormSubUserContainer formType="create"/>
+                <ModalFormCreateSubUserContainer/>
             </div>
         );
     }

@@ -274,7 +274,7 @@ const validate = values => {
         errors.fullname = '"fullname" is not allowed to be empty'
     }
     if (!values.member) {
-        errors.member = '"member" is not allowed to be empty'
+        errors.member = '"member" is required'
     }
 
     if (!values.password) {

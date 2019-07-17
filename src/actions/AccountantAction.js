@@ -105,7 +105,7 @@ export const socketScanData = (params) => {
 
             // Incase Accountant Manual
             if(!_isEmpty(params.bankerName)) {
-                if (typeof params.flagType !== "undefined") requestObj.more_post.flag_type = params.flagType
+                if (typeof params.flagType !== "undefined") requestObj.more_post.flag_type = `${params.flagType}`
                 if (typeof params.accountRole !== "undefined") requestObj.more_post.is_sub = params.accountRole
                 requestObj.more_post.is_scan_by_hand = true
             }
@@ -400,6 +400,14 @@ export const toggleShowHideBankerAccountChild = params => {
             type: AccountantActionType.ACCOUNTANT_TOGGLE_SHOW_HIDE_BANKER_ACCOUNT_CHILD,
             bankerAccountId: _get(params, 'bankerAccountId', null),
             username: _get(params, 'username', [])
+        });
+    }
+}
+
+export const resetWhenChangeDate = _ => {
+    return (dispatch) => {
+        dispatch({
+            type: AccountantActionType.ACCOUNTANT_RESET_WHEN_CHANGE_DATE,
         });
     }
 }

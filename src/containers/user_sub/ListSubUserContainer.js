@@ -1,12 +1,12 @@
 import React, {Component} from "react";
 import {get, isEmpty} from 'lodash';
 
-import {getMemberSub, delMemberSub} from "my-actions/account_sub/AccountSubAction";
+import {getMemberSub, delMemberSub, toggleModalMemberSub} from "my-actions/account_sub/AccountSubAction";
 import {compose} from "redux/es/redux";
 import {connect} from "react-redux";
 import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 import {withTranslation} from "react-i18next";
-import {TransComponent} from 'my-components'
+import {TransComponent, LoadingComponent} from 'my-components'
 import ModalFormEditSubUserContainer from "my-containers/user_sub/ModalFormEditSubUserContainer"
 
 class ListSubUserContainer extends Component{
@@ -30,8 +30,7 @@ class ListSubUserContainer extends Component{
     }
 
     toggleEditMemberSub = (item) => {
-        var isOpenModalEdit = true;
-        this.childModalFormEditSubUserContainer.callEditMemberSub(item, isOpenModalEdit);
+        this.childModalFormEditSubUserContainer.callEditMemberSub(item);
     }
 
     toggleDelMemberSubModal = value_id => {
@@ -50,15 +49,14 @@ class ListSubUserContainer extends Component{
         var post = {
             id: this.state.delValueID
         }
-        var self = this;
         this.props.delMemberSub(post)
-            .then(function () {
-                self.setState({
-                    isOpenDelModal: !self.state.isOpenDelModal
+            .then( () => {
+                this.setState({
+                    isOpenDelModal: !this.state.isOpenDelModal
                 })
             })
-            .then(function () {
-                self.props.getMemberSub()
+            .then( () => {
+                this.props.getMemberSub()
             })
             .catch(function (err) {
                 console.log(err)
@@ -66,15 +64,10 @@ class ListSubUserContainer extends Component{
     }
 
     render() {
-        const {t} = this.props
-        var DATA = this.props.memberSub.memberSub;
-        if(isEmpty(DATA)){
-            return null;
-        }
-        var listMemberSub = DATA.res.data.List;
+        const {t, memberSub} = this.props
+        var listMemberSub = memberSub
         const filterTextChange = this.state.filterText;
-
-        var self = this;
+        var x = 0;
         return (
             <div className="col-xs-12">
                 <div className="portlet light bordered">
@@ -104,23 +97,26 @@ class ListSubUserContainer extends Component{
                             </thead>
                             <tbody>
                             {
-                                listMemberSub.map(function (item, index) {
+                                listMemberSub.length ?
+                                listMemberSub.map((item, index) => {
                                     if(item.fullname.toUpperCase().indexOf(filterTextChange.toUpperCase()) > -1){
+                                        x++;
                                         return(
                                             <tr key={index}>
-                                                <td className="text-center"> {index + 1} </td>
+                                                <td className="text-center"> {x} </td>
                                                 <td className="text-center uppercase"> {item.fullname} </td>
                                                 <td className="text-center uppercase"> {item.username} </td>
-                                                <td className="text-center"> {item.status === 1 ? "Online" : "Offline"} </td>
+                                                <td className="text-center"> {item.status === 1 ? t("Online") : t("Offline")} </td>
                                                 <td className="text-center"> {item.active_password2 === 1 ? (<span className="btn btn-danger label-active-pass2"> <TransComponent i18nKey="activate"/> </span>) : <span />} </td>
                                                 <td className="text-center"> <button className="text-success btn btn-link"
-                                                                                     onClick={ () => self.toggleEditMemberSub(item)}> <i className="fa fa-edit"></i> </button> </td>
+                                                                                     onClick={ () => this.toggleEditMemberSub(item)}> <i className="fa fa-edit font-green cursor-pointer"></i> </button> </td>
                                                 <td className="text-center"> <button className="text-success btn btn-link font-red"
-                                                                                     onClick={ () => self.toggleDelMemberSubModal(item.id)}> <i className="fa fa-close"></i> </button> </td>
+                                                                                     onClick={ () => this.toggleDelMemberSubModal(item.id)}> <i className="fa fa-times-circle cursor-pointer"></i> </button> </td>
                                             </tr>
                                         )
                                     }
                                 })
+                                : <tr><td className="text-center" colSpan="20"><TransComponent i18nKey="Data Empty" /></td></tr>
                             }
                             </tbody>
                         </table>
@@ -135,7 +131,7 @@ class ListSubUserContainer extends Component{
                                     <TransComponent i18nKey="Are you sure want to delete ?"/>
                                 </ModalBody>
                                 <ModalFooter>
-                                    <Button className="bg-red font-white" onClick={this.handleDelMemberSub}><TransComponent i18nKey="Yes"/></Button>
+                                    <Button className="bg-red font-white" onClick={this.handleDelMemberSub}><TransComponent i18nKey="Confirm"/></Button>
                                     <Button color="secondary" onClick={() => this.toggleDelMemberSubModal()}><TransComponent i18nKey="Cancel"/></Button>
                                 </ModalFooter>
                             </Modal>
@@ -150,7 +146,7 @@ class ListSubUserContainer extends Component{
 
 const mapStateToProps = state => {
     return {
-        memberSub: get(state,'AccountSubReducer', {}),
+        memberSub: state.AccountSubReducer.memberSub,
         formMemberSubSaveStatus: state.AccountSubReducer.formSaveStatus,
     }
 };
@@ -159,6 +155,7 @@ const mapDispatchToProps = dispatch => {
     return{
         getMemberSub: params => {dispatch(getMemberSub(params))},
         delMemberSub: params => dispatch(delMemberSub(params)),
+        toggleModalMemberSub:  params => dispatch(toggleModalMemberSub(params)),
     };
 };
 

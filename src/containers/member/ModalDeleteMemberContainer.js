@@ -5,7 +5,7 @@ import {get as _get} from 'lodash'
 
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import 'my-styles/reactstrap-modal.css'
-import { TransComponent } from 'my-components'
+import { TransComponent, LoadingComponent } from 'my-components'
 import { toggleModalDeleteMember, deleteMember } from 'my-actions/member/MemberAction'
 
 class ModalDeleteMemberContainer extends Component {
@@ -21,6 +21,7 @@ class ModalDeleteMemberContainer extends Component {
         username = username ? username.toUpperCase() : username
         return (
             <Modal isOpen={this.props.isOpenModalDelete} toggle={_ => this.props.toggleModalDeleteMember()}>
+                { this.props.isInitDeleteMember ? <LoadingComponent /> : null }
                 <ModalHeader toggle={_ => this.props.toggleModalDeleteMember()}><TransComponent i18nKey="Confirm" /></ModalHeader>
                 <ModalBody>
                     <TransComponent i18nKey="confirm delete {{item}}" i18nObj={{item: username}} />
@@ -38,6 +39,9 @@ class ModalDeleteMemberContainer extends Component {
 
 const mapStateToProps = state => {
     return {
+        //Handle Loading
+        isInitDeleteMember: state.MemberReducer.isInitDeleteMember,
+
         isOpenModalDelete: state.MemberReducer.isOpenModalDelete,
         formDeleteStatus: state.MemberReducer.formDeleteStatus,
         selectedItem : state.MemberReducer.selectedItem,

@@ -4,11 +4,13 @@ import AccountSubService from 'my-services/account_sub/AccountSubServices'
 export const getMemberSub = () => {
     return (dispatch) => {
         return AccountSubService.getMemberSub().then(res => {
-
-            dispatch({
-                type: AccountSubActionType.GET_MEMBER_SUB,
-                payload: res,
-            })
+            if(res.status) {
+                var memberSub = res.res.data.List;
+                dispatch({
+                    type: AccountSubActionType.GET_MEMBER_SUB,
+                    memberSub: memberSub,
+                })
+            }
         })
     }
 }
@@ -60,6 +62,14 @@ export const toggleModalMemberSub = () => {
     return (dispatch) => {
         dispatch({
             type: AccountSubActionType.MEMBER_SUB_TOGGLE_MODAL_FORM,
+        })
+    }
+};
+
+export const toggleModalEditMemberSub = () => {
+    return (dispatch) => {
+        dispatch({
+            type: AccountSubActionType.MEMBER_SUB_TOGGLE_MODAL_EDIT_FORM,
         })
     }
 };

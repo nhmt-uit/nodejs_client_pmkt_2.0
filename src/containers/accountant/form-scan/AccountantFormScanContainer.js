@@ -11,7 +11,7 @@ import { join, filter, isEmpty as _isEmpty, map as _map, isEqual as _isEqual } f
 import { AppConfig } from 'my-constants'
 import BootstrapInputIcon from 'my-utils/components/date-picker/BootstrapInputIcon'
 import { FormScanGroupDateComponent, FormScanFlagTypeComponent } from 'my-components/accountant'
-import { checkBankerAccount } from 'my-actions/AccountantAction';
+import { checkBankerAccount, resetWhenChangeDate } from 'my-actions/AccountantAction';
 import { TransComponent } from 'my-components'
 import { AccountantFormScanButtonContainer, AccountantFormButtonFullScreenContainer } from 'my-containers/accountant'
 
@@ -82,6 +82,9 @@ class AccountantFormScanContainer extends Component {
     |--------------------------------------------------------------------------
     */
     checkDateToSelectGroupDate() {
+        // Reset data banker account
+        this.props.resetWhenChangeDate()
+        
         let date_form = moment(this.state.from_date).format('YYYY-MM-DD')
         let to_date = moment(this.state.to_date).format('YYYY-MM-DD')
         this.setState({typeGroupDate: null})
@@ -108,6 +111,9 @@ class AccountantFormScanContainer extends Component {
     |--------------------------------------------------------------------------
     */
     changeGroupDate = type => {
+        // Reset data banker account
+        this.props.resetWhenChangeDate()
+
         this.setState({typeGroupDate: type})
         switch (type) {
             case 'today':
@@ -132,6 +138,10 @@ class AccountantFormScanContainer extends Component {
     |--------------------------------------------------------------------------
     */
     changeAccountRole = type => {
+        
+        // Reset data banker account
+        this.props.resetWhenChangeDate()
+        
         this.setState({accountRole: type})
     }
 
@@ -141,6 +151,9 @@ class AccountantFormScanContainer extends Component {
     |--------------------------------------------------------------------------
     */
     changeFlagType = type => {
+        
+        // Reset data banker account
+        this.props.resetWhenChangeDate()
         this.setState({flagType: type})
     }
 
@@ -161,7 +174,7 @@ class AccountantFormScanContainer extends Component {
             }
             label = join(labels, ", ")
         }
-        return <span className="uppercase" style={{'color': 'ccc'}}>{label}</span>
+        return <span className="uppercase" style={{'color': 'ccc'}}><TransComponent i18nKey={label}/></span>
     }
 
     handleSelectMember = selected => {
@@ -263,6 +276,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch) => {
     return {
         checkBankerAccount: (type_check, params) => {dispatch(checkBankerAccount(type_check, params))},
+        resetWhenChangeDate: _ => {dispatch(resetWhenChangeDate())},
     }
 };
 

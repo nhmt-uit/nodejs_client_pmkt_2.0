@@ -37,6 +37,11 @@ class AppPage extends BaseComponent {
 		const isLogin = CookieService.get("isLogin");
 		const pathname = window.location.pathname;
 		if(!isLogin && !pathname.match(/\/auth\/login/i)) window.location.href = RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'login' })
+
+		if(window.location.href === 'http://localhost:3000/dashboard'){
+			const byPassDashboard = CookieService.get("byPassDashboard");
+			if(!byPassDashboard) window.location.href = RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'login' })
+		}
 	}
 
 	render() {

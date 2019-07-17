@@ -14,6 +14,7 @@ import { AuthService } from 'my-services/systems'
 
 class ReportDetail extends Component {
     componentWillMount() {
+        console.log(window.location.pathname)
         var chuky_id = window.location.pathname.split('/')[4];
         this.props.getReportDetail(chuky_id)
     }
@@ -35,6 +36,7 @@ class ReportDetail extends Component {
         var DV_Tiente_Map = keyBy(DV_Tiente, 'dv_tien_te_id')
 
         List.forEach(function (items, index) {
+            console.log("Items",items)
             index = index + 1;
             var member_name = items[1].name;
             var book_type = "ALL";
@@ -152,6 +154,7 @@ class ReportDetail extends Component {
                     <tbody>
                     {
                         // rows
+                        arr.length ?
                         arr.map(function (item, index) {
                             return <tr key={index}>
                                 <td className="text-center"> {item.index} </td>
@@ -172,6 +175,7 @@ class ReportDetail extends Component {
                                 <td className="text-right"> 0 </td>
                             </tr>
                         })
+                            : <tr><td className="text-center" colSpan="20"><TransComponent i18nKey="Data Empty" /></td></tr>
                     }
                     </tbody>
                 </table>
@@ -181,11 +185,11 @@ class ReportDetail extends Component {
 }
 
 const mapStateToProps = state => {
-    let initialValues = {};
-    if(state.form.report_detail){
-        initialValues = state.form.report_detail.values;
+
+    return {
+        auth: state.AuthReducer,
+        reportDetail: state.report_detail,
     }
-    return {initialValues, auth: state.AuthReducer, reportDetail: state.report_detail}
 };
 
 const mapDispatchToProps = (dispatch) => {
