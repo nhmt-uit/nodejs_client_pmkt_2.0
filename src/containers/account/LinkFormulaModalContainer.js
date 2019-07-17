@@ -382,7 +382,7 @@ class LinkFormulaModalContainer extends Component {
                                                     value: memberId
                                                 }) }
                                                 <span className="input-group-btn">
-                                                    <button className="btn btn-secondary border-silver" onClick={() => this.props.toggleModalMember()}>
+                                                    <button className="btn btn-secondary bg-red-sunglo" onClick={() => this.props.toggleModalMember()}>
                                                         <i className="fa fa-plus font-white" />
                                                     </button>
                                                 </span>
@@ -411,7 +411,7 @@ class LinkFormulaModalContainer extends Component {
                                                     value: formulaId
                                                 }) }
                                                 <span className="input-group-btn">
-                                                    <button onClick={e => this.handleToggleFormulaModal(e)} className="btn btn-secondary border-silver">
+                                                    <button onClick={e => this.handleToggleFormulaModal(e)} className="btn btn-secondary bg-red-sunglo">
                                                         <i className="fa fa-plus font-white" />
                                                     </button>
                                                 </span>
