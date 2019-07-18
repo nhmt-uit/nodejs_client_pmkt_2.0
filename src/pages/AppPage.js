@@ -32,7 +32,6 @@ class AppPage extends BaseComponent {
 		this.props.changeLanguage(AppConfig.DEFAULT_LANG);
 
 		CookieService.addChangeListener(obj => {
-			console.log("Obj",obj)
 			if ((obj.name === "isLogin"  && !obj.value) || (obj.name === "byPassDashboard" && obj.value) ) this.forceUpdate()
 		})
 		const isLogin = CookieService.get("isLogin");

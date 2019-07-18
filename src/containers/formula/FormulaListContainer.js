@@ -119,21 +119,12 @@ class FormulaListContainer extends Component {
 
     renderBody() {
         const { currentPage, perPage } = this.state;
-        const { isFetching } = this.props;
 
         let formulaList = cloneDeep(this.props.formulaList);
 
         formulaList = this.filterFormula(formulaList);
         formulaList = _sortBy(formulaList, ['giaonhan', 'tenct']);
         formulaList = formulaList.splice((currentPage - 1) * 10, perPage);
-
-        if (isFetching && !this.state.isOpenAccountModal) {
-            return (
-                <tr>
-                    <td style={{ height: '100px' }} colSpan={13}><LoadingComponent /></td>
-                </tr>
-            );
-        }
 
         if (formulaList.length === 0) {
             return <tr><td className="text-center" colSpan="20"><TransComponent i18nKey="Data Empty" /></td></tr>
@@ -505,11 +496,12 @@ class FormulaListContainer extends Component {
     };
 
     render() {
-        const { banker, formulaList } = this.props
+        const { banker, formulaList, isFetching } = this.props
         const { bankerId, isOpenAccountModal, isOpenRelinkModal, isOpenDeleteModal, isEdit, currentPage, perPage } = this.state;
 
         return (
             <div className="portlet box blue-hoki position-relative">
+                { isFetching && !this.state.isOpenAccountModal ? <LoadingComponent /> : null }
                 <button onClick={_ => this.handleToggleNewModal()} className="btn btn-danger btn-add-formula"><TransComponent i18nKey="Add new" /></button>
                 <div className="portlet-title">
                     <div className="caption bold uppercase font-size-15"><TransComponent i18nKey="Formula list" /></div>
@@ -566,7 +558,7 @@ class FormulaListContainer extends Component {
                                 { this.renderBody() }
                             </tbody>
                         </table>
-                    </div>                     
+                    </div>
                     <div className="text-center">
                         <PaginationComponent
                             currentPage={currentPage}

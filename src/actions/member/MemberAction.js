@@ -3,6 +3,12 @@ import MemberService from 'my-services/member/MemberService'
 
 export const getMember = () => {
     return (dispatch) => {
+        dispatch({
+            type: MemberActionType.GET_MEMBER,
+            isInitListMember: true
+        })
+
+        
         return MemberService.getMember().then(res => {
             if(res.status) {
                 const optMember = res.res.data.List.map(item => {
@@ -12,6 +18,7 @@ export const getMember = () => {
                     type: MemberActionType.GET_MEMBER,
                     payload: res,
                     optMember: optMember,
+                    isInitListMember: false
                 })
             }
         })
@@ -20,20 +27,23 @@ export const getMember = () => {
 
 export const getFormulaByMember = (params) => {
     return (dispatch) => {
+        dispatch({
+            type: MemberActionType.GET_FORMULA_BY_MEMBER,
+            isInitListMemberDetail: true
+        })
+
         return MemberService.getFormulaByMember(params).then(res => {
             if(res.status) {
                 dispatch({
                     type: MemberActionType.GET_FORMULA_BY_MEMBER,
                     payload: res.res.data.List,
                     selectedItemList: params.selectedItemList,
+                    isInitListMemberDetail: false
                 })
             }
         })
     }
 };
-
-
-
 
 export const resetStoreMember = () => {
     return (dispatch) => {
@@ -84,11 +94,17 @@ export const resetFormSaveResponse = (params) => {
 
 export const deleteMember = params => {
     return (dispatch) => {
+        dispatch({
+            type: MemberActionType.MEMBER_DELETE_MEMBER,
+            isInitDeleteMember: true
+        })
+
         MemberService.deleteMember(params.id).then(res => {
             dispatch({
                 type: MemberActionType.MEMBER_DELETE_MEMBER,
                 formDeleteStatus: res.status,
-                formDeleteResponse: res.res
+                formDeleteResponse: res.res,
+                isInitDeleteMember: false
             })
         })
     }
@@ -108,8 +124,13 @@ export const toggleModalDeleteMemberDetail = (params = {}) => {
 
 
 export const deleteMemberFormulaDetail = params => {
-    console.log(params)
     return (dispatch) => {
+        dispatch({
+            type: MemberActionType.MEMBER_DELETE_MEMBER_FORMULA,
+            isInitDeleteMemberDetail: true
+        })
+
+
         if(params.typeDelete === "single") {
             const paramsDelete = {
                 memberId: params.memberId,
@@ -119,7 +140,8 @@ export const deleteMemberFormulaDetail = params => {
                 dispatch({
                     type: MemberActionType.MEMBER_DELETE_MEMBER_FORMULA,
                     formDeleteDetailStatus: res.status,
-                    formDeleteDetailResponse: res.res
+                    formDeleteDetailResponse: res.res,
+                    isInitDeleteMemberDetail: false
                 })
             })
         } else if (params.typeDelete === "multiple") {
@@ -131,7 +153,8 @@ export const deleteMemberFormulaDetail = params => {
                 dispatch({
                     type: MemberActionType.MEMBER_DELETE_MEMBER_FORMULA,
                     formDeleteDetailStatus: res.status,
-                    formDeleteDetailResponse: res.res
+                    formDeleteDetailResponse: res.res,
+                    isInitDeleteMemberDetail: false
                 })
             })
         }

@@ -108,9 +108,11 @@ class FormAssignContainer extends Component {
             banker_select: _get(this.props.initialValues, 'account.bankerId'),
             select_formula_type: _get(this.props.initialValues, 'formula_type.value'),
         }
-
         
-        const nestedAccount = this.findParents([this.props.rootAccInfoFull], this.props.selectedAccount.label)
+        let nestedAccount
+        if(!_isEmpty(this.props.rootAccInfoFull) && !_isEmpty(this.props.selectedAccount)) {
+            nestedAccount = this.findParents([this.props.rootAccInfoFull], _get(this.props.selectedAccount, 'label'))
+        }
         //Incase New Account - account_select = -9999
         if(!_isEmpty(this.props.selectedAccount) && !_isEmpty(this.props.rootAccInfo)) {
             const objRequest = {
@@ -137,7 +139,7 @@ class FormAssignContainer extends Component {
     }
 
     findParents = (array, username) => {
-        if (typeof array != 'undefined') {
+        if (typeof array != 'undefined' && array.length) {
             for (let i = 0; i < array.length; i++) {
                 if (array[i].username == username) return [username];
                 let a = this.findParents(array[i].child, username);

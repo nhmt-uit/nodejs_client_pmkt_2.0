@@ -24,7 +24,6 @@ class Header extends Component {
 
     handleLogout = async _ => {
         await AuthService.logout();
-
         window.location.reload()
     };
 

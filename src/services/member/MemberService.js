@@ -33,6 +33,10 @@ class MemberService extends BaseService {
         return HttpService.post(`${this.serviceUrl}/member/update_multi_cong_thuc_tinh`, payload);
     }
 
+    updateLinkFormulaDetail(payload) {
+        return HttpService.post(`${this.serviceUrl}/member/update_link_formula_detail`, payload);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | @input: memberId

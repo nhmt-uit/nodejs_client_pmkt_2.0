@@ -1,3 +1,5 @@
+import { isEmpty as _isEmpty } from 'lodash'
+
 import { ReportActionType } from 'my-constants/action-types';
 
 let defaultState = {
@@ -16,11 +18,14 @@ let defaultState = {
 const ReportReducer = (state = defaultState, action) => {
     switch(action.type){
         case ReportActionType.GET_CYCLE_PAGE:
-            return {...defaultState, isFetching: true};
+            return {...defaultState};
         case ReportActionType.GET_CYCLE_PAGE_SUCCESS:
-            return {...state, cyclePage: action.payload, errors: {}, isFetching: false};
+            if(!_isEmpty(action.payload)) {
+                return {...state, cyclePage: action.payload, errors: {}, isFetching: action.isFetching};
+            }
+            return {...state, isFetching: action.isFetching};
         case ReportActionType.GET_CYCLE_PAGE_FAIL:
-            return {...state, errors: action.payload, isFetching: false};
+            return {...state, errors: action.payload, isFetching: action.isFetching};
 
         case ReportActionType.CLOSE_CYCLE_SUCCESS:
             return {...state, moneyExchangeIds: [], cyclePage: action.payload, errors: {}};
