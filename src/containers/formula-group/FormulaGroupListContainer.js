@@ -5,8 +5,9 @@ import {compose} from "redux/es/redux";
 import {connect} from "react-redux";
 
 import {withTranslation} from "react-i18next";
-import { getFormulaGroup, delFormulaGroup } from 'my-actions/formula-group/FormulaGroupAction';
+import { getFormulaGroup, delFormulaGroupDetail, delFormulaGroup } from 'my-actions/formula-group/FormulaGroupAction';
 import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
+import { ModalFormEditFormulaGroup } from 'my-containers/formula-group'
 
 class FormulaGroupListContainer extends Component {
     constructor(props) {
@@ -15,6 +16,8 @@ class FormulaGroupListContainer extends Component {
             filterText: '',
             bankerId: '',
             delValueID: '',
+            formulaGroupId: '',
+            delBankerId: '',
             isOpenDelModal: false,
             visible: {},
         }
@@ -34,11 +37,28 @@ class FormulaGroupListContainer extends Component {
         });
     };
 
-    handleOpenModelDel = id => {
-        if(id){
-            this.setState({
-                delValueID: id,
-            })
+    handleCloseModalDel = () => {
+        this.setState({
+            delValueID: '',
+            formulaGroupId: '',
+            delBankerId: '',
+            isOpenDelModal: false,
+        })
+    }
+
+    handleOpenModelDel = (item) => {
+        if(item){
+            if(item.id){
+                this.setState({
+                    delValueID: item.id,
+                })
+            }
+            if(item.formula_group_id && item.banker){
+                this.setState({
+                    formulaGroupId: item.formula_group_id,
+                    delBankerId: item.banker.id
+                })
+            }
         }
         var isOpenDelModal = this.state.isOpenDelModal;
         this.setState({
@@ -46,22 +66,47 @@ class FormulaGroupListContainer extends Component {
         })
     };
 
+    handleEditFormulaGroup = (item) => {
+        this.childModalFormEditFormulaGroup.callEditFormulaGroup(item)
+    }
+
     handleDelFormulaGroup = () => {
-        var payload = {
-            id: this.state.delValueID
-        };
-        this.props.delFormulaGroup(payload)
-            .then( () => {
-                this.setState({
-                    isOpenDelModal: !this.state.isOpenDelModal
+        var delBankerId = this.state.delBankerId;
+        var formulaGroupId = this.state.formulaGroupId;
+        if(delBankerId && formulaGroupId){
+            var payload = {
+                formula_group_id: formulaGroupId,
+                banker_id: delBankerId
+            }
+            this.props.delFormulaGroup(payload)
+                .then( () => {
+                    this.setState({
+                        isOpenDelModal: !this.state.isOpenDelModal
+                    })
                 })
-            })
-            .then( () => {
-                this.props.getFormulaGroup()
-            })
-            .catch((err) => {
-                console.log(err)
-            })
+                .then( () => {
+                    this.props.getFormulaGroup()
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        } else {
+            var payload = {
+                id: this.state.delValueID
+            };
+            this.props.delFormulaGroupDetail(payload)
+                .then( () => {
+                    this.setState({
+                        isOpenDelModal: !this.state.isOpenDelModal
+                    })
+                })
+                .then( () => {
+                    this.props.getFormulaGroup()
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        }
     };
 
     handleSearchChange = (e) => {
@@ -102,11 +147,11 @@ class FormulaGroupListContainer extends Component {
                         <td className="text-center"> {item.num_of_formula} </td>
                         <td className="text-center">
                             <button className="text-success btn btn-link">
-                                <i className="fa fa-edit font-green cursor-pointer"></i></button>
+                                <i className="fa fa-edit font-green cursor-pointer" onClick={ () => this.handleEditFormulaGroup(item)}></i></button>
                         </td>
                         <td className="text-center">
                             <button className="text-success btn btn-link font-red">
-                                <i className="fa fa-trash-o font-red cursor-pointer" onClick={ () => this.handleOpenModelDel(item.id)}></i></button>
+                                <i className="fa fa-trash-o font-red cursor-pointer" onClick={ () => this.handleOpenModelDel(item)}></i></button>
                         </td>
                     </tr>
                 );
@@ -196,8 +241,8 @@ class FormulaGroupListContainer extends Component {
                     </table>
                 </div>
                 <div>
-                    <Modal isOpen={this.state.isOpenDelModal} toggle={() => this.handleOpenModelDel()}>
-                        <ModalHeader toggle={() => this.handleOpenModelDel()} className="text-uppercase">
+                    <Modal isOpen={this.state.isOpenDelModal} toggle={() => this.handleCloseModalDel()}>
+                        <ModalHeader toggle={() => this.handleCloseModalDel()} className="text-uppercase">
                             <strong>
                                 <TransComponent i18nKey="xac nhan"/>
                             </strong>
@@ -206,11 +251,12 @@ class FormulaGroupListContainer extends Component {
                             <TransComponent i18nKey="Are you sure want to delete ?"/>
                         </ModalBody>
                         <ModalFooter>
-                            <Button className="bg-red font-white" onClick={this.handleDelFormulaGroup}><TransComponent i18nKey="Confirm"/></Button>
-                            <Button color="secondary" onClick={() => this.handleOpenModelDel()}><TransComponent i18nKey="Cancel"/></Button>
+                            <Button className="bg-red font-white" onClick={this.handleDelFormulaGroup}><TransComponent i18nKey="Yes"/></Button>
+                            <Button color="secondary" onClick={() => this.handleCloseModalDel()}><TransComponent i18nKey="Cancel"/></Button>
                         </ModalFooter>
                     </Modal>
                 </div>
+                <ModalFormEditFormulaGroup onRef={ref => (this.childModalFormEditFormulaGroup = ref)}/>
             </div>
         )
     }
@@ -226,6 +272,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         getFormulaGroup: () => dispatch(getFormulaGroup()),
+        delFormulaGroupDetail: params => dispatch(delFormulaGroupDetail(params)),
         delFormulaGroup: params => dispatch(delFormulaGroup(params))
     };
 }

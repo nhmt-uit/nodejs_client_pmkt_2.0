@@ -105,7 +105,7 @@ class ReportStatisticContainer extends Component {
         const t = this.props.t;
         const hasReportDetailFeature = Number(CookieService.get('hasReportDetailFeature'));
         const bookTabElm = type === 'accounting' ? this.renderBookTabs('accounting') : this.renderBookTabs('synthesis');
-
+        const roles = CookieService.get('roles');
         return (
             <div className={`tab-pane ${classActive}`} id={`tab_${type}`}>
                 <div className="row">
@@ -114,6 +114,7 @@ class ReportStatisticContainer extends Component {
                             <ul className="nav nav-tabs tabs-reversed">
                                 <li className="title-accountant"><a href="#/">{ itemActive.name || '' }</a></li>
                                 {
+                                    (Number(roles) === 11 || Number(roles) === 12) ? null :
                                     (type === 'accounting' && hasReportDetailFeature === 1)
                                         ? <li className="title-accountant">
                                             <button
@@ -254,6 +255,7 @@ class ReportStatisticContainer extends Component {
         const { data = {}, totalAccounting = {}, totalByBook = {}, totalByTypeReport = {}, totalReport = {}, statusBtnMoneyExchange } = this.props.reportStore;
         const t = this.props.t;
         const classActive = isActive ? 'active' : '';
+        const roles = CookieService.get('roles');
 
         let total = {}
         let { currencyMap = [] } = this.props.reportStore;
@@ -272,14 +274,17 @@ class ReportStatisticContainer extends Component {
         
         return (
             <div className={`tab-pane ${classActive}`} id={id} key={id}>
-                <ButtonMoneyExchange
-                    toggleBtnMoneyExchange={this.handleToggleStatusBtnMoneyExchange}
-                    isChecked={false}
-                    onToggleModalMoneyExchange={this.toggleModalMoneyExchange}
-                    onToggleShowAll={this.toggleShowAll}
-                    typeReport={type}
-                    tabActive={id}
-                />
+                {
+                    (Number(roles) === 11 || Number(roles) === 12) ? null :
+                        <ButtonMoneyExchange
+                            toggleBtnMoneyExchange={this.handleToggleStatusBtnMoneyExchange}
+                            isChecked={false}
+                            onToggleModalMoneyExchange={this.toggleModalMoneyExchange}
+                            onToggleShowAll={this.toggleShowAll}
+                            typeReport={type}
+                            tabActive={id}
+                        />
+                }
                 <div className="portlet-body">
                     <div className="table-responsive">
                         <table className="table table-striped table-bordered table-hover">
@@ -570,6 +575,7 @@ class ReportStatisticContainer extends Component {
 
         let tabContent = null;
         let tabReport = null;
+        const roles = CookieService.get('roles');
 
         switch(reportType) {
             case 'cycle':
