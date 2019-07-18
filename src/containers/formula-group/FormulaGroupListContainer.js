@@ -196,7 +196,7 @@ class FormulaGroupListContainer extends Component {
         return(
             <div className="portlet box blue-hoki position-relative">
                 <div className="portlet-title">
-                    <div className="caption font-red-sunglo bold uppercase font-size-15"><TransComponent i18nKey="formula group list" /></div>
+                    <div className="caption bold uppercase font-size-15"><TransComponent i18nKey="formula group list" /></div>
                     <div className="actions">
                         <div className="form-inline">
                             <div className="form-group">
