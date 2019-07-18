@@ -496,11 +496,20 @@ h5.modal-title {font-size: 16px; font-weight: bold;}
 
 .wrap-tooltip:hover .hovered {
   display: block;
+  z-index: 9;
+}
+
+.bg-hover-detail {
+   background-color: #9ea0a2!important;
 }
 
 .tooltip-account {
   min-width: 200px;
   left: -5.8rem;
+}
+
+.tooltip-detail {
+  right: -2.8rem;
 }
 
 .tooltip-arrow {
@@ -515,6 +524,10 @@ h5.modal-title {font-size: 16px; font-weight: bold;}
   margin-left: -5px;
   border-width: 0 5px 5px;
   border-bottom-color: #e26a6a;
+}
+
+.border-bt-color-grey {
+    border-bottom-color: #9ea0a2!important;
 }
 
 .padding-0 {
