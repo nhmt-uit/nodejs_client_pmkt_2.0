@@ -5,6 +5,7 @@ html {
 @media (min-width: 992px) {
   .page-content-wrapper .page-content {
       margin-left: 195px;
+      min-height: 864px !important;
   }
   .page-sidebar {
     width: 195px;

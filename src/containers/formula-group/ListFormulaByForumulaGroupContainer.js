@@ -188,7 +188,7 @@ class ListFormulaByForumulaGroupContainer extends Component {
         const updateFormulaRes = this.state.updateFormulaRes
         return (
             <div className="portlet light bordered">
-                <div className="portlet-title">
+                <div className="portlet-title font-red-sunglo">
                     <div className="caption">
                         <span className="caption-subject font-green bold uppercase"><TransComponent i18nKey="Detail" /></span>
                     </div>

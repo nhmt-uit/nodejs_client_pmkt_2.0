@@ -307,11 +307,10 @@ class DetailMemberContainer extends Component {
                                         formulaByMemberList.map( (item, index) => {
                                             let formulaDetail = formulaList.find(obj => obj.id === item.congthucmau_id)
                                             const selectedFormulasItem = this.state.selectedFormulas.find(obj => obj.id === item.id)
-
+                                            
                                             if(!_isEmpty(selectedFormulasItem) && !_isEmpty(selectedFormulasItem.newFormulaId)) {
                                                 formulaDetail = formulaList.find(obj => obj.id === selectedFormulasItem.newFormulaId)
                                             }
-
 
                                             if(formulaDetail.field_value.length > 1) {
                                                 return (

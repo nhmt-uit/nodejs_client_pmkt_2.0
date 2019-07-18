@@ -8,7 +8,7 @@ class FormulaGroupPage extends Component{
         return (
             <div className="portlet light bordered">
                 <div className="portlet-title">
-                    <div className="caption bold uppercase font-size-15"><TransComponent i18nKey="formula group" /></div>
+                    <div className="caption font-red-sunglo bold uppercase font-size-15"><TransComponent i18nKey="formula group" /></div>
                 </div>
                 <div className="portlet-body">
                     <FormulaGroupListContainer />

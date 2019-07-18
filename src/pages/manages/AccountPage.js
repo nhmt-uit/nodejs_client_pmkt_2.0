@@ -8,7 +8,7 @@ export default class AccountPage extends Component {
         return (
             <div className="portlet light bordered">
                 <div className="portlet-title">
-                    <div className="caption bold uppercase font-size-15"><TransComponent i18nKey="Account" /></div>
+                    <div className="caption font-red-sunglo bold uppercase font-size-15"><TransComponent i18nKey="Account" /></div>
                 </div>
                 <div className="portlet-body">
                     <AccountListContainer />

@@ -24,6 +24,28 @@ class AuthService extends BaseService {
 
     /*
     |--------------------------------------------------------------------------
+    | @content: authentication username & password
+    | @param: username
+    |           password
+    |--------------------------------------------------------------------------
+    */
+    refreshToken(){
+        const payload = {
+            client_secret : AppConfig.API_CLIENT_SECRET,
+            client_id: 1,
+            grant_type: "refresh_token",
+            refresh_token: CookieService.get('refresh_token'),
+        };
+        return HttpService.post(`${this.serviceUrl}/oauth2/token`, payload).then(res => {
+            CookieService.set('access_token', res.access_token);
+            CookieService.set('expires_in', res.expires_in);
+            CookieService.set('refresh_token', res.refresh_token);
+            CookieService.set('token_type', res.token_type);
+        })
+    };
+
+    /*
+    |--------------------------------------------------------------------------
     | @content: Get secure code
     |--------------------------------------------------------------------------
     */

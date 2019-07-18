@@ -9,9 +9,7 @@ class TransComponent extends Component {
         
         try {
             keyLower = i18nKey.toLowerCase()
-        } catch (e) {
-            console.log(e)
-        }
+        } catch (e) { }
         return (
             t(keyLower, i18nObj)
         );

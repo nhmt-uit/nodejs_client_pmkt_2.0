@@ -72,7 +72,7 @@ class ListSubUserContainer extends Component{
             <div className="col-xs-12">
                 <div className="portlet light bordered">
                     <div className="portlet-title">
-                        <div className="caption">
+                        <div className="caption font-red-sunglo">
                             <span className="caption-subject font-dark bold"><TransComponent i18nKey="sub list"/></span>
                         </div>
                         <div className="actions">

@@ -13,8 +13,8 @@
     border: 1px solid #e0e0e0;
     border-bottom-width: 2px;
     margin-bottom: 26px;
-    height: 255px;
-    line-height: 255px;
+    height: 200px;
+    line-height: 200px;
     position: relative;
 }
 .btn-tile:hover {
@@ -23,8 +23,8 @@
     text-decoration: none;
 }
 .btn-tile div:first-child {
-    margin-top: 13%;
-    font-size: 66px;
+    margin-top: 10%;
+    font-size: 50px;
     margin-bottom: 6px;
     line-height: normal;
 }

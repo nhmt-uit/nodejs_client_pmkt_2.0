@@ -211,7 +211,7 @@ class FormAssignContainer extends Component {
                             formatGroupLabel={renderFormatGroupLabel}
                             />
                         <span className="input-group-btn">
-                            <button className="btn green" type="button" onClick={_ => this.props.toggleModalAccount()}><i className="fa fa-plus" /></button>
+                            <button className="btn bg-red-sunglo" type="button" onClick={_ => this.props.toggleModalAccount()}><i className="fa fa-plus font-white" /></button>
                         </span>
                     </div>
                     <Field name="account"component={renderError} />
@@ -256,7 +256,7 @@ class FormAssignContainer extends Component {
                                 placeholder={<TransComponent i18nKey="Member" />}
                                 />
                             <span className="input-group-btn">
-                                <button className="btn green" type="button" onClick={_ => this.props.toggleModalMember()}><i className="fa fa-plus" /></button>
+                                <button className="btn bg-red-sunglo" type="button" onClick={_ => this.props.toggleModalMember()}><i className="fa fa-plus font-white" /></button>
                             </span>
                         </div>
                         <Field name="member"component={renderError} />
@@ -287,7 +287,7 @@ class FormAssignContainer extends Component {
                                         placeholder={<TransComponent i18nKey="-- select formula --" />}
                                         />
                                     <span className="input-group-btn">
-                                        <button className="btn green" type="button" onClick={_ => this.props.toggleModalFormula()}><i className="fa fa-plus" /></button>
+                                        <button className="btn bg-red-sunglo" type="button" onClick={_ => this.props.toggleModalFormula()}><i className="fa fa-plus font-white" /></button>
                                     </span>
                                 </div>
                                 <Field name="formula"component={renderError} />
@@ -305,7 +305,7 @@ class FormAssignContainer extends Component {
                                     placeholder={<TransComponent i18nKey="-- Select formula group --" />}
                                     />
                                 <span className="input-group-btn">
-                                    <button className="btn green" type="button" onClick={_ => this.props.toggleModalAssignFormulaGroup() }><i className="fa fa-plus" /></button>
+                                    <button className="btn bg-red-sunglo" type="button" onClick={_ => this.props.toggleModalAssignFormulaGroup() }><i className="fa fa-plus font-white" /></button>
                                 </span>
                             </div>
                             <Field name="formula"component={renderError} />
