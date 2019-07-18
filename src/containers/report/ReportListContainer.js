@@ -346,15 +346,6 @@ class ReportListContainer extends Component {
                             {this.props.isFullScreen ? <TransComponent i18nKey="Exit Full Screen" /> : <TransComponent i18nKey="Full Screen" />}
                         </a>
                     </div>
-                    <div className="actions">
-                        {
-                            (Number(roles) === 11 || Number(roles) === 12) ? null :
-                                <Link to={RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT_TRANSACTION')} className="btn btn-danger">
-                                    <span className="ladda-label"> {t("Add")}</span>
-                                    <span className="ladda-spinner"></span>
-                                </Link>
-                        }
-                    </div>
                 </div>
                 <div className="portlet-body ">
                     <ListGroup>
