@@ -309,12 +309,28 @@ class ReportListContainer extends Component {
         const roles = CookieService.get('roles');
         const btnAdd =
             (Number(roles) === 11 || Number(roles) === 12)
-                ? null
+                ?
+                (
+                    <>
+                        &nbsp;
+                        <a className="btn btn-default btn-fullscreen" href="javascript:;" onClick={_ => this.props.toggleFullScreen() }>
+                            <i className={this.props.isFullScreen ? "fa fa-compress" : "fa fa-expand"} />
+                            {this.props.isFullScreen ? <TransComponent i18nKey="Exit Full Screen" /> : <TransComponent i18nKey="Full Screen" />}
+                        </a>
+                    </>
+                )
                 : (
-                    <Link to={RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT_TRANSACTION')} className="btn btn-danger">
-                        <span className="ladda-label"> {t("Add")}</span>
-                        <span className="ladda-spinner"></span>
-                    </Link>
+                    <>
+                        <Link to={RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT_TRANSACTION')} className="btn btn-danger">
+                            <span className="ladda-label"> {t("Add")}</span>
+                            <span className="ladda-spinner"></span>
+                        </Link>
+                        &nbsp;
+                        <a className="btn btn-default btn-fullscreen" href="javascript:;" onClick={_ => this.props.toggleFullScreen() }>
+                            <i className={this.props.isFullScreen ? "fa fa-compress" : "fa fa-expand"} />
+                            {this.props.isFullScreen ? <TransComponent i18nKey="Exit Full Screen" /> : <TransComponent i18nKey="Full Screen" />}
+                        </a>
+                    </>
                 );
 
         if (isFetching) {
@@ -340,11 +356,16 @@ class ReportListContainer extends Component {
                         <span className="caption-subject font-red-sunglo bold uppercase">{t('report')}</span>
                     </div>
                     <div className="actions">
-                        { btnAdd } &nbsp;
-                        <a className="btn btn-default btn-fullscreen" href="javascript:;" onClick={_ => this.props.toggleFullScreen() }>
-                            <i className={this.props.isFullScreen ? "fa fa-compress" : "fa fa-expand"} />
-                            {this.props.isFullScreen ? <TransComponent i18nKey="Exit Full Screen" /> : <TransComponent i18nKey="Full Screen" />}
-                        </a>
+                        { btnAdd }
+                    </div>
+                    <div className="actions">
+                        {
+                            (Number(roles) === 11 || Number(roles) === 12) ? null :
+                                <Link to={RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT_TRANSACTION')} className="btn btn-danger">
+                                    <span className="ladda-label"> {t("Add")}</span>
+                                    <span className="ladda-spinner"></span>
+                                </Link>
+                        }
                     </div>
                 </div>
                 <div className="portlet-body ">
