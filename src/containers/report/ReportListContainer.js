@@ -125,7 +125,6 @@ class ReportListContainer extends Component {
     }
 
     renderCycleItem(cycle) {
-        const roles = CookieService.get('roles');
         const collapse = this.state.collapse;
         const collapseElement = !!collapse[cycle.id] ? (
             <div className="margin-top-15" style={{ marginLeft: '25px' }}>
@@ -146,12 +145,9 @@ class ReportListContainer extends Component {
                         {
                             cycle.is_exported
                                 ? <i className="fa fa-check-circle font-green" />
-                                : ((Number(roles) === 11 || Number(roles) === 12)) ? null : <i className="fa fa-exchange font-green cursor-pointer" onClick={this.toggleModal(cycle.id)} />
+                                : <i className="fa fa-exchange font-green cursor-pointer" onClick={this.toggleModal(cycle.id)} />
                         }
-                        {
-                            (Number(roles) === 11 || Number(roles) === 12) ? null :
-                            <> &nbsp;&nbsp;<span className="icon-close color-red cursor-pointer" onClick={this.toggleDelModal(cycle.name, { chuky_id: cycle.id, acc_name: '' })} /> </>
-                        }
+                        &nbsp;&nbsp;<span className="icon-close color-red cursor-pointer" onClick={this.toggleDelModal(cycle.name, { chuky_id: cycle.id, acc_name: '' })} />
                     </span>
 
                     { collapseElement }
@@ -301,7 +297,7 @@ class ReportListContainer extends Component {
     render() {
         const { t, cyclePage, isFetching } = this.props;
         const { itemPerPage, currentPage } = this.state;
-        console.log(cyclePage)
+console.log(cyclePage)
         let cycleList = cyclePage.data || {};
 
         cycleList = sortBy(cycleList, 'sort_value').reverse();
@@ -309,66 +305,46 @@ class ReportListContainer extends Component {
         const roles = CookieService.get('roles');
         const btnAdd =
             (Number(roles) === 11 || Number(roles) === 12)
-                ?
-                (
-                    <>
-                        &nbsp;
-                        <a className="btn btn-default btn-fullscreen" href="javascript:;" onClick={_ => this.props.toggleFullScreen() }>
-                            <i className={this.props.isFullScreen ? "fa fa-compress" : "fa fa-expand"} />
-                            {this.props.isFullScreen ? <TransComponent i18nKey="Exit Full Screen" /> : <TransComponent i18nKey="Full Screen" />}
-                        </a>
-                    </>
-                )
+                ? null
                 : (
-                    <>
-                        <Link to={RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT_TRANSACTION')} className="btn btn-danger">
-                            <span className="ladda-label"> {t("Add")}</span>
-                            <span className="ladda-spinner"></span>
-                        </Link>
-                        &nbsp;
-                        <a className="btn btn-default btn-fullscreen" href="javascript:;" onClick={_ => this.props.toggleFullScreen() }>
-                            <i className={this.props.isFullScreen ? "fa fa-compress" : "fa fa-expand"} />
-                            {this.props.isFullScreen ? <TransComponent i18nKey="Exit Full Screen" /> : <TransComponent i18nKey="Full Screen" />}
-                        </a>
-                    </>
+                    <Link to={RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT_TRANSACTION')} className="btn btn-danger">
+                        <span className="ladda-label"> {t("Add")}</span>
+                        <span className="ladda-spinner" />
+                    </Link>
                 );
 
-        if (isFetching) {
-            return (
-                <div className="portlet light bordered">
-                    <div className="portlet-title">
-                        <div className="caption">
-                            <span className="caption-subject font-red bold uppercase">{t('report')}</span>
-                        </div>
-                        {btnAdd}
-                    </div>
-                    <div className="portlet-body" style={{ minHeight: '60px' }}>
-                        <LoadingComponent />
-                    </div>
-                </div>
-            );
-        }
+        // if (isFetching) {
+        //     return (
+        //         <div className="portlet light bordered">
+        //             <div className="portlet-title">
+        //                 <div className="caption">
+        //                     <span className="caption-subject font-red bold uppercase">{t('report')}</span>
+        //                 </div>
+        //                 {btnAdd}
+        //             </div>
+        //             <div className="portlet-body position-relative" style={{ minHeight: '60px' }}>
+        //                 <LoadingComponent />
+        //             </div>
+        //         </div>
+        //     );
+        // }
 
         return (
             <div className="portlet light bordered">
                 <div className="portlet-title">
                     <div className="caption">
-                        <span className="caption-subject font-red-sunglo bold uppercase">{t('report')}</span>
+                        <span className="caption-subject font-red bold uppercase">{t('report')}</span>
                     </div>
                     <div className="actions">
-                        { btnAdd }
-                    </div>
-                    <div className="actions">
-                        {
-                            (Number(roles) === 11 || Number(roles) === 12) ? null :
-                                <Link to={RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT_TRANSACTION')} className="btn btn-danger">
-                                    <span className="ladda-label"> {t("Add")}</span>
-                                    <span className="ladda-spinner"></span>
-                                </Link>
-                        }
+                        { btnAdd } &nbsp;
+                        <a className="btn btn-default btn-fullscreen" href="javascript:;" onClick={_ => this.props.toggleFullScreen() }>
+                            <i className={this.props.isFullScreen ? "fa fa-compress" : "fa fa-expand"} />
+                            {this.props.isFullScreen ? <TransComponent i18nKey="Exit Full Screen" /> : <TransComponent i18nKey="Full Screen" />}
+                        </a>
                     </div>
                 </div>
-                <div className="portlet-body ">
+                <div className="portlet-body position-relative">
+                    { isFetching ? <LoadingComponent /> : null }
                     <ListGroup>
                         {Object.keys(cycleList).map(item => {
                             return this.renderCycleItem(cycleList[item]);
@@ -392,7 +368,7 @@ class ReportListContainer extends Component {
 
 const mapStateToProps = state => {
     return {
-        cyclePage: _get(state, 'ReportReducer.cyclePage', {}),
+        cyclePage: _get(state, 'ReportReducer.cyclePage', { }),
         isFetching: _get(state, 'ReportReducer.isFetching', false),
         isFullScreen : state.AppReducer.isFullScreen
     };
