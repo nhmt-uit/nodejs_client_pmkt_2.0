@@ -29,7 +29,10 @@ let defaultState = {
     
     // Handle Modal Delete Formula
     isOpenModalDeleteFormula: false,
-	paramsDeleteFormula: {}
+	paramsDeleteFormula: {},
+
+	// Handle Modal Edit Formula
+    isOpenModalEditFormula: false,
 }
 
 const FormulaGroupReducer = (state = defaultState, action) => {
@@ -38,7 +41,9 @@ const FormulaGroupReducer = (state = defaultState, action) => {
         case FormulaGroupActionType.GET_FORMULA_GROUP:
             return {...state, formulaGroupList: action.formulaGroupList, bankerList: action.bankerList}
         case FormulaGroupActionType.DEL_FORMULA_GROUP:
-            return {...state,}
+            return {...state};
+        case FormulaGroupActionType.DEL_FORMULA_GROUP_DETAIL:
+            return {...state,};
 
         case FormulaGroupActionType.FORMULA_RESET_STORE: {
             return {...defaultState}
@@ -87,9 +92,16 @@ const FormulaGroupReducer = (state = defaultState, action) => {
         }
         case FormulaGroupActionType.FORMULA_GROUP_TOGGLE_MODAL_FORM_ASSIGN: {
             //Reset Store When Modal Close
-            if (!state.isOpenModalAssign === false) return {...defaultState}
+            if (!state.isOpenModalAssign === false) return {...state, isOpenModalAssign: false, formAssignFormulaGroupSaveStatus: null, formAssignFormulaGroupSaveResponse: {} }
             return {...state, isOpenModalAssign: !state.isOpenModalAssign};
         }
+        case FormulaGroupActionType.FORMULA_GROUP_TOGGLE_MODAL_EDIT_FORMULA:
+            if(state.isOpenModalEditFormula === true){
+                var isOpenModalEditFormula = !state.isOpenModalEditFormula
+                return {...state, isOpenModalEditFormula: isOpenModalEditFormula, formSaveStatus: null, formSaveResponse: {}, formAssignFormulaGroupSaveStatus: null, formAssignFormulaGroupSaveResponse: {}}
+            }
+            return {...state, isOpenModalEditFormula: !state.isOpenModalEditFormula}
+
         case FormulaGroupActionType.FORMULA_GROUP_SAVE_FORM_ASSIGN: {
             return {...state, formAssignSaveStatus: action.formAssignSaveStatus, formAssignSaveResponse: action.formAssignSaveResponse}
         }

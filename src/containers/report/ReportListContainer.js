@@ -124,6 +124,7 @@ class ReportListContainer extends Component {
     }
 
     renderCycleItem(cycle) {
+        const roles = CookieService.get('roles');
         const collapse = this.state.collapse;
         const collapseElement = !!collapse[cycle.id] ? (
             <div className="margin-top-15" style={{ marginLeft: '25px' }}>
@@ -144,9 +145,12 @@ class ReportListContainer extends Component {
                         {
                             cycle.is_exported
                                 ? <i className="fa fa-check-circle font-green" />
-                                : <i className="fa fa-exchange font-green cursor-pointer" onClick={this.toggleModal(cycle.id)} />
+                                : ((Number(roles) === 11 || Number(roles) === 12)) ? null : <i className="fa fa-exchange font-green cursor-pointer" onClick={this.toggleModal(cycle.id)} />
                         }
-                        &nbsp;&nbsp;<span className="icon-close color-red cursor-pointer" onClick={this.toggleDelModal(cycle.name, { chuky_id: cycle.id, acc_name: '' })} />
+                        {
+                            (Number(roles) === 11 || Number(roles) === 12) ? null :
+                            <> &nbsp;&nbsp;<span className="icon-close color-red cursor-pointer" onClick={this.toggleDelModal(cycle.name, { chuky_id: cycle.id, acc_name: '' })} /> </>
+                        }
                     </span>
 
                     { collapseElement }
@@ -335,10 +339,13 @@ class ReportListContainer extends Component {
                         <span className="caption-subject font-red bold uppercase">{t('report')}</span>
                     </div>
                     <div className="actions">
-                        <Link to={RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT_TRANSACTION')} className="btn btn-danger">
-                            <span className="ladda-label"> {t("Add")}</span>
-                            <span className="ladda-spinner"></span>
-                        </Link>
+                        {
+                            (Number(roles) === 11 || Number(roles) === 12) ? null :
+                                <Link to={RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT_TRANSACTION')} className="btn btn-danger">
+                                    <span className="ladda-label"> {t("Add")}</span>
+                                    <span className="ladda-spinner"></span>
+                                </Link>
+                        }
                     </div>
                 </div>
                 <div className="portlet-body ">

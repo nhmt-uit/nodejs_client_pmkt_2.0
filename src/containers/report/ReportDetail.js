@@ -14,7 +14,6 @@ import { AuthService } from 'my-services/systems'
 
 class ReportDetail extends Component {
     componentWillMount() {
-        console.log(window.location.pathname)
         var chuky_id = window.location.pathname.split('/')[4];
         this.props.getReportDetail(chuky_id)
     }
@@ -36,8 +35,8 @@ class ReportDetail extends Component {
         var DV_Tiente_Map = keyBy(DV_Tiente, 'dv_tien_te_id')
 
         List.forEach(function (items, index) {
-            console.log("Items",items)
             index = index + 1;
+            var banker_name = ''
             var member_name = items[1].name;
             var book_type = "ALL";
             var account = "";
@@ -70,6 +69,7 @@ class ReportDetail extends Component {
                             index: index,
                             member_name: member_name,
                             book_type: book_type,
+                            banker_name: '',
                             account: '',
                             VND: VND,
                             USD: USD,
@@ -97,6 +97,7 @@ class ReportDetail extends Component {
                                 index: index,
                                 member_name: member_name,
                                 book_type: book_type,
+                                banker_name: '',
                                 account: '',
                                 VND: VND,
                                 USD: USD,
@@ -106,6 +107,7 @@ class ReportDetail extends Component {
                             child.forEach(function (item) {
                                 USD = 0;
                                 VND = 0
+                                banker_name = item[1].banker_name
                                 account = item[1].name;
                                 Money = item[1].total;
                                 Money = Object.entries(Money);
@@ -122,6 +124,7 @@ class ReportDetail extends Component {
                                     index: index,
                                     member_name: member_name,
                                     book_type: book_type,
+                                    banker_name: banker_name,
                                     account: account,
                                     VND: VND,
                                     USD: USD,
@@ -144,6 +147,7 @@ class ReportDetail extends Component {
                             <th className="caption-subject font-red text-center bold uppercase"><TransComponent i18nKey="id pmkt"/></th>
                             <th className="caption-subject font-red text-center bold uppercase"><TransComponent i18nKey="Member"/></th>
                             <th className="caption-subject font-red text-center bold uppercase"><TransComponent i18nKey="Type"/></th>
+                            <th className="caption-subject font-red text-center bold uppercase"><TransComponent i18nKey="Company"/></th>
                             <th className="caption-subject font-red text-center bold uppercase"><TransComponent i18nKey="Account"/></th>
                             <th className="caption-subject font-red text-center bold uppercase"><TransComponent i18nKey="vnd"/></th>
                             <th className="caption-subject font-red text-center bold uppercase"><TransComponent i18nKey="usd"/></th>
@@ -161,6 +165,7 @@ class ReportDetail extends Component {
                                 <td className="text-center font-dark uppercase"> {username} </td>
                                 <td className="text-center font-dark uppercase"> {item.member_name} </td>
                                 <td className="text-center font-dark uppercase"> { item.book_type === "ALL" ? <span className="font-red bold uppercase"> {item.book_type} </span> : <span> {item.book_type} </span> } </td>
+                                <td className="text-center font-dark uppercase"> {item.banker_name} </td>
                                 <td className="text-center font-dark uppercase"> {item.account} </td>
                                 <td className="text-right"> {
                                     item.VND < 0 ? <span className="font-red"> {Helpers.formatMoney(item.VND,0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney(item.VND,0)} </span>

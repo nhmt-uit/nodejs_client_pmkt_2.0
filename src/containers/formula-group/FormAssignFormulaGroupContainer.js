@@ -38,6 +38,7 @@ class FormAssignFormulaGroupContainer extends Component {
         if(!_isEqual(_get(prevProps.initialValues, 'formula_group_select'), _get(this.props.initialValues, 'formula_group_select'))
             || !_isEqual(_get(prevProps.initialValues, 'company'), _get(this.props.initialValues, 'company'))
         ) {
+
             // Render List Formula
             this.handleLoadFormulaList()
         }
@@ -71,6 +72,24 @@ class FormAssignFormulaGroupContainer extends Component {
             this.props.initialize({...this.props.initialValues,
                 company: defaultBanker,
                 formula_select: optFormula[0],
+            })
+        }
+
+        const { item } = this.props;
+        if(this.props.formType === 'update'){
+            var formulaGroup = {
+                name: item.name,
+                label: item.name,
+                value: item.formula_group_id
+            }
+            var company = {
+                name: item.banker.name.toUpperCase(),
+                label: item.banker.name.toUpperCase(),
+                value: item.banker.id
+            }
+            this.props.initialize({...this.props.initialValues,
+                formula_group_select: formulaGroup,
+                company: company,
             })
         }
     }
@@ -125,6 +144,7 @@ class FormAssignFormulaGroupContainer extends Component {
     }
     
     render() {
+        const {formType } = this.props;
         const bankerId = _get(this.props.initialValues, 'company.value')
         const optFormula = this.props.optFormula.filter(item => item.banker_id === bankerId)
         return (
@@ -150,16 +170,29 @@ class FormAssignFormulaGroupContainer extends Component {
                     </div>
                     <div className="form-group">
                         <label><TransComponent i18nKey="Company" /></label>
-                        <Field
-                            name="company"
-                            className="basic-single"
-                            component={renderSelectField}
-                            isSearchable={true}
-                            options={this.props.optBanker}
-                            menuPosition="fixed"
-                            onChange={this.handleChangeBanker}
-                            isDisabled={this.props.defaultBankerId}
-                            />
+                        {
+                            formType === 'update' ?
+                                <Field
+                                    name="company"
+                                    className="basic-single"
+                                    component={renderSelectField}
+                                    options={this.props.optBanker}
+                                    autoComplete="off"
+                                    readOnly={true}
+                                    isDisabled={true}
+                                />
+                                :
+                                <Field
+                                    name="company"
+                                    className="basic-single"
+                                    component={renderSelectField}
+                                    isSearchable={true}
+                                    options={this.props.optBanker}
+                                    menuPosition="fixed"
+                                    onChange={this.handleChangeBanker}
+                                    isDisabled={this.props.defaultBankerId}
+                                />
+                        }
                     </div>
                     <div className="form-group">
                         <label><TransComponent i18nKey="Formula" /></label>

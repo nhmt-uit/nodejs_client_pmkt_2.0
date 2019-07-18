@@ -4,6 +4,7 @@ import {reduxForm} from "redux-form";
 import {connect} from "react-redux";
 import { getBanker } from "my-actions/banker/BankerAction";
 import {TransComponent, LoadingComponent} from 'my-components'
+import { CookieService } from 'my-utils/core'
 
 import { isEmpty} from 'lodash'
 
@@ -13,6 +14,11 @@ class BankerListContainer extends React.Component{
     }
 
     render() {
+        const roles = CookieService.get("roles");
+        if(Number(roles) === 11 || Number(roles) === 12){
+            return <div className="text-center"><TransComponent i18nKey="Data Empty" /></div>
+        }
+
         var DATA = {};
         DATA = this.props.bankerList.payload;
         if(isEmpty(DATA)){
@@ -20,6 +26,7 @@ class BankerListContainer extends React.Component{
                 <div style={{ height: '100px' }}><LoadingComponent /></div>
             );
         }
+
         var List = DATA.res.data.List;
         return(
             <div className="col-md-12 portlet light bordered">
