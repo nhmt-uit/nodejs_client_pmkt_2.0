@@ -2,7 +2,12 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withTranslation } from 'react-i18next';
-import { debounce as _debounce, sortBy as _sortBy, cloneDeep as _cloneDeep } from 'lodash';
+import {
+    debounce as _debounce,
+    sortBy as _sortBy,
+    cloneDeep as _cloneDeep,
+    isEmpty as _isEmpty
+} from 'lodash';
 
 import { TransComponent, LoadingComponent } from 'my-components';
 import { BookTabContentContainer, ModalByActionContainer, LinkFormulaModalContainer } from 'my-containers/account';
@@ -23,80 +28,91 @@ class AccountListContainer extends Component {
         const keySearch = this.state.keySearch.toLowerCase().trim();
         const result = [];
 
-        const deleteIsOpen = lstAccount => {
-            lstAccount.forEach(acc => {
-                delete acc.isOpen;
+        const searchRecursive = (lstChild, lstAccMatch = {}, idParent) => {
+            let isMatch = false;
 
-                if (acc.child && acc.child.length) {
-                    deleteIsOpen(acc.child);
-                }
-            })
-        };
+            lstChild = _cloneDeep(lstChild);
 
-        const searchRecursive = (lstChild, lstAccName = []) => {
-            return lstChild.some(item => {
+            lstChild.forEach(item => {
+                item = item || {};
+
+                if (!item.acc_parent_id) idParent = item.id;
+
                 const accName = (item.acc_name || '').toLowerCase().trim();
-                console.log('vao roi', accName);
+
                 if (accName.indexOf(keySearch) !== -1) {
-                    item.isOpen = true;
+                    isMatch = true;
 
-                    lstAccName.push(item.acc_name);
-
-                    return true;
+                    lstAccMatch[idParent] = lstAccMatch[idParent] || [];
+                    lstAccMatch[idParent].push(item);
                 }
 
-                if (item.child && item.child.length) return searchRecursive(item.child, lstAccName);
-
-                return false;
+                if (!isMatch && item.child && item.child.length) return searchRecursive(item.child, lstAccMatch, idParent);
             });
+
+            return lstAccMatch;
         };
 
         let resultFilter = id === 'all' ? lstAccount : lstAccount.filter(account => account.book_id === id);
 
         if (keySearch) {
-            deleteIsOpen(resultFilter);
+            const lstAccMatch = searchRecursive(resultFilter);
 
-            resultFilter.forEach(item => {
-                const accName = (item.acc_name || '').toLowerCase().trim();
+            return Object.entries(lstAccMatch).map(acc => {
+                const parentItem = resultFilter.find(item => item.id === acc[0]);
 
-                if (accName.indexOf(keySearch) !== -1) {
-                    result.push(item);
-
-                    return;
-                }
-
-                if (item.child && item.child.length) {
-                    const lstAccName = searchRecursive(item.child);
-
-                    if (lstAccName) {
-                        result.push(item);
-                        // result.push(this.filterAccount(lstAccName));
-                    }
-                }
+                return this.findParent(_cloneDeep(parentItem), acc[1], this._mapAccountList(_cloneDeep(resultFilter)));
             });
         }
 
         return keySearch ? result : resultFilter;
     }
 
-    filterAccount(account, level = 0, lstParent, hasAccount) {
-        // if (account.isOpen && level === 0) {
-        //     return account;
-        // }
-        //
-        // if (!account.isOpen) {
-        //     if (lstParent && level !== 0 && hasAccount) {
-        //         lstParent.splice(lstParent.findIndex(item => item.id === account.id), 1);
-        //     }
-        //
-        //     if (account.child && account.child.length) {
-        //         const hasAccount = account.child.some(item => !!item.isOpen);
-        //
-        //         account.child.forEach(item => this.filterAccount(item, ++level, account.child, hasAccount));
-        //     }
-        // }
-        //
-        // return account;
+    _mapAccountList(lstAccount) {
+        const result = [];
+        const loopAccount = (lstAccount) => {
+            lstAccount.forEach(account => {
+                result[account.id] = account;
+
+                if (account.child && account.child.length) {
+                    loopAccount(account.child);
+                }
+            })
+        };
+
+        loopAccount(lstAccount);
+
+        return result;
+    }
+
+    findParent(parentItem, lstAccountMatch, lst) {
+        let result = _cloneDeep(parentItem);
+
+        const renderChild = (account, lstAcc, rsChild = {}) => {
+            let accParent = lstAcc[account.acc_parent_id];
+
+            if (!accParent.acc_parent_id) return rsChild;
+
+            accParent.child = [account];
+            rsChild = _cloneDeep(accParent);
+
+            if (accParent.acc_parent_id) return renderChild(accParent, lstAcc, rsChild);
+        };
+
+        if (lstAccountMatch.every(item => item.id !== parentItem.id)) {
+            result.child = [];
+
+            lstAccountMatch.forEach(account => {
+                if (account.id !== parentItem.id) {
+                    result.child = result.child || [];
+
+                    result.child.push(renderChild(account, lst));
+                    console.log(result);
+                }
+            });
+        }
+
+        return lst[parentItem.id];
     }
 
     handleOpenCreateNewModal = () => {

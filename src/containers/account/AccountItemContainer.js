@@ -84,7 +84,7 @@ class AccountItemContainer extends Component {
                 <td className="text-center">
                     { item.__level === 0 ? <ButtonCheckLoginContainer isCheck={this.props.isCheckLogin} id={item.id} /> : null }
                 </td>
-                <td className="text-center">{item.is_active.toString()}</td>
+                <td className="text-center">{(item.is_active || '').toString()}</td>
                 <td className="text-center">
                     <i className="fa fa-plus-circle font-green cursor-pointer" onClick={this.handleOpenLinkFormulaModal(item)} />
                 </td>
