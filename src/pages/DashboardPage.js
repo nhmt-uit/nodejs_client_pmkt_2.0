@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import {compose} from "redux/es/redux";
-import {withTranslation} from "react-i18next";
 import {TransComponent} from 'my-components'
 
 import { QuickActivitiesContainer, PanelAlert } from "my-containers/dashboard"
@@ -9,7 +7,6 @@ import { CookieService } from 'my-utils/core'
 class DashboardPage extends Component {
     
     render() {
-        const { t } = this.props;
         const status = CookieService.get("status");
 
         return (
@@ -86,6 +83,4 @@ class DashboardPage extends Component {
     }
 }
 
-export default compose(
-    withTranslation(),
-)(DashboardPage);
+export default DashboardPage

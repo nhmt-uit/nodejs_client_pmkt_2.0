@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { withTranslation } from 'react-i18next';
+import {Link} from "react-router-dom";
 import {
     ListGroupItem, ListGroup,
     Modal, ModalFooter,
@@ -11,11 +12,11 @@ import { compose } from 'redux';
 import { get as _get, cloneDeep, sortBy } from 'lodash';
 
 import { getCyclePage, getReport, getReportByBanker, getReportByMember } from 'my-actions/ReportAction';
-import { LoadingComponent, PaginationComponent } from 'my-components';
+import { TransComponent, LoadingComponent, PaginationComponent } from 'my-components';
 import { ReportService } from 'my-services/report';
 import { CookieService } from 'my-utils/core';
 import {RoutesService} from 'my-routes';
-import {Link} from "react-router-dom";
+import { toggleFullScreen } from 'my-actions/systems/AppAction';
 
 class ReportListContainer extends Component {
     constructor(props) {
@@ -305,12 +306,12 @@ console.log(cyclePage)
         const btnAdd =
             (Number(roles) === 11 || Number(roles) === 12)
                 ? null
-                : (<div className="actions">
+                : (
                     <Link to={RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT_TRANSACTION')} className="btn btn-danger">
                         <span className="ladda-label"> {t("Add")}</span>
                         <span className="ladda-spinner" />
                     </Link>
-                </div>);
+                );
 
         // if (isFetching) {
         //     return (
@@ -334,7 +335,13 @@ console.log(cyclePage)
                     <div className="caption">
                         <span className="caption-subject font-red bold uppercase">{t('report')}</span>
                     </div>
-                    { btnAdd }
+                    <div className="actions">
+                        { btnAdd } &nbsp;
+                        <a className="btn btn-default btn-fullscreen" href="javascript:;" onClick={_ => this.props.toggleFullScreen() }>
+                            <i className={this.props.isFullScreen ? "fa fa-compress" : "fa fa-expand"} />
+                            {this.props.isFullScreen ? <TransComponent i18nKey="Exit Full Screen" /> : <TransComponent i18nKey="Full Screen" />}
+                        </a>
+                    </div>
                 </div>
                 <div className="portlet-body position-relative">
                     { isFetching ? <LoadingComponent /> : null }
@@ -363,6 +370,7 @@ const mapStateToProps = state => {
     return {
         cyclePage: _get(state, 'ReportReducer.cyclePage', { }),
         isFetching: _get(state, 'ReportReducer.isFetching', false),
+        isFullScreen : state.AppReducer.isFullScreen
     };
 };
 
@@ -372,6 +380,7 @@ const mapDispatchToProps = dispatch => {
         getReport: (post, itemActive) => dispatch(getReport(post, itemActive)),
         getReportByBanker: (post, itemActive) => dispatch(getReportByBanker(post, itemActive)),
         getReportByMember: (post, itemActive) => dispatch(getReportByMember(post, itemActive)),
+        toggleFullScreen: _ => {dispatch(toggleFullScreen())},
     };
 };
 

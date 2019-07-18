@@ -16,7 +16,6 @@ class CreateSubUserContainer extends Component {
     }
 
     render() {
-        const { t }  = this.props;
         return (
             <div className="col-md-12">
                 <div className="form-group text-right">

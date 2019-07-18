@@ -60,10 +60,10 @@ class ReportStatisticContainer extends Component {
     renderTabReport(type) {
         const t = this.props.t;
         const { currencyMap, totalAccounting, totalReport, total, itemActive } = this.props.reportStore;
-        const title = 
-            (type === 'accounting' || type === 'banker') 
-                ? t('REPORT OF ACCOUNTING') 
-                : (type === 'member') 
+        const title =
+            (type === 'accounting' || type === 'banker')
+                ? t('REPORT OF ACCOUNTING')
+                : (type === 'member')
                     ? `${t('REPORT')} ${itemActive.memberName}`
                     : t('SYNTHESIS OF REPORT');
         const totalTab = (type === 'accounting' || type === 'banker') ? totalAccounting : type === 'member' ? total : totalReport;
@@ -89,7 +89,7 @@ class ReportStatisticContainer extends Component {
                         }
 
                         return (
-                            <strong key={index} className="display-block font-size-12">
+                            <strong key={index} className="display-block font-size-12 position-relative">
                                 {`${item.dv_tien_te}: ${Helpers.formatMoney(totalTab[item.dv_tien_te_id].result, 0)}`}
                             </strong>
                         );

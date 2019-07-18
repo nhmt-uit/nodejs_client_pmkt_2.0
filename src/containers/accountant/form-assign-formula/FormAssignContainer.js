@@ -141,9 +141,9 @@ class FormAssignContainer extends Component {
     findParents = (array, username) => {
         if (typeof array != 'undefined' && array.length) {
             for (let i = 0; i < array.length; i++) {
-                if (array[i].username == username) return [username];
+                if (array[i].username === username) return [username];
                 let a = this.findParents(array[i].child, username);
-                if (a != null) {
+                if (a !== null) {
                     a.unshift(array[i].username);
                     return a;
                 }
