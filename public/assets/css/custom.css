@@ -44,7 +44,7 @@ html {
   padding: 5px !important;
 }
 
-h5.modal-title {font-size: 16px; font-weight: bold;}
+h5.modal-title {font-size: 16px; font-weight: bold; color: #E26A6A!important;}
 
 .fredux-radio-inline {
   display: block !important;
@@ -83,7 +83,7 @@ h5.modal-title {font-size: 16px; font-weight: bold;}
 	border: 1px solid #c2cad8;
 	min-height: 32px;
 }
-.form-group .css-26l3qy-menu {
+.form-group .css-26l3qy-menu, .form-group .css-1hup0q {
 	z-index: 10;
 }
 
@@ -405,6 +405,8 @@ h5.modal-title {font-size: 16px; font-weight: bold;}
   position: absolute;
 }
 
+.overload-hidden { overflow: hidden;}
+
 .btn-money-exchange {
   position: absolute;
   right: 15px;
@@ -497,11 +499,20 @@ h5.modal-title {font-size: 16px; font-weight: bold;}
 
 .wrap-tooltip:hover .hovered {
   display: block;
+  z-index: 9;
+}
+
+.bg-hover-detail {
+   background-color: #9ea0a2!important;
 }
 
 .tooltip-account {
   min-width: 200px;
   left: -5.8rem;
+}
+
+.tooltip-detail {
+  right: -2.8rem;
 }
 
 .tooltip-arrow {
@@ -516,6 +527,10 @@ h5.modal-title {font-size: 16px; font-weight: bold;}
   margin-left: -5px;
   border-width: 0 5px 5px;
   border-bottom-color: #e26a6a;
+}
+
+.border-bt-color-grey {
+    border-bottom-color: #9ea0a2!important;
 }
 
 .padding-0 {
@@ -536,4 +551,8 @@ h5.modal-title {font-size: 16px; font-weight: bold;}
 
 .nav-tab-account li.active > a {
     color: #35dfef!important;
+}
+
+.max-width-650 {
+    max-width: 650px;
 }

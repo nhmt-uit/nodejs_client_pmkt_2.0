@@ -4,9 +4,7 @@ import { ChangeSecureCodeContainer } from 'my-containers/navigation';
 
 class ChangeSecureCodePage extends Component {
     render() {
-        return (
-            <ChangeSecureCodeContainer />
-        );
+        return <ChangeSecureCodeContainer />;
     }
 }
 

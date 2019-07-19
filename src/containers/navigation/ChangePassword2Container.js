@@ -13,19 +13,19 @@ class ChangePassword2Container extends Component {
             name: 'current_password2',
             label: 'Current Password 2',
             type: 'password',
-            rules: ['required'],
+            rules: ['requiredCurrentPassword'],
         },
         {
             name: 'new_password2',
             label: 'New Password 2',
             type: 'password',
-            rules: ['required', 'notEqualCurrentPassword2', 'passwordValid'],
+            rules: ['requiredNewPassword', 'notEqualCurrentPassword2', 'passwordValidNewPassword'],
         },
         {
             name: 're_new_password2',
             label: 'Confirm Password 2',
             type: 'password',
-            rules: ['required', 'confirmNewPassword2'],
+            rules: ['requiredConfirmPassword', 'confirmNewPassword2'],
         }
     ];
 

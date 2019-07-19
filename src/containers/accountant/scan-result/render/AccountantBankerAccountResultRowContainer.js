@@ -122,20 +122,20 @@ class AccountantBankerAccountResultRowContainer extends Component {
 
                 tbl_col_formula.push(
                     <Fragment key={uuidv4()}>
-                    <td><TransComponent i18nKey="Not have formula yet" /></td>
-                    
-                    <AccountantBankerAccountResultHiddenTableTdContainer dataHiddenFields={dataHiddenFields} />
+                        <td><TransComponent i18nKey="Not have formula yet" /></td>
+                        
+                        <AccountantBankerAccountResultHiddenTableTdContainer dataHiddenFields={dataHiddenFields} />
 
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td className="text-center" width="45px"></td>
-                    <td className="text-center" width="45px"><a href="#/" onClick={_ => this.props.toggleModalFormFormula(objToggleModalSelectedFomula)} className="font-green-jungle"><i className="fa fa-plus-circle" /></a></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td className="text-center" width="45px"></td>
+                        <td className="text-center" width="45px"><a href="#/" onClick={_ => this.props.toggleModalFormFormula(objToggleModalSelectedFomula)} className="font-green-jungle"><i className="fa fa-plus-circle" /></a></td>
                     </Fragment>
                 )
                 
                 xhtml.push(
-                    <tr>
+                    <tr key={uuidv4()}>
                         {idxFormula === 1 ? tbl_col_username : null}
                         {idxDynamic === 1 ? tbl_col_dynamic : null}
                         {tbl_col_formula}

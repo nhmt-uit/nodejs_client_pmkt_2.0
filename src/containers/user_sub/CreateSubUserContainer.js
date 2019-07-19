@@ -13,7 +13,7 @@ class CreateSubUserContainer extends Component {
         return (
             <div className="col-md-12">
                 <div className="form-group text-right">
-                    <a type="submit" className="btn btn-default red" onClick={() => this.props.toggleModalMemberSub()}><TransComponent i18nKey="Add new"/></a>
+                    <a href="#/" type="submit" className="btn btn-default red" onClick={() => this.props.toggleModalMemberSub()}><TransComponent i18nKey="Add new"/></a>
                 </div>
                 <div className="clearfix"></div>
                 <ModalFormCreateSubUserContainer/>

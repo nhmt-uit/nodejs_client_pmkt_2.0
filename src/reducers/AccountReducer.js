@@ -2,6 +2,8 @@ import { get as _get } from 'lodash'
 import { AccountActionType } from 'my-constants/action-types'
 
 let defaultState = {
+	isInitSaveFormData: false,
+
 	initFormData: {},
 	optBanker: [],
 	optAccountBelong: [],
@@ -22,6 +24,7 @@ let defaultState = {
 
 	lstTab: [],
 	lstAccount: [],
+	lstOpen: [],
 
 	modalLinkFormula: {
 		lstMember: [],
@@ -75,7 +78,7 @@ export const AccountReducer = (state = defaultState, action) => {
 			if (!state.isOpenModalDelete === false) return {...defaultState}
 			return {...state, selectedItem: action.selectedItem, isOpenModalDelete: !state.isOpenModalDelete};
 		case AccountActionType.ACCOUNT_SAVE_FORM_DATA:
-			return {...state, formSaveStatus: action.formSaveStatus, formSaveResponse: action.formSaveResponse}
+			return {...state, isInitSaveFormData: action.isInitSaveFormData, formSaveStatus: action.formSaveStatus, formSaveResponse: action.formSaveResponse}
 		case AccountActionType.ACCOUNT_DELETE_ITEM:
 			return {...state, formDeleteStatus: action.formDeleteStatus, formDeleteResponse: action.formDeleteResponse}
 		case AccountActionType.ACCOUNT_RESET_FORM_RESPONSE:
@@ -92,6 +95,9 @@ export const AccountReducer = (state = defaultState, action) => {
 			return { ...state, lstAccount: action.payload, isFetchingAccount: false, error: null };
 		case AccountActionType.GET_ACCOUNT_FAIL:
 			return { ...state, isFetchingAccount: false, error: action.payload };
+
+		case AccountActionType.SET_LIST_OPEN:
+			return { ...state, lstOpen: action.lstOpen };
 
 		default:
 			return {...state}

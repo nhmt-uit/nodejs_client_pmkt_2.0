@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from 'react';
 import { withTranslation } from 'react-i18next';
-import {Link} from "react-router-dom";
 import {
     ListGroupItem, ListGroup,
     Modal, ModalFooter,
@@ -10,6 +9,7 @@ import Select from 'react-select';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { get as _get, cloneDeep, sortBy } from 'lodash';
+import { Link } from 'react-router-dom';
 
 import { getCyclePage, getReport, getReportByBanker, getReportByMember } from 'my-actions/ReportAction';
 import { TransComponent, LoadingComponent, PaginationComponent } from 'my-components';
@@ -143,6 +143,13 @@ class ReportListContainer extends Component {
                     }
                     &nbsp;&nbsp;<a href="#" onClick={this.handleGetReport({ chuky_id: cycle.id }, cycle, 'cycle')}>{cycle.name}</a>
                     <span className="float-right" >
+                        <div className="wrap-tooltip">
+                            <i className="fa fa-info color-grey cursor-pointer" />
+                            <span className="tooltip-arrow border-bt-color-grey hovered"/>
+                            <span className="content-tooltip hovered bg-dark font-white tooltip-detail text-center">
+                                <TransComponent i18nKey="Detail" />
+                            </span>
+                        </div>
                         {
                             cycle.is_exported
                                 ? <i className="fa fa-check-circle font-green" />

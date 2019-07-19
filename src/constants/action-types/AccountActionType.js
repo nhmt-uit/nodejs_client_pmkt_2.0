@@ -12,3 +12,5 @@ export const GET_TAB_FAIL                           = 'GET_TAB_FAIL';
 export const GET_ACCOUNT                            = 'GET_ACCOUNT';
 export const GET_ACCOUNT_SUCCESS                    = 'GET_ACCOUNT_SUCCESS';
 export const GET_ACCOUNT_FAIL                       = 'GET_ACCOUNT_FAIL';
+
+export const SET_LIST_OPEN                          = 'SET_LIST_OPEN';

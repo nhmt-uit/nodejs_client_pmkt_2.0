@@ -334,7 +334,16 @@ class FormulaListContainer extends Component {
     renderBodyAccountModal = () => {
         const { formulaSelected, listAccDelete, listAccEdit, isLoadingDelete, isLoadingUpdate } = this.state;
         const listAccUse = formulaSelected ? (formulaSelected.list_acc_use || []) : [];
-        const listOptionFormula = this.props.formulaList.map(item => { return { label: item.tenct.toUpperCase(), value: item.id } })
+        const listOptionFormula = this.props.formulaList.filter(item => {
+            if (item.banker_id === formulaSelected.banker_id) {
+                item.label = item.tenct.toUpperCase();
+                item.value = item.id;
+
+                return true;
+            }
+
+            return false;
+        });
         const selectBatchFormulaElm = listAccEdit.length > 1
             ? <Select
                 className="basic-single color-text-normal"

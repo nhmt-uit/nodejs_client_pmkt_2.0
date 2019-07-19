@@ -34,16 +34,13 @@ class ListCurrencyComponent extends Component {
         switch (value) {
             case -1:
                 return 'X0';
-                break;
             case 0:
                 return 'X';
-                break;
             case 1:
                 return '0.X';
-                break;
             case 2:
                 return '0.0X';
-                break;
+            default: break;
         }
     }
 
@@ -103,7 +100,7 @@ class ListCurrencyComponent extends Component {
 
     handleCheck = item => e => {
         let idx = this.getIndexCurrencyListById(item._id);
-        if (idx == -1) {
+        if (idx === -1) {
             this.setState({_error: true})
             return;
         }

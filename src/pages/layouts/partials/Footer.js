@@ -8,7 +8,7 @@ class Footer extends Component {
         return (
             <div className="page-footer">
                 <div className="page-footer-inner text-center">
-                    2019 © VW3 Application | <TransComponent i18nKey="version" /> : {AppConfig.DATE_RELEASE} | <TransComponent i18nKey="release date" /> :  {AppConfig.VERSION_RELEASE}
+                    2019 © VW3 Application | <TransComponent i18nKey="version" /> : {AppConfig.VERSION_RELEASE} | <TransComponent i18nKey="release date" /> :  {AppConfig.DATE_RELEASE}
                 </div>
                 <div className="scroll-to-top">
                     <i className="icon-arrow-up" />
