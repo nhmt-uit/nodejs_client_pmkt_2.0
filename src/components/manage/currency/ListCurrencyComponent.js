@@ -27,16 +27,13 @@ class ListCurrencyComponent extends Component {
         switch (value) {
             case -1:
                 return 'X0';
-                break;
             case 0:
                 return 'X';
-                break;
             case 1:
                 return '0.X';
-                break;
             case 2:
                 return '0.0X';
-                break;
+            default: break;
         }
     }
 
@@ -76,7 +73,7 @@ class ListCurrencyComponent extends Component {
 
     getIndexCurrencyListById (id) {
         for (let key in this.state.currencyList) {
-            if (this.state.currencyList[key]._id == id) {
+            if (this.state.currencyList[key]._id === id) {
                 return key;
             }
         }
@@ -85,7 +82,7 @@ class ListCurrencyComponent extends Component {
 
     handleCheck = item => e => {
         let idx = this.getIndexCurrencyListById(item._id);
-        if (idx == -1) {
+        if (idx === -1) {
             this.setState({_error: true})
             return;
         }
@@ -128,7 +125,7 @@ class ListCurrencyComponent extends Component {
                                 <td>{item.name}</td>
                                 <td>{item.total}</td>
                                 <td>{this.typeRound(item.filter)}</td>
-                                <td><a onClick={this.showHideForm(item, true)}><i className="pointer fa fa-edit"></i></a></td>
+                                <td><a href="#/" onClick={this.showHideForm(item, true)}><i className="pointer fa fa-edit"></i></a></td>
                             </tr>
                         )
                     })

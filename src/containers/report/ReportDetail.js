@@ -19,7 +19,6 @@ class ReportDetail extends Component {
     }
 
     render() {
-        const { t } = this.props;
         const username = AuthService.getUsername();
         var DATA = this.props.reportDetail.payload;
         if(isEmpty(DATA)){
@@ -61,10 +60,10 @@ class ReportDetail extends Component {
                         Money = Object.entries(Money);
                         Money.forEach(function (item) {
                             var typeOfMoney = DV_Tiente_Map[item[1].id].dv_tien_te
-                            if (typeOfMoney == 'VND') {
+                            if (typeOfMoney === 'VND') {
                                 VND = item[1].result
                             }
-                            if (typeOfMoney == 'USD') {
+                            if (typeOfMoney === 'USD') {
                                 USD = item[1].result
                             }
 
@@ -91,10 +90,10 @@ class ReportDetail extends Component {
                             Money = Object.entries(Money);
                             Money.forEach(function (item) {
                                 var typeOfMoney = DV_Tiente_Map[item[1].id].dv_tien_te
-                                if (typeOfMoney == 'VND') {
+                                if (typeOfMoney === 'VND') {
                                     VND = item[1].result
                                 }
-                                if (typeOfMoney == 'USD') {
+                                if (typeOfMoney === 'USD') {
                                     USD = item[1].result
                                 }
                             });
@@ -118,10 +117,10 @@ class ReportDetail extends Component {
                                 Money = Object.entries(Money);
                                 Money.forEach(function (item) {
                                     var typeOfMoney = DV_Tiente_Map[item[1].id].dv_tien_te
-                                    if (typeOfMoney == 'VND') {
+                                    if (typeOfMoney === 'VND') {
                                         VND = item[1].result
                                     }
-                                    if (typeOfMoney == 'USD') {
+                                    if (typeOfMoney === 'USD') {
                                         USD = item[1].result
                                     }
                                 })

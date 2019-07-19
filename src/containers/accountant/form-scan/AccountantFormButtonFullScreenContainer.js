@@ -15,7 +15,7 @@ class AccountantFormButtonFullScreenContainer extends Component {
 
     render() {
         return (
-            <a className="btn btn-default btn-fullscreen" href="javascript:;" onClick={_ => this.props.toggleFullScreen() }>
+            <a className="btn btn-default btn-fullscreen" href="#/" onClick={_ => this.props.toggleFullScreen() }>
                 <i className={this.props.isFullScreen ? "fa fa-compress" : "fa fa-expand"} />
                 {this.props.isFullScreen ? <TransComponent i18nKey="Exit Full Screen" /> : <TransComponent i18nKey="Full Screen" />}
             </a>

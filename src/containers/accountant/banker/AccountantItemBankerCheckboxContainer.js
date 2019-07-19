@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { compose } from 'redux'
 import { connect } from 'react-redux'
-import { isEmpty as _isEmpty, isEqual as _isEqual, cloneDeep as _cloneDeep } from 'lodash'
+import { isEmpty as _isEmpty, isEqual as _isEqual } from 'lodash'
 
 import { checkBankerAccount } from 'my-actions/AccountantAction';
 

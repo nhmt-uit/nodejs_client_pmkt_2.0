@@ -218,7 +218,7 @@ class ListFormulaByForumulaGroupContainer extends Component {
                         </table>
                     </div>
                     {formulaPatternList.length ?
-                        <div className="form-actions text-right">
+                        <div className="form-actions text-right" style={{marginTop: '15px'}}>
                             <button type="button" className="btn red" disabled={!this.state.f_pattern_ids.length} onClick={this.handleMultipleDeleteFormula}>
                                 <TransComponent i18nKey="Delete selected" />
                             </button>

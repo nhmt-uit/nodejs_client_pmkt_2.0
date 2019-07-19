@@ -137,7 +137,7 @@ class Header extends Component {
 
                 {/* Modal Banker */}
                 <Modal isOpen={this.state.isOpenModalBaner} toggle={this.toggleModalBanker} scrollable={true}>
-                    <ModalHeader toggle={this.toggleModalBanker} ><i className="icon-social-dribbble font-green"></i>&nbsp;&nbsp;<span className="caption-subject font-green bold uppercase"><TransComponent i18nKey="Company" /></span></ModalHeader>
+                    <ModalHeader toggle={this.toggleModalBanker} ><i className="icon-social-dribbble"></i>&nbsp;&nbsp;<span className="caption-subject bold uppercase"><TransComponent i18nKey="Company" /></span></ModalHeader>
                     <ModalBody>
                         <BankerListContainer />
                     </ModalBody>
