@@ -106,6 +106,10 @@ class ReportStatisticContainer extends Component {
         const hasReportDetailFeature = Number(CookieService.get('hasReportDetailFeature'));
         const bookTabElm = type === 'accounting' ? this.renderBookTabs('accounting') : this.renderBookTabs('synthesis');
         const roles = CookieService.get('roles');
+        var cycleName;
+        if(itemActive.name){
+            cycleName = itemActive.name.split('/').join('@')
+        }
         return (
             <div className={`tab-pane ${classActive}`} id={`tab_${type}`}>
                 <div className="row">
@@ -118,7 +122,7 @@ class ReportStatisticContainer extends Component {
                                     (type === 'accounting' && hasReportDetailFeature === 1)
                                         ? <li className="title-accountant">
                                             <button
-                                                onClick={() => window.open(RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT_DETAIL', { chuky_id: itemActive.id }), '_blank')}
+                                                onClick={() => window.open(RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT_DETAIL', { chuky_id: itemActive.id, cycle_name: cycleName }), '_blank')}
                                                 className="btn btn-danger"
                                             >
                                                 {t('Show detail')}
