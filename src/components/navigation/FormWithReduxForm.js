@@ -34,34 +34,39 @@ class FormWithReduxForm extends Component {
         }
     };
 
-    rules = {
-        required: value => value ? undefined : 'is required',
-        passwordValid: value => (/^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%])[0-9A-Za-z!@#$%]{8,}$/).test(value)
-            ? undefined
-            : 'is required at least 8 characters, included Uppercase, normal and special',
-        confirmNewPassword: value =>
-            _isEqual(value, _get(this.props, 'formValues.new_password', undefined))
-                ? undefined
-                : 'do not match new password',
-        confirmNewPassword2: value =>
-            _isEqual(value, _get(this.props, 'formValues.new_password2', undefined))
-                ? undefined
-                : 'do not match new password 2',
-        confirmNewSecure: value =>
-            _isEqual(value, _get(this.props, 'formValues.new_secure', undefined))
-                ? undefined
-                : 'do not match new secure code',
-        notEqualCurrentPassword2: value =>
-            _isEqual(value, _get(this.props, 'formValues.current_password2', undefined))
-                ? 'must be different from current password 2'
-                : undefined,
-        maxLength6: value => value && ( value.length > 6 || value.length < 6) ? 'must be 6 characters' : undefined,
-        number: value => value && isNaN(Number(value)) ? 'must be a number' : undefined
-    };
+    required = name => value => value ? undefined : <TransComponent i18nKey={`"${name}" is required`} /> ;
+    requiredCurrentPassword = this.required('Current Password');
+    requiredNewPassword = this.required('New Password');
+    requiredConfirmPassword = this.required('Confirm password');
+    requiredCurrentSecureCode = this.required('Current Security Code');
+    requiredNewSecureCode = this.required('New Security Code');
+
+    passwordValid = name => value => (/^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%])[0-9A-Za-z!@#$%]{8,}$/).test(value)
+        ? undefined
+        : <TransComponent i18nKey={`"${name}" fails to match the required pattern: /^(?=.*\\d)(?=.*[a-z])(?=.*[a-z])(?=.*[!@#$%])[0-9a-za-z!@#$%]{{8,}}$/`} />;
+    passwordValidNewPassword = this.passwordValid('new password');
+
+    confirm = (name, refField) => value => _isEqual(value, _get(this.props, `formValues.${refField}`, undefined))
+        ? undefined
+        : <TransComponent i18nKey={`"${name}" must be one of [ref:${refField}]`} />;
+    confirmSecureCode = this.confirm('Confirm Security Code', 'new_security_code');
+    confirmNewPassword = this.confirm('Confirm password', 'new_password');
+    confirmNewPassword2 = this.confirm('Confirm password', 'new_password2');
+
+    numberSecureCode = value => value && isNaN(Number(value)) ? `"New Security Code" fails to match the required pattern: /^([0-9]){{6}}$/` : undefined;
+    maxLength6SecureCode = value => value && ( value.length > 6 || value.length < 6) ? `"New Security Code" length must be at least 6 characters long` : undefined;
+
+    notEqualCurrentPassword = value =>
+        _isEqual(value, _get(this.props, 'formValues.current_password', undefined))
+            ? <TransComponent i18nKey={`"new password" must not equal "current password"`} />
+            : undefined;
+    notEqualCurrentPassword2 = value =>
+        _isEqual(value, _get(this.props, 'formValues.current_password2', undefined))
+            ? <TransComponent i18nKey={`"new password" must not equal "current password"`} />
+            : undefined;
 
     renderForm() {
         const {data, err, success, handleSubmit} = this.props;
-
 
         return (
             <form className="form-horizontal" onSubmit={handleSubmit(this.handleSubmit)}>
@@ -101,7 +106,7 @@ class FormWithReduxForm extends Component {
                                     {...props}
                                     index={index}
                                     component={renderTextField}
-                                    validate={_get(item, 'rules', []).map(elm => this.rules[elm] )}
+                                    // validate={_get(item, 'rules', []).map(elm => this[elm] )}
                                 />
                             );
                         })
@@ -142,7 +147,7 @@ class FormWithReduxForm extends Component {
                         </div>
                     </div>
                     <div className="portlet-body form">
-                        <div style={{ width: '70%', margin: 'auto' }}>
+                        <div className="max-width-650" style={{ margin: 'auto' }}>
                             {this.renderForm()}
                         </div>
                     </div>
@@ -155,6 +160,48 @@ class FormWithReduxForm extends Component {
 FormWithReduxForm.propTypes = propTypes;
 FormWithReduxForm.defaultProps = defaultProps;
 
+const validate = (values) => {
+    const errors = {};
+    const msgRequired = 'is required';
+
+    if (!values.pwd_current_password) errors.pwd_current_password = `"Current Password" ${msgRequired}`;
+    if (!values.new_password) errors.new_password = `"New Password" ${msgRequired}`;
+    if (!values.confirm_password) errors.confirm_password = `"Confirm password" ${msgRequired}`;
+    if (!values.current_secure_code) errors.current_secure_code = `"Current Security Code" ${msgRequired}`;
+    if (!values.new_secure_code) errors.new_secure_code = `"New Security Code" ${msgRequired}`;
+
+    if (values.new_password && (/^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%])[0-9A-Za-z!@#$%]{8,}$/).test(values.new_password)) {
+        errors.new_password = `"new password" fails to match the required pattern: /^(?=.*\d)(?=.*[a-z])(?=.*[a-z])(?=.*[!@#$%])[0-9a-za-z!@#$%]{{8,}}$/`;
+    }
+
+    if (values.new_secure_code && values.current_secure_code && _isEqual(values.new_secure_code, values.current_secure_code)) {
+        errors.new_security_code = `"Confirm Security Code" must be one of [ref:current_secure_code]`;
+    }
+    if (values.new_password && values.current_password && _isEqual(values.new_password, values.current_password)) {
+        errors.new_security_code = `"Confirm password" must be one of [ref:new_password]`;
+    }
+    if (values.new_password2 && values.current_password2 && _isEqual(values.new_password2, values.current_password2)) {
+        errors.new_security_code = `"Confirm password" must be one of [ref:new_password2]`;
+    }
+
+    if (values.new_secure_code && isNaN(Number(values.new_secure_code))) {
+        errors.new_secure_code = `"New Security Code" fails to match the required pattern: /^([0-9]){{6}}$/`;
+    }
+
+    if (values.new_secure_code && ( values.new_secure_code.length > 6 || values.new_secure_code.length < 6 )) {
+        errors.new_secure_code = `"New Security Code" length must be at least 6 characters long`;
+    }
+
+    if (values.new_password && values.current_password && _isEqual(values.new_password, values.current_password)) {
+        errors.new_password = `"new password" must not equal "current password"`;
+    }
+    if (values.new_password && values.current_password2 && _isEqual(values.new_password, values.current_password2)) {
+        errors.new_password = `"new password" must not equal "current password2"`;
+    }
+
+    return errors;
+};
+
 const mapStateToProps = state => {
     return {
         formValues: _get(state, 'form.form_navigation.values', {}),
@@ -163,8 +210,6 @@ const mapStateToProps = state => {
 };
 
 export default compose(
-    reduxForm({
-        form: 'form_navigation',
-    }),
+    reduxForm({ form: 'form_navigation', validate }),
     connect(mapStateToProps, null),
 )(FormWithReduxForm)

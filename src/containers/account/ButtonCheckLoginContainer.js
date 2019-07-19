@@ -19,35 +19,23 @@ export default class ButtonCheckLoginContainer extends Component {
     };
 
     componentWillReceiveProps(nextProps, nextContext) {
-        if (nextProps.isCheck) {
+        if (nextProps.isCheck && nextProps.isCheck !== this.props.isCheck) {
             this.handleCheckLogin(this.props.id)();
         }
     }
 
     handleCheckLogin = id => () => {
-        this.setState({ 
-            isChecking: true
-        }, ()=> {
+        if (this.state.isChecking) {
+            return null;
+        }
+
+        this.setState({ isChecking: true }, ()=> {
             return AccountService.checkLogin(id)
                 .then(res => {
-                    if (res.status) {
-                        this.setState({
-                            isChecking: false,
-                            status: 'success',
-                        });
-                    } else {
-                        this.setState({
-                            isChecking: false,
-                            status: 'err',
-                        });
-                    }
+                    if (res.status) this.setState({ isChecking: false, status: 'success' });
+                    else this.setState({ isChecking: false, status: 'err' });
                 })
-                .catch(() => {
-                    this.setState({
-                        isChecking: false,
-                        status: 'err',
-                    });
-                });
+                .catch(() => this.setState({ isChecking: false, status: 'err' }));
         });
     };
 
@@ -56,9 +44,8 @@ export default class ButtonCheckLoginContainer extends Component {
 
         let classIcon = 'fa-recycle';
 
-        if (isChecking) {
-            classIcon = 'fa-spinner fa-spin';
-        } else if (status) {
+        if (isChecking) classIcon = 'fa-spinner fa-spin';
+        else if (status) {
             classIcon = status === 'success' ? 'fa-check font-green' : 'fa-close font-red';
         }
 

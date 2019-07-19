@@ -17,7 +17,7 @@ class AccountItemContainer extends Component {
     static defaultProps = {
         account: {},
         isCheckLogin: false,
-        onChangeProps: () => void(0)
+        onChangeProps: () => void(0),
     };
 
     state = { 
@@ -34,17 +34,11 @@ class AccountItemContainer extends Component {
         this.setState({ toggleIds });
     };
 
-    handleOpenDeleteModal = (id, name) => () => {
-        return this.props.onChangeProps({ deleteState: { id, name, isOpenModal: true } });
-    };
+    handleOpenDeleteModal = (id, name) => () => this.props.onChangeProps({ deleteState: { id, name, isOpenModal: true } });
 
-    handleOpenUpdateModal = selectedItem => () => {
-        return this.props.toggleModalAccount({ selectedItem });
-    };
+    handleOpenUpdateModal = selectedItem => () => this.props.toggleModalAccount({ selectedItem });
 
-    handleOpenLinkFormulaModal = selectedItem => () => {
-        return this.props.toggleModalAccount({ selectedItem, isModalLinkFormula: true });
-    };
+    handleOpenLinkFormulaModal = selectedItem => () => this.props.toggleModalAccount({ selectedItem, isModalLinkFormula: true });
 
     renderTR(item) {
         const toggleIds = this.state.toggleIds;
@@ -100,27 +94,25 @@ class AccountItemContainer extends Component {
 
     renderRecursiveItem(item) {
         const toggleIds = this.state.toggleIds;
+
         const result = [];
         const loopItem = (itemLoop) => {
-           result.push(this.renderTR(itemLoop));
+            result.push(this.renderTR(itemLoop));
 
-            if (itemLoop.child && itemLoop.child.length && toggleIds[itemLoop.id]) {
-                itemLoop.child.forEach(child => {
-                    loopItem(child);
-                });
-            }
+            const isOpen = toggleIds[itemLoop.id] !== undefined
+                ? toggleIds[itemLoop.id]
+                : !!itemLoop.isOpen;
+
+            if (itemLoop.child && itemLoop.child.length && isOpen) itemLoop.child.forEach(child => loopItem(child));
         };
 
-        if (!_isEmpty(item)) {
-            loopItem(item);
-        }
+        if (!_isEmpty(item)) loopItem(item);
+
         return result;
     }
 
     render() {
-        const { account } = this.props;
-
-        return this.renderRecursiveItem(account);
+        return this.renderRecursiveItem(this.props.account);
     }
 }
 

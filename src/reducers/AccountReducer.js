@@ -22,6 +22,7 @@ let defaultState = {
 
 	lstTab: [],
 	lstAccount: [],
+	lstOpen: [],
 
 	modalLinkFormula: {
 		lstMember: [],
@@ -92,6 +93,9 @@ export const AccountReducer = (state = defaultState, action) => {
 			return { ...state, lstAccount: action.payload, isFetchingAccount: false, error: null };
 		case AccountActionType.GET_ACCOUNT_FAIL:
 			return { ...state, isFetchingAccount: false, error: action.payload };
+
+		case AccountActionType.SET_LIST_OPEN:
+			return { ...state, lstOpen: action.lstOpen };
 
 		default:
 			return {...state}

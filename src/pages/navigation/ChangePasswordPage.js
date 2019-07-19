@@ -4,9 +4,7 @@ import { ChangePasswordContainer } from 'my-containers/navigation';
 
 class ChangePasswordPage extends Component {
     render() {
-        return (
-            <ChangePasswordContainer />
-        );
+        return <ChangePasswordContainer />;
     }
 }
 
