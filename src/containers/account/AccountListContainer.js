@@ -5,12 +5,13 @@ import { withTranslation } from 'react-i18next';
 import {
     debounce as _debounce,
     sortBy as _sortBy,
-    cloneDeep as _cloneDeep
+    cloneDeep as _cloneDeep,
+    isEmpty as _isEmpty
 } from 'lodash';
 
 import { TransComponent, LoadingComponent } from 'my-components';
 import { BookTabContentContainer, ModalByActionContainer, LinkFormulaModalContainer } from 'my-containers/account';
-import { getTab, getAccount, toggleModalAccount } from 'my-actions/AccountAction';
+import { getTab, getAccount, toggleModalAccount, setListOpen } from 'my-actions/AccountAction';
 
 class AccountListContainer extends Component {
     componentDidMount() {
@@ -23,110 +24,40 @@ class AccountListContainer extends Component {
         keySearch: '',
     };
 
-    filterAccountByBook(lstAccount, id) {
-        const keySearch = this.state.keySearch.toLowerCase().trim();
-        const result = [];
-        lstAccount = _cloneDeep(lstAccount);
-        lstAccount = lstAccount.filter( function findChild(item) {
-            if (item.acc_name.includes(keySearch)) return true
-            if (item.child) {
-                return (item.child = item.child.filter(findChild)).length
-            }
-        })
+    _mapLstAccount(lst, result = {}) {
+        lst.forEach(item => {
+            result[item.id] = item;
 
-        console.log(lstAccount)
-        return lstAccount
-
-        // const searchRecursive = (lstChild, lstAccMatch = {}, idParent) => {
-        //     let isMatch = false;
-
-        //     lstChild = _cloneDeep(lstChild);
-
-        //     lstChild.forEach(item => {
-        //         item = item || {};
-
-        //         if (!item.acc_parent_id) idParent = item.id;
-
-        //         const accName = (item.acc_name || '').toLowerCase().trim();
-
-        //         if (accName.indexOf(keySearch) !== -1) {
-        //             isMatch = true;
-
-        //             lstAccMatch[idParent] = lstAccMatch[idParent] || [];
-        //             lstAccMatch[idParent].push(item);
-        //         }
-
-        //         if (!isMatch && item.child && item.child.length) return searchRecursive(item.child, lstAccMatch, idParent);
-        //     });
-
-        //     return lstAccMatch;
-        // };
-
-        // let resultFilter = id === 'all' ? lstAccount : lstAccount.filter(account => account.book_id === id);
-
-        // if (keySearch) {
-        //     const lstAccMatch = searchRecursive(resultFilter);
-
-        //     return Object.entries(lstAccMatch).map(acc => {
-        //         const parentItem = resultFilter.find(item => item.id === acc[0]);
-
-        //         return this.findParent(_cloneDeep(parentItem), acc[1], this._mapAccountList(_cloneDeep(resultFilter)));
-        //     });
-        // }
-
-        // return keySearch ? result : resultFilter;
-    }
-
-    _mapAccountList(lstAccount) {
-        const result = [];
-        const loopAccount = (lstAccount) => {
-            lstAccount.forEach(account => {
-                result[account.id] = account;
-
-                if (account.child && account.child.length) {
-                    loopAccount(account.child);
-                }
-            })
-        };
-
-        loopAccount(lstAccount);
+            if (item.child && item.child.length) return this._mapLstAccount(item.child, result);
+        });
 
         return result;
     }
 
-    findParent(parentItem, lstAccountMatch, lst) {
-        let result = _cloneDeep(parentItem);
+    filterAccountByBook(lstAccount, id) {
+        const keySearch = this.state.keySearch.toLowerCase().trim();
 
-        const renderChild = (account, lstAcc, rsChild = {}) => {
-            let accParent = lstAcc[account.acc_parent_id];
+        lstAccount = _cloneDeep(lstAccount);
+        lstAccount = id === 'all' ? lstAccount : lstAccount.filter(account => account.book_id === id);
 
-            if (!accParent.acc_parent_id) return rsChild;
+        if (keySearch) {
+            lstAccount = lstAccount.filter( function findChild(item) {
+                item.isOpen = true;
 
-            accParent.child = [account];
-            rsChild = _cloneDeep(accParent);
+                if ((item.acc_name || '').toLowerCase().indexOf(keySearch) !== -1) {
+                    item.isOpen = false;
 
-            if (accParent.acc_parent_id) return renderChild(accParent, lstAcc, rsChild);
-        };
-
-        if (lstAccountMatch.every(item => item.id !== parentItem.id)) {
-            result.child = [];
-
-            lstAccountMatch.forEach(account => {
-                if (account.id !== parentItem.id) {
-                    result.child = result.child || [];
-
-                    result.child.push(renderChild(account, lst));
-                    console.log(result);
+                    return true;
                 }
+
+                if (item.child) return (item.child = item.child.filter(findChild)).length;
             });
         }
 
-        return lst[parentItem.id];
+        return lstAccount;
     }
 
-    handleOpenCreateNewModal = () => {
-        this.props.toggleModalAccount();
-    };
+    handleOpenCreateNewModal = () => this.props.toggleModalAccount();
 
     handleSearch = _debounce(key => {
         this.setState({ keySearch: key });

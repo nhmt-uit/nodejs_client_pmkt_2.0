@@ -149,3 +149,12 @@ export const getTab = () => {
         });
     }
 };
+
+export const setListOpen = lstOpen => {
+    return dispatch => {
+        dispatch({
+            type: AccountActionType.SET_LIST_OPEN,
+            lstOpen,
+        });
+    }
+};

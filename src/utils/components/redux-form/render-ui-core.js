@@ -1,7 +1,7 @@
 import React from 'react';
 
 export const renderTextField = ({
-    input: { value, onChange, onBlur },
+    input: { value, onChange, onBlur, onFocus },
     label,
     meta: { touched, error, warning },
     ...otherProps
@@ -12,6 +12,7 @@ export const renderTextField = ({
         value,
         onChange,
         onBlur,
+        onFocus,
         className: "form-control",
     };
 

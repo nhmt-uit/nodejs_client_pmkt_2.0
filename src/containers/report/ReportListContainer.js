@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from 'react';
 import { withTranslation } from 'react-i18next';
-import {Link} from "react-router-dom";
 import {
     ListGroupItem, ListGroup,
     Modal, ModalFooter,
@@ -10,9 +9,10 @@ import Select from 'react-select';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { get as _get, cloneDeep, sortBy } from 'lodash';
+import { Link } from 'react-router-dom';
 
 import { getCyclePage, getReport, getReportByBanker, getReportByMember } from 'my-actions/ReportAction';
-import { LoadingComponent, PaginationComponent, TransComponent } from 'my-components';
+import { TransComponent, LoadingComponent, PaginationComponent } from 'my-components';
 import { ReportService } from 'my-services/report';
 import { CookieService } from 'my-utils/core';
 import {RoutesService} from 'my-routes';
@@ -308,7 +308,7 @@ class ReportListContainer extends Component {
     render() {
         const { t, cyclePage, isFetching } = this.props;
         const { itemPerPage, currentPage } = this.state;
-
+console.log(cyclePage)
         let cycleList = cyclePage.data || {};
 
         cycleList = sortBy(cycleList, 'sort_value').reverse();
@@ -323,6 +323,22 @@ class ReportListContainer extends Component {
                         <span className="ladda-spinner" />
                     </Link>
                 );
+
+        // if (isFetching) {
+        //     return (
+        //         <div className="portlet light bordered">
+        //             <div className="portlet-title">
+        //                 <div className="caption">
+        //                     <span className="caption-subject font-red bold uppercase">{t('report')}</span>
+        //                 </div>
+        //                 {btnAdd}
+        //             </div>
+        //             <div className="portlet-body position-relative" style={{ minHeight: '60px' }}>
+        //                 <LoadingComponent />
+        //             </div>
+        //         </div>
+        //     );
+        // }
 
         return (
             <div className="portlet light bordered">

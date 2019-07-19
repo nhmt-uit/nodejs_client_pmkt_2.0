@@ -552,3 +552,7 @@ h5.modal-title {font-size: 16px; font-weight: bold; color: #E26A6A!important;}
 .nav-tab-account li.active > a {
     color: #35dfef!important;
 }
+
+.max-width-650 {
+    max-width: 650px;
+}
