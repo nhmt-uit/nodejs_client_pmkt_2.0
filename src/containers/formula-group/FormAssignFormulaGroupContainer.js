@@ -163,7 +163,7 @@ class FormAssignFormulaGroupContainer extends Component {
                                 menuPosition="fixed"
                                 />
                             <span className="input-group-btn">
-                                <button className="btn green" type="button" onClick={_ => this.props.toggleModalFormulaGroup()}><i className="fa fa-plus" /></button>
+                                <button className="btn bg-red-sunglo" type="button" onClick={_ => this.props.toggleModalFormulaGroup()}><i className="fa fa-plus font-white" /></button>
                             </span>
                         </div>
                         <Field name="formula_group_select"component={renderError} />
@@ -206,7 +206,7 @@ class FormAssignFormulaGroupContainer extends Component {
                                 menuPosition="fixed"
                                 />
                             <span className="input-group-btn">
-                                <button className="btn green" type="button" onClick={_ => this.props.toggleModalFormula()}><i className="fa fa-plus" /></button>
+                                <button className="btn bg-red-sunglo" type="button" onClick={_ => this.props.toggleModalFormula()}><i className="fa fa-plus font-white" /></button>
                             </span>
                         </div>
                         <Field name="formula_select"component={renderError} />
