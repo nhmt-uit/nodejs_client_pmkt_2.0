@@ -29,6 +29,14 @@ class ConfigurationService extends BaseService {
     getCurrencyConfig(){
         return HttpService.post(`${this.serviceUrl}/currency`);
     };
+    /*
+    |--------------------------------------------------------------------------
+    | @content: Save company configuration
+    |--------------------------------------------------------------------------
+    */
+    saveCompanyConfig(post){
+        return HttpService.post(`${this.serviceUrl}/company_config/save`, post)
+    }
 
     /*
     |--------------------------------------------------------------------------

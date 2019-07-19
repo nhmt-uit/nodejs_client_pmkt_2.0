@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import { compose } from 'redux'
 import { withTranslation } from 'react-i18next'
-import { Table, Input, Button } from 'reactstrap';
-import { saveCurrencyConfig } from 'my-actions/manage/ConfigurationAction';
+import {Table, Input, Button, ModalHeader, ModalBody, ModalFooter, Modal} from 'reactstrap';
+import { saveCurrencyConfig, getCurrencyConfig } from 'my-actions/manage/ConfigurationAction';
 import { EditForm } from 'my-components/manage';
 import {connect} from "react-redux";
+import {TransComponent} from 'my-components'
 
 class ListCurrencyComponent extends Component {
     constructor (props) {
@@ -14,7 +15,13 @@ class ListCurrencyComponent extends Component {
             currencyList: this.props.currencyList,
             listCheck: [],
             isOpen: false,
-            itemSelected: {}
+            itemSelected: {},
+
+            isOpenModalConfirm: false,
+            message: '',
+            checkAll: false,
+            onSave: false,
+            item: '',
         };
     }
     componentWillReceiveProps(nextProps, nextContext) {
@@ -40,38 +47,14 @@ class ListCurrencyComponent extends Component {
         }
     }
 
-    handleSave () {
-        let isOk = window.confirm("Are you sure ?");
-        if (isOk) {
-            var post = [];
-            this.state.currencyList.forEach(function (item) {
-                if (item.checked) {
-                    post.push({name: item.name, id: item.id})
-                }
-            });
-            this.props.saveCurrencyConfig({data: JSON.stringify(post)});
-            //Action.save({data: JSON.stringify(post)})
-        }
-    }
-
-    handleCheckAll (e) {
-        let data = this.state.currencyList;
-        if(!e.target.checked) {
-            let checked = e.target.checked;
-            let isOk = window.confirm("Ban co chac chan khong muon su dung bat ky loai tien nao? Viec bo chon nay se xoa tat ca cac cong thuc");
-            if (isOk) {
-                for (let key in data) {
-                    if (!data.hasOwnProperty(key)) continue;
-                    data[key].checked = checked;
-                }
-            }
-        }else{
-            for (let key in data) {
-                if (!data.hasOwnProperty(key)) continue;
-                data[key].checked = e.target.checked;
-            }
-        }
-        this.setState({currencyList: data});
+    toggleCloseModalConfirm = () => {
+        this.setState({
+            isOpenModalConfirm: false,
+            message: '',
+            checkAll: false,
+            onSave: false,
+            item: '',
+        })
     }
 
     getIndexCurrencyListById (id) {
@@ -81,6 +64,41 @@ class ListCurrencyComponent extends Component {
             }
         }
         return -1;
+    }
+
+    handleConfirmModal = () => {
+        var {checkAll, item, onSave} = this.state
+        let idx = this.getIndexCurrencyListById(item._id);
+        let data = this.state.currencyList;
+        if(checkAll){
+            console.log(item.checked)
+            for (let key in data) {
+                if (!data.hasOwnProperty(key)) continue;
+                data[key].checked = false;
+            }
+        } else if(onSave){
+            var post = [];
+            this.state.currencyList.forEach(function (item) {
+                if (item.checked) {
+                    post.push({name: item.name, id: item.id})
+                }
+            });
+            this.props.saveCurrencyConfig({data: JSON.stringify(post)})
+                .then( () => {
+                    this.props.getCurrencyConfig()
+                })
+        } else {
+            data[idx].checked = !item.checked;
+        }
+        this.toggleCloseModalConfirm();
+    }
+
+    handleSave () {
+        this.setState({
+            isOpenModalConfirm: true,
+            message: 'Are you sure ?',
+            onSave: true,
+        })
     }
 
     handleCheck = item => e => {
@@ -93,13 +111,31 @@ class ListCurrencyComponent extends Component {
         let checked =  e.target.checked;
         let data = this.state.currencyList;
         if(total > 0 && !checked) {
-            let name = item.name;
-            let isOk = window.confirm('Ban co chac chan muon xoa loai tien ' + name + '. Viec xoa nay se xoa toan bo cong thuc su dung loai tien nay va khong the phuc hoi.');
-            if (isOk) {
-                data[idx].checked = checked;
-            }
+            this.setState({
+                isOpenModalConfirm: true,
+                message: 'Ban co chac chan muon xoa loai tien ' + item.name + '. Viec xoa nay se xoa toan bo cong thuc su dung loai tien nay va khong the phuc hoi.',
+                checkAll: false,
+                item: item
+            })
         }else{
             data[idx].checked = e.target.checked;
+        }
+        this.setState({currencyList: data});
+    }
+
+    handleCheckAll (e) {
+        let data = this.state.currencyList;
+        if(!e.target.checked) {
+            this.setState({
+                isOpenModalConfirm: true,
+                message: 'Ban co chac chan khong muon su dung bat ky loai tien nao? Viec bo chon nay se xoa tat ca cac cong thuc',
+                checkAll: true,
+            })
+        }else{
+            for (let key in data) {
+                if (!data.hasOwnProperty(key)) continue;
+                data[key].checked = e.target.checked;
+            }
         }
         this.setState({currencyList: data});
     }
@@ -114,24 +150,24 @@ class ListCurrencyComponent extends Component {
         const { t } = this.props;
         if (this.state.currencyList) {
             xhtml = this.state.currencyList.map((item, idx) => {
-                        if (checkAll && !item.checked) {
-                            checkAll = false;
-                        }
-                        return (
-                            <tr key={idx}>
-                                <td>
-                                    <label className="mt-checkbox mt-checkbox-outline">&nbsp;
-                                        <Input type="checkbox" name={item._id} onChange={this.handleCheck(item)} checked={item.checked || false}/>
-                                        <span></span>
-                                    </label>
-                                </td>
-                                <td>{item.name}</td>
-                                <td>{item.total}</td>
-                                <td>{this.typeRound(item.filter)}</td>
-                                <td><a onClick={this.showHideForm(item, true)}><i className="pointer fa fa-edit"></i></a></td>
-                            </tr>
-                        )
-                    })
+                if (checkAll && !item.checked) {
+                    checkAll = false;
+                }
+                return (
+                    <tr key={idx}>
+                        <td>
+                            <label className="mt-checkbox mt-checkbox-outline">&nbsp;
+                                <Input type="checkbox" name={item._id} onChange={this.handleCheck(item)} checked={item.checked || false}/>
+                                <span></span>
+                            </label>
+                        </td>
+                        <td>{item.name}</td>
+                        <td>{item.total}</td>
+                        <td>{this.typeRound(item.filter)}</td>
+                        <td><a onClick={this.showHideForm(item, true)}><i className="pointer fa fa-edit"></i></a></td>
+                    </tr>
+                )
+            })
         }
         return (
             <>
@@ -148,9 +184,9 @@ class ListCurrencyComponent extends Component {
                                         <span></span>
                                     </label>
                                 </th>
-                                <th className={"user_fn"}>{t('Name')}</th>
-                                <th className={"user_un"}>{t('Số công thức')}</th>
-                                <th className={"user_sts"}>{t('Round')}</th>
+                                <th className={"caption-subject font-red"}>{t('Name')}</th>
+                                <th className={"caption-subject font-red"}>{t('Số công thức')}</th>
+                                <th className={"caption-subject font-red"}>{t('Round')}</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -160,6 +196,20 @@ class ListCurrencyComponent extends Component {
                     </Table>
                 </div>
                 <EditForm isOpen={this.state.isOpen} showHideForm={this.showHideForm} item={this.state.itemSelected}/>
+                <Modal isOpen={this.state.isOpenModalConfirm} toggle={() => this.toggleCloseModalConfirm()}>
+                    <ModalHeader toggle={() => this.toggleCloseModalConfirm()} className="text-uppercase">
+                        <strong>
+                            <TransComponent i18nKey="xac nhan"/>
+                        </strong>
+                    </ModalHeader>
+                    <ModalBody>
+                        <TransComponent i18nKey={this.state.message}/>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button className="bg-red font-white" onClick={this.handleConfirmModal}><TransComponent i18nKey="Confirm"/></Button>
+                        <Button color="secondary" onClick={() => this.toggleCloseModalConfirm()}><TransComponent i18nKey="Cancel"/></Button>
+                    </ModalFooter>
+                </Modal>
             </>
         );
 
@@ -174,7 +224,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        saveCurrencyConfig: (post) => dispatch(saveCurrencyConfig(post))
+        saveCurrencyConfig: (post) => dispatch(saveCurrencyConfig(post)),
+        getCurrencyConfig: () => dispatch(getCurrencyConfig()),
     };
 };
 
