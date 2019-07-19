@@ -147,26 +147,6 @@ class ListCurrencyComponent extends Component {
         const { t } = this.props;
         if (this.state.currencyList) {
             xhtml = this.state.currencyList.map((item, idx) => {
-<<<<<<< HEAD
-                        if (checkAll && !item.checked) {
-                            checkAll = false;
-                        }
-                        return (
-                            <tr key={idx}>
-                                <td>
-                                    <label className="mt-checkbox mt-checkbox-outline">&nbsp;
-                                        <Input type="checkbox" name={item._id} onChange={this.handleCheck(item)} checked={item.checked || false}/>
-                                        <span></span>
-                                    </label>
-                                </td>
-                                <td>{item.name}</td>
-                                <td>{item.total}</td>
-                                <td>{this.typeRound(item.filter)}</td>
-                                <td><a href="#/" onClick={this.showHideForm(item, true)}><i className="pointer fa fa-edit"></i></a></td>
-                            </tr>
-                        )
-                    })
-=======
                 if (checkAll && !item.checked) {
                     checkAll = false;
                 }
@@ -185,7 +165,6 @@ class ListCurrencyComponent extends Component {
                     </tr>
                 )
             })
->>>>>>> 5e6bd0161a7b943bbca2d610d54df588758af433
         }
         return (
             <>
