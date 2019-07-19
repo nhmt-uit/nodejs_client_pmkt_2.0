@@ -108,7 +108,7 @@ class ReportStatisticContainer extends Component {
         const roles = CookieService.get('roles');
         var cycleName;
         if(itemActive.name){
-            cycleName = itemActive.name.split('/').join('@')
+            cycleName = encodeURIComponent(itemActive.name)
         }
         return (
             <div className={`tab-pane ${classActive}`} id={`tab_${type}`}>
