@@ -26,45 +26,55 @@ class AccountListContainer extends Component {
     filterAccountByBook(lstAccount, id) {
         const keySearch = this.state.keySearch.toLowerCase().trim();
         const result = [];
+        lstAccount = _cloneDeep(lstAccount);
+        lstAccount = lstAccount.filter( function findChild(item) {
+            if (item.acc_name.includes(keySearch)) return true
+            if (item.child) {
+                return (item.child = item.child.filter(findChild)).length
+            }
+        })
 
-        const searchRecursive = (lstChild, lstAccMatch = {}, idParent) => {
-            let isMatch = false;
+        console.log(lstAccount)
+        return lstAccount
 
-            lstChild = _cloneDeep(lstChild);
+        // const searchRecursive = (lstChild, lstAccMatch = {}, idParent) => {
+        //     let isMatch = false;
 
-            lstChild.forEach(item => {
-                item = item || {};
+        //     lstChild = _cloneDeep(lstChild);
 
-                if (!item.acc_parent_id) idParent = item.id;
+        //     lstChild.forEach(item => {
+        //         item = item || {};
 
-                const accName = (item.acc_name || '').toLowerCase().trim();
+        //         if (!item.acc_parent_id) idParent = item.id;
 
-                if (accName.indexOf(keySearch) !== -1) {
-                    isMatch = true;
+        //         const accName = (item.acc_name || '').toLowerCase().trim();
 
-                    lstAccMatch[idParent] = lstAccMatch[idParent] || [];
-                    lstAccMatch[idParent].push(item);
-                }
+        //         if (accName.indexOf(keySearch) !== -1) {
+        //             isMatch = true;
 
-                if (!isMatch && item.child && item.child.length) return searchRecursive(item.child, lstAccMatch, idParent);
-            });
+        //             lstAccMatch[idParent] = lstAccMatch[idParent] || [];
+        //             lstAccMatch[idParent].push(item);
+        //         }
 
-            return lstAccMatch;
-        };
+        //         if (!isMatch && item.child && item.child.length) return searchRecursive(item.child, lstAccMatch, idParent);
+        //     });
 
-        let resultFilter = id === 'all' ? lstAccount : lstAccount.filter(account => account.book_id === id);
+        //     return lstAccMatch;
+        // };
 
-        if (keySearch) {
-            const lstAccMatch = searchRecursive(resultFilter);
+        // let resultFilter = id === 'all' ? lstAccount : lstAccount.filter(account => account.book_id === id);
 
-            return Object.entries(lstAccMatch).map(acc => {
-                const parentItem = resultFilter.find(item => item.id === acc[0]);
+        // if (keySearch) {
+        //     const lstAccMatch = searchRecursive(resultFilter);
 
-                return this.findParent(_cloneDeep(parentItem), acc[1], this._mapAccountList(_cloneDeep(resultFilter)));
-            });
-        }
+        //     return Object.entries(lstAccMatch).map(acc => {
+        //         const parentItem = resultFilter.find(item => item.id === acc[0]);
 
-        return keySearch ? result : resultFilter;
+        //         return this.findParent(_cloneDeep(parentItem), acc[1], this._mapAccountList(_cloneDeep(resultFilter)));
+        //     });
+        // }
+
+        // return keySearch ? result : resultFilter;
     }
 
     _mapAccountList(lstAccount) {

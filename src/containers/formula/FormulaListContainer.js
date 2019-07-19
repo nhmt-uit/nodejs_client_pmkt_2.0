@@ -513,7 +513,7 @@ class FormulaListContainer extends Component {
                 { isFetching && !this.state.isOpenAccountModal ? <LoadingComponent /> : null }
                 <button onClick={_ => this.handleToggleNewModal()} className="btn btn-danger btn-add-formula"><TransComponent i18nKey="Add new" /></button>
                 <div className="portlet-title">
-                    <div className="caption font-red-sunglo bold uppercase font-size-15"><TransComponent i18nKey="Formula list" /></div>
+                    <div className="caption bold uppercase font-size-15"><TransComponent i18nKey="Formula list" /></div>
                     <div className="actions">
                         <div className="form-inline">
                             <div className="form-group">

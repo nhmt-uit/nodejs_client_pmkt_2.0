@@ -4,7 +4,7 @@ import {connect} from "react-redux";
 import {reduxForm} from "redux-form";
 
 import {withTranslation} from "react-i18next";
-import {TransComponent} from 'my-components'
+import {TransComponent, LoadingComponent} from 'my-components'
 
 import { getReportDetail} from "my-actions/report/ReportDetailAction";
 import {isEmpty, keyBy, sortBy} from "lodash";
@@ -23,7 +23,9 @@ class ReportDetail extends Component {
         const username = AuthService.getUsername();
         var DATA = this.props.reportDetail.payload;
         if(isEmpty(DATA)){
-            return null;
+            return (
+                <div><LoadingComponent /></div>
+            );
         }
         var List = DATA.res.data;
         List = Object.entries(List);
@@ -33,6 +35,9 @@ class ReportDetail extends Component {
         var arr = [];
         var DV_Tiente = DATA.res.currencyMap;
         var DV_Tiente_Map = keyBy(DV_Tiente, 'dv_tien_te_id')
+
+        var cycle_name = window.location.pathname.split('/')[5];
+        var cycleName = cycle_name.split('@').join('/')
 
         List.forEach(function (items, index) {
             index = index + 1;
@@ -143,6 +148,7 @@ class ReportDetail extends Component {
                 <table className="table table-striped table-bordered table-hover dataTable no-footer dtr-inline">
                     <thead>
                         <tr role="row">
+                            <th className="caption-subject font-red text-center bold uppercase"><TransComponent i18nKey="cycle"/></th>
                             <th className="caption-subject font-red text-center bold uppercase"> # </th>
                             <th className="caption-subject font-red text-center bold uppercase"><TransComponent i18nKey="id pmkt"/></th>
                             <th className="caption-subject font-red text-center bold uppercase"><TransComponent i18nKey="Member"/></th>
@@ -161,6 +167,7 @@ class ReportDetail extends Component {
                         arr.length ?
                         arr.map(function (item, index) {
                             return <tr key={index}>
+                                <td className="text-center"> {cycleName} </td>
                                 <td className="text-center"> {item.index} </td>
                                 <td className="text-center font-dark uppercase"> {username} </td>
                                 <td className="text-center font-dark uppercase"> {item.member_name} </td>
