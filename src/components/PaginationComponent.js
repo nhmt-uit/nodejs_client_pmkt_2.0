@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import Proptypes from 'prop-types';
 
 import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';

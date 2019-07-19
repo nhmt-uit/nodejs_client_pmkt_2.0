@@ -66,7 +66,6 @@ class FormSubUserContainer extends Component {
             reset_pass_2: _get(this.props.initialValues, 'reset_pass_2', false),
             changePassword: _get(this.props.initialValues, 'change_pass', false),
         }
-        console.log(post)
         this.props.createMemberSub(post)
             .then(() => {
                 this.props.getMemberSub()

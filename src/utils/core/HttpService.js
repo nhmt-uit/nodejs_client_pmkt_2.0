@@ -4,6 +4,7 @@ import qs from 'qs';
 
 import { Helpers } from 'my-utils';
 import CookieService from 'my-utils/core/CookieService';
+import { AppConfig } from 'my-constants';
 
 class HttpService {
     constructor() {
@@ -39,7 +40,9 @@ class HttpService {
         return this.service.get(path, {
             params: queryParams,
             cancelToken: cancelToken
-        });
+        }).catch(error => {
+            return this.refreshToken(error)
+        })
     };
 
     //Create request with method post
@@ -50,7 +53,9 @@ class HttpService {
         }
 
         //Convert Object to form data
-        return this.service.post(path, qs.stringify(payload, { indices: false, skipNulls: false }), { cancelToken: cancelToken });
+        return this.service.post(path, qs.stringify(payload, { indices: false, skipNulls: false }), { cancelToken: cancelToken }).catch(error => {
+            return this.refreshToken(error)
+        })
     };
 
     //Create request with method put
@@ -59,7 +64,9 @@ class HttpService {
         if(_isEmpty(cancelToken)){
             cancelToken = this.getCancelToken();
         }
-        return this.service.put(path, payload, { cancelToken: cancelToken });
+        return this.service.put(path, payload, { cancelToken: cancelToken }).catch(error => {
+            return this.refreshToken(error)
+        })
     };
 
     //Create request with method delete
@@ -72,7 +79,9 @@ class HttpService {
         return this.service.delete(path, {
             params: queryParams,
             cancelToken: cancelToken
-        });
+        }).catch(error => {
+            return this.refreshToken(error)
+        })
     };
 
     //Set JWT Token
@@ -98,12 +107,35 @@ class HttpService {
         return data;
     };
 
+    refreshToken = params => {
+        let responstStatus = _get(params, 'response.status')
+        // Incase Expired Token
+        if (responstStatus === 401) {
+            const payload = {
+                client_secret : AppConfig.API_CLIENT_SECRET,
+                client_id: 1,
+                grant_type: "refresh_token",
+                refresh_token: CookieService.get('refresh_token'),
+            };
+            return this.service.post(`${AppConfig.API_URL}/oauth2/token`,  qs.stringify(payload, { indices: false, skipNulls: false })).then(res => {
+                CookieService.set('access_token', res.access_token);
+                CookieService.set('expires_in', res.expires_in);
+                CookieService.set('refresh_token', res.refresh_token);
+                CookieService.set('token_type', res.token_type);
+
+                const payload_req = params.response.config
+                payload_req.headers['Authorization'] = `Bearer ${res.access_token}`;
+                return this.service.request(payload_req)
+            })
+        }
+        throw params
+    }
+
     //Handle when request fail
     handleError = error => {
-        // Helpers.hideLoading();
         let responstStatus = _get(error, 'response.status')
-		const pathname = window.location.pathname;
-        if ( (responstStatus === 401 || responstStatus === 400) && !pathname.match(/\/auth\/login/i) ) {
+        const pathname = window.location.pathname;
+        if(responstStatus === 400 && !pathname.match(/\/auth\/login/i) ) {
             CookieService.removeAll()
             window.history.pushState(null, null, '/auth/login')
             window.location.reload()

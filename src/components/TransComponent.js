@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { withTranslation } from 'react-i18next'
 
 class TransComponent extends Component {
@@ -9,9 +9,7 @@ class TransComponent extends Component {
         
         try {
             keyLower = i18nKey.toLowerCase()
-        } catch (e) {
-            console.log(e)
-        }
+        } catch (e) { }
         return (
             t(keyLower, i18nObj)
         );

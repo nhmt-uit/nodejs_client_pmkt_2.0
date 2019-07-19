@@ -15,6 +15,14 @@ class FormFormulaGroupContainer extends Component {
     componentWillMount() {
         // Init Default Form Value
         this.handleInitialValue()
+        const {formType, item } = this.props;
+        if(formType === 'update'){
+            this.props.initialize({
+                ...this.props.initialValues,
+                name: item.name,
+                id: item.id,
+            })
+        }
     }
 
     handleInitialValue = _ =>{
@@ -24,8 +32,17 @@ class FormFormulaGroupContainer extends Component {
     }
 
     handleSubmit = e => {
-        const payload = {
-            name: _get(this.props.initialValues, 'name'),
+        var id = _get(this.props.initialValues, 'id', '')
+        var payload = {}
+        if(id){
+            payload = {
+                name: _get(this.props.initialValues, 'name').toUpperCase(),
+                id: _get(this.props.initialValues, 'id', '')
+            }
+        } else {
+            payload = {
+                name: _get(this.props.initialValues, 'name'),
+            }
         }
         this.props.saveFormulaGroupDetail(payload)
     }

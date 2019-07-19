@@ -4,19 +4,12 @@ import {connect} from "react-redux";
 
 import {TransComponent} from 'my-components'
 
-import { createMemberSub, getMemberSub, toggleModalMemberSub, getSuffixesMember} from 'my-actions/account_sub/AccountSubAction'
+import { toggleModalMemberSub } from 'my-actions/account_sub/AccountSubAction'
 import ModalFormCreateSubUserContainer from './ModalFormCreateSubUserContainer'
 
 class CreateSubUserContainer extends Component {
-    constructor(props){
-        super(props)
-        this.state = {
-            isOpenModal: false,
-        }
-    }
 
     render() {
-        const { t }  = this.props;
         return (
             <div className="col-md-12">
                 <div className="form-group text-right">
@@ -39,9 +32,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return{
-        createMemberSub: post => dispatch(createMemberSub(post)),
-        getMemberSub: params => {dispatch(getMemberSub(params))},
-        getSuffixesMember: params => dispatch(getSuffixesMember(params)),
         toggleModalMemberSub:  params => dispatch(toggleModalMemberSub(params)),
     }
 };

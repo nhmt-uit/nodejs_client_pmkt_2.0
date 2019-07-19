@@ -9,14 +9,15 @@ class InfoUserContainer extends Component {
         const username = AuthService.getUsername();
         const expires = AuthService.getExpires();
         const status = CookieService.get("status");
+        const roles = CookieService.get("roles");
 
         return (
             <div className="col-md-4 hide-on-mobile" style={{paddingTop: "10px", fontSize: '12px'}}>
                 <div className="font-white"><span><TransComponent i18nKey="hello: " /> </span><span> {username} </span></div>
                 {
-                    Number(status) === 1 ?
+                    Number(status) === 0 || (Number(roles) === 11 || Number(roles) === 12 ) ?
+                        null :
                         <div className="font-white"><span><TransComponent i18nKey="expires day: " /> </span><span> {expires} </span></div>
-                        : null
                 }
             </div>
         );

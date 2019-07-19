@@ -4,7 +4,7 @@ import { TransComponent } from 'my-components'
 import ButtonBackTransaction from "my-containers/report/transaction/ButtonBackTransaction";
 
 
-class TransactionPage extends React.Component{
+class TransactionPage extends Component{
     constructor(props) {
         super(props);
         this.state = {

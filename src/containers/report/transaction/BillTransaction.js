@@ -187,7 +187,7 @@ class BillTransaction extends Component {
         return (
             <div className="portlet light bordered">
                 <div className="portlet-title">
-                    <div className="caption">
+                    <div className="caption font-red-sunglo">
                         <i className="icon-social-dribbble font-green hide"></i>
                         <span className="caption-subject font-dark bold">
                             <i className="fa fa-calculator" />&nbsp;&nbsp;

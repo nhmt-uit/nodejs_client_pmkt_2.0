@@ -214,7 +214,7 @@ class CreateTransaction extends Component {
                                 placeholder={t("-- select member --")}
                             />
                             <span className="input-group-btn">
-                                <button className="btn green" type="button" onClick={_ => this.props.toggleModalMember()}><i className="fa fa-plus"/></button>
+                                <button className="btn bg-red-sunglo" type="button" onClick={_ => this.props.toggleModalMember()}><i className="fa fa-plus font-white"/></button>
                             </span>
                         </div>
                         <Field name="member" component={renderError}/>

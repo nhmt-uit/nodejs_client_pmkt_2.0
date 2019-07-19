@@ -5,6 +5,7 @@ html {
 @media (min-width: 992px) {
   .page-content-wrapper .page-content {
       margin-left: 195px;
+      min-height: 864px !important;
   }
   .page-sidebar {
     width: 195px;
@@ -252,7 +253,7 @@ h5.modal-title {font-size: 16px; font-weight: bold;}
     right: 14px;
     bottom: 6px;
     font-size: 35px;
-    color: #dddddd;
+    color: #ddddddbd;
 }
 
 .tab-accountant::before{
@@ -262,7 +263,7 @@ h5.modal-title {font-size: 16px; font-weight: bold;}
     right: 14px;
     bottom: 6px;
     font-size: 35px;
-    color: #dddddd;
+    color: #ddddddbd;
 }
 
 .display-block {

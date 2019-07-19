@@ -1,6 +1,3 @@
-import uuidv4 from 'uuid/v4'
-import { map as _map, isEmpty as _isEmpty, get as _get, uniq as _uniq, difference as _difference, cloneDeep as _cloneDeep, has as _has } from 'lodash'
-
 import { AccountantAssignFormulaActionType } from 'my-constants/action-types'
 
 let defaultState = {

@@ -20,10 +20,22 @@ export const getFormulaGroup = () => {
 
 export const delFormulaGroup = (payload) => {
     return (dispatch) => {
-        return FormulaGroupService.delFormulaGroup(payload).then(res => {
+        return FormulaGroupService.delFormulaGroup(payload).then( res => {
 
             dispatch({
                 type: FormulaGroupActionType.DEL_FORMULA_GROUP,
+            })
+        })
+    }
+}
+
+
+export const delFormulaGroupDetail = (payload) => {
+    return (dispatch) => {
+        return FormulaGroupService.delFormulaGroupDetail(payload).then(res => {
+
+            dispatch({
+                type: FormulaGroupActionType.DEL_FORMULA_GROUP_DETAIL,
             })
         })
     }
@@ -154,4 +166,11 @@ export const toggleModalDeleteFormulaByFormulaGroup = (params) => {
     }
 }
 
+export const toggleModalEditFormulaGroup = (params) => {
+    return (dispatch) => {
+        dispatch({
+            type: FormulaGroupActionType.FORMULA_GROUP_TOGGLE_MODAL_EDIT_FORMULA,
+        })
+    }
+}
 

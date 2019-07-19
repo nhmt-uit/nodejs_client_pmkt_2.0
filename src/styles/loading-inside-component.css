@@ -12,7 +12,7 @@
   display: block;
   position: absolute;
   background: #ffffff73;
-  z-index: 9999;
+  z-index: 200;
 }
 .wrap-loader-inside-component .loading {
   position: absolute;
