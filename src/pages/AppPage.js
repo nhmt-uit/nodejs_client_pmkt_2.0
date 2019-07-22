@@ -18,8 +18,10 @@ const RenderComponent = () => {
 	const isLogin = CookieService.get("isLogin");
 	const isCheckSecure = CookieService.get('isCheckSecure');
 	const needChangeSecurePassword = CookieService.get('needChangeSecurePassword');
+	const byPassDashboard = CookieService.get('byPassDashboard');
 
-	if (!Number(isLogin) || !Number(isCheckSecure) || Number(needChangeSecurePassword)) {
+	// if (!Number(isLogin) || !Number(isCheckSecure) || Number(needChangeSecurePassword)) {
+	if (!Number(byPassDashboard)) {
 		component = <AuthenticationLayout/>;
 	}
 
@@ -33,7 +35,16 @@ class AppPage extends BaseComponent {
 		this.props.changeLanguage(AppConfig.DEFAULT_LANG);
 
 		CookieService.addChangeListener(obj => {
-			if ((obj.name === "isLogin"  && !obj.value) || (obj.name === "byPassDashboard" && obj.value) ) this.forceUpdate()
+			console.log(obj)
+			if (obj.name === "byPassDashboard") {
+				console.log(obj.value)
+				if(typeof obj.value === 'undefined' || !Number(obj.value)) {
+					this.forceUpdate()
+				} else {
+					
+				}
+				
+			}
 		});
 
 		const isLogin = CookieService.get("isLogin");
