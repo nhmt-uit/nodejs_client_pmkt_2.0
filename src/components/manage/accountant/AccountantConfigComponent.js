@@ -19,15 +19,73 @@ class AccountantConfigComponent extends Component {
         }
     }
 
-    handleChangeCheckAllBanker = () => {
+    handleChangeCheckAllSportbookCasino = (item) => e => {
+        const { accountant } = this.state;
+        var checked = e.target.checked
+        accountant.forEach( item_banker => {
+            if(item.banker === item_banker.banker){
+                item_banker.child.forEach(item_child => {
+                    item_child.flag_type = checked
+                })
+            }
+        })
+        this.setState({
+            accountant: accountant
+        })
+    }
 
+    handleChangeCheckAllRadioAll = (item) => e => {
+        const { accountant } = this.state;
+        var checked = e.target.checked
+        console.log(checked)
+        accountant.forEach( item_banker => {
+            if(item.banker === item_banker.banker){
+                item_banker.child.forEach(item_child => {
+                    item_child.flag_type = !checked
+                })
+            }
+        })
+        this.setState({
+            accountant: accountant
+        })
+    }
+
+    handleChangeCheckAllBanker = (item) => e => {
+        const { accountant } = this.state;
+        var checked = e.target.checked
+        accountant.forEach( item_banker => {
+            if(item.banker === item_banker.banker){
+                item_banker.child.forEach(item_child => {
+                    item_child.checked = checked
+                })
+            }
+        })
+        this.setState({
+            accountant: accountant
+        })
     }
 
     handleCheckType = (item_child) => e => {
+        const { accountant } = this.state;
+        accountant.forEach(( item => {
+            if(item.banker === item_child.banker){
+                item.child.forEach( child => {
+                    if(child.id === item_child.id){
+                        if(child.flag_type === 1 || child.flag_type === true){
+                            child.flag_type = false
+                        } else {
+                            child.flag_type = true
+                        }
+                    }
+                })
+            }
+        }))
+        this.setState({
+            accountant: accountant
+        })
     }
 
     handleChangeCheckBoxChild = (item_child) => e => {
-        console.log(item_child)
         const { accountant } = this.state;
         var checked = e.target.checked
         accountant.forEach( item => {
@@ -39,7 +97,6 @@ class AccountantConfigComponent extends Component {
                 })
             }
         })
-        console.log(accountant)
         this.setState({
             accountant: accountant
         })
@@ -48,23 +105,28 @@ class AccountantConfigComponent extends Component {
     render() {
         const { accountant } = this.state;
         var tbody;
-        var checkAllBanker, checkAllRadioAll, checkAllSportbooksCasino;
-        if(accountant){
-            accountant.forEach( item => {
-                var arr = item.child;
-                checkAllBanker = arr.every(function (sub) {
-                    return sub.checked === 1
-                })
-                checkAllRadioAll = arr.every(function (sub) {
-                    return sub.flag_type === 0
-                })
-                checkAllSportbooksCasino = arr.every(function (sub) {
-                    return sub.flag_type === 1
-                })
-            })
-        }
+        var checkAllBanker = true, checkAllRadioAll = true, checkAllSportbooksCasino = true;
         if(accountant){
             tbody = accountant.map( item => {
+                var arr = item.child;
+                checkAllBanker = arr.every(function (sub) {
+                    if(sub.checked === 1 || sub.checked === true){
+                        return true
+                    }
+                    return false
+                })
+                checkAllRadioAll = arr.every(function (sub) {
+                    if(sub.flag_type === 0 || sub.flag_type === false){
+                        return true
+                    }
+                    return false
+                })
+                checkAllSportbooksCasino = arr.every(function (sub) {
+                    if(sub.flag_type === 1 || sub.flag_type === true){
+                        return true
+                    }
+                    return false
+                })
                 return(
                     <div key={item.banker} className="col-md-6">
                         <div className="portlet box grey-silver position-relative">
@@ -74,7 +136,7 @@ class AccountantConfigComponent extends Component {
                                         <Input
                                             type="checkbox"
                                             checked={checkAllBanker}
-                                            onChange={this.handleChangeCheckAllBanker()}
+                                            onChange={this.handleChangeCheckAllBanker(item)}
                                         />
                                         {item.banker}
                                         <span></span>
@@ -92,7 +154,7 @@ class AccountantConfigComponent extends Component {
                                                 <Input
                                                     type="checkbox"
                                                     checked={checkAllRadioAll}
-                                                    onChange={this.handleChangeCheckAllBanker()}
+                                                    onChange={this.handleChangeCheckAllRadioAll(item)}
                                                 />
                                                 <TransComponent i18nKey="All"/>
                                                 <span></span>
@@ -103,7 +165,7 @@ class AccountantConfigComponent extends Component {
                                                     <Input
                                                         type="checkbox"
                                                         checked={checkAllRadioAll}
-                                                        onChange={this.handleChangeCheckAllBanker()}
+                                                        onChange={this.handleChangeCheckAllRadioAll(item)}
                                                     />
                                                     <TransComponent i18nKey="All"/>
                                                     <span></span>
@@ -112,7 +174,7 @@ class AccountantConfigComponent extends Component {
                                                     <Input
                                                         type="checkbox"
                                                         checked={checkAllSportbooksCasino}
-                                                        onChange={this.handleChangeCheckAllBanker()}
+                                                        onChange={this.handleChangeCheckAllSportbookCasino(item)}
                                                     />
                                                     <TransComponent i18nKey="All type by type"/>
                                                     <span></span>
@@ -125,8 +187,8 @@ class AccountantConfigComponent extends Component {
                                 {
                                     item.child.map( item_child => {
                                         var checkedBanker = (item_child.checked === 1 || item_child.checked === true) ? 'checked' : '';
-                                        var checkedItemAll = item_child.flag_type === 0 ? 'checked' : '';
-                                        var checkedSportbooksCasino = item_child.flag_type === 1 ? 'checked' : '';
+                                        var checkedItemAll = (item_child.flag_type === 0 || item_child.flag_type === false)? 'checked' : '';
+                                        var checkedSportbooksCasino = (item_child.flag_type === 1 || item_child.flag_type === true) ? 'checked' : '';
                                         var checkNew789 = item_child.flag_type === 2 ? 'checked' : '';
                                         return(
                                             <table className="table table-condensed table-hover" key={item_child.acc_name}>
@@ -333,7 +395,9 @@ class AccountantConfigComponent extends Component {
                     </div>
                     <div className="col-md-6 text-right">
                         <label className="mt-checkbox mt-checkbox-outline">
-                            <Input type="checkbox"/>
+                            <Input
+                                type="checkbox"
+                            />
                             <TransComponent i18nKey="Select All"/>
                             <span></span>
                         </label>
