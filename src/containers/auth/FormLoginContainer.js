@@ -33,25 +33,37 @@ class FormLoginContainer extends React.Component {
         if (e.key === 'Enter' && e.shiftKey === false) {
             return this.handleSubmit(e);
         }
-    }
+    };
 
     render() {
         var password = _get(this.props.initialValues, 'password');
         var username = _get(this.props.initialValues, 'username');
         var onSubmit = false;
+
         if(password && username){
             onSubmit = true
         }
 
         const { auth } = this.props;
-        if (auth.login_status) {
+        if (Number(CookieService.get('isLogin')) && auth.login_status) {
             $('div.alert').fadeIn();
 
-            const redirect = CookieService.get('isCheckSecure')
-                ? RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'secure' })
-                : CookieService.get('needChangeSecurePassword')
-                    ? RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'reset-secure-password' })
-                    : RoutesService.getPath('ADMIN', 'DASHBOARD');
+            const redirect = CookieService.get('isReset') === '0'
+                ? RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'reset' })
+                : CookieService.get('isCheckSecure') === '0'
+                    ? RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'secure' })
+                    : CookieService.get('needChangeSecurePassword') === '1'
+                        ? RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'reset-secure-password' })
+                        : RoutesService.getPath('ADMIN', 'DASHBOARD');
+
+            if (redirect.indexOf('dashboard')) {
+                CookieService.set('byPassDashboard', '1');
+
+                window.location.href = redirect;
+
+                return;
+            }
+
             return  <Redirect to={redirect} />
         } else if (auth.login_status === false && _get(this.props, 'auth.errors.error_description', null)) {
             $('div.alert').fadeIn();

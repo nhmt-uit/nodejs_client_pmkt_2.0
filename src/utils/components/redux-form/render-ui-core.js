@@ -1,4 +1,5 @@
 import React from 'react';
+import { TransComponent } from 'my-components';
 
 export const renderTextField = ({
     input: { value, onChange, onBlur, onFocus },
@@ -18,11 +19,11 @@ export const renderTextField = ({
 
     return (
         <div className={`form-group ${(touched && (error || warning)) ? 'has-error' : ''}`} style={{ display: 'flex' }}>
-           <label className="col-md-3 control-label">{label}</label>
-           <div className="col-md-9">
-                <input  {...properties} />
-               {touched && ((error && <span className="help-block">{error}</span>) || (warning && <span className="help-block">{warning}</span>))}
-            </div>
+            { label ? <label className="col-md-3 control-label">{label}</label> : null }
+           <div style={label ? {} : { paddingLeft: 0, paddingRight: 0 }} className={`col-md-${ label ? '9' : '12' }`}>
+                <input  {...properties} placeholder={otherProps.placeholder} />
+               {touched && ((error && <span className="help-block"><TransComponent i18nKey={error} /></span>) || (warning && <span className="help-block"><TransComponent i18nKey={warning} /></span>))}
+           </div>
         </div>
     )
 };

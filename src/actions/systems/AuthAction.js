@@ -84,7 +84,7 @@ export const getSecure = _ => {
                 }
             }).catch(e => {
                 if (e.response.status === 500) {
-                    CookieService.set('isCheckSecure', true);
+                    CookieService.set('isCheckSecure', '1');
 
                     dispatch({
                         type: AuthActionType.AUTH_CHECK_SECURE_SUCCESS,
@@ -108,7 +108,8 @@ export const checkSecure = (secureCode) => {
         return AuthService.checkSecure(secureCode)
             .then(res => {
                 if (res.status && _get(res, 'res.valid', true)) {
-                    CookieService.set('isCheckSecure', true);
+                    CookieService.set('isCheckSecure', '1');
+
                     dispatch({
                         type: AuthActionType.AUTH_CHECK_SECURE_SUCCESS,
                         payload: res,
@@ -116,6 +117,7 @@ export const checkSecure = (secureCode) => {
                 } else {
                     CookieService.remove('isLogin');
                     CookieService.remove('access_token');
+
                     dispatch({
                         type: AuthActionType.AUTH_CHECK_SECURE_FAIL,
                         payload: {

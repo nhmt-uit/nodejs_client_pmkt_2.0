@@ -46,13 +46,9 @@ class AccountDetailItemContainer extends Component {
     _renderTd({ rowSpan, className, content }) {
         const props = {};
 
-        if (rowSpan) {
-            props.rowSpan = rowSpan;
-        }
+        if (rowSpan) props.rowSpan = rowSpan;
 
-        if (className) {
-            props.className = className;
-        }
+        if (className) props.className = className;
 
         return <td { ...props } >{ content }</td>;
     }
@@ -77,13 +73,9 @@ class AccountDetailItemContainer extends Component {
         const { dataItem } = this.props;
         const newState = {};
 
-        if (type === 'member') {
-            newState.memberSelected = value;
-        }
+        if (type === 'member') newState.memberSelected = value;
 
-        if (type === 'formula') {
-            newState.formulaSelected = value;
-        }
+        if (type === 'formula') newState.formulaSelected = value;
 
         this.setState(newState, () => {
             const formulaId = this.state.formulaSelected ? this.state.formulaSelected.value : dataItem.congthucmau_id;
@@ -103,9 +95,7 @@ class AccountDetailItemContainer extends Component {
         formula.label = formula.tenct;
         formula.value = formula.id;
 
-        if (!this.state.isEdit) {
-            return formula.tenct;
-        }
+        if (!this.state.isEdit) return formula.tenct;
 
         return <Select
             onChange={this.handleChangeSelect('formula')}
@@ -125,9 +115,7 @@ class AccountDetailItemContainer extends Component {
         member.label = (member.fullname || '').toUpperCase();
         member.value = member.id;
 
-        if (!this.state.isEdit) {
-            return (member.fullname || '').toUpperCase();
-        }
+        if (!this.state.isEdit) return (member.fullname || '').toUpperCase();
 
         return <Select
             onChange={this.handleChangeSelect('member')}
@@ -157,12 +145,18 @@ class AccountDetailItemContainer extends Component {
 
     render() {
         const { dataItem, lstFormula, lstMember, order } = this.props;
-        const { isOpenModal, isLoadingDelete } = this.state;
+        const { isOpenModal, isLoadingDelete, isEdit, formulaSelected } = this.state;
 
         let subItemIn = null;
         let subItemOut = null;
 
-        const formula = lstFormula.find(item => item.id === (dataItem.congthucmau_id || '')) || {};
+        const formula = lstFormula.find(item =>
+            {
+                const formulaId = isEdit && formulaSelected ? formulaSelected.value : (dataItem.congthucmau_id || '');
+
+                return item.id === formulaId;
+            })
+            || {};
         const member = lstMember.find(item => item.id === (dataItem.user_id || '')) || {};
         const fieldValueLength = formula.field_value ? formula.field_value.length : 1;
         const fieldValue_0 = _get(formula, 'field_value[0]');

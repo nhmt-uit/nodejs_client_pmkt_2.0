@@ -10,22 +10,19 @@ import { savePassword, toggleNotify } from 'my-actions/systems/ChangePasswordAct
 class ChangePasswordContainer extends Component {
     data = [
         {
-            name: 'pwd_current_password',
+            name: 'current_password',
             label: 'Current Password',
             type: 'password',
-            rules: ['requiredCurrentPassword'],
         },
         {
-            name: 'pwd_new_password',
+            name: 'new_password',
             label: 'New Password',
             type: 'password',
-            rules: ['requiredNewPassword', 'passwordValidNewPassword', 'notEqualCurrentPassword'],
         },
         {
             name: 're_new_password',
             label: 'Confirm Password',
             type: 'password',
-            rules: ['confirmNewPassword'],
         }
     ];
 
