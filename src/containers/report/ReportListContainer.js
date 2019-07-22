@@ -68,9 +68,7 @@ class ReportListContainer extends Component {
             });
         }
 
-        if (item.level === 2) {
-            item.child = sortBy(item.child, 'name');
-        }
+        if (item.level === 2) item.child = sortBy(item.child, 'name');
 
         if (item.level === 3) {
             item.child = sortBy(item.child, 'name');
