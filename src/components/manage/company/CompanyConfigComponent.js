@@ -90,8 +90,12 @@ class CompanyConfigComponent extends Component{
     render() {
         const { company } = this.state;
         var tbody;
+        var checkAll = true;
         if(company){
             tbody = company.map( (item) => {
+                if (checkAll && !item.checked) {
+                    checkAll = false;
+                }
                 var url = item.logo.replace(".", "")
                 return(
                     <tr key={item.id} role="row" className="odd">
@@ -132,7 +136,7 @@ class CompanyConfigComponent extends Component{
                     <tr>
                         <th className="text-center">
                             <label className="mt-checkbox mt-checkbox-outline">&nbsp;
-                                <Input type="checkbox" onChange={this.handleCheckAll()}/>
+                                <Input type="checkbox" onChange={this.handleCheckAll()} checked={checkAll}/>
                                 <span></span>
                             </label>
                         </th>
