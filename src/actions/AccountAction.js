@@ -82,11 +82,16 @@ export const toggleModalDeleteAccount = (params) => {
 
 export const saveAccount = (payload) => {
     return (dispatch) => {
+        dispatch({
+            type: AccountActionType.ACCOUNT_SAVE_FORM_DATA,
+            isInitSaveFormData: true
+        })
         AccountService.saveAccount(payload).then(async res => {
             dispatch({
                 type: AccountActionType.ACCOUNT_SAVE_FORM_DATA,
                 formSaveStatus: res.status,
-                formSaveResponse: res.res
+                formSaveResponse: res.res,
+                isInitSaveFormData: false
             })
 
             //Clear Message

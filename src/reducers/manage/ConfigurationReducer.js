@@ -4,6 +4,7 @@ import { get } from 'lodash';
 
 let defaultState = {
     errors: {},
+    saveStatus: {},
     response: {},
     accountant: [],
     company: [],
@@ -29,6 +30,9 @@ const ConfigurationReducer = (state = defaultState, action) => {
 
         case ConfigurationActionType.SAVE_ACCOUNTANT_CONFIG_SUCCESS:
         case ConfigurationActionType.SAVE_COMPANY_CONFIG_SUCCESS:
+            return {...state, saveStatus: action.saveStatus}
+        case ConfigurationActionType.RESET_FORM_SAVE_RESPONSE_COMPANY_CONFIG:
+            return {...state, saveStatus: null}
         case ConfigurationActionType.SAVE_CURRENCY_CONFIG_SUCCESS:
             return {...state, response: get(action.payload, 'res.data', {}), errors: {}};
 

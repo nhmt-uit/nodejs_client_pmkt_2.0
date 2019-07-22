@@ -44,7 +44,7 @@ html {
   padding: 5px !important;
 }
 
-h5.modal-title {font-size: 16px; font-weight: bold;}
+h5.modal-title {font-size: 16px; font-weight: bold; color: #E26A6A!important;}
 
 .fredux-radio-inline {
   display: block !important;
@@ -83,7 +83,7 @@ h5.modal-title {font-size: 16px; font-weight: bold;}
 	border: 1px solid #c2cad8;
 	min-height: 32px;
 }
-.form-group .css-26l3qy-menu {
+.form-group .css-26l3qy-menu, .form-group .css-1hup0q {
 	z-index: 10;
 }
 
@@ -404,6 +404,8 @@ h5.modal-title {font-size: 16px; font-weight: bold;}
 .position-absolute {
   position: absolute;
 }
+
+.overload-hidden { overflow: hidden;}
 
 .btn-money-exchange {
   position: absolute;

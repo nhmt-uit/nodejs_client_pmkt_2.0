@@ -127,6 +127,36 @@ export const saveCurrencyConfig = (post) => {
     }
 };
 
+export const saveCompanyConfig = (post) => {
+    return dispatch => {
+        return ConfigurationService.saveCompanyConfig(post)
+            .then( res => {
+                if(res.status){
+                    dispatch({
+                        type: ConfigurationActionType.SAVE_COMPANY_CONFIG_SUCCESS,
+                        saveStatus: res.status
+                    })
+                } else {
+                    dispatch({
+                        type: ConfigurationActionType.SAVE_COMPANY_CONFIG_FAIL,
+                        payload: {
+                            status: false,
+                            error_description: _get(res, 'res.data.message', '')
+                        },
+                    })
+                }
+            })
+    }
+}
+
+export const resetFormSaveResponse = (params) => {
+    return (dispatch) => {
+        dispatch({
+            type: ConfigurationActionType.RESET_FORM_SAVE_RESPONSE_COMPANY_CONFIG,
+        });
+    }
+}
+
 export const getInitCurrency = () => {
     return dispatch => {
         return ConfigurationService.getInitCurrency()

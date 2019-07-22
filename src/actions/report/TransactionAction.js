@@ -92,6 +92,7 @@ export const getDetailReport = (post) => {
     return(dispatch) => {
         return TransactionService.getDetailReport(post).then(res =>{
             if(res.status){
+                console.log(res.res)
                 const currencyMap = res.res.currencyMap;
                 const result = res.res.result;
                 const total = res.res.total;

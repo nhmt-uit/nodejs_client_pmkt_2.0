@@ -46,17 +46,17 @@ export default class FormulaItemContainer extends Component {
                     <td rowSpan={fieldValueLength}>{ formula.currency_name }</td>
                     <td rowSpan={fieldValueLength}>{
                         formula.giaonhan === 1
-                        ? <TransComponent i18nKey={'Pay'}/> 
+                        ? <TransComponent i18nKey={'Pay'}/>
                         : <TransComponent i18nKey={'Receive'}/>
                     }</td>
-                    <td rowSpan={fieldValueLength} className="text-center">{ formula.format_name }</td>
+                    <td rowSpan={fieldValueLength}>{ formula.format_name }</td>
                     { fieldValElement }
                     <td rowSpan={fieldValueLength} className={"text-center"}>
                         <span onClick={() => this.props.onToggle('account', formula)} className="font-green cursor-pointer">{formula.total_account}</span>
                     </td>
                     <td rowSpan={fieldValueLength} className="text-center">
-                        { 
-                            (formula.total_account && formula.total_account > 0) 
+                        {
+                            (formula.total_account && formula.total_account > 0)
                                 ? <i className="fa fa-exchange font-green cursor-pointer" onClick={() => this.props.onToggle('relink', formula)} />
                                 : null
                         }

@@ -5,7 +5,7 @@ import {connect} from "react-redux";
 import { TabContent, TabPane, Nav, NavItem, NavLink, Card, Button, CardTitle, CardText, Row, Col } from 'reactstrap';
 import classnames from 'classnames';
 import { getAccountantConfig, getCompanyConfig, getCurrencyConfig, getInitCurrency } from 'my-actions/manage/ConfigurationAction';
-import { ListCurrencyComponent } from 'my-components/manage'
+import { ListCurrencyComponent, CompanyConfigComponent } from 'my-components/manage'
 
 class ConfigurationContainer extends Component {
     constructor(props) {
@@ -37,7 +37,7 @@ class ConfigurationContainer extends Component {
         }
     }
     render() {
-        const { t, configuration } = this.props;
+        const { t, configuration, company } = this.props;
         return (
             <div className="config portlet light bordered">
                     <div className="portlet-title">
@@ -78,8 +78,8 @@ class ConfigurationContainer extends Component {
                         </TabPane>
                         <TabPane tabId="2">
                             <Row>
-                                <Col sm="6">
-                                    Company
+                                <Col sm="12">
+                                    <CompanyConfigComponent company={company}/>
                                 </Col>
                             </Row>
                         </TabPane>
@@ -99,6 +99,7 @@ class ConfigurationContainer extends Component {
 const mapStateToProps = state => {
     return {
         configuration: state.ConfigurationReducer,
+        company: state.ConfigurationReducer.company,
     };
 };
 

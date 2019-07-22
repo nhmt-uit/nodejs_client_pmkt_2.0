@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {compose} from "redux";
 import {connect} from "react-redux";
+import { withRouter } from 'react-router-dom'
 import {reduxForm} from "redux-form";
 
 import {withTranslation} from "react-i18next";
@@ -14,17 +15,16 @@ import { AuthService } from 'my-services/systems'
 
 class ReportDetail extends Component {
     componentWillMount() {
-        var chuky_id = window.location.pathname.split('/')[4];
+        const chuky_id = this.props.match.params.chuky_id
         this.props.getReportDetail(chuky_id)
     }
 
     render() {
-        const { t } = this.props;
         const username = AuthService.getUsername();
         var DATA = this.props.reportDetail.payload;
         if(isEmpty(DATA)){
             return (
-                <div><LoadingComponent /></div>
+                <LoadingComponent />
             );
         }
         var List = DATA.res.data;
@@ -36,8 +36,8 @@ class ReportDetail extends Component {
         var DV_Tiente = DATA.res.currencyMap;
         var DV_Tiente_Map = keyBy(DV_Tiente, 'dv_tien_te_id')
 
-        var cycle_name = window.location.pathname.split('/')[5];
-        var cycleName = cycle_name.split('@').join('/')
+        var cycle_name = this.props.match.params.cycle_name
+        var cycleName = decodeURIComponent(cycle_name)
 
         List.forEach(function (items, index) {
             index = index + 1;
@@ -61,10 +61,10 @@ class ReportDetail extends Component {
                         Money = Object.entries(Money);
                         Money.forEach(function (item) {
                             var typeOfMoney = DV_Tiente_Map[item[1].id].dv_tien_te
-                            if (typeOfMoney == 'VND') {
+                            if (typeOfMoney === 'VND') {
                                 VND = item[1].result
                             }
-                            if (typeOfMoney == 'USD') {
+                            if (typeOfMoney === 'USD') {
                                 USD = item[1].result
                             }
 
@@ -91,10 +91,10 @@ class ReportDetail extends Component {
                             Money = Object.entries(Money);
                             Money.forEach(function (item) {
                                 var typeOfMoney = DV_Tiente_Map[item[1].id].dv_tien_te
-                                if (typeOfMoney == 'VND') {
+                                if (typeOfMoney === 'VND') {
                                     VND = item[1].result
                                 }
-                                if (typeOfMoney == 'USD') {
+                                if (typeOfMoney === 'USD') {
                                     USD = item[1].result
                                 }
                             });
@@ -118,10 +118,10 @@ class ReportDetail extends Component {
                                 Money = Object.entries(Money);
                                 Money.forEach(function (item) {
                                     var typeOfMoney = DV_Tiente_Map[item[1].id].dv_tien_te
-                                    if (typeOfMoney == 'VND') {
+                                    if (typeOfMoney === 'VND') {
                                         VND = item[1].result
                                     }
-                                    if (typeOfMoney == 'USD') {
+                                    if (typeOfMoney === 'USD') {
                                         USD = item[1].result
                                     }
                                 })
@@ -214,4 +214,5 @@ export default compose(
     reduxForm({form: 'report_detail'}),
     connect(mapStateToProps, mapDispatchToProps),
     withTranslation(),
+    withRouter,
 )(ReportDetail);

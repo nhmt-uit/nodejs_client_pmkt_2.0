@@ -20,10 +20,10 @@ class CreateFormulaGroupContainer extends Component {
         return (
             <div>
                 <div className="form-group text-right">
-                    <a type="submit" className="btn btn-default red" onClick={() => this.props.toggleModalFormulaGroup()}>
+                    <a href="#/" type="submit" className="btn btn-default red" onClick={() => this.props.toggleModalFormulaGroup()}>
                         <TransComponent i18nKey="Add new"/>
                     </a>
-                    <a type="submit" className="btn btn-default red" onClick={() => this.props.toggleModalAssignFormulaGroup()}>
+                    <a href="#/" type="submit" className="btn btn-default red" onClick={() => this.props.toggleModalAssignFormulaGroup()}>
                         <TransComponent i18nKey="Add Formula to group"/>
                     </a>
                 </div>

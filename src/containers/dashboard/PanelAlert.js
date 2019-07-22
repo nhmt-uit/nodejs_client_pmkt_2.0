@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { get as _get, isEmpty as _isEmpty} from 'lodash'
+import { isEmpty as _isEmpty} from 'lodash'
 
 import { TransComponent } from 'my-components'
 import AlertService from 'my-services/systems/AlertService'

@@ -6,7 +6,7 @@ import { Field, reduxForm } from 'redux-form';
 import { get as _get, isEmpty as _isEmpty, isEqual as _isEqual } from 'lodash'
 
 import { requestInitFormData, saveAccount, resetFormSaveResponse } from 'my-actions/AccountAction'
-import { TransComponent } from 'my-components'
+import { TransComponent, LoadingComponent } from 'my-components'
 import { renderSelectField, renderError, renderFormatGroupLabel } from 'my-utils/components/redux-form/render-form'
 import { AccountService } from 'my-services/account'
 
@@ -101,7 +101,7 @@ class FormAccountContainer extends Component {
 
 
     render() {
-        const {optBanker, formType} = this.props
+        const {optBanker, formType, isInitSaveFormData} = this.props
         const company = _get(this.props.initialValues, 'company')
         const optAccountBelong = [{value: "root", label: <TransComponent i18nKey="Is root account" toUpperCase />}].concat(this.props.optAccountBelong.filter(item => item.value === _get(company, 'value')))
 
@@ -109,7 +109,8 @@ class FormAccountContainer extends Component {
         const isDisabledBasedOneAccountBelong = _get(belong_account, 'value') === "root" ? false : true
 
         return (
-            <form name="form_account">
+            <form name="form_account" className="position-relative overload-hidden">
+                { isInitSaveFormData ? <LoadingComponent/> : null }
                 <div className="form-body">
                     {this.renderAlert()}
                     <div className="form-group">
@@ -282,6 +283,9 @@ const validate = values => {
 
 const mapStateToProps = state => {
     return {
+        //Handle Loading
+        isInitSaveFormData : state.AccountReducer.isInitSaveFormData,
+
         initialValues: _get(state, 'form.form_account.values', {}),
         initFormData : state.AccountReducer.initFormData,
         optBanker : state.AccountReducer.optBanker,

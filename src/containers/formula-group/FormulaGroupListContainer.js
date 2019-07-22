@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { TransComponent, LoadingComponent } from 'my-components';
+import { TransComponent } from 'my-components';
 import {get as _get} from "lodash";
 import {compose} from "redux/es/redux";
 import {connect} from "react-redux";
