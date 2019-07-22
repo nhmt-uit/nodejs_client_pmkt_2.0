@@ -1,5 +1,5 @@
 import DashboardPage from 'my-pages/DashboardPage';
-import { LoginPage, SecureCodePage, ResetSecurePasswordPage } from 'my-pages/auth';
+import { LoginPage, SecureCodePage, ResetSecurePasswordPage, ResetPage } from 'my-pages/auth';
 import { ChangePasswordPage, ChangePassword2Page, ChangeSecureCodePage } from 'my-pages/navigation';
 
 import RoutesService from './RoutesService'
@@ -16,7 +16,7 @@ import { FormulaPage } from 'my-pages/formula';
 import FormulaGroupPage from "../pages/formula-group/FormulaGroupPage";
 import { MemberPage } from "../pages/member";
 
-const Routes = [
+const CommonRoutes = [
 	{
 		path: "/",
 		exact: true,
@@ -39,10 +39,19 @@ const Routes = [
 		component: ResetSecurePasswordPage,
 	},
 	{
+		path: RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'reset' }),
+		exact: true,
+		component: ResetPage,
+	},
+	{
 		path: RoutesService.getPath('ADMIN', 'DASHBOARD'),
 		exact: true,
 		component: DashboardPage,
-	},
+	}
+];
+
+const Routes = [
+	...CommonRoutes,
 	{
 		path: RoutesService.getPath('ADMIN', 'ACCOUNTANT_DASHBOARD'),
 		exact: true,
@@ -151,56 +160,11 @@ const Routes = [
 ];
 
 const RoutesUnActive = [
-	{
-		path: "/",
-		exact: true,
-		component: DashboardPage,
-	},
-	// authentication
-	{
-		path: RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'login' }),
-		exact: true,
-		component: LoginPage,
-	},
-	{
-		path: RoutesService.getPath('ADMIN', 'DASHBOARD'),
-		exact: true,
-		component: DashboardPage,
-	},
-	{
-		path: '*',
-		exact: true,
-		component: DashboardPage,
-	},
+	...CommonRoutes,
 ];
 
 const RoutesRoles11_12 = [
-	{
-		path: "/",
-		exact: true,
-		component: DashboardPage,
-	},
-	// authentication
-	{
-		path: RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'login' }),
-		exact: true,
-		component: LoginPage,
-	},
-	{
-		path: RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'secure' }),
-		exact: true,
-		component: SecureCodePage,
-	},
-	{
-		path: RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'reset-secure-password' }),
-		exact: true,
-		component: ResetSecurePasswordPage,
-	},
-	{
-		path: RoutesService.getPath('ADMIN', 'DASHBOARD'),
-		exact: true,
-		component: DashboardPage,
-	},
+	...CommonRoutes,
 	{
 		path: RoutesService.getPath('ADMIN', 'ACCOUNTANT_DASHBOARD'),
 		exact: true,

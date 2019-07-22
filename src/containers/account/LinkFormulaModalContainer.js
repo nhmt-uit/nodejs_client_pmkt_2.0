@@ -250,21 +250,23 @@ class LinkFormulaModalContainer extends Component {
                         </tr>
                     </thead>
                     {
-                        lstAccountDetail.map((account, index) =>
-                            <AccountDetailItemContainer
-                                key={index}
-                                dataItem={account}
-                                lstFormula={lstFormula}
-                                lstMember={lstMember}
-                                order={index + 1}
-                                onReGetLinkFormulaDetail={this.handleGetLinkFormulaDetail}
-                                onCheckAccount={this.handleChangeLstDelete}
-                                optFormula={this.state.optFormula}
-                                optMember={this.props.optMember}
-                                onChangeLstDetail={this.handleChangeLstDetail}
-                                isSaved={this.state.isSaved}
-                            />
-                        )
+                        lstAccountDetail.length
+                            ? lstAccountDetail.map((account, index) =>
+                                <AccountDetailItemContainer
+                                    key={index}
+                                    dataItem={account}
+                                    lstFormula={lstFormula}
+                                    lstMember={lstMember}
+                                    order={index + 1}
+                                    onReGetLinkFormulaDetail={this.handleGetLinkFormulaDetail}
+                                    onCheckAccount={this.handleChangeLstDelete}
+                                    optFormula={this.state.optFormula}
+                                    optMember={this.props.optMember}
+                                    onChangeLstDetail={this.handleChangeLstDetail}
+                                    isSaved={this.state.isSaved}
+                                />
+                            )
+                            : <tbody><tr><td className="text-center" colSpan={30}><TransComponent i18nKey="Empty data" /></td></tr></tbody>
                     }
                 </table>
             </div>

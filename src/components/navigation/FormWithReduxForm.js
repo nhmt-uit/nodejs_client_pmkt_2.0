@@ -27,46 +27,14 @@ const defaultProps = {
 
 class FormWithReduxForm extends Component {
     handleSubmit = _ => {
-        if (!_get(this.props, 'form.syncErrors', undefined)) {
-            this.props.onSubmitForm(this.props.formValues);
+        this.props.onSubmitForm(this.props.formValues);
 
-            return this.props.reset();
-        }
+        return this.props.reset();
     };
 
-    required = name => value => value ? undefined : <TransComponent i18nKey={`"${name}" is required`} /> ;
-    requiredCurrentPassword = this.required('Current Password');
-    requiredNewPassword = this.required('New Password');
-    requiredConfirmPassword = this.required('Confirm password');
-    requiredCurrentSecureCode = this.required('Current Security Code');
-    requiredNewSecureCode = this.required('New Security Code');
-
-    passwordValid = name => value => (/^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%])[0-9A-Za-z!@#$%]{8,}$/).test(value)
-        ? undefined
-        : <TransComponent i18nKey={`"${name}" fails to match the required pattern: /^(?=.*\\d)(?=.*[a-z])(?=.*[a-z])(?=.*[!@#$%])[0-9a-za-z!@#$%]{{8,}}$/`} />;
-    passwordValidNewPassword = this.passwordValid('new password');
-
-    confirm = (name, refField) => value => _isEqual(value, _get(this.props, `formValues.${refField}`, undefined))
-        ? undefined
-        : <TransComponent i18nKey={`"${name}" must be one of [ref:${refField}]`} />;
-    confirmSecureCode = this.confirm('Confirm Security Code', 'new_security_code');
-    confirmNewPassword = this.confirm('Confirm password', 'new_password');
-    confirmNewPassword2 = this.confirm('Confirm password', 'new_password2');
-
-    numberSecureCode = value => value && isNaN(Number(value)) ? `"New Security Code" fails to match the required pattern: /^([0-9]){{6}}$/` : undefined;
-    maxLength6SecureCode = value => value && ( value.length > 6 || value.length < 6) ? `"New Security Code" length must be at least 6 characters long` : undefined;
-
-    notEqualCurrentPassword = value =>
-        _isEqual(value, _get(this.props, 'formValues.current_password', undefined))
-            ? <TransComponent i18nKey={`"new password" must not equal "current password"`} />
-            : undefined;
-    notEqualCurrentPassword2 = value =>
-        _isEqual(value, _get(this.props, 'formValues.current_password2', undefined))
-            ? <TransComponent i18nKey={`"new password" must not equal "current password"`} />
-            : undefined;
-
     renderForm() {
-        const {data, err, success, handleSubmit} = this.props;
+        const {data, err, success, handleSubmit, form = {}} = this.props;
+        const hasError = !form.syncErrors || Object.keys(form.registeredFields || {}).some(field => (form.syncErrors || {}).hasOwnProperty(field));
 
         return (
             <form className="form-horizontal" onSubmit={handleSubmit(this.handleSubmit)}>
@@ -101,19 +69,13 @@ class FormWithReduxForm extends Component {
                             };
 
                             return (
-                                <Field
-                                    key={index}
-                                    {...props}
-                                    index={index}
-                                    component={renderTextField}
-                                    // validate={_get(item, 'rules', []).map(elm => this[elm] )}
-                                />
+                                <Field key={index}{...props} index={index} component={renderTextField} />
                             );
                         })
                     }
                     <div className="form-group">
                         <div className="col-md-offset-3 col-md-9">
-                            <button disabled={_get(this.props, 'form.syncErrors', false)} type="submit" className="col-md-12 btn red"><TransComponent i18nKey='Save' /></button>
+                            <button disabled={hasError} type="submit" className="col-md-12 btn red"><TransComponent i18nKey='Save' /></button>
                             &nbsp;&nbsp;
                         </div>
                     </div>
@@ -164,39 +126,43 @@ const validate = (values) => {
     const errors = {};
     const msgRequired = 'is required';
 
-    if (!values.pwd_current_password) errors.pwd_current_password = `"Current Password" ${msgRequired}`;
+    if (!values.current_password) errors.current_password = `"Current Password" ${msgRequired}`;
+    if (!values.current_password2) errors.current_password2 = `"Current Password" ${msgRequired}`;
+    if (!values.current_secure) errors.current_secure = `"Current Security Code" ${msgRequired}`;
+    else if (isNaN(Number(values.current_secure))) errors.current_secure = `"Current Security Code" must be a number`;
+
     if (!values.new_password) errors.new_password = `"New Password" ${msgRequired}`;
-    if (!values.confirm_password) errors.confirm_password = `"Confirm password" ${msgRequired}`;
-    if (!values.current_secure_code) errors.current_secure_code = `"Current Security Code" ${msgRequired}`;
-    if (!values.new_secure_code) errors.new_secure_code = `"New Security Code" ${msgRequired}`;
-
-    if (values.new_password && (/^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%])[0-9A-Za-z!@#$%]{8,}$/).test(values.new_password)) {
-        errors.new_password = `"new password" fails to match the required pattern: /^(?=.*\d)(?=.*[a-z])(?=.*[a-z])(?=.*[!@#$%])[0-9a-za-z!@#$%]{{8,}}$/`;
-    }
-
-    if (values.new_secure_code && values.current_secure_code && _isEqual(values.new_secure_code, values.current_secure_code)) {
-        errors.new_security_code = `"Confirm Security Code" must be one of [ref:current_secure_code]`;
-    }
-    if (values.new_password && values.current_password && _isEqual(values.new_password, values.current_password)) {
-        errors.new_security_code = `"Confirm password" must be one of [ref:new_password]`;
-    }
-    if (values.new_password2 && values.current_password2 && _isEqual(values.new_password2, values.current_password2)) {
-        errors.new_security_code = `"Confirm password" must be one of [ref:new_password2]`;
-    }
-
-    if (values.new_secure_code && isNaN(Number(values.new_secure_code))) {
-        errors.new_secure_code = `"New Security Code" fails to match the required pattern: /^([0-9]){{6}}$/`;
-    }
-
-    if (values.new_secure_code && ( values.new_secure_code.length > 6 || values.new_secure_code.length < 6 )) {
-        errors.new_secure_code = `"New Security Code" length must be at least 6 characters long`;
-    }
-
-    if (values.new_password && values.current_password && _isEqual(values.new_password, values.current_password)) {
+    else if (!(/^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%])[0-9A-Za-z!@#$%]{8,}$/).test(values.new_password)) {
+        errors.new_password = `"new password" fails to match the required pattern: /^(?=.*\\d)(?=.*[a-z])(?=.*[a-z])(?=.*[!@#$%])[0-9a-za-z!@#$%]{{8,}}$/`;
+    } else if (values.current_password && _isEqual(values.new_password, values.current_password)) {
         errors.new_password = `"new password" must not equal "current password"`;
     }
-    if (values.new_password && values.current_password2 && _isEqual(values.new_password, values.current_password2)) {
-        errors.new_password = `"new password" must not equal "current password2"`;
+
+    if (!values.new_password2) errors.new_password2 = `"New Password" ${msgRequired}`;
+    else if (!(/^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%])[0-9A-Za-z!@#$%]{8,}$/).test(values.new_password2)) {
+        errors.new_password2 = `"New Password" fails to match the required pattern: /^(?=.*\\d)(?=.*[a-z])(?=.*[a-z])(?=.*[!@#$%])[0-9a-za-z!@#$%]{{8,}}$/`;
+    } else if (values.current_password2 && _isEqual(values.new_password2, values.current_password2)) {
+        errors.new_password2 = `"New Password" must not equal "Current Password"`;
+    }
+
+    if (!values.re_new_password)  errors.re_new_password = `"Confirm password" ${msgRequired}`;
+    else if (values.new_password && !_isEqual(values.new_password, values.re_new_password)) {
+        errors.re_new_password = `"Confirm password" must be one of [ref:new_password]`;
+    }
+
+    if (!values.re_new_password2)  errors.re_new_password2 = `"Confirm password" ${msgRequired}`;
+    else if (values.new_password2 && !_isEqual(values.new_password2, values.re_new_password2)) {
+        errors.re_new_password2 = `"Confirm password" must be one of [ref:new_password2]`;
+    }
+
+    if (!values.new_secure) errors.new_secure = `"New Security Code" ${msgRequired}`;
+    else if (isNaN(Number(values.new_secure))) errors.new_secure = `"New Security Code" fails to match the required pattern: /^([0-9]){{6}}$/`;
+    else if ((values.new_secure.length > 6 || values.new_secure.length < 6)) {
+        errors.new_secure = `"New Security Code" length must be at least 6 characters long`;
+    }
+
+    if (!_isEqual(values.new_secure, values.re_new_secure)) {
+        errors.re_new_secure = `"Confirm Security Code" must be one of [ref:new_security_code]`;
     }
 
     return errors;

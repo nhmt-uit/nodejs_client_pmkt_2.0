@@ -7,6 +7,7 @@ import { Redirect } from 'react-router-dom';
 
 import { RoutesService } from 'my-routes';
 import { getSecure, checkSecure } from 'my-actions/systems/AuthAction';
+import { CookieService } from 'my-utils/core';
 
 class SecureCodeWidget extends Component {
     constructor(props) {
@@ -20,14 +21,9 @@ class SecureCodeWidget extends Component {
         this.ref2 = React.createRef();
     }
 
-    componentDidMount() {
-        this.props.getSecure();
-    }
+    componentDidMount() { this.props.getSecure(); }
 
-    handleSubmit() {
-        this.props.checkSecure(this.state);
-
-    }
+    handleSubmit() { this.props.checkSecure(this.state); }
 
     handleChangeField(e) {
         const { value, name } = e.target;
@@ -109,7 +105,13 @@ class SecureCodeWidget extends Component {
         }
 
         if (this.props.checkSecureStatus) {
-            return <Redirect to={RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'reset-secure-password' })} />
+            if (CookieService.get('needChangeSecurePassword') === '1') {
+                return <Redirect to={RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'reset-secure-password' })} />;
+            }
+
+            CookieService.set('byPassDashboard', '1');
+
+            window.location.href = RoutesService.getPath('ADMIN', 'DASHBOARD');
         }
 
         const t = this.props.t;

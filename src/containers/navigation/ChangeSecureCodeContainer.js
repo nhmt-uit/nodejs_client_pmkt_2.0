@@ -10,11 +10,11 @@ import { TransComponent } from 'my-components'
 class ChangeSecureCodeContainer extends Component {
     data = [
         {
-            name: 'current_secure_code',
+            name: 'current_secure',
             label: 'Current Security Code',
         },
         {
-            name: 'new_secure_code',
+            name: 'new_secure',
             label: 'New Security Code',
         },
         {

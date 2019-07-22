@@ -17,10 +17,10 @@ const RenderComponent = () => {
 	// Check user is login? change template
 	const isLogin = CookieService.get("isLogin");
 	const isCheckSecure = CookieService.get('isCheckSecure');
-	const byPassDashboard = CookieService.get('byPassDashboard');
+	const needChangeSecurePassword = CookieService.get('needChangeSecurePassword');
 
-	if ((!isLogin || !isCheckSecure !== undefined) && !byPassDashboard) {
-		component = ( <AuthenticationLayout /> );
+	if (!Number(isLogin) || !Number(isCheckSecure) || Number(needChangeSecurePassword)) {
+		component = <AuthenticationLayout/>;
 	}
 
 	return component;
@@ -28,26 +28,26 @@ const RenderComponent = () => {
 
 class AppPage extends BaseComponent {
 	constructor(props) {
-		super(props)
+		super(props);
+
 		this.props.changeLanguage(AppConfig.DEFAULT_LANG);
 
 		CookieService.addChangeListener(obj => {
 			if ((obj.name === "isLogin"  && !obj.value) || (obj.name === "byPassDashboard" && obj.value) ) this.forceUpdate()
-		})
+		});
+
 		const isLogin = CookieService.get("isLogin");
 		const pathname = window.location.pathname;
-		if(!isLogin && !pathname.match(/\/auth\/login/i)) window.location.href = RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'login' })
 
-		if(window.location.href === 'http://localhost:3000/dashboard'){
-			const byPassDashboard = CookieService.get("byPassDashboard");
-			if(!byPassDashboard) window.location.href = RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'login' })
-		}
+		if(!isLogin && !pathname.match(/\/auth\/login/i)) window.location.href = RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'login' });
 	}
 
 	render() {
 		const isLogin = CookieService.get("isLogin");
 		const pathname = window.location.pathname;
-		if(!isLogin && !pathname.match(/\/auth\/login/i)) return null
+
+		if(!isLogin && !pathname.match(/\/auth\/login/i)) return null;
+
 		return (
 			<>
 				<RenderComponent />
