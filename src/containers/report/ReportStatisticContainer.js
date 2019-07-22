@@ -103,13 +103,8 @@ class ReportStatisticContainer extends Component {
         const classActive = isActive ? 'active' : '';
         const { itemActive = {}, books = [], reportType = 'cycle' } = this.props.reportStore;
         const t = this.props.t;
-        const hasReportDetailFeature = Number(CookieService.get('hasReportDetailFeature'));
         const bookTabElm = type === 'accounting' ? this.renderBookTabs('accounting') : this.renderBookTabs('synthesis');
         const roles = CookieService.get('roles');
-        var cycleName;
-        if(itemActive.name){
-            cycleName = encodeURIComponent(itemActive.name)
-        }
         return (
             <div className={`tab-pane ${classActive}`} id={`tab_${type}`}>
                 <div className="row">
@@ -117,19 +112,6 @@ class ReportStatisticContainer extends Component {
                         <div className="tabbable-line tabbable-custom-profile tabbable-book">
                             <ul className="nav nav-tabs tabs-reversed">
                                 <li className="title-accountant"><a href="#/">{ itemActive.name || '' }</a></li>
-                                {
-                                    (Number(roles) === 11 || Number(roles) === 12) ? null :
-                                    (type === 'accounting' && hasReportDetailFeature === 1)
-                                        ? <li className="title-accountant">
-                                            <button
-                                                onClick={() => window.open(RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT_DETAIL', { chuky_id: itemActive.id, cycle_name: cycleName }), '_blank')}
-                                                className="btn btn-danger"
-                                            >
-                                                {t('Show detail')}
-                                            </button>
-                                        </li>
-                                        : ''
-                                }
                                 {bookTabElm}
                             </ul>
                             <div className="tab-content">

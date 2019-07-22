@@ -533,6 +533,11 @@ h5.modal-title {font-size: 16px; font-weight: bold; color: #E26A6A!important;}
     border-bottom-color: #9ea0a2!important;
 }
 
+.border-bt-color-red {
+  border-bottom-color: #E26A6A!important
+}
+
+
 .padding-0 {
     padding: 0
 }

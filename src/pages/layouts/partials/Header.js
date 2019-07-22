@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 
 import { ZopimChat, Notification } from 'my-components/navigation'
 import BankerListContainer from "my-containers/banker/BankerListContainer"
@@ -22,9 +22,10 @@ class Header extends Component {
         lang: CookieService.get('lang')
     };
 
-    handleLogout = async _ => {
-        await AuthService.logout();
-        window.location.reload()
+    handleLogout = _ => {
+        this.props.history.push(RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'login' }))
+        AuthService.logout();
+        // window.location.reload()
     };
 
     handleChangeLanguage = type => () => {
@@ -158,4 +159,5 @@ const mapDispatchToProps = dispatch => {
 
 export default compose(
     connect(null, mapDispatchToProps),
+    withRouter,
 )(Header)

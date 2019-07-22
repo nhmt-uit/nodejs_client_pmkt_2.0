@@ -60,7 +60,7 @@ class FormulaGroupListContainer extends Component {
                 })
             }
         }
-        var isOpenDelModal = this.state.isOpenDelModal;
+        let isOpenDelModal = this.state.isOpenDelModal;
         this.setState({
             isOpenDelModal : !isOpenDelModal,
         })
@@ -71,10 +71,10 @@ class FormulaGroupListContainer extends Component {
     }
 
     handleDelFormulaGroup = () => {
-        var delBankerId = this.state.delBankerId;
-        var formulaGroupId = this.state.formulaGroupId;
+        let delBankerId = this.state.delBankerId;
+        let formulaGroupId = this.state.formulaGroupId;
         if(delBankerId && formulaGroupId){
-            var payload = {
+            let payload = {
                 formula_group_id: formulaGroupId,
                 banker_id: delBankerId
             }
@@ -91,7 +91,7 @@ class FormulaGroupListContainer extends Component {
                     console.log(err)
                 })
         } else {
-            var payload = {
+            let payload = {
                 id: this.state.delValueID
             };
             this.props.delFormulaGroupDetail(payload)
@@ -180,7 +180,7 @@ class FormulaGroupListContainer extends Component {
                 if(bankerId === '' || bankerId === 'all'){
                     formulaGroupDetail(item, level)
                 } else {
-                    var data = [];
+                    let data = [];
                     item.child.forEach(function (items) {
                         if(items.banker.id === bankerId){
                             data.push(item)

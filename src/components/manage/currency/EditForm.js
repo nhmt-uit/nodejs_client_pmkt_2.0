@@ -4,7 +4,7 @@ import {compose} from "redux";
 import {withTranslation} from "react-i18next";
 import {connect} from "react-redux";
 import { TransComponent } from 'my-components'
-import { getInitCurrency, saveCurrencyCustomFilter, getCurrencyConfig } from 'my-actions/manage/ConfigurationAction';
+import { saveCurrencyCustomFilter, getCurrencyConfig } from 'my-actions/manage/ConfigurationAction';
 
 class EditForm extends React.Component {
     constructor(props) {
@@ -51,10 +51,10 @@ class EditForm extends React.Component {
         //     }
         //     this.setState(state);
         // }
-        if (nextProps.isOpen != undefined) {
+        if (nextProps.isOpen !== undefined) {
             let state = {
                 isOpen: nextProps.isOpen,
-                round: this.state.round && this.state.round != -2 ? this.state.round : nextProps.item.filter
+                round: this.state.round && this.state.round !== -2 ? this.state.round : nextProps.item.filter
             };
             this.setState(state)
         }

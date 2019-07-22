@@ -5,7 +5,7 @@ import {get as _get} from 'lodash'
 import {reduxForm} from "redux-form";
 
 import {withTranslation} from "react-i18next";
-import {TransComponent, LoadingComponent} from 'my-components'
+import { TransComponent } from 'my-components'
 
 import { Helpers } from 'my-utils'
 import { getAllTransaction} from "my-actions/report/TransactionAction";
@@ -65,7 +65,6 @@ class ListOfTransaction extends Component {
     }
 
     render() {
-        const { t } = this.props;
         const {currencies, listTransaction} = this.props;
         var showCurrencies = currencies.map(function (item, index) {
             return(

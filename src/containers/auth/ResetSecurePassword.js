@@ -156,7 +156,7 @@ class ResetSecurePassword extends Component {
                                 component={this.renderField}
                                 className="form-control form-control-solid placeholder-no-fix"
                                 autoComplete="off"
-                                placeholder={this.props.t("Insert new secure password")}
+                                placeholder={this.props.t("insert new secure password")}
                             />
                         </div>
                         <div className="form-group">
@@ -166,7 +166,7 @@ class ResetSecurePassword extends Component {
                                 component={this.renderField}
                                 className="form-control form-control-solid placeholder-no-fix"
                                 autoComplete="off"
-                                placeholder={this.props.t("Confirm new secure password")}
+                                placeholder={this.props.t("confirm new secure password")}
                             />
                         </div>
                         <div className="form-actions text-center">

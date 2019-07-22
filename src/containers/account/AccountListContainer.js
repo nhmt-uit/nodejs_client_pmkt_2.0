@@ -6,7 +6,6 @@ import {
     debounce as _debounce,
     sortBy as _sortBy,
     cloneDeep as _cloneDeep,
-    isEmpty as _isEmpty
 } from 'lodash';
 
 import { TransComponent, LoadingComponent } from 'my-components';

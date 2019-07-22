@@ -53,6 +53,7 @@ class ReportListContainer extends Component {
     };
 
     recursiveItem(item, id, itemActive, isExported = false) {
+        const roles = CookieService.get('roles');
         const collapse = this.state.collapse;
 
         if (!item.child) {
@@ -86,7 +87,7 @@ class ReportListContainer extends Component {
                             <a className="text-capitalize" href="#" onClick={this.handleGetReport({ chuky_id: id, member_name: child.name }, { ...itemActive, memberName: child.name }, 'member')} >{index + 1} - {child.name}</a>
                             { isExported
                                 ? ''
-                                : <span className="text-capitalize icon-close float-right color-red cursor-pointer" onClick={this.toggleDelModal(child.name, { chuky_id: id, acc_name: child.name })} />
+                                : ((Number(roles) === 11 || Number(roles) === 12)) ? null : <span className="text-capitalize icon-close float-right color-red cursor-pointer" onClick={this.toggleDelModal(child.name, { chuky_id: id, acc_name: child.name })} />
                             }
                         </div>
                     </div>
@@ -125,6 +126,7 @@ class ReportListContainer extends Component {
     }
 
     renderCycleItem(cycle) {
+        const hasReportDetailFeature = Number(CookieService.get('hasReportDetailFeature'));
         const roles = CookieService.get('roles');
         const collapse = this.state.collapse;
         const collapseElement = !!collapse[cycle.id] ? (
@@ -143,13 +145,20 @@ class ReportListContainer extends Component {
                     }
                     &nbsp;&nbsp;<a href="#" onClick={this.handleGetReport({ chuky_id: cycle.id }, cycle, 'cycle')}>{cycle.name}</a>
                     <span className="float-right" >
-                        <div className="wrap-tooltip">
-                            <i className="fa fa-info color-grey cursor-pointer" />
-                            <span className="tooltip-arrow border-bt-color-grey hovered"/>
-                            <span className="content-tooltip hovered bg-dark font-white tooltip-detail text-center">
-                                <TransComponent i18nKey="Detail" />
-                            </span>
-                        </div>
+                        {
+                            (Number(roles) === 11 || Number(roles) === 12) && hasReportDetailFeature !== 1 ? null :
+                            <div className="wrap-tooltip">
+                                <a href="#/"
+                                    onClick={() => window.open(RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT_DETAIL', { chuky_id: cycle.id, cycle_name: encodeURIComponent(cycle.name) }), '_blank')}
+                                >
+                                    <i className="fa fa-info font-red-sunglo cursor-pointer" />
+                                    <span className="tooltip-arrow border-bt-color-red hovered"/>
+                                    <span className="content-tooltip hovered bg-dark font-white tooltip-detail text-center bg-red-sunglo" style={{minWidth: '120px'}}>
+                                        <TransComponent i18nKey="Show detail" />
+                                    </span>
+                                </a>
+                            </div>
+                        }
                         {
                             cycle.is_exported
                                 ? <i className="fa fa-check-circle font-green" />
@@ -276,7 +285,7 @@ class ReportListContainer extends Component {
                     />
                 </ModalBody>
                 <ModalFooter>
-                    <Button className="bg-green font-white" onClick={this.handleCloseCycle}>{t('save')}</Button>{' '}
+                    <Button className="bg-green font-white" disabled={!this.state.cycleChosenSelect} onClick={this.handleCloseCycle}>{t('save')}</Button>{' '}
                     <Button color="secondary" onClick={this.toggleModal()}>{t('cancel')}</Button>
                 </ModalFooter>
             </Modal>
