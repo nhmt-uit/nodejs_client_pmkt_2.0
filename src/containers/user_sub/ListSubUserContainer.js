@@ -104,7 +104,7 @@ class ListSubUserContainer extends Component{
                                         return(
                                             <tr key={index}>
                                                 <td className="text-center"> {x} </td>
-                                                <td className="text-center uppercase"> {item.fullname} </td>
+                                                <td className="uppercase"> {item.fullname} </td>
                                                 <td className="text-center uppercase"> {item.username} </td>
                                                 <td className="text-center"> {item.status === 1 ? t("Online") : t("Offline")} </td>
                                                 <td className="text-center"> {item.active_password2 === 1 ? (<span className="btn btn-danger label-active-pass2"> <TransComponent i18nKey="activate"/> </span>) : <span />} </td>

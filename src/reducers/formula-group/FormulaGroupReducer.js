@@ -93,7 +93,7 @@ const FormulaGroupReducer = (state = defaultState, action) => {
         case FormulaGroupActionType.FORMULA_GROUP_TOGGLE_MODAL_FORM_ASSIGN: {
             //Reset Store When Modal Close
             if (!state.isOpenModalAssign === false) return {...state, isOpenModalAssign: false, formAssignFormulaGroupSaveStatus: null, formAssignFormulaGroupSaveResponse: {} }
-            return {...state, isOpenModalAssign: !state.isOpenModalAssign};
+            return {...state, isOpenModalAssign: !state.isOpenModalAssign, formulaPatternList: []};
         }
         case FormulaGroupActionType.FORMULA_GROUP_TOGGLE_MODAL_EDIT_FORMULA:
             if(state.isOpenModalEditFormula === true){

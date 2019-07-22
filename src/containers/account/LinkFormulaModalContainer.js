@@ -95,7 +95,7 @@ class LinkFormulaModalContainer extends Component {
     }
 
     componentWillReceiveProps(nextProps, nextContext) {
-        const { selectedItem, lstFormula = [], lstFormulaGroup = [] } = this.props;
+        const { selectedItem } = this.props;
 
         let newState = {};
 

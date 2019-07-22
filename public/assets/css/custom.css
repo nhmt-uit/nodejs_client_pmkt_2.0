@@ -71,27 +71,30 @@ h5.modal-title {font-size: 16px; font-weight: bold; color: #E26A6A!important;}
 } */
 
 /* Custom React Select */
-.form-group .css-2b097c-container:focus {
+.form-group div[class*="css-"][class*="-container"]:focus {
 	outline: none;
 }
-.form-group .css-1pahdxg-control, .form-group .css-1pahdxg-control:hover {
+.form-group div[class*="css-"][class*="-control"], .form-group div[class*="css-"][class*="-control"]:hover {
 	border-color: #93a1bb;
   box-shadow: none;
   min-height: 32px;
 }
-.form-group .css-yk16xz-control {
+.form-group div[class*="css-"][class*="-container"] div[class*="css-"][class*="-control"] {
 	border: 1px solid #c2cad8;
 	min-height: 32px;
 }
-.form-group .css-26l3qy-menu, .form-group .css-1hup0q {
-	z-index: 10;
+.form-group div[class*="css-"][class*="-container"] div[class*="css-"][class*="-menu"],
+.form-group div[class*="css-"][class*="-container"] div[class*="css-"][class*="-control"] + div[class*="css-"] {
+	z-index: 12 !important;
 }
 
-.form-group .css-1g48xl4-IndicatorsContainer {
+.form-group div[class*="css-"][class*="-container"] div[class*="css-"][class*="-control"] div[class*="css-"][class*="-indicatorContainer"] {
 	height: 32px;
 }
 
-.form-group .css-8eqalp{z-index: 10}
+.form-group div[class*="css-"][class*="-container"] div[class*="css-"][class*="-control"] div[class*="css-"]{
+  z-index: 10;
+}
 
 .hide-multi .css-1rhbuit-multiValue .css-1alnv5e {
 	display: none;

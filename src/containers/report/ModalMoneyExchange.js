@@ -6,7 +6,7 @@ import {
 } from 'reactstrap';
 import Select from 'react-select';
 import { withTranslation } from 'react-i18next';
-import { get as _get, isEmpty } from 'lodash';
+import { get as _get } from 'lodash';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 
@@ -120,8 +120,8 @@ class ModalMoneyExchange extends Component {
                 </ModalBody>
                 <ModalFooter>
                     <Button
-                        disabled={!rate || isNaN(rate) || !from.value || !to.value} 
-                        className="red" 
+                        disabled={!rate || isNaN(rate) || !from.value || !to.value}
+                        className="red"
                         onClick={this.handleSubmitForm}
                     ><TransComponent i18nKey="Submit" /></Button>&nbsp;
                     <Button className="green" onClick={this.toggleModalMoneyExchange}><TransComponent i18nKey="Close" /></Button>

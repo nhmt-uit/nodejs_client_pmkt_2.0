@@ -35,15 +35,25 @@ class FormAccountContainer extends Component {
             if(this.props.formType === 'update' && !_isEmpty(this.props.selectedItem)) {
                 const selectedItem = this.props.selectedItem;
                 const { acc_parent_id, id, acc_name, sub_user, sub_code, note, is_sub, is_active, banker } = selectedItem;
-                const optAccountBelong = [{value: 'root', label: <TransComponent i18nKey='Is root account' toUpperCase />}].concat(this.props.optAccountBelong);
+                const optAccountBelong = [{value: 'root', label: <TransComponent i18nKey='Is root account' toUpperCase />}].concat(this.props.optAccountBelong)
                 const belong_account_item = acc_parent_id ? acc_parent_id : 'root';
+                let belong_account
+                if (belong_account_item === 'root') {
+                    belong_account = optAccountBelong.find(item => item.value === belong_account_item)
+                } else {
+                    try {
+                        belong_account = optAccountBelong.find(item => item.value === selectedItem.banker_id).options.find(item => item.value === belong_account_item)
+                    } catch (e) {
+                        // Can not find value
+                    }
+                }
 
                 this.props.initialize({
                     ...this.props.initialValues,
                     id,
                     company: this.props.optBanker.find(item => item.value === banker),
                     acc_name,
-                    belong_account:  optAccountBelong.find(item => item.value === belong_account_item),
+                    belong_account: belong_account,
                     sub_user, sub_code, note,
                     is_sub: optIsSub.find(item => item.value === is_sub),
                     is_active: optAccountStatus.find(item => item.value === is_active),
