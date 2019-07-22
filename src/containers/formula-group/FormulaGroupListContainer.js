@@ -251,7 +251,7 @@ class FormulaGroupListContainer extends Component {
                             <TransComponent i18nKey="Are you sure want to delete ?"/>
                         </ModalBody>
                         <ModalFooter>
-                            <Button className="bg-red font-white" onClick={this.handleDelFormulaGroup}><TransComponent i18nKey="Yes"/></Button>
+                            <Button className="bg-red font-white" onClick={this.handleDelFormulaGroup}><TransComponent i18nKey="Confirm"/></Button>
                             <Button color="secondary" onClick={() => this.handleCloseModalDel()}><TransComponent i18nKey="Cancel"/></Button>
                         </ModalFooter>
                     </Modal>
