@@ -50,7 +50,7 @@ class CreateTransaction extends Component {
                     submit: true
                 })
             }
-            if(amount !== '' && Number.isNaN(amount) == true || amount == ''){
+            if(amount !== '' && (Number.isNaN(amount) === true || amount === '')){
                 this.setState({
                     submit: true
                 })
