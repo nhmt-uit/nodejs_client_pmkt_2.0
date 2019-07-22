@@ -7,7 +7,6 @@ import {get as _get, get, isEqual as _isEqual} from 'lodash';
 import { Redirect } from 'react-router-dom';
 import $ from 'jquery';
 
-import { resetSecurePassword } from 'my-actions/systems/AuthAction';
 import { RoutesService } from 'my-routes';
 import { CookieService } from 'my-utils/core';
 import { TransComponent } from 'my-components';
@@ -78,6 +77,8 @@ class ResetSecurePassword extends Component {
             const result = await AuthService.resetSecurePassword(this.props.formValues);
 
             if (result.status) {
+                CookieService.set('byPassDashboard', '1');
+                CookieService.set('needChangeSecurePassword', '0');
                 this.setState({ isLoading: false, success: true })
             } else {
                 this.setState({ isLoading: false, error: true, msg: _get(result, 'res.data.message', '') });
@@ -98,8 +99,6 @@ class ResetSecurePassword extends Component {
             return <Redirect to={RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'login' })} />;
 
         if (this.state.success) {
-            CookieService.set('byPassDashboard', '1');
-
             window.location.href = RoutesService.getPath('ADMIN', 'DASHBOARD');
         }
 
@@ -175,14 +174,8 @@ const mapStateToProps = state => {
     };
 };
 
-const mapDispatchToProps = dispatch => {
-    return {
-        resetSecurePassword: params => { dispatch(resetSecurePassword(params)) }
-    };
-};
-
 export default compose(
     reduxForm({form: 'form_secure_password', validate}),
-    connect(mapStateToProps, mapDispatchToProps),
+    connect(mapStateToProps, null),
     withTranslation()
 )(ResetSecurePassword);
