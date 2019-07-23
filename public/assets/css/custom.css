@@ -515,7 +515,12 @@ h5.modal-title {font-size: 16px; font-weight: bold; color: #E26A6A!important;}
 }
 
 .tooltip-detail {
-  right: -2.8rem;
+    left: -2rem;
+    padding: .5rem;
+    min-width: 75px;
+    -webkit-border-radius: .3rem!important;
+    -moz-border-radius: .3rem!important;
+    border-radius: .3rem!important;
 }
 
 .tooltip-arrow {
@@ -558,4 +563,20 @@ h5.modal-title {font-size: 16px; font-weight: bold; color: #E26A6A!important;}
 
 .max-width-650 {
     max-width: 650px;
+}
+
+.width-40 {
+    width: 40px;
+}
+
+.height-40 {
+    height: 40px;
+}
+
+.font-size-13 {
+    font-size: 13px;
+}
+
+.border-none {
+    border: none;
 }

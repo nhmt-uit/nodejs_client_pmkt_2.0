@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux'
-import { isEmpty as _isEmpty, forEach as _forEach, concat as _concat } from 'lodash'
+import { get as _get, isEmpty as _isEmpty, forEach as _forEach, concat as _concat } from 'lodash'
 import uuidv4 from 'uuid/v4'
 
 import { Helpers } from 'my-utils'
@@ -70,7 +70,8 @@ class AccountantBankerAccountResultRowContainer extends Component {
     generateRowData = _ => {
         const { item, rootAccInfo, rootAccInfoFull} = this.props
         const { dataFieldList, dataHiddenFields, scanData } = this.props.bankerAccount
-        const bankerAccountId = this.props.bankerAccount.id
+        console.log(this.props.bankerAccount)
+        const bankerAccountId = _get(this.props.bankerAccount, 'accountant[0].accInfo.id')
         
         let xhtml = []
         let tbl_col_username = []

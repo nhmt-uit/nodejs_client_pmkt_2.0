@@ -19,6 +19,7 @@ class ModalDeleteFormulaContainer extends Component {
 
     handleDelete = async _ => {
         const { payloadSelectedFormula } = this.props
+        console.log(payloadSelectedFormula)
         const bankerAccountId = payloadSelectedFormula.bankerAccountId
         const scanData = payloadSelectedFormula.scanData
         const ctt_id = payloadSelectedFormula.formulaDetail.ctt_id

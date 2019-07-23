@@ -106,7 +106,7 @@ export const socketScanData = (params) => {
             // Incase Accountant Manual
             if(!_isEmpty(params.bankerName)) {
                 if (typeof params.flagType !== "undefined") requestObj.more_post.flag_type = `${params.flagType}`
-                if (typeof params.accountRole !== "undefined") requestObj.more_post.is_sub = params.accountRole
+                if (typeof params.accountRole !== "undefined") requestObj.more_post.is_sub = `${params.accountRole}`
                 requestObj.more_post.is_scan_by_hand = true
             }
 
@@ -269,7 +269,7 @@ export const socketGetReport = params => {
                 if (res.type === "resolve") {
                     EventsService.removeAllListeners('accountant_get_report_banker_account')
                 }
-
+                console.log(res)
                 // Dispatch data to reducer
                 dispatch({
                     type: AccountantActionType.ACCOUNTANT_SOCKET_GET_REPORT_BANKER_ACCOUNT,

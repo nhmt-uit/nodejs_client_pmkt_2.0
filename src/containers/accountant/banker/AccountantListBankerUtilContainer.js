@@ -29,7 +29,7 @@ class AccountantListBankerUtilContainer extends Component {
                         <span></span>
                     </label>
                 </div>
-                <div className="form-group col-md-8 text-right">
+                <div className="form-group col-xs-8 col-md-8 text-right">
                     <label className="mt-checkbox uppercase" style={{marginRight: '50px'}}>
                         <input type="checkbox" onChange={this.props.toggleShowAllFormula} checked={this.props.isShowAllFormula} /> <TransComponent i18nKey="show all" />
                         <span></span>

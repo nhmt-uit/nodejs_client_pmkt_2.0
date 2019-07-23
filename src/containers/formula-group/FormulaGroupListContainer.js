@@ -146,12 +146,10 @@ class FormulaGroupListContainer extends Component {
                         <td className="text-center"> {level === 0 ? null : item.banker.name.toUpperCase()} </td>
                         <td className="text-center"> {item.num_of_formula} </td>
                         <td className="text-center">
-                            <button className="text-success btn btn-link">
-                                <i className="fa fa-edit font-green cursor-pointer" onClick={ () => this.handleEditFormulaGroup(item)}></i></button>
+                            <i className="fa fa-edit font-green cursor-pointer" onClick={ () => this.handleEditFormulaGroup(item)} />
                         </td>
                         <td className="text-center">
-                            <button className="text-success btn btn-link font-red">
-                                <i className="fa fa-trash-o font-red cursor-pointer" onClick={ () => this.handleOpenModelDel(item)}></i></button>
+                            <i className="fa fa-trash-o font-red-sunglo cursor-pointer" onClick={ () => this.handleOpenModelDel(item)} />
                         </td>
                     </tr>
                 );
@@ -221,24 +219,27 @@ class FormulaGroupListContainer extends Component {
                     </div>
                 </div>
                 <div className="portlet-body">
-                    <table className="table table-striped table-bordered table-hover dataTable no-footer dtr-inline">
-                        <thead>
-                            <tr role="row">
-                                <th className="caption-subject font-red text-center"> # </th>
-                                <th className="caption-subject font-red text-center"><TransComponent i18nKey="formula group name"/></th>
-                                <th className="caption-subject font-red text-center"><TransComponent i18nKey="Company"/></th>
-                                <th className="caption-subject font-red text-center"><TransComponent i18nKey="Total"/></th>
-                                <th className="caption-subject font-red text-center"><TransComponent i18nKey="Edit"/></th>
-                                <th className="caption-subject font-red text-center"><TransComponent i18nKey="Delete"/></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        {
-                            formulaGroupList.length ?
-                                tbody : <tr><td className="text-center" colSpan="20"><TransComponent i18nKey="Data Empty" /></td></tr>
-                        }
-                        </tbody>
-                    </table>
+                    
+                    <div className="table-responsive">
+                        <table className="table table-striped table-bordered table-hover dataTable no-footer dtr-inline">
+                            <thead>
+                                <tr role="row">
+                                    <th className="caption-subject font-red text-center"> # </th>
+                                    <th className="caption-subject font-red text-center"><TransComponent i18nKey="formula group name"/></th>
+                                    <th className="caption-subject font-red text-center"><TransComponent i18nKey="Company"/></th>
+                                    <th className="caption-subject font-red text-center"><TransComponent i18nKey="Total"/></th>
+                                    <th className="caption-subject font-red text-center"><TransComponent i18nKey="Edit"/></th>
+                                    <th className="caption-subject font-red text-center"><TransComponent i18nKey="Delete"/></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {
+                                formulaGroupList.length ?
+                                    tbody : <tr><td className="text-center" colSpan="20"><TransComponent i18nKey="Data Empty" /></td></tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <div>
                     <Modal isOpen={this.state.isOpenDelModal} toggle={() => this.handleCloseModalDel()}>

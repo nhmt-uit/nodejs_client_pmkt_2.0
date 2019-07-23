@@ -7,12 +7,18 @@ import { ReportService } from 'my-services/report';
  * @description Get cycle page
  * @param {Object} pagination - include currentPage and itemPerPage
  * */
-export const getCyclePage = (pagination) => {
+export const getCyclePage = (pagination, isInitial = false) => {
     return dispatch => {
-        dispatch({
-            type: ReportActionType.GET_CYCLE_PAGE_SUCCESS,
-            isFetching: true
-        });
+        if (isInitial) {
+            dispatch({
+                type: ReportActionType.GET_CYCLE_PAGE_INITIAL,
+            });
+        } else {
+            dispatch({
+                type: ReportActionType.GET_CYCLE_PAGE_SUCCESS,
+                isFetching: true
+            });
+        }
 
         return ReportService.getCyclePage(pagination)
             .then(res => {

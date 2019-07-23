@@ -59,6 +59,7 @@ export const AccountReducer = (state = defaultState, action) => {
 				...defaultState,
 				lstTab: state.lstTab,
 				lstAccount: state.lstAccount,
+				isFetchingAccount: state.isFetchingAccount,
 			};
 
 			//Reset Store When Modal Close

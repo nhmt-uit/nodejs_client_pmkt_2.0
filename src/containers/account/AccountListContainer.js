@@ -18,6 +18,12 @@ class AccountListContainer extends Component {
         this.props.getAccount();
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.props.formSaveStatus && !prevProps.formSaveStatus) {
+            this.props.getAccount();
+        }
+    }
+
     state = {
         isOpenModal: false,
         keySearch: '',
@@ -82,10 +88,11 @@ class AccountListContainer extends Component {
     }
 
     render() {
-        const { t, lstTab, isFetchingAccount } = this.props;
+        const { t, lstTab, isFetchingAccount } = this.props;console.log('render account list', this.props)
 
         return (
-            <div className="portlet box blue-hoki position-relative">
+            <div className="portlet box blue-hoki position-relative min-height-60">
+                { isFetchingAccount ? <LoadingComponent /> : null }
                 <button onClick={this.handleOpenCreateNewModal} className="btn btn-danger btn-add-formula"><TransComponent i18nKey="Add new" /></button>
                 <div className="portlet-title tabbable-line padding-top-0">
                     <div className="caption">
@@ -111,7 +118,6 @@ class AccountListContainer extends Component {
                     </div>
                 </div>
                 <div className="portlet-body">
-                    { isFetchingAccount ? <LoadingComponent /> : null }
                     <div className="tab-content">
                         { this.renderTabContent() }
                     </div>
@@ -128,6 +134,7 @@ const mapStateToProps = state => {
         lstTab: state.AccountReducer.lstTab || [],
         lstAccount: state.AccountReducer.lstAccount || [],
         isFetchingAccount: state.AccountReducer.isFetchingAccount || false,
+        formSaveStatus: state.AccountReducer.formSaveStatus || false,
     };
 };
 

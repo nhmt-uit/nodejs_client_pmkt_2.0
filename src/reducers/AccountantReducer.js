@@ -240,8 +240,10 @@ export const AccountantReducer = (state = defaultState, action) => {
 			return {...state, bankerAccount: newBankerAccount}
 		case AccountantActionType.ACCOUNTANT_SOCKET_GET_REPORT_BANKER_ACCOUNT:
 			let bankerAccountId = action.uuid2AccId[action.full_payload.uuid]
+			console.log(newBankerAccount)
+			console.log(bankerAccountId)
 			if(!_isEmpty(bankerAccountId)) {
-				var objIndex = newBankerAccount.findIndex((obj => obj.id === bankerAccountId))
+				var objIndex = newBankerAccount.findIndex((obj => obj.id === bankerAccountId || obj.data.accountant[0].accInfo.id === bankerAccountId))
 				if (objIndex !== -1) {
 					newBankerAccount[objIndex].data = {...newBankerAccount[objIndex].data, ...action.payload}
 					newBankerAccount[objIndex].data.dataHiddenFields = handleProcessDataCheckHiddenColumn(newBankerAccount[objIndex].data.accountant)
@@ -268,7 +270,7 @@ export const AccountantReducer = (state = defaultState, action) => {
 				item.data = null
 				return item
 			})
-			return {...state, bankerAccount: newBankerAccount}
+			return {...state, bankerAccount: newBankerAccount, isAllowReport: false}
 		default:
 			return {...state}
 	}
