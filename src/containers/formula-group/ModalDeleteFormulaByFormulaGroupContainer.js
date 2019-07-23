@@ -6,7 +6,7 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import 'my-styles/reactstrap-modal.css'
 import { FormulaGroupService } from 'my-services/formula-group'
 import { TransComponent } from 'my-components'
-import { initFormulaList, toggleModalDeleteFormulaByFormulaGroup } from 'my-actions/formula-group/FormulaGroupAction'
+import { initFormulaList, toggleModalDeleteFormulaByFormulaGroup, getFormulaGroup } from 'my-actions/formula-group/FormulaGroupAction'
 
 class ModalDeleteFormulaByFormulaGroupContainer extends Component {
     shouldComponentUpdate(newProps, newState) {
@@ -25,6 +25,9 @@ class ModalDeleteFormulaByFormulaGroupContainer extends Component {
             }
 
             await FormulaGroupService.deleteOneByOne(payload)
+                .then( () => {
+                    this.props.getFormulaGroup()
+                })
             this.props.initFormulaList({formula_group_select: this.props.paramsDeleteFormula.formula_group_id, banker_id: this.props.paramsDeleteFormula.banker_id})
             this.props.toggleModalDeleteFormulaByFormulaGroup()
         } else if (this.props.paramsDeleteFormula.type === "multiple") {
@@ -34,6 +37,9 @@ class ModalDeleteFormulaByFormulaGroupContainer extends Component {
                 'f_pattern_ids[]': this.props.paramsDeleteFormula.f_pattern_ids,
             }
             await FormulaGroupService.multiDelete(payload)
+                .then( () => {
+                    this.props.getFormulaGroup()
+                })
             this.props.initFormulaList({formula_group_select: this.props.paramsDeleteFormula.formula_group_id, banker_id: this.props.paramsDeleteFormula.banker_id})
             this.props.toggleModalDeleteFormulaByFormulaGroup()
         }
@@ -74,6 +80,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         initFormulaList: params => dispatch(initFormulaList(params)),
         toggleModalDeleteFormulaByFormulaGroup: (params) => {dispatch(toggleModalDeleteFormulaByFormulaGroup(params))},
+        getFormulaGroup: () => dispatch(getFormulaGroup()),
     }
 };
 
