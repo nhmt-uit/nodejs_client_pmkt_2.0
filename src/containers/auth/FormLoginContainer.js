@@ -56,11 +56,9 @@ class FormLoginContainer extends React.Component {
                         ? RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'reset-secure-password' })
                         : RoutesService.getPath('ADMIN', 'DASHBOARD');
 
-            if (redirect.indexOf('dashboard')) {
+            if (redirect.indexOf('dashboard') !== -1) {
                 CookieService.set('byPassDashboard', '1');
-
                 window.location.href = redirect;
-
                 return;
             }
 

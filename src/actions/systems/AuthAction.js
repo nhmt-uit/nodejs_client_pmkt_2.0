@@ -137,37 +137,3 @@ export const checkSecure = (secureCode) => {
     };
 };
 
-export const resetSecurePassword = (post) => {
-    return dispatch => {
-        return AuthService.resetSecurePassword(post)
-            .then(res => {
-                if (res.status) {
-                    CookieService.set('byPassDashboard', true);
-
-                    setTimeout(() => {
-                        dispatch({
-                            type: AuthActionType.RESET_SECURE_PASSWORD_SUCCESS,
-                            payload: res,
-                        });
-                    }, 1000);
-                } else {
-                    dispatch({
-                        type: AuthActionType.RESET_SECURE_PASSWORD_FAIL,
-                        payload: {
-                            status: false,
-                            error_description: _get(res, 'res.data.message', '')
-                        },
-                    });
-                }
-            })
-            .catch(e => {
-                dispatch({
-                    type: AuthActionType.RESET_SECURE_PASSWORD_FAIL,
-                    payload: _get(e, 'response.data', {
-                        status: false,
-                        error_description: e.stack,
-                    }),
-                });
-            })
-    }
-};

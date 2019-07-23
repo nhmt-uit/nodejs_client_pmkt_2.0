@@ -161,6 +161,11 @@ const Routes = [
 
 const RoutesUnActive = [
 	...CommonRoutes,
+	{
+		path: '*',
+		exact: true,
+		component: DashboardPage,
+	},
 ];
 
 const RoutesRoles11_12 = [
