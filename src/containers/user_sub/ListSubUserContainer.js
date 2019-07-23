@@ -77,7 +77,7 @@ class ListSubUserContainer extends Component{
                         </div>
                         <div className="actions">
                             <div className="input-icon right">
-                                <i className="icon-magnifier"></i>
+                                <i className="icon-magnifier" />
                                 <input type="text" className="form-control" placeholder={t("sub")} value={this.state.filterText} onChange={this.handleSearchChange}/>
                             </div>
                         </div>
@@ -108,10 +108,8 @@ class ListSubUserContainer extends Component{
                                                 <td className="text-center uppercase"> {item.username} </td>
                                                 <td className="text-center"> {item.status === 1 ? t("Online") : t("Offline")} </td>
                                                 <td className="text-center"> {item.active_password2 === 1 ? (<span className="btn btn-danger label-active-pass2"> <TransComponent i18nKey="activate"/> </span>) : <span />} </td>
-                                                <td className="text-center"> <button className="text-success btn btn-link"
-                                                                                     onClick={ () => this.toggleEditMemberSub(item)}> <i className="fa fa-edit font-green cursor-pointer"></i> </button> </td>
-                                                <td className="text-center"> <button className="text-success btn btn-link font-red"
-                                                                                     onClick={ () => this.toggleDelMemberSubModal(item.id)}> <i className="fa fa-times-circle cursor-pointer"></i> </button> </td>
+                                                <td className="text-center"> <i className="fa fa-edit font-green cursor-pointer" onClick={ () => this.toggleEditMemberSub(item)} /> </td>
+                                                <td className="text-center"> <i onClick={ () => this.toggleDelMemberSubModal(item.id)} className="fa font-red-sunglo fa-times-circle cursor-pointer" /> </td>
                                             </tr>
                                         )
                                     }

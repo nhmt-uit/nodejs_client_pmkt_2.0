@@ -24,15 +24,13 @@ class ModalMoneyExchange extends Component {
         };
     }
 
-    toggleModalMoneyExchange = () => {
-        return this.props.onToggleModalMoneyExchange();
-    }
+    toggleModalMoneyExchange = () => this.props.onToggleModalMoneyExchange();
 
     handleChangeRate = e => {
         this.setState({
             rate: e.target.value
         });
-    }
+    };
 
     parseCurrencyToOptions (currencyMap) {
         if (!currencyMap) {
@@ -54,14 +52,14 @@ class ModalMoneyExchange extends Component {
         }
 
         this.setState(newState);
-    }
+    };
 
     handleSubmitForm = () => {
         const { from, to, rate } = this.state;
         const params = { from: from.value, to: to.value, rate, moneyExchangeIds: this.props.moneyExchangeIds };
 
         return this.props.onMoneyExchange(params);
-    }
+    };
 
     render() {
         const currencyMap = this.props.currencyMap;
@@ -135,7 +133,7 @@ const mapStateToProps = state => {
     return {
         moneyExchangeIds: _get(state, 'ReportReducer.moneyExchangeIds', []),
     };
-}
+};
 
 export default compose(
     connect(mapStateToProps, null),

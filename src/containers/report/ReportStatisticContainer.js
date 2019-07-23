@@ -550,14 +550,15 @@ class ReportStatisticContainer extends Component {
 
     handleToggleStatusBtnMoneyExchange = (status) => {
         return this.props.changeStatusBtnMoneyExchange(status);
-    }
+    };
 
     toggleShowAll = status => {
         this.setState({ showAll: status });
-    }
+    };
 
     render() {
-        const { currencyMap, isFetchingReport, reportType = 'cycle' } = this.props.reportStore;
+        const { currencyMap = [], reportType = 'cycle' } = this.props.reportStore;
+        const isFetchingReport = this.props.isFetchingReport;
 
         let tabContent = null;
         let tabReport = null;
@@ -592,13 +593,19 @@ class ReportStatisticContainer extends Component {
                 tabReport = <li className="active tab-report-detail">{ this.renderTabReport('member') }</li>;
         }
 
-        if (!currencyMap) {
-            return null;
+        if (!currencyMap.length) {
+            if (!isFetchingReport) return null;
+
+            return (<div className="portlet light bordered">
+                <div className="portlet-body position-relative min-height-60">
+                    <LoadingComponent />
+                </div>
+            </div>);
         }
 
         return (
             <div className="portlet light bordered">
-                <div className="portlet-body position-relative">
+                <div className="portlet-body position-relative min-height-60">
                     { isFetchingReport ? <LoadingComponent /> : null }
                     <div className="tabbable-line tabbable-full-width tabbable-report">
                         <ul className="nav nav-tabs">
@@ -623,6 +630,7 @@ class ReportStatisticContainer extends Component {
 const mapStateToProps = state => {
     return {
         reportStore: state.ReportReducer || {},
+        isFetchingReport: state.ReportReducer.isFetchingReport || false,
     };
 };
 

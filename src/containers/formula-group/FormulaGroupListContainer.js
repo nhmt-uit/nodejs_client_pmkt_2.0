@@ -146,12 +146,10 @@ class FormulaGroupListContainer extends Component {
                         <td className="text-center"> {level === 0 ? null : item.banker.name.toUpperCase()} </td>
                         <td className="text-center"> {item.num_of_formula} </td>
                         <td className="text-center">
-                            <button className="text-success btn btn-link">
-                                <i className="fa fa-edit font-green cursor-pointer" onClick={ () => this.handleEditFormulaGroup(item)}></i></button>
+                            <i className="fa fa-edit font-green cursor-pointer" onClick={ () => this.handleEditFormulaGroup(item)} />
                         </td>
                         <td className="text-center">
-                            <button className="text-success btn btn-link font-red">
-                                <i className="fa fa-trash-o font-red cursor-pointer" onClick={ () => this.handleOpenModelDel(item)}></i></button>
+                            <i className="fa fa-trash-o font-red-sunglo cursor-pointer" onClick={ () => this.handleOpenModelDel(item)} />
                         </td>
                     </tr>
                 );

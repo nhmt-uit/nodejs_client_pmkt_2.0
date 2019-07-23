@@ -1,22 +1,18 @@
-import React, { Component, Fragment } from 'react';
-import { withTranslation } from 'react-i18next';
-import {
-    ListGroupItem, ListGroup,
-    Modal, ModalFooter,
-    ModalHeader, ModalBody, Button
-} from 'reactstrap';
+import React, {Component, Fragment} from 'react';
+import {withTranslation} from 'react-i18next';
+import {Button, ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
 import Select from 'react-select';
-import { connect } from 'react-redux';
-import { compose } from 'redux';
-import { get as _get, cloneDeep, sortBy } from 'lodash';
-import { Link } from 'react-router-dom';
+import {connect} from 'react-redux';
+import {compose} from 'redux';
+import {cloneDeep, get as _get, sortBy} from 'lodash';
+import {Link} from 'react-router-dom';
 
-import { getCyclePage, getReport, getReportByBanker, getReportByMember } from 'my-actions/ReportAction';
-import { TransComponent, LoadingComponent, PaginationComponent } from 'my-components';
-import { ReportService } from 'my-services/report';
-import { CookieService } from 'my-utils/core';
+import {getCyclePage, getReport, getReportByBanker, getReportByMember} from 'my-actions/ReportAction';
+import {LoadingComponent, PaginationComponent, TransComponent} from 'my-components';
+import {ReportService} from 'my-services/report';
+import {CookieService} from 'my-utils/core';
 import {RoutesService} from 'my-routes';
-import { toggleFullScreen } from 'my-actions/systems/AppAction';
+import {toggleFullScreen} from 'my-actions/systems/AppAction';
 
 class ReportListContainer extends Component {
     constructor(props) {
@@ -41,7 +37,7 @@ class ReportListContainer extends Component {
     componentDidMount() {
         const { currentPage, itemPerPage } = this.state;
 
-        this.props.getCyclePage({ currentPage, itemPerPage  });
+        this.props.getCyclePage({ currentPage, itemPerPage }, true);
     }
 
     toggle = id => () => {
@@ -85,7 +81,9 @@ class ReportListContainer extends Component {
                             <a className="text-capitalize" href="#" onClick={this.handleGetReport({ chuky_id: id, member_name: child.name }, { ...itemActive, memberName: child.name }, 'member')} >{index + 1} - {child.name}</a>
                             { isExported
                                 ? ''
-                                : ((Number(roles) === 11 || Number(roles) === 12)) ? null : <span className="text-capitalize icon-close float-right color-red cursor-pointer" onClick={this.toggleDelModal(child.name, { chuky_id: id, acc_name: child.name })} />
+                                : ((Number(roles) === 11 || Number(roles) === 12))
+                                    ? null
+                                    : <span className="text-capitalize icon-close float-right color-red cursor-pointer" onClick={this.toggleDelModal(child.name, { chuky_id: id, acc_name: child.name })} />
                             }
                         </div>
                     </div>
@@ -151,8 +149,9 @@ class ReportListContainer extends Component {
                                 >
                                     <i className="fa fa-info font-red-sunglo cursor-pointer" />
                                     <span className="tooltip-arrow border-bt-color-red hovered"/>
-                                    <span className="content-tooltip hovered bg-dark font-white tooltip-detail text-center bg-red-sunglo" style={{minWidth: '120px'}}>
-                                        <TransComponent i18nKey="Show detail" />
+                                    <span
+                                        className="content-tooltip hovered bg-dark font-white tooltip-detail font-size-13 text-center bg-red-sunglo">
+                                        <TransComponent i18nKey="Detail" />
                                     </span>
                                 </a>
                             </div>
@@ -191,6 +190,10 @@ class ReportListContainer extends Component {
         state.isOpenModal = !state.isOpenModal;
         state.cycleChosen = typeof id === 'string' ? id: state.cycleChosen;
 
+        if (!state.isOpenModal === false) {
+            state.cycleChosenSelect = '';
+        }
+
         this.setState(state)
     };
 
@@ -207,19 +210,19 @@ class ReportListContainer extends Component {
         this.setState(newState);
     };
 
-    handleCloseCycle = _ => {
+    handleCloseCycle = async () => {
         const params = {
             chuky_id_from: this.state.cycleChosen,
             chuky_id_to: this.state.cycleChosenSelect,
         };
 
-        ReportService.closeCycle(params).then(_ => {
-            const { currentPage, itemPerPage } = this.state;
+        await ReportService.closeCycle(params);
 
-            this.setState({ isOpenModal: !this.state.isOpenModal }, () => {
-                this.props.getCyclePage({ currentPage, itemPerPage });
-            });
-        })
+        const { currentPage, itemPerPage } = this.state;
+
+        this.setState({ isOpenModal: false, cycleChosenSelect: '' }, () => {
+            this.props.getCyclePage({ currentPage, itemPerPage });
+        });
     };
 
     handleDelCycle = _ => {
@@ -284,7 +287,7 @@ class ReportListContainer extends Component {
                 </ModalBody>
                 <ModalFooter>
                     <Button className="bg-green font-white" disabled={!this.state.cycleChosenSelect} onClick={this.handleCloseCycle}>{t('save')}</Button>{' '}
-                    <Button color="secondary" onClick={this.toggleModal()}>{t('cancel')}</Button>
+                    <Button className="bg-red-sunglo font-white" onClick={this.toggleModal()}>{t('cancel')}</Button>
                 </ModalFooter>
             </Modal>
         );
@@ -297,16 +300,14 @@ class ReportListContainer extends Component {
         return (
             <Modal isOpen={isOpenDelModal} toggle={this.toggleDelModal()}>
                 <ModalHeader toggle={this.toggleDelModal()} className="text-uppercase">
-                    <strong>
-                        {t('Confirm')}
-                    </strong>
+                    <strong><TransComponent i18nKey="Xac nhan" /></strong>
                 </ModalHeader>
                 <ModalBody>
-                    {t('Are you sure to delete ')} <span className="font-green">{ delName }</span> ?
+                    <TransComponent i18nKey="Are you sure delete" />&nbsp;<span className="font-green">{ delName }</span> ?
                 </ModalBody>
                 <ModalFooter>
-                    <Button className="bg-red font-white" onClick={this.handleDelCycle}>{t('save')}</Button>{' '}
-                    <Button color="secondary" onClick={this.toggleDelModal()}>{t('cancel')}</Button>
+                    <Button className="bg-green font-white" onClick={this.handleDelCycle}>{t('save')}</Button>{' '}
+                    <Button className="bg-red-sunglo font-white" onClick={this.toggleDelModal()}>{t('cancel')}</Button>
                 </ModalFooter>
             </Modal>
         );
@@ -315,7 +316,7 @@ class ReportListContainer extends Component {
     render() {
         const { t, cyclePage, isFetching } = this.props;
         const { itemPerPage, currentPage } = this.state;
-console.log(cyclePage)
+
         let cycleList = cyclePage.data || {};
 
         cycleList = sortBy(cycleList, 'sort_value').reverse();
@@ -331,22 +332,6 @@ console.log(cyclePage)
                     </Link>
                 );
 
-        // if (isFetching) {
-        //     return (
-        //         <div className="portlet light bordered">
-        //             <div className="portlet-title">
-        //                 <div className="caption">
-        //                     <span className="caption-subject font-red bold uppercase">{t('report')}</span>
-        //                 </div>
-        //                 {btnAdd}
-        //             </div>
-        //             <div className="portlet-body position-relative" style={{ minHeight: '60px' }}>
-        //                 <LoadingComponent />
-        //             </div>
-        //         </div>
-        //     );
-        // }
-
         return (
             <div className="portlet light bordered">
                 <div className="portlet-title">
@@ -361,13 +346,14 @@ console.log(cyclePage)
                         </a>
                     </div>
                 </div>
-                <div className="portlet-body position-relative">
+                <div className="portlet-body position-relative min-height-60">
                     { isFetching ? <LoadingComponent /> : null }
-                    <ListGroup>
-                        {Object.keys(cycleList).map(item => {
-                            return this.renderCycleItem(cycleList[item]);
-                        })}
-                    </ListGroup>
+                    {
+                        Object.keys(cycleList).length
+                            ? <ListGroup>{Object.keys(cycleList).map(item => this.renderCycleItem(cycleList[item]))}</ListGroup>
+                            : isFetching ? null : <div className="text-center"><TransComponent i18nKey="Empty data" /></div>
+
+                    }
                     <div className="text-center">
                         <PaginationComponent
                             total={cyclePage.total || 0}
@@ -394,7 +380,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        getCyclePage: pagination => dispatch(getCyclePage(pagination)),
+        getCyclePage: (pagination, isInitial) => dispatch(getCyclePage(pagination, isInitial)),
         getReport: (post, itemActive) => dispatch(getReport(post, itemActive)),
         getReportByBanker: (post, itemActive) => dispatch(getReportByBanker(post, itemActive)),
         getReportByMember: (post, itemActive) => dispatch(getReportByMember(post, itemActive)),

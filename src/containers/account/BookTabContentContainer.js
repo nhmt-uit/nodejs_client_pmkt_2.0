@@ -41,18 +41,14 @@ class BookTabContentContainer extends Component {
         });
 
         this.setState(state, () => {
-            if (typeof cb === 'function') {
-                cb();
-            }
+            if (typeof cb === 'function') cb();
         })
     };
     
     handleDeleteAccount = () => {
         const { deleteState } = this.state;
         
-        if (!deleteState.id) {
-            return null;
-        }
+        if (!deleteState.id) return null;
 
         deleteState.isLoading = true;
 
@@ -106,7 +102,7 @@ class BookTabContentContainer extends Component {
         );
     }
 
-    render() {
+    render() {console.log('render book content')
         const { id, isActive } = this.props;
         const { deleteState } = this.state;
         const classActive = isActive ? 'active' : '';
