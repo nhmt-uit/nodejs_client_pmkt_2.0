@@ -228,7 +228,7 @@ class AccountantConfigComponent extends Component {
                         <div className="portlet box grey-silver">
                             <div className="portlet-title">
                                 <div className="caption">
-                                    <label className="mt-checkbox mt-checkbox-outline font-dark font-size-15" style={{width: 145}}>
+                                    <label className="mt-checkbox mt-checkbox-outline font-dark font-size-15" style={{width: 160}}>
                                         <Input
                                             type="checkbox"
                                             checked={checkAllBanker}
@@ -246,7 +246,7 @@ class AccountantConfigComponent extends Component {
                                             item.banker.toLowerCase() === "3king" ||
                                             item.banker.toLowerCase() ==="sgs889")
                                             ?
-                                            <label className="mt-checkbox mt-checkbox-outline font-dark font-size-15" style={{width: 90}}>
+                                            <label className="mt-checkbox mt-checkbox-outline font-dark font-size-15" style={{width: 120}}>
                                                 <Input
                                                     type="checkbox"
                                                     checked={checkAllRadioAll}
@@ -257,7 +257,7 @@ class AccountantConfigComponent extends Component {
                                             </label>
                                             :
                                             <>
-                                                <label className="mt-checkbox mt-checkbox-outline font-dark font-size-15" style={{width: 90}}>
+                                                <label className="mt-checkbox mt-checkbox-outline font-dark font-size-15" style={{width: 120}}>
                                                     <Input
                                                         type="checkbox"
                                                         checked={checkAllRadioAll}
@@ -290,7 +290,7 @@ class AccountantConfigComponent extends Component {
                                             <table className="table table-condensed table-hover" key={item_child.acc_name}>
                                                 <tbody>
                                                     <tr>
-                                                        <td style={{width: 145}}>
+                                                        <td style={{width: 160}}>
                                                             <label className="mt-checkbox mt-checkbox-outline font-dark font-size-12">
                                                                 <Input
                                                                     type="checkbox"
@@ -304,7 +304,7 @@ class AccountantConfigComponent extends Component {
                                                         {
                                                             item_child.book_name === "sportsbook" ?
                                                                 <>
-                                                                    <td style={{width: 100}}>
+                                                                    <td style={{width: 130}}>
                                                                         {
                                                                             item.banker === "sbc168" ? null :
                                                                                 <label className="mt-radio font-size-12">
@@ -400,7 +400,7 @@ class AccountantConfigComponent extends Component {
                                                                 :
                                                                 item_child.book_name === "other" ?
                                                                 <>
-                                                                    <td style={{width: 100}}>
+                                                                    <td style={{width: 130}}>
                                                                         {
                                                                             item.banker === "sv388" || item.banker === "s1288" || item.banker === "cft3388" ?
                                                                                 <label className="mt-radio font-size-12">
@@ -461,7 +461,7 @@ class AccountantConfigComponent extends Component {
                                                                 </>
                                                                     : item_child.book_name === "loto" ?
                                                                     <>
-                                                                        <td style={{width: 100}}></td>
+                                                                        <td style={{width: 130}}></td>
                                                                         <td>
                                                                             {
                                                                                 item.banker === "new789" ?
