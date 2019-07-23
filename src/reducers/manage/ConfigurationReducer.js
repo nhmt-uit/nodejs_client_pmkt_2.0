@@ -29,6 +29,7 @@ const ConfigurationReducer = (state = defaultState, action) => {
             return {...state, errors: action.payload};
 
         case ConfigurationActionType.SAVE_ACCOUNTANT_CONFIG_SUCCESS:
+            return {...state, saveStatus: action.saveStatus}
         case ConfigurationActionType.SAVE_COMPANY_CONFIG_SUCCESS:
             return {...state, saveStatus: action.saveStatus}
         case ConfigurationActionType.RESET_FORM_SAVE_RESPONSE_COMPANY_CONFIG:

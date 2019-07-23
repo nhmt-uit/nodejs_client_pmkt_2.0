@@ -35,17 +35,23 @@ class AccountantManualBankerPage extends Component {
                                     bankerList.map(function (item, index) {
                                         return (
                                             <div key={index} className="col-xs-6 col-md-4">
-                                                <Link to={RoutesService.getPath('ADMIN', 'ACCOUNTANT_MANUAL_PROCESS', {bankerName: item.name.toLowerCase(), type: 'login' })} >
+                                                <Link to={RoutesService.getPath('ADMIN', 'ACCOUNTANT_MANUAL_PROCESS', {
+                                                    bankerName: item.name.toLowerCase(),
+                                                    type: 'login'
+                                                })}>
                                                     <div className="widget-thumb margin-bottom-20 bordered">
                                                         <div className="widget-thumb-wrap text-center">
-                                                            <img src={"/assets/images/logo/" + item.logo} alt={item.name} title={item.name} style={{height:33, width:"auto"}}/>
+                                                            <img src={"/assets/images/logo/" + item.logo}
+                                                                 alt={item.name} title={item.name}
+                                                                 style={{height: 33, width: "auto"}}/>
                                                         </div>
                                                     </div>
                                                 </Link>
                                             </div>
                                         )
                                     })
-                                    : <div style={{ height: '100px' }}><LoadingComponent /></div>}
+                                    : <div className="text-center"><TransComponent i18nKey="Data Empty"/></div>
+                                }
                             </div>
                         </div>
                     </div>
