@@ -13,6 +13,7 @@ import { FormAssignContainer, ListFormulaByAccountContainer } from 'my-container
 class ModalFormFormulaContainer extends Component {
     handleToggleModal = _ => {
         const { payloadSelectedFormula } = this.props
+        console.log(payloadSelectedFormula)
         const bankerAccountId = payloadSelectedFormula.bankerAccountId
         const scanData = payloadSelectedFormula.scanData
         this.props.socketGetReport({id: bankerAccountId, scanData: scanData})

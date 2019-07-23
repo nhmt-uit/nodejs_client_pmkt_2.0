@@ -48,7 +48,7 @@ class FormMemberContainer extends Component {
                 s1: suffixes[0],
                 s2: suffixes[1],
                 s3: suffixes[2],
-                status: this.props.selectedItem.status,
+                status: this.props.selectedItem.status ? true : false,
                 except: this.props.selectedItem.fullname,
             })
         }
@@ -120,7 +120,7 @@ class FormMemberContainer extends Component {
                     <div className="form-group">
                         <label><TransComponent i18nKey="Username"/></label>
                         <div className="row">
-                            <div className="col-md-4" style={{paddingRight: '0px'}}>
+                            <div className="col-xs-4 col-md-4" style={{paddingRight: '0px'}}>
                                 <Field
                                     name="username"
                                     component="input"
@@ -129,7 +129,7 @@ class FormMemberContainer extends Component {
                                     readOnly={true}
                                 />
                             </div>
-                            <div className="col-md-2" style={{paddingRight: '0px'}}>
+                            <div className="col-xs-2 col-md-2" style={{paddingRight: '0px'}}>
                                 <Field name="s1" component="select" className="form-control" disabled={!_isEmpty(this.props.selectedItem)}>
                                     {
                                         optSubMemberNumber.map(item => {
@@ -138,7 +138,7 @@ class FormMemberContainer extends Component {
                                     }
                                 </Field>
                             </div>
-                            <div className="col-md-2" style={{paddingRight: '0px'}}>
+                            <div className="col-xs-2 col-md-2" style={{paddingRight: '0px'}}>
                                 <Field name="s2" component="select" className="form-control" disabled={!_isEmpty(this.props.selectedItem)}>
                                     {
                                         optSubMemberNumber.map(item => {
@@ -147,7 +147,7 @@ class FormMemberContainer extends Component {
                                     }
                                 </Field>
                             </div>
-                            <div className="col-md-2" style={{paddingRight: '0px'}}>
+                            <div className="col-xs-2 col-md-2" style={{paddingRight: '0px'}}>
                                 <Field name="s3" component="select" className="form-control" disabled={!_isEmpty(this.props.selectedItem)}>
                                     {
                                         optSubMemberNumber.map(item => {

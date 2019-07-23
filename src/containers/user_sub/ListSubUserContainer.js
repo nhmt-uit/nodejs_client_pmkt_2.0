@@ -83,43 +83,45 @@ class ListSubUserContainer extends Component{
                         </div>
                     </div>
                     <div className="portlet-body">
-                        <table className="table table-striped table-bordered table-hover dataTable no-footer dtr-inline">
-                            <thead>
-                                <tr role="row">
-                                    <th className="caption-subject font-red text-center"> # </th>
-                                    <th className="caption-subject font-red text-center"><TransComponent i18nKey="Name"/></th>
-                                    <th className="caption-subject font-red text-center"><TransComponent i18nKey="Username"/></th>
-                                    <th className="caption-subject font-red text-center"><TransComponent i18nKey="Status"/></th>
-                                    <th className="caption-subject font-red text-center"><TransComponent i18nKey="Password 2"/></th>
-                                    <th className="caption-subject font-red text-center"><TransComponent i18nKey="Edit"/></th>
-                                    <th className="caption-subject font-red text-center"><TransComponent i18nKey="Delete"/></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            {
-                                listMemberSub.length ?
-                                listMemberSub.map((item, index) => {
-                                    if(item.fullname.toUpperCase().indexOf(filterTextChange.toUpperCase()) > -1){
-                                        x++;
-                                        return(
-                                            <tr key={index}>
-                                                <td className="text-center"> {x} </td>
-                                                <td className="uppercase"> {item.fullname} </td>
-                                                <td className="text-center uppercase"> {item.username} </td>
-                                                <td className="text-center"> {item.status === 1 ? t("Online") : t("Offline")} </td>
-                                                <td className="text-center"> {item.active_password2 === 1 ? (<span className="btn btn-danger label-active-pass2"> <TransComponent i18nKey="activate"/> </span>) : <span />} </td>
-                                                <td className="text-center"> <button className="text-success btn btn-link"
-                                                                                     onClick={ () => this.toggleEditMemberSub(item)}> <i className="fa fa-edit font-green cursor-pointer"></i> </button> </td>
-                                                <td className="text-center"> <button className="text-success btn btn-link font-red"
-                                                                                     onClick={ () => this.toggleDelMemberSubModal(item.id)}> <i className="fa fa-times-circle cursor-pointer"></i> </button> </td>
-                                            </tr>
-                                        )
-                                    }
-                                })
-                                : <tr><td className="text-center" colSpan="20"><TransComponent i18nKey="Data Empty" /></td></tr>
-                            }
-                            </tbody>
-                        </table>
+                        <div className="table-responsive">
+                            <table className="table table-striped table-bordered table-hover dataTable no-footer dtr-inline">
+                                <thead>
+                                    <tr role="row">
+                                        <th className="caption-subject font-red text-center"> # </th>
+                                        <th className="caption-subject font-red text-center"><TransComponent i18nKey="Name"/></th>
+                                        <th className="caption-subject font-red text-center"><TransComponent i18nKey="Username"/></th>
+                                        <th className="caption-subject font-red text-center"><TransComponent i18nKey="Status"/></th>
+                                        <th className="caption-subject font-red text-center"><TransComponent i18nKey="Password 2"/></th>
+                                        <th className="caption-subject font-red text-center"><TransComponent i18nKey="Edit"/></th>
+                                        <th className="caption-subject font-red text-center"><TransComponent i18nKey="Delete"/></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {
+                                    listMemberSub.length ?
+                                    listMemberSub.map((item, index) => {
+                                        if(item.fullname.toUpperCase().indexOf(filterTextChange.toUpperCase()) > -1){
+                                            x++;
+                                            return(
+                                                <tr key={index}>
+                                                    <td className="text-center"> {x} </td>
+                                                    <td className="uppercase"> {item.fullname} </td>
+                                                    <td className="text-center uppercase"> {item.username} </td>
+                                                    <td className="text-center"> {item.status === 1 ? t("Online") : t("Offline")} </td>
+                                                    <td className="text-center"> {item.active_password2 === 1 ? (<span className="btn btn-danger label-active-pass2"> <TransComponent i18nKey="activate"/> </span>) : <span />} </td>
+                                                    <td className="text-center"> <button className="text-success btn btn-link"
+                                                                                        onClick={ () => this.toggleEditMemberSub(item)}> <i className="fa fa-edit font-green cursor-pointer"></i> </button> </td>
+                                                    <td className="text-center"> <button className="text-success btn btn-link font-red"
+                                                                                        onClick={ () => this.toggleDelMemberSubModal(item.id)}> <i className="fa fa-times-circle cursor-pointer"></i> </button> </td>
+                                                </tr>
+                                            )
+                                        }
+                                    })
+                                    : <tr><td className="text-center" colSpan="20"><TransComponent i18nKey="Data Empty" /></td></tr>
+                                }
+                                </tbody>
+                            </table>
+                        </div>
                         <div>
                             <Modal isOpen={this.state.isOpenDelModal} toggle={() => this.toggleDelMemberSubModal()}>
                                 <ModalHeader toggle={() => this.toggleDelMemberSubModal()} className="text-uppercase">

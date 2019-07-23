@@ -131,27 +131,30 @@ class CompanyConfigComponent extends Component{
                 <div className="btn-group-top text-right">
                     <Button color="success" onClick={this.handleSaveData()}><TransComponent i18nKey="Save"/></Button>
                 </div>
-                <table className="table table-striped table-hover dataTable no-footer dtr-inline">
-                    <thead>
-                    <tr>
-                        <th className="text-center">
-                            <label className="mt-checkbox mt-checkbox-outline">&nbsp;
-                                <Input type="checkbox" onChange={this.handleCheckAll()} checked={checkAll}/>
-                                <span></span>
-                            </label>
-                        </th>
-                        <th className="caption-subject font-red text-center"><TransComponent i18nKey="Company"/></th>
-                        <th className="caption-subject font-red"><TransComponent i18nKey="Viết tắt"/></th>
-                        <th className="caption-subject font-red"><TransComponent i18nKey="Nhóm"/></th>
-                        <th className="caption-subject font-red"><TransComponent i18nKey="Trang quản lý"/></th>
-                        <th className="caption-subject font-red"><TransComponent i18nKey="Trang thành viên"/></th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {tbody}
-                    </tbody>
-                </table>
+                
+                <div className="table-responsive">
+                    <table className="table table-striped table-hover dataTable no-footer dtr-inline">
+                        <thead>
+                        <tr>
+                            <th className="text-center">
+                                <label className="mt-checkbox mt-checkbox-outline">&nbsp;
+                                    <Input type="checkbox" onChange={this.handleCheckAll()} checked={checkAll}/>
+                                    <span></span>
+                                </label>
+                            </th>
+                            <th className="caption-subject font-red text-center"><TransComponent i18nKey="Company"/></th>
+                            <th className="caption-subject font-red"><TransComponent i18nKey="Viết tắt"/></th>
+                            <th className="caption-subject font-red"><TransComponent i18nKey="Nhóm"/></th>
+                            <th className="caption-subject font-red"><TransComponent i18nKey="Trang quản lý"/></th>
+                            <th className="caption-subject font-red"><TransComponent i18nKey="Trang thành viên"/></th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {tbody}
+                        </tbody>
+                    </table>
+                </div>
             </>
         )
     }

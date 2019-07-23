@@ -21,7 +21,9 @@ class AccountantManualPage extends Component {
                 <AccountantFormScanContainer />
                 <AccountantStatusAccountContainer />
                 <AccountantListBankerUtilContainer />
-                <AccountantListBankerContainer />
+                <div className="position-relative">
+                    <AccountantListBankerContainer />
+                </div>
             </>
         );
     }

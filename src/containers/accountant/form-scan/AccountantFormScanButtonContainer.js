@@ -213,9 +213,9 @@ class AccountantFormScanButtonContainer extends Component {
             <div className="form-group">
                 { !isProcessing ? <a href="#/" className="btn btn-default red" onClick={this.handleRequestScan}><TransComponent i18nKey="Scan" /></a> : null}
                 { isProcessing ? <a href="#/" className="btn btn-default grey" onClick={this.handleStopScan}><TransComponent i18nKey="Stop" /></a> : null}
-                { bankerName ? <Link to={RoutesService.getPath('ADMIN', 'ACCOUNTANT_MANUAL_PROCESS', { bankerName: bankerName, type: 'login' })} className="btn btn-default grey"><TransComponent i18nKey="Sign Out" /></Link> : null}
                 { typeof bankerName === "undefined" && isAllowReport ? <a href="#/" type="submit" className="btn btn-default red" onClick={_ => this.handleSaveReport() }><TransComponent i18nKey="Save report" /></a> : null}
-                { hasSpecialFeature === 1 && typeof bankerName === "undefined" && isAllowReport ? <a href="#/" type="submit" className="btn btn-default red" onClick={_ => this.handleExportCsv() }><TransComponent i18nKey="export to csv" /></a> : null}
+                { hasSpecialFeature === 1 && isAllowReport ? <a href="#/" type="submit" className="btn btn-default red" onClick={_ => this.handleExportCsv() }><TransComponent i18nKey="export to csv" /></a> : null}
+                { bankerName ? <Link to={RoutesService.getPath('ADMIN', 'ACCOUNTANT_MANUAL_PROCESS', { bankerName: bankerName, type: 'login' })} className="btn btn-default grey"><TransComponent i18nKey="Sign Out" /></Link> : null}
             </div>
         )
     }

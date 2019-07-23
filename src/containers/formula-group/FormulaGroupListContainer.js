@@ -221,24 +221,27 @@ class FormulaGroupListContainer extends Component {
                     </div>
                 </div>
                 <div className="portlet-body">
-                    <table className="table table-striped table-bordered table-hover dataTable no-footer dtr-inline">
-                        <thead>
-                            <tr role="row">
-                                <th className="caption-subject font-red text-center"> # </th>
-                                <th className="caption-subject font-red text-center"><TransComponent i18nKey="formula group name"/></th>
-                                <th className="caption-subject font-red text-center"><TransComponent i18nKey="Company"/></th>
-                                <th className="caption-subject font-red text-center"><TransComponent i18nKey="Total"/></th>
-                                <th className="caption-subject font-red text-center"><TransComponent i18nKey="Edit"/></th>
-                                <th className="caption-subject font-red text-center"><TransComponent i18nKey="Delete"/></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        {
-                            formulaGroupList.length ?
-                                tbody : <tr><td className="text-center" colSpan="20"><TransComponent i18nKey="Data Empty" /></td></tr>
-                        }
-                        </tbody>
-                    </table>
+                    
+                    <div className="table-responsive">
+                        <table className="table table-striped table-bordered table-hover dataTable no-footer dtr-inline">
+                            <thead>
+                                <tr role="row">
+                                    <th className="caption-subject font-red text-center"> # </th>
+                                    <th className="caption-subject font-red text-center"><TransComponent i18nKey="formula group name"/></th>
+                                    <th className="caption-subject font-red text-center"><TransComponent i18nKey="Company"/></th>
+                                    <th className="caption-subject font-red text-center"><TransComponent i18nKey="Total"/></th>
+                                    <th className="caption-subject font-red text-center"><TransComponent i18nKey="Edit"/></th>
+                                    <th className="caption-subject font-red text-center"><TransComponent i18nKey="Delete"/></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {
+                                formulaGroupList.length ?
+                                    tbody : <tr><td className="text-center" colSpan="20"><TransComponent i18nKey="Data Empty" /></td></tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <div>
                     <Modal isOpen={this.state.isOpenDelModal} toggle={() => this.handleCloseModalDel()}>

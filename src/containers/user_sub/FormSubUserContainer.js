@@ -93,7 +93,7 @@ class FormSubUserContainer extends Component {
                     <div className="form-group">
                         <label><TransComponent i18nKey="Username"/></label>
                         <div className="row">
-                            <div className="col-md-4" style={{paddingRight: '0px'}}>
+                            <div className="col-xs-4 col-md-4" style={{paddingRight: '0px'}}>
                                 <Field
                                     name="username"
                                     component="input"
@@ -103,7 +103,7 @@ class FormSubUserContainer extends Component {
                                     disabled={true}
                                 />
                             </div>
-                            <div className="col-md-2" style={{paddingRight: '0px'}}>
+                            <div className="col-xs-2 col-md-2" style={{paddingRight: '0px'}}>
                                 {formType === "create" ?
                                     <Field name="s1" component="select" className="form-control">
                                         {
@@ -123,7 +123,7 @@ class FormSubUserContainer extends Component {
                                     </Field>
                                 }
                             </div>
-                            <div className="col-md-2" style={{paddingRight: '0px'}}>
+                            <div className="col-xs-2 col-md-2" style={{paddingRight: '0px'}}>
                                 {formType === "create" ?
                                     <Field name="s2" component="select" className="form-control">
                                         {
@@ -143,7 +143,7 @@ class FormSubUserContainer extends Component {
                                     </Field>
                                 }
                             </div>
-                            <div className="col-md-2" style={{paddingRight: '0px'}}>
+                            <div className="col-xs-2 col-md-2" style={{paddingRight: '0px'}}>
                                 {formType === "create" ?
                                     <Field name="s3" component="select" className="form-control">
                                         {
