@@ -82,7 +82,7 @@ export const getSecure = _ => {
                     });
                 }
             }).catch(e => {
-                if (e.response.status === 500) {
+                if (_get(e, 'response.state') === 500) {
                     CookieService.set('isCheckSecure', '1');
 
                     dispatch({
