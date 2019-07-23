@@ -5,8 +5,6 @@ import {compose} from "redux/es/redux";
 import {connect} from "react-redux";
 
 import { getCompanyConfig, saveCompanyConfig, resetFormSaveResponse } from 'my-actions/manage/ConfigurationAction';
-// import {keyBy} from "lodash";
-
 
 class CompanyConfigComponent extends Component{
     constructor(props) {
@@ -160,7 +158,6 @@ class CompanyConfigComponent extends Component{
 const mapStateToProps = state => {
     return {
         saveStatus: state.ConfigurationReducer.saveStatus,
-
 };
 };
 

@@ -5,7 +5,7 @@ import { ConfigurationService } from 'my-services/manage';
 
 export const getAccountantConfig = () => {
     return dispatch => {
-        return ConfigurationService.getAccoutantConfig()
+        return ConfigurationService.getAccountantConfig()
             .then(res => {
                 if (res.status) {
                     dispatch({
@@ -143,6 +143,28 @@ export const saveCompanyConfig = (post) => {
                             status: false,
                             error_description: _get(res, 'res.data.message', '')
                         },
+                    })
+                }
+            })
+    }
+}
+
+export const saveAccountantConfig = post => {
+    return dispatch => {
+        return ConfigurationService.saveAccountantConfig(post)
+            .then( res => {
+                if(res.status){
+                    dispatch({
+                        type: ConfigurationActionType.SAVE_ACCOUNTANT_CONFIG_SUCCESS,
+                        saveStatus: res.status
+                    })
+                } else {
+                    dispatch({
+                        type: ConfigurationActionType.SAVE_ACCOUNTANT_CONFIG_FAIL,
+                        payload: {
+                            status: false,
+                            error_description: _get(res, 'res.data.message', '')
+                        }
                     })
                 }
             })

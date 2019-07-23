@@ -8,7 +8,7 @@ class ConfigurationService extends BaseService {
     | @content: Get accountant configuration
     |--------------------------------------------------------------------------
     */
-    getAccoutantConfig(){
+    getAccountantConfig(){
         return HttpService.post(`${this.serviceUrl}/accountant_config`);
     };
 
@@ -45,6 +45,15 @@ class ConfigurationService extends BaseService {
     */
     saveCurrencyConfig(post){
         return HttpService.post(`${this.serviceUrl}/currency/save`, post);
+    };
+
+    /*
+    |--------------------------------------------------------------------------
+    | @content: Save accountant configuration
+    |--------------------------------------------------------------------------
+    */
+    saveAccountantConfig(post){
+        return HttpService.post(`${this.serviceUrl}/accountant_config/save`, post);
     };
 
     /*
