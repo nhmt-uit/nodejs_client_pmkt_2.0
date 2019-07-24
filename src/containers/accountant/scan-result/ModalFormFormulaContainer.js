@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import {get as _get, isEqual as _isEqual} from 'lodash'
+import {get as _get} from 'lodash'
 
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import 'my-styles/reactstrap-modal.css'
-import { FormulaService } from 'my-services/formula'
 import { toggleModalFormFormula, socketGetReport } from 'my-actions/AccountantAction'
-import { Helpers} from 'my-utils'
 import { TransComponent } from 'my-components'
 import { FormAssignContainer, ListFormulaByAccountContainer } from 'my-containers/accountant'
 

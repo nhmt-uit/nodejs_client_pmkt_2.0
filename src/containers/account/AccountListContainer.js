@@ -10,12 +10,15 @@ import {
 
 import { TransComponent, LoadingComponent } from 'my-components';
 import { BookTabContentContainer, ModalByActionContainer, LinkFormulaModalContainer } from 'my-containers/account';
-import { getTab, getAccount, toggleModalAccount, setListOpen } from 'my-actions/AccountAction';
+import { getTab, getAccount, toggleModalAccount } from 'my-actions/AccountAction';
 
 class AccountListContainer extends Component {
     componentDidMount() {
         this.props.getTab();
-        this.props.getAccount();
+
+        if (!this.props.lstAccount.length) {
+            this.props.getAccount();
+        }
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -56,6 +59,8 @@ class AccountListContainer extends Component {
                 }
 
                 if (item.child) return (item.child = item.child.filter(findChild)).length;
+
+                return false;
             });
         }
 

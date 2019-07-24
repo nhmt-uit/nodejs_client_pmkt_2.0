@@ -1,5 +1,4 @@
 import { AccountSubActionType } from 'my-constants/action-types';
-import {isObjectPattern} from "@babel/types";
 
 let defaultState = {
     isOpenEditModal: false,

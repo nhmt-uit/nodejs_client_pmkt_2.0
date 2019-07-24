@@ -1,11 +1,10 @@
 import React, {Component} from 'react';
 import { withTranslation } from 'react-i18next';
-import {Field, reduxForm, SubmissionError} from "redux-form";
+import {Field, reduxForm} from "redux-form";
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import {get as _get, get, isEqual as _isEqual} from 'lodash';
 import { Redirect } from 'react-router-dom';
-import $ from 'jquery';
 
 import { RoutesService } from 'my-routes';
 import { CookieService } from 'my-utils/core';

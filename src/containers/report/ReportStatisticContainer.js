@@ -14,7 +14,6 @@ import { Helpers } from 'my-utils';
 import { LoadingComponent, TransComponent } from 'my-components';
 import { ReportByMember } from 'my-components/report';
 import { CookieService } from 'my-utils/core';
-import { RoutesService } from 'my-routes';
 import { ReportAccountContainer, ButtonMoneyExchange, ModalMoneyExchange } from 'my-containers/report';
 import { ReportService } from 'my-services/report';
 import { getReport, getReportByBanker, getReportByMember, changeMoneyExchangeIds, changeStatusBtnMoneyExchange } from 'my-actions/ReportAction';
@@ -102,9 +101,7 @@ class ReportStatisticContainer extends Component {
     renderTabReportContent(type, isActive) {
         const classActive = isActive ? 'active' : '';
         const { itemActive = {}, books = [], reportType = 'cycle' } = this.props.reportStore;
-        const t = this.props.t;
         const bookTabElm = type === 'accounting' ? this.renderBookTabs('accounting') : this.renderBookTabs('synthesis');
-        const roles = CookieService.get('roles');
         return (
             <div className={`tab-pane ${classActive}`} id={`tab_${type}`}>
                 <div className="row">
@@ -562,7 +559,6 @@ class ReportStatisticContainer extends Component {
 
         let tabContent = null;
         let tabReport = null;
-        const roles = CookieService.get('roles');
 
         switch(reportType) {
             case 'cycle':

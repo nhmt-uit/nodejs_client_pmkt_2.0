@@ -1,12 +1,11 @@
 import React, {Component} from "react";
-import {get, isEmpty} from 'lodash';
 
 import {getMemberSub, delMemberSub, toggleModalMemberSub} from "my-actions/account_sub/AccountSubAction";
 import {compose} from "redux/es/redux";
 import {connect} from "react-redux";
 import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 import {withTranslation} from "react-i18next";
-import {TransComponent, LoadingComponent} from 'my-components'
+import {TransComponent} from 'my-components'
 import ModalFormEditSubUserContainer from "my-containers/user_sub/ModalFormEditSubUserContainer"
 
 class ListSubUserContainer extends Component{
@@ -114,6 +113,8 @@ class ListSubUserContainer extends Component{
                                                 </tr>
                                             )
                                         }
+
+                                        return null;
                                     })
                                     : <tr><td className="text-center" colSpan="20"><TransComponent i18nKey="Data Empty" /></td></tr>
                                 }

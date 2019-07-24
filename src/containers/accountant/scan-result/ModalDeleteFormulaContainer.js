@@ -31,7 +31,6 @@ class ModalDeleteFormulaContainer extends Component {
 
     render() {
         const { payloadSelectedFormula } = this.props
-        const formulaID = _get(payloadSelectedFormula, 'formulaDetail.ctt_id')
         const formulaName = Helpers.formatFormulaName(_get(payloadSelectedFormula, 'formulaDetail.formulaName', ''))
         const formulaMember = _get(payloadSelectedFormula, 'formulaDetail.memberName', '').toUpperCase()
         
