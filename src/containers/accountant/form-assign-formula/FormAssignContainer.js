@@ -55,13 +55,9 @@ class FormAssignContainer extends Component {
     }
 
     componentDidUpdate() {
-        if(this.props.formMemberSaveStatus === true) {
-            this.props.initMember()
-        }
+        if(this.props.formMemberSaveStatus === true) this.props.initMember();
 
-        if(this.props.formAccountSaveStatus === true) {
-            this.props.initAccount()
-        }
+        if(this.props.formAccountSaveStatus === true) this.props.initAccount();
 
         if(this.props.formFormulaSaveStatus === true) {
             const newFormulaId = this.props.formFormulaSaveResponse.data.formulaId
@@ -183,7 +179,7 @@ class FormAssignContainer extends Component {
     }
 
     renderInputAccount = _ => {
-        const { optAccount } = this.props
+        const { optAccount, isFetchingInitAccount } = this.props
         //First Init Select When Call Component From Accountant Scan
         if(!_isEmpty(this.props.selectedAccount)) {
             return (
@@ -192,6 +188,7 @@ class FormAssignContainer extends Component {
                     className="basic-single"
                     component={renderSelectField}
                     isSearchable={true}
+                    isLoading={isFetchingInitAccount}
                     isDisabled={true}
                     options={[this.props.selectedAccount]}
                     formatGroupLabel={renderFormatGroupLabel}
@@ -206,6 +203,7 @@ class FormAssignContainer extends Component {
                             className="basic-single"
                             component={renderSelectField}
                             options={optAccount}
+                            isLoading={isFetchingInitAccount}
                             placeholder={<TransComponent i18nKey="-- Select account --" />}
                             onChange={this.handleChangeAccount}
                             formatGroupLabel={renderFormatGroupLabel}
@@ -214,7 +212,7 @@ class FormAssignContainer extends Component {
                             <button className="btn bg-red-sunglo" type="button" onClick={_ => this.props.toggleModalAccount()}><i className="fa fa-plus font-white" /></button>
                         </span>
                     </div>
-                    <Field name="account"component={renderError} />
+                    <Field name="account" component={renderError} />
                 </>
             )
         }
@@ -253,6 +251,7 @@ class FormAssignContainer extends Component {
                                 component={renderSelectField}
                                 options={optMember}
                                 isSearchable={true}
+                                isLoading={this.props.isFetchingInitMember}
                                 placeholder={<TransComponent i18nKey="Member" />}
                                 />
                             <span className="input-group-btn">
@@ -352,6 +351,8 @@ const mapStateToProps = state => {
         optFormula: state.AccountantAssignFormulaReducer.optFormula,
         formSaveStatus: state.AccountantAssignFormulaReducer.formSaveStatus,
         formSaveResponse: state.AccountantAssignFormulaReducer.formSaveResponse,
+        isFetchingInitMember: state.AccountantAssignFormulaReducer.isFetchingInitMember,
+        isFetchingInitAccount: state.AccountantAssignFormulaReducer.isFetchingInitAccount,
         isOpenModalAssignFormulaGroup: state.FormulaGroupReducer.isOpenModalAssign,
 
         //Response Modal Member Saved

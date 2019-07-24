@@ -9,6 +9,9 @@ let defaultState = {
 	formSaveStatus: null,
 	formSaveResponse: {},
 
+	isFetchingInitMember: false,
+	isFetchingInitAccount: false,
+
 	// Handle list formula by account
 	selectedAccountId: null,
 	listFormulaDetail: [],
@@ -22,9 +25,13 @@ export const AccountantAssignFormulaReducer = (state = defaultState, action) => 
 		case AccountantAssignFormulaActionType.ASSIGN_FORMULA_RESET_DATA_ACCOUNT:
 			return {...defaultState}
 		case AccountantAssignFormulaActionType.ASSIGN_FORMULA_INIT_DATA_ACCOUNT:
-			return {...state, optAccount: action.optAccount}
+			return {...state, isFetchingInitAccount: true}
+		case AccountantAssignFormulaActionType.ASSIGN_FORMULA_INIT_DATA_ACCOUNT_SUCCESS:
+			return {...state, isFetchingInitAccount: false, optAccount: action.optAccount,}
 		case AccountantAssignFormulaActionType.ASSIGN_FORMULA_INIT_DATA_MEMBER:
-			return {...state, optMember: action.optMember}
+			return {...state, isFetchingInitMember: true, }
+		case AccountantAssignFormulaActionType.ASSIGN_FORMULA_INIT_DATA_MEMBER_SUCCESS:
+			return {...state, optMember: action.optMember, isFetchingInitMember: false, }
 		case AccountantAssignFormulaActionType.ASSIGN_FORMULA_INIT_DATA_FORMULA:
 			return {...state, optFormula: action.optFormula}
 		case AccountantAssignFormulaActionType.ASSIGN_FORMULA_SAVE_DATA_FORMULA:

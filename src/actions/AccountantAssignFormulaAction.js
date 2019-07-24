@@ -18,12 +18,16 @@ export const resetData = params => {
 
 export const initAccount = (params) => {
     return (dispatch) => {
+        dispatch({
+            type: AccountantAssignFormulaActionType.ASSIGN_FORMULA_INIT_DATA_ACCOUNT,
+        });
+
         AccountService.getAccount().then(res => {
             if (res.status) {
                 const optAccount = res.res.data.bankerAccountMap
                 // Dispatch data to reducer
                 dispatch({
-                    type: AccountantAssignFormulaActionType.ASSIGN_FORMULA_INIT_DATA_ACCOUNT,
+                    type: AccountantAssignFormulaActionType.ASSIGN_FORMULA_INIT_DATA_ACCOUNT_SUCCESS,
                     optAccount: optAccount
                 });
             }
@@ -33,15 +37,17 @@ export const initAccount = (params) => {
 
 export const initMember = (params) => {
     return (dispatch) => {
+        dispatch({
+            type: AccountantAssignFormulaActionType.ASSIGN_FORMULA_INIT_DATA_MEMBER,
+        });
+
         MemberService.getMember().then(res => {
             if (res.status) {
-                const optMember = res.res.data.List.map(item => {
-                    return {value: item.id, label: item.fullname.toUpperCase()}
-                })
+                const optMember = res.res.data.List.map(item => ({ value: item.id, label: item.fullname.toUpperCase() }))
 
                 // Dispatch data to reducer
                 dispatch({
-                    type: AccountantAssignFormulaActionType.ASSIGN_FORMULA_INIT_DATA_MEMBER,
+                    type: AccountantAssignFormulaActionType.ASSIGN_FORMULA_INIT_DATA_MEMBER_SUCCESS,
                     optMember: optMember
                 });
             }

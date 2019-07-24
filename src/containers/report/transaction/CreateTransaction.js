@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Field, reduxForm, reset} from "redux-form";
+import {Field, reduxForm} from "redux-form";
 import {connect} from "react-redux";
 import {compose} from "redux";
 import {isEmpty, get as _get, sortBy} from 'lodash'

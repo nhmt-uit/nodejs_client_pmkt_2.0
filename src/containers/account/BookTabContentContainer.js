@@ -138,7 +138,7 @@ class BookTabContentContainer extends Component {
                     <ModalBody><TransComponent i18nKey="are you sure delete" />&nbsp;<span className="text-uppercase">{deleteState.name}</span></ModalBody>
                     <ModalFooter>
                         <div className="text-center">
-                            <button className="btn btn-primary" disabled={deleteState.isLoading} onClick={this.handleDeleteAccount}>
+                            <button className="btn bg-green font-white" disabled={deleteState.isLoading} onClick={this.handleDeleteAccount}>
                                 <TransComponent i18nKey="Delete" />{ deleteState.isLoading ? <i className="fa fa-spinner fa-spin" /> : null }
                             </button>&nbsp;
                             <button className="btn btn-danger" onClick={this.handleChangeState({ deleteState: { ...deleteState, isOpenModal: !deleteState.isOpenModal } })}>

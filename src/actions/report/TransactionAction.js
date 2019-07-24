@@ -1,6 +1,5 @@
 import { TransactionActionType } from 'my-constants/action-types'
 import TransactionService from 'my-services/report/TransactionService'
-import {isEmpty as _isEmpty} from "lodash";
 
 export const getAllTransaction = () => {
     return (dispatch) => {

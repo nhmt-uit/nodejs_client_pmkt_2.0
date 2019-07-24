@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux'
-import { get as _get, isEmpty as _isEmpty, forEach as _forEach, concat as _concat } from 'lodash'
+import { get as _get, isEmpty as _isEmpty } from 'lodash'
 import uuidv4 from 'uuid/v4'
 
 import { Helpers } from 'my-utils'
@@ -38,7 +38,7 @@ class AccountantBankerAccountResultRowContainer extends Component {
     findParents = (array, username) => {
         if (typeof array != 'undefined') {
             for (let i = 0; i < array.length; i++) {
-                if (array[i].username == username) return [username];
+                if (array[i].username === username) return [username];
                 let a = this.findParents(array[i].child, username);
                 if (a != null) {
                     a.unshift(array[i].username);

@@ -59,7 +59,8 @@ class FormLoginContainer extends React.Component {
             if (redirect.indexOf('dashboard') !== -1) {
                 CookieService.set('byPassDashboard', '1');
                 window.location.href = redirect;
-                return;
+
+                return null;
             }
 
             return  <Redirect to={redirect} />

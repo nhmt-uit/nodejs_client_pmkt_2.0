@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { reduxForm } from "redux-form";
-import { get as _get } from 'lodash'
 
 import { ModalDeleteFormulaByAccountContainer } from 'my-containers/accountant'
 import { TransComponent } from 'my-components'
@@ -38,14 +36,16 @@ class ListFormulaByAccountContainer extends Component {
     }
 
     handleCheckFormula = (e, item) => {
+        let congthuctinhIds = this.state.congthuctinhIds;
+
         const isChecked = e.target.checked;
-        const formulaId = item.id
-        if(isChecked) {
-            this.state.congthuctinhIds.push(formulaId)
-        } else {
-            this.state.congthuctinhIds = this.state.congthuctinhIds.filter(id => id !== formulaId)
+        const formulaId = item.id;
+        if(isChecked) this.state.congthuctinhIds.push(formulaId)
+        else {
+            congthuctinhIds = congthuctinhIds.filter(id => id !== formulaId)
         }
-        this.setState({congthuctinhIds : this.state.congthuctinhIds})
+
+        this.setState({congthuctinhIds})
     }
     
     renderDetailData = formulaPayload => {

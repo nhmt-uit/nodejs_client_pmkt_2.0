@@ -22,7 +22,7 @@ class CompanyConfigComponent extends Component{
 
     handleSaveData = () => e => {
         const { company } = this.state;
-        var data = [], post;
+        var data = [];
         company.forEach( item => {
             if(item.checked === false){
                 data.push(item.id)
@@ -174,5 +174,4 @@ const mapDispatchToProps = dispatch => {
 
 export default compose(
     connect(mapStateToProps, mapDispatchToProps),
-)
-(CompanyConfigComponent)
+)(CompanyConfigComponent)

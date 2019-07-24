@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { Collapse } from 'reactstrap'
 import { isEmpty as _isEmpty, isEqual as _isEqual } from 'lodash'
 import uuidv4 from 'uuid/v4'
 
