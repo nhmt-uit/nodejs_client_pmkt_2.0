@@ -5,7 +5,7 @@ import { reduxForm } from "redux-form";
 import { get as _get, isEmpty as _isEmpty } from 'lodash'
 
 import { ModalDeleteFormulaByFormulaGroupContainer } from 'my-containers/formula-group'
-import { TransComponent } from 'my-components'
+import { TransComponent, LoadingComponent } from 'my-components'
 import { initFormulaList, toggleModalDeleteFormulaByFormulaGroup } from 'my-actions/formula-group/FormulaGroupAction'
 import { FormulaGroupService } from 'my-services/formula-group'
 import { Helpers } from 'my-utils'
@@ -184,7 +184,7 @@ class ListFormulaByForumulaGroupContainer extends Component {
     }
 
     render() {
-        const { formulaPatternList } = this.props
+        const { formulaPatternList, isFetching } = this.props
         const updateFormulaRes = this.state.updateFormulaRes
         return (
             <div className="portlet light bordered">
@@ -202,6 +202,7 @@ class ListFormulaByForumulaGroupContainer extends Component {
                         : null
                     }
                     <div className="table-responsive">
+                        { isFetching ? <LoadingComponent /> : null }
                         <table className="table table-striped table-bordered table-hover table-animation">
                             <thead>
                                 <tr className="font-red-sunglo">
@@ -242,7 +243,8 @@ const mapStateToProps = state => {
         initialValues: _get(state, 'form.form_assign_formula_group.values'),
 
         optFormulaPatternList: state.FormulaGroupReducer.optFormulaPatternList,
-        formulaPatternList: state.FormulaGroupReducer.formulaPatternList
+        formulaPatternList: state.FormulaGroupReducer.formulaPatternList,
+        isFetching: state.FormulaGroupReducer.isFetching,
     }
 };
 

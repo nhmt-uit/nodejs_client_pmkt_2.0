@@ -33,6 +33,8 @@ let defaultState = {
 
 	// Handle Modal Edit Formula
     isOpenModalEditFormula: false,
+    // isFetching
+    isFetching: false,
 }
 
 const FormulaGroupReducer = (state = defaultState, action) => {
@@ -86,10 +88,13 @@ const FormulaGroupReducer = (state = defaultState, action) => {
                     item.label = item.tenct.toUpperCase()
                     return item
                 })
-                return {...state, formulaPatternList: action.initFormData.selectedFormulaPatternList, optFormulaPatternList: newOptFormulaPatternList }
+                return {...state, formulaPatternList: action.initFormData.selectedFormulaPatternList, optFormulaPatternList: newOptFormulaPatternList, isFetching: action.isFetching}
             }
-            return {...state}
+            return {...state, isFetching: action.isFetching}
         }
+        case FormulaGroupActionType.FORMULA_GROUP_INIT_FORMULA_LIST_FAIL:
+            return {...state, errors: action.payload, isFetching: action.isFetching};
+
         case FormulaGroupActionType.FORMULA_GROUP_TOGGLE_MODAL_FORM_ASSIGN: {
             //Reset Store When Modal Close
             if (!state.isOpenModalAssign === false) return {...state, isOpenModalAssign: false, formAssignFormulaGroupSaveStatus: null, formAssignFormulaGroupSaveResponse: {} }
@@ -100,7 +105,7 @@ const FormulaGroupReducer = (state = defaultState, action) => {
                 var isOpenModalEditFormula = !state.isOpenModalEditFormula
                 return {...state, isOpenModalEditFormula: isOpenModalEditFormula, formSaveStatus: null, formSaveResponse: {}, formAssignFormulaGroupSaveStatus: null, formAssignFormulaGroupSaveResponse: {}}
             }
-            return {...state, isOpenModalEditFormula: !state.isOpenModalEditFormula}
+            return {...state, isOpenModalEditFormula: !state.isOpenModalEditFormula, formulaPatternList: []}
 
         case FormulaGroupActionType.FORMULA_GROUP_SAVE_FORM_ASSIGN: {
             return {...state, formAssignSaveStatus: action.formAssignSaveStatus, formAssignSaveResponse: action.formAssignSaveResponse}

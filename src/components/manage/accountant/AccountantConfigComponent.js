@@ -473,7 +473,7 @@ class AccountantConfigComponent extends Component {
                                                                                             checked={checkNew789}
                                                                                             onChange={this.handleCheckType(item_child)}
                                                                                         />
-                                                                                        <TransComponent i18nKey="Loto"/>
+                                                                                        Loto
                                                                                         <span></span>
                                                                                     </label>
                                                                                     : null
