@@ -159,7 +159,7 @@ export const socketScanData = (params) => {
         let payloadReject = []
         EventsService.on('accountant_scan_reject', async res => {
             if (res) {
-                let item = queuesRequest.pop()
+                let item = queuesRequest.shift()
                 if(!_isEmpty(item)) SocketService.send('scan', item.arg, item.uuid)
 
                 payloadReject.push(res)
@@ -182,7 +182,7 @@ export const socketScanData = (params) => {
         let payloadResolve = []
         EventsService.on('accountant_scan_resolve',async res => {
             if (res) {
-                let item = queuesRequest.pop()
+                let item = queuesRequest.shift()
                 if(!_isEmpty(item)) SocketService.send('scan', item.arg, item.uuid)
 
                 payloadResolve.push(res)
