@@ -34,7 +34,7 @@ class FormAccountContainer extends Component {
         if(!_isEqual(prevProps.optBanker, this.props.optBanker) ||!_isEqual(prevProps.optAccountBelong, this.props.optAccountBelong)) {
             if(this.props.formType === 'update' && !_isEmpty(this.props.selectedItem)) {
                 const selectedItem = this.props.selectedItem;
-                const { acc_parent_id, id, acc_name, sub_user, sub_code, note, is_sub, is_active, banker } = selectedItem;
+                const { acc_parent_id, id, acc_name, sub_user, sub_pass, sub_code, note, is_sub, is_active, banker } = selectedItem;
                 const optAccountBelong = [{value: 'root', label: <TransComponent i18nKey='Is root account' toUpperCase />}].concat(this.props.optAccountBelong)
                 const belong_account_item = acc_parent_id ? acc_parent_id : 'root';
                 let belong_account
@@ -54,7 +54,7 @@ class FormAccountContainer extends Component {
                     company: this.props.optBanker.find(item => item.value === banker),
                     acc_name,
                     belong_account: belong_account,
-                    sub_user, sub_code, note,
+                    sub_user, sub_pass, sub_code, note,
                     is_sub: optIsSub.find(item => item.value === is_sub),
                     is_active: optAccountStatus.find(item => item.value === is_active),
                 })
