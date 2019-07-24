@@ -54,11 +54,15 @@ class AccountantItemBankerAccountContainer extends Component {
                             <div className="clearfix"></div>
                         </h4>
                     </div>
-                    <LazyLoad>
-                        <Collapse isOpen={bankerAccount.collapse}>
-                            <AccountantBankerAccountResultContainer payload={bankerAccount.data} bankerAccountType={bankerAccount.type}  />
-                        </Collapse>
-                    </LazyLoad>
+                    {
+                        bankerAccount.data ?
+                            <LazyLoad>
+                                <Collapse isOpen={bankerAccount.collapse}>
+                                    <AccountantBankerAccountResultContainer payload={bankerAccount.data} bankerAccountType={bankerAccount.type}  />
+                                </Collapse>
+                            </LazyLoad>
+                        : null
+                    }
                 </div>
             </div>
         )
