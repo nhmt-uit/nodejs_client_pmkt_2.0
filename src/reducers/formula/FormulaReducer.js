@@ -18,6 +18,7 @@ let defaultState = {
     isFetching: false,
     error: null,
 
+    isFetchingAccountDetail: false,
     lstAccountDetail: [],
 };
 
@@ -76,10 +77,12 @@ const FormulaReducer = (state = defaultState, action) => {
         case FormulaActionType.GET_FORMULA_FAIL:
             return {...state, isFetching: false, error: action.payload};
 
+        case FormulaActionType.GET_LINK_FORMULA_DETAIL:
+            return {...state, isFetchingAccountDetail: true, error: null};
         case FormulaActionType.GET_LINK_FORMULA_DETAIL_SUCCESS:
-            return {...state, lstAccountDetail: action.lstAccountDetail, error: null};
+            return {...state, lstAccountDetail: action.lstAccountDetail, isFetchingAccountDetail: false, error: null};
         case FormulaActionType.GET_LINK_FORMULA_DETAIL_FAIL:
-            return {...state, error: action.payload};
+            return {...state, isFetchingAccountDetail: false, error: action.payload};
             
         default:
             return {...state};

@@ -9,12 +9,6 @@ import { FormFormulaContainer } from 'my-containers/formula'
 import { toggleModalFormula } from 'my-actions/formula/FormulaAction'
 
 class ModalFormFormulaContainer extends Component {
-    modalTitle = ''
-    componentDidMount() {
-        if(this.props.formType === "create") this.modalTitle = <TransComponent i18nKey="Create formula" />
-        if(this.props.formType === "update") this.modalTitle = <TransComponent i18nKey="Update formula" />
-    }
-
     componentDidUpdate(){
         // Hide modal after save success
         if(this.props.formSaveStatus && this.props.isOpenModal) {
@@ -23,9 +17,11 @@ class ModalFormFormulaContainer extends Component {
     }
 
     render() {
+        const title = this.props.formType === "create" ? <TransComponent i18nKey="Create formula" /> : <TransComponent i18nKey="Update formula" />;
+
         return (
             <Modal isOpen={this.props.isOpenModal} toggle={_ => this.props.toggleModalFormula()} scrollable={true}>
-                <ModalHeader toggle={_ => this.props.toggleModalFormula()}>{this.modalTitle}</ModalHeader>
+                <ModalHeader toggle={_ => this.props.toggleModalFormula()}>{title}</ModalHeader>
                 <ModalBody>
                     <FormFormulaContainer {...this.props} />
                 </ModalBody>

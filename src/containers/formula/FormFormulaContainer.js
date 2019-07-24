@@ -51,6 +51,7 @@ class FormFormulaContainer extends Component {
                 const selectedItem = this.props.selectedItem;
 
                 this.props.initialize({...this.props.initialValues,
+                    id: selectedItem.id,
                     company: this.props.optBanker.find(item => item.id === selectedItem.banker_id),
                     formula_type: this.props.optFormulaType.find(item => item.id === selectedItem.f_format_id),
                     currency: this.props.optCurrency.find(item => item.id === selectedItem.dv_tiente),
@@ -109,6 +110,7 @@ class FormFormulaContainer extends Component {
             payload[`field_${dataFormulaType.data.find(item => item.dis === "he_so_1").value}`] = _get(this.props.initialValues, 'he_so_1')
         if (!_isEmpty(dataFormulaType.data.filter(item => item.dis === "he_so_2")))
             payload[`field_${dataFormulaType.data.find(item => item.dis === "he_so_2").value}`] = _get(this.props.initialValues, 'he_so_2')
+        if (_get(this.props.initialValues, 'id')) payload.id = _get(this.props.initialValues, 'id');
 
         this.props.saveFormula(payload)
     }
