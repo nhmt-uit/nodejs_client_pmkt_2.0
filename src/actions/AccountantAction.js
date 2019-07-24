@@ -11,7 +11,7 @@ import { Helpers } from 'my-utils'
 
 
 
-const timeWaitToDispatch = 500
+const timeWaitToDispatch = 1000
 const firstNumberPayloadSend = 50
 
 export const socketInitData = (params) => {

@@ -82,9 +82,6 @@ class AccountantFormScanContainer extends Component {
     |--------------------------------------------------------------------------
     */
     checkDateToSelectGroupDate() {
-        // Reset data banker account
-        this.props.resetWhenChangeDate()
-        
         let date_form = moment(this.state.from_date).format('YYYY-MM-DD')
         let to_date = moment(this.state.to_date).format('YYYY-MM-DD')
         this.setState({typeGroupDate: null})
@@ -103,6 +100,9 @@ class AccountantFormScanContainer extends Component {
                 this.setState({typeGroupDate: 'last_week'})
             }
         }
+
+        // Reset data banker account
+        this.props.resetWhenChangeDate()
     }
 
     /*

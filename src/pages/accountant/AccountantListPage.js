@@ -11,8 +11,7 @@ class AccountantListPage extends Component {
     }
 
     componentWillUnmount() {
-        console.log("unmouhtnfdg")
-        this.props.resetStore()
+        // this.props.resetStore()
         SocketService.disconnect()
     }
 

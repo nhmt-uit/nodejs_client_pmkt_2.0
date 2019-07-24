@@ -38,6 +38,7 @@ const mapStateToProps = state => {
     return {
         bankerAccount : state.AccountantReducer.bankerAccount,
         isCollapseBanker : state.AccountantReducer.isCollapseBanker,
+        isChangeDate : state.AccountantReducer.isChangeDate,
     }
 }
 

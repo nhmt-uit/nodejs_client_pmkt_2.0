@@ -12,6 +12,7 @@ import { toggleFullScreen } from 'my-actions/systems/AppAction';
 
 class AccountantBankerAccountResultContainer extends Component {
     shouldComponentUpdate(newProps, newState) {
+        if(_isEmpty(newProps.payload)) return false
         //Prevent update when bankerAccount collapse
         if(newProps.isCollapseBankerAccount !== false || newProps.isCollapseBanker !== false) return false
 

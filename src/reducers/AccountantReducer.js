@@ -32,6 +32,8 @@ let defaultState = {
 	payloadSelectedFormula: {}
 }
 
+let originalBankerAccounts = []
+
 export const AccountantReducer = (state = defaultState, action) => {
 	let newMember = _cloneDeep(state.member)
 	let newBanker = _cloneDeep(state.banker)
@@ -52,6 +54,8 @@ export const AccountantReducer = (state = defaultState, action) => {
 			if(action.request_type === "accountant_init" && action.full_payload.type !== "notify" && action.full_payload.message !== "init_data") {
 				socketInitStatus = 'finish'
 			}
+
+			originalBankerAccounts = _get(action.payload, 'payloadBankerAccount', [])
 			return {...state,
 						socketInitStatus: socketInitStatus,
 						bankerAccount: _get(action.payload, 'payloadBankerAccount', []),
@@ -243,7 +247,7 @@ export const AccountantReducer = (state = defaultState, action) => {
 		case AccountantActionType.ACCOUNTANT_SOCKET_GET_REPORT_BANKER_ACCOUNT:
 			let bankerAccountId = action.uuid2AccId[action.full_payload.uuid]
 			if(!_isEmpty(bankerAccountId)) {
-				var objIndex = newBankerAccount.findIndex((obj => obj.id === bankerAccountId || obj.data.accountant[0].accInfo.id === bankerAccountId))
+				var objIndex = newBankerAccount.findIndex(obj => obj.id === bankerAccountId || (!_isEmpty(obj.data) && obj.data.accountant[0].accInfo.id === bankerAccountId))
 				if (objIndex !== -1) {
 					newBankerAccount[objIndex].data = {...newBankerAccount[objIndex].data, ...action.payload}
 					newBankerAccount[objIndex].data.dataHiddenFields = handleProcessDataCheckHiddenColumn(newBankerAccount[objIndex].data.accountant)
