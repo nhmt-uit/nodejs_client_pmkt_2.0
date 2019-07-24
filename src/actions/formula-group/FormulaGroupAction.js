@@ -1,6 +1,7 @@
 import { FormulaGroupActionType } from 'my-constants/action-types'
 import FormulaGroupService from 'my-services/formula-group/FormulaGroupService'
 import { Helpers } from 'my-utils'
+import _get from "lodash/get";
 
 export const getFormulaGroup = () => {
     return (dispatch) => {
@@ -67,14 +68,30 @@ export const initFormulaGroupDetail = () => {
     }
 }
 
-export const initFormulaList = (banker_id) => {
+export const initFormulaList = (banker_id, isInitial = false) => {
     return (dispatch) => {
+        if(!isInitial){
+            dispatch({
+                type: FormulaGroupActionType.FORMULA_GROUP_INIT_FORMULA_LIST,
+                isFetching: true,
+            })
+        }
         FormulaGroupService.loadFormulaList(banker_id).then(res => {
             if (res.status) {
                 dispatch({
                     type: FormulaGroupActionType.FORMULA_GROUP_INIT_FORMULA_LIST,
-                    initFormData: res.res.data
+                    initFormData: res.res.data,
+                    isFetching: false
                 });
+            } else {
+                dispatch({
+                    type: FormulaGroupActionType.FORMULA_GROUP_INIT_FORMULA_LIST_FAIL,
+                    payload: {
+                        status: false,
+                        error_description: _get(res, 'res.data.message', '')
+                    },
+                    isFetching: false
+                })
             }
         })
     }
