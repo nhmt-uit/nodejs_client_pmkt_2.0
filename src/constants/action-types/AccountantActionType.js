@@ -1,3 +1,4 @@
+export const ACCOUNTANT_RESET_STORE                             = 'ACCOUNTANT_RESET_STORE'
 export const ACCOUNTANT_SOCKET_INIT_DATA                        = 'ACCOUNTANT_SOCKET_INIT_DATA'
 export const ACCOUNTANT_SOCKET_SCAN_DATA                        = 'ACCOUNTANT_SOCKET_SCAN_DATA'
 export const ACCOUNTANT_SOCKET_SCAN_DATA_START                  = 'ACCOUNTANT_SOCKET_SCAN_DATA_START'

@@ -411,3 +411,12 @@ export const resetWhenChangeDate = _ => {
         });
     }
 }
+
+
+export const resetStore = _ => {
+    return (dispatch) => {
+        dispatch({
+            type: AccountantActionType.ACCOUNTANT_RESET_STORE,
+        });
+    }
+}

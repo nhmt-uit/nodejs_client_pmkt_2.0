@@ -42,6 +42,8 @@ export const AccountantReducer = (state = defaultState, action) => {
 	state.isCollapseBanker = false
 	state.isCollapseBankerAccount = false
 	switch(action.type){
+		case AccountantActionType.ACCOUNTANT_RESET_STORE:
+			return {...defaultState}
 		case AccountantActionType.ACCOUNTANT_SOCKET_INIT_DATA:
 			if(action.request_type === "accountant_init" && action.full_payload.type === "notify" && action.full_payload.message === "init_data") {
 				state = defaultState
@@ -240,8 +242,6 @@ export const AccountantReducer = (state = defaultState, action) => {
 			return {...state, bankerAccount: newBankerAccount}
 		case AccountantActionType.ACCOUNTANT_SOCKET_GET_REPORT_BANKER_ACCOUNT:
 			let bankerAccountId = action.uuid2AccId[action.full_payload.uuid]
-			console.log(newBankerAccount)
-			console.log(bankerAccountId)
 			if(!_isEmpty(bankerAccountId)) {
 				var objIndex = newBankerAccount.findIndex((obj => obj.id === bankerAccountId || obj.data.accountant[0].accInfo.id === bankerAccountId))
 				if (objIndex !== -1) {
