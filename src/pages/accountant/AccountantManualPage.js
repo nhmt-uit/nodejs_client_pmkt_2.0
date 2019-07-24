@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
     
-import { socketInitData } from 'my-actions/AccountantAction';
+import { socketInitData, resetWhenChangeDate } from 'my-actions/AccountantAction';
 import { AccountantFormScanContainer, AccountantListBankerContainer, AccountantStatusAccountContainer, AccountantListBankerUtilContainer } from "my-containers/accountant"
 import { SocketService } from 'my-utils/core';
 
@@ -12,6 +12,7 @@ class AccountantManualPage extends Component {
     }
 
     componentWillUnmount() {
+        this.props.resetWhenChangeDate()
         SocketService.disconnect()
     }
 
@@ -32,6 +33,7 @@ class AccountantManualPage extends Component {
 const mapDispatchToProps = (dispatch) => {
     return {
         socketInitData: params => {dispatch(socketInitData(params))},
+        resetWhenChangeDate: _ => {dispatch(resetWhenChangeDate())},
     }
 };
 

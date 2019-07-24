@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
     
-import { socketInitData } from 'my-actions/AccountantAction';
+import { socketInitData, resetWhenChangeDate } from 'my-actions/AccountantAction';
 import { AccountantFormScanContainer, AccountantListBankerContainer, AccountantStatusAccountContainer, AccountantListBankerUtilContainer } from "my-containers/accountant"
 import { SocketService } from 'my-utils/core';
 
@@ -11,6 +11,7 @@ class AccountantListPage extends Component {
     }
 
     componentWillUnmount() {
+        this.props.resetWhenChangeDate()
         SocketService.disconnect()
     }
 
@@ -31,6 +32,7 @@ class AccountantListPage extends Component {
 const mapDispatchToProps = (dispatch) => {
     return {
         socketInitData: _ => {dispatch(socketInitData())},
+        resetWhenChangeDate: _ => {dispatch(resetWhenChangeDate())},
     }
 };
 

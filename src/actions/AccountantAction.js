@@ -114,7 +114,7 @@ export const socketScanData = (params) => {
 
             // First send package to websocket
             if (i <= firstNumberPayloadSend) {
-                let item = queuesRequest.pop()
+                let item = queuesRequest.shift()
                 if(!_isEmpty(item)) {
                     SocketService.send('scan', item.arg, item.uuid)
                 }
