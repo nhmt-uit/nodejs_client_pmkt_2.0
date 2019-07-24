@@ -88,7 +88,7 @@ class AccountListContainer extends Component {
     }
 
     render() {
-        const { t, lstTab, isFetchingAccount } = this.props;console.log('render account list', this.props)
+        const { t, lstTab, isFetchingAccount } = this.props;
 
         return (
             <div className="portlet box blue-hoki position-relative min-height-60">

@@ -33,7 +33,6 @@ export const toggleModalFormula = params => {
     }
 };
 
-
 export const saveFormula = (payload) => {
     return (dispatch) => {
         FormulaService.saveFormula(payload).then(res => {
@@ -88,6 +87,10 @@ export const setFormulaSelected = formula => {
 
 export const getLinkFormulaDetail = id => {
     return dispatch => {
+        dispatch({
+            type: FormulaActionType.GET_LINK_FORMULA_DETAIL,
+        });
+
         return FormulaService.getLinkFormulaDetail(id)
             .then(res => {
                 if (res.status) {

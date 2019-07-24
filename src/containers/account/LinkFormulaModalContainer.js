@@ -10,7 +10,7 @@ import {
     get as _get,
 } from 'lodash';
 
-import { TransComponent } from 'my-components';
+import { TransComponent, LoadingComponent } from 'my-components';
 
 import { FormulaService } from 'my-services/formula';
 
@@ -207,22 +207,19 @@ class LinkFormulaModalContainer extends Component {
         const { lstDelete } = this.state;
         const indexOfAccount = lstDelete.findIndex(item => item === id);
 
-        if (indexOfAccount !== -1 && !checked) {
-            lstDelete.splice(indexOfAccount, 1);
-        }
+        if (indexOfAccount !== -1 && !checked) lstDelete.splice(indexOfAccount, 1);
 
-        if (indexOfAccount === -1 && checked) {
-            lstDelete.push(id);
-        }
+        if (indexOfAccount === -1 && checked) lstDelete.push(id);
 
         this.setState({ lstDelete })
     };
 
     renderDetailAccount() {
-        const { lstAccountDetail, lstMember, lstFormula } = this.props;
+        const { lstAccountDetail, lstMember, lstFormula, isFetchingAccountDetail } = this.props;
 
         return (
-            <div className="table-responsive">
+            <div className="table-responsive position-relative">
+                { isFetchingAccountDetail ? <LoadingComponent /> : null }
                 <table className="table table-striped table-bordered table-hover min-width-850">
                     <thead className="font-red">
                         <tr>
@@ -286,11 +283,8 @@ class LinkFormulaModalContainer extends Component {
             return;
         }
 
-        if (itemIndex !== -1) {
-            lstDetailEdit[itemIndex] = detail;
-        } else {
-            lstDetailEdit.push(detail);
-        }
+        if (itemIndex !== -1) lstDetailEdit[itemIndex] = detail;
+        else lstDetailEdit.push(detail);
 
         this.setState({ lstDetailEdit });
     };
@@ -477,6 +471,7 @@ const mapStateToProps = state => {
         isOpenFormulaModal: state.FormulaReducer.isOpenModal || false,
         isOpenFormulaGroupModal: state.FormulaGroupReducer.isOpenModal || false,
         isOpenFormulaGroupAssignModal: state.FormulaGroupReducer.isOpenModalAssign || false,
+        isFetchingAccountDetail: state.FormulaReducer.isFetchingAccountDetail || false,
     };
 };
 

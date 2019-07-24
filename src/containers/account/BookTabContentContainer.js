@@ -102,7 +102,7 @@ class BookTabContentContainer extends Component {
         );
     }
 
-    render() {console.log('render book content')
+    render() {
         const { id, isActive } = this.props;
         const { deleteState } = this.state;
         const classActive = isActive ? 'active' : '';

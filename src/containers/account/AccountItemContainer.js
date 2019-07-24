@@ -42,8 +42,11 @@ class AccountItemContainer extends Component {
 
     renderTR(item) {
         const toggleIds = this.state.toggleIds;
+        const isOpen = toggleIds[item.id] !== undefined
+            ? toggleIds[item.id]
+            : !!item.isOpen;
         const iconChildToggle = (item.child && item.child.length)
-            ? <i className={`fa ${ toggleIds[item.id] ? 'fa-chevron-down' : 'fa-chevron-right' }`} />
+            ? <i className={`fa ${ isOpen ? 'fa-chevron-down' : 'fa-chevron-right' }`} />
             : null;
         const marginLeft = item.__level ? { marginLeft: `${15*item.__level}px`} : {};
         const toggleChildEvt = (item.child && item.child.length) ? { onClick: this.toggleChildAccount(item.id) } : {};
