@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
+import $ from 'jquery'
     
 import { socketInitData, resetStore } from 'my-actions/AccountantAction';
 import { AccountantFormScanContainer, AccountantListBankerContainer, AccountantStatusAccountContainer, AccountantListBankerUtilContainer } from "my-containers/accountant"
 import { SocketService } from 'my-utils/core';
+
 
 class AccountantListPage extends Component {
     componentDidMount() {
@@ -11,7 +13,7 @@ class AccountantListPage extends Component {
     }
 
     componentWillUnmount() {
-        // this.props.resetStore()
+        this.props.resetStore()
         SocketService.disconnect()
     }
 
@@ -21,7 +23,7 @@ class AccountantListPage extends Component {
                 <AccountantFormScanContainer />
                 <AccountantStatusAccountContainer />
                 <AccountantListBankerUtilContainer />
-                <div className="position-relative">
+                <div className="position-relative accountant-content">
                     <AccountantListBankerContainer />
                 </div>
             </>
