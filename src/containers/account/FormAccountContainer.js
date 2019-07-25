@@ -120,6 +120,7 @@ class FormAccountContainer extends Component {
 
         return (
             <form name="form_account" className="position-relative overload-hidden">
+                { _isEmpty(optBanker) ? <LoadingComponent/> : null}
                 { isInitSaveFormData ? <LoadingComponent/> : null }
                 <div className="form-body">
                     {this.renderAlert()}

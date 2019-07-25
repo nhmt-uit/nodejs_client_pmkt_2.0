@@ -17,6 +17,7 @@ class BillTransaction extends Component {
             transactionMethod: '',
             amount: '',
             rowInTable: false,
+            showInvoice: false,
         }
     }
 
@@ -46,12 +47,28 @@ class BillTransaction extends Component {
             cycleId: cycleId
         };
         this.props.getDetailReport(post);
+        if(memberValues && cycleValues){
+            this.setState({
+                showInvoice: true,
+            })
+        } else {
+            this.setState({
+                showInvoice: false,
+            })
+        }
         if(memberValues && cycleValues && typeOfMoney && transactionMethod && amount){
             this.setState({
                 typeOfMoney: typeOfMoney,
                 transactionMethod: transactionMethod,
                 amount: amount,
                 rowInTable: true,
+            })
+        } else {
+            this.setState({
+                typeOfMoney: '',
+                transactionMethod: '',
+                amount: '',
+                rowInTable: false,
             })
         }
         if(Number.isNaN(amount)){
@@ -63,27 +80,24 @@ class BillTransaction extends Component {
 
     render() {
         const {currencyMap, result, total, optMoney} = this.props;
-        if (isEmpty(currencyMap) || isEmpty(result) || isEmpty(total)) {
-            return null;
-        }
         var resultMap = Object.entries(result);
         let map_currency = keyBy(currencyMap, 'dv_tien_te_id');
         let currencyIDs = currencyMap.map(function (currency) {
             return currency.dv_tien_te_id;
         }).sort().reverse();
 
-        var typeOfMoney = this.state.typeOfMoney;
-        var transactionMethod = this.state.transactionMethod;
-        var amount = this.state.amount;
+        var {typeOfMoney, transactionMethod, amount } = this.state;
         var transaction;
         if(transactionMethod === "2"){
             transaction = "Payment";
         } else {
             transaction = "Other";
         }
+
         let mapOptMoney = keyBy(optMoney, 'value');
         mapOptMoney = Object.entries(mapOptMoney);
 
+        if(!this.state.showInvoice) return null;
         var found = false;
         let headers = currencyIDs.map(function (id) {
             if(typeOfMoney === id){
@@ -165,19 +179,20 @@ class BillTransaction extends Component {
                 }
                 return false;
             });
+            if(!this.state.rowInTable) itemNew = null;
             if(itemNew){
                 headers.push(
-                    <th key={itemNew.value} className="caption-subject font-red text-center"> {itemNew[1].label} </th>
+                    <th key={itemNew[1].value + 'header'} className="caption-subject font-red text-center"> {itemNew[1].label} </th>
                 );
 
                 rowNew.push(
-                    <td className="caption-subject font-green text-center">
+                    <td key={itemNew[1].value + 'rowNew'} className="caption-subject font-green text-center">
                         {amount < 0 ? <span className="font-red"> {Helpers.formatMoney(amount,0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney(amount,0)} </span>}
                     </td>
                 );
 
                 rowTotal.push(
-                    <td className="caption-subject font-green text-right">
+                    <td key={itemNew[1].value + 'total'} className="caption-subject font-green text-right">
                         {amount < 0 ? <span className="font-red"> {Helpers.formatMoney(amount,0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney(amount,0)} </span>}
                     </td>
                 )
@@ -199,10 +214,10 @@ class BillTransaction extends Component {
                     <div className="table-responsive">
                         <table className="table table-striped table-bordered table-hover dataTable no-footer dtr-inline">
                             <thead>
-                            <tr role="row">
-                                <th> </th>
-                                {headers}
-                            </tr>
+                                <tr role="row">
+                                    <th> </th>
+                                    {headers}
+                                </tr>
                             </thead>
                             <tbody>
                             {this.state.rowInTable ?

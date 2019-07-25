@@ -23,7 +23,7 @@ class BankerListContainer extends React.Component{
         DATA = this.props.bankerList.payload;
         if(isEmpty(DATA)){
             return (
-                <tr><td className="text-center" colSpan="20"><TransComponent i18nKey="Data Empty" /></td></tr>
+                <div className="text-center"><TransComponent i18nKey="Data Empty" /></div>
             );
         }
 
