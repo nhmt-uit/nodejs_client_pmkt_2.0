@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { isPlainObject as _isPlainObject, merge as _merge } from 'lodash';
 import {connect} from "react-redux";
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import LazyLoad from 'react-lazyload';
 
 import { TransComponent } from 'my-components';
 import { AccountItemContainer } from 'my-containers/account';
@@ -90,16 +91,68 @@ class BookTabContentContainer extends Component {
     }
 
     renderBody() {
-        const { lstAccount } = this.props;
+        const result = [];
 
-        return lstAccount.map((item, index) => 
-            <AccountItemContainer
-                key={index}
-                isCheckLogin={this.state.isCheckLoginAll}
-                account={this.flatItem(item, 0, index + 1)}
-                onChangeProps={props => this.handleChangeState(props)()}
-            />
-        );
+        let order = 0;
+
+        const loopResult = lst => {
+            if (Array.isArray(lst) && lst.length > 30) {
+                const lstMap = lst.splice(0, 30);
+
+                if (!result.length) {
+                    result.push(
+                        <>
+                            { lstMap.map(item => {
+                                    const orderItem = ++order;
+
+                                    return <AccountItemContainer
+                                        key={orderItem}
+                                        isCheckLogin={this.state.isCheckLoginAll}
+                                        account={this.flatItem(item, 0, orderItem)}
+                                        onChangeProps={props => this.handleChangeState(props)()}
+                                    />;
+                                }) }
+                        </>
+                    );
+                } else {
+                    result.push(
+                        <LazyLoad>
+                            { lstMap.map(item => {
+                                const orderItem = ++order;
+
+                                return <AccountItemContainer
+                                    key={orderItem}
+                                    isCheckLogin={this.state.isCheckLoginAll}
+                                    account={this.flatItem(item, 0, orderItem)}
+                                    onChangeProps={props => this.handleChangeState(props)()}
+                                />;
+                            }) }
+                        </LazyLoad>
+                    );
+                }
+
+                loopResult(lst);
+            } else {
+                result.push(
+                    <>
+                        { lst.map(item => {
+                                const orderItem = ++order;
+
+                                return <AccountItemContainer
+                                    key={orderItem}
+                                    isCheckLogin={this.state.isCheckLoginAll}
+                                    account={this.flatItem(item, 0, orderItem)}
+                                    onChangeProps={props => this.handleChangeState(props)()}
+                                />;
+                            }) }
+                    </>
+                );
+            }
+        };
+
+        loopResult(this.props.lstAccount);
+
+        return result;
     }
 
     render() {
@@ -110,7 +163,7 @@ class BookTabContentContainer extends Component {
         return (
             <div className={`tab-pane ${classActive}`} id={id}>
                 <div className="table-responsive">
-                    <table className="table table-striped table-bordered table-hover">
+                    <table className="table table-striped table-bordered table-hover table-account">
                         <thead className="font-red">
                             <tr className="font-red-sunglo">
                                 <td><span className="glyphicon glyphicon-sort-by-alphabet" /></td>

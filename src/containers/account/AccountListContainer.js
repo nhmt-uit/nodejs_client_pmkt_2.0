@@ -84,8 +84,8 @@ class AccountListContainer extends Component {
             <>
                 <BookTabContentContainer lstAccount={this.filterAccountByBook(lstAccount, 'all')} id="all" isActive={true} data={{}} />
                 {
-                    lstTab.map(item => (
-                        <BookTabContentContainer lstAccount={this.filterAccountByBook(lstAccount, item.id)} key={item.id} id={item.id} data={{}} />
+                    lstTab.map((item, idx) => (
+                        <BookTabContentContainer lstAccount={this.filterAccountByBook(lstAccount, item.id)} key={idx} id={item.id} data={{}} />
                     ))
                 }
             </>
