@@ -21,6 +21,7 @@ let defaultState = {
 	// Handel button form
 	isProcessing: false,
 	isAllowReport: false,
+	isReplaceRouterLink: false,
 
 
 	// Handel delete formula after scan
@@ -119,7 +120,7 @@ export const AccountantReducer = (state = defaultState, action) => {
 				newBankerAccountByMember = []
 				newMember.map(item => { item.checked = false })
 				newBankerAccount.map(item => {
-					item.checked = item.type === "reject" && item.message !== "Empty data" ? true : false
+					item.checked = item.type === "reject" && item.message !== "Empty data"
 					toggleBanker(newBanker, newBankerAccount, true, item.banker )
 				})
 			}
@@ -159,7 +160,7 @@ export const AccountantReducer = (state = defaultState, action) => {
 					newBankerAccount[objIndex].uuid = x
 				}
 			}
-			return {...state, bankerAccount: newBankerAccount, isProcessing: true}
+			return {...state, bankerAccount: newBankerAccount, isProcessing: true, isReplaceRouterLink: false };
 		case AccountantActionType.ACCOUNTANT_SOCKET_SCAN_DATA_NOTIFY:
 			if (action.payload.length !== 0 ) {
 				for(let x in action.payload) {
@@ -180,8 +181,8 @@ export const AccountantReducer = (state = defaultState, action) => {
 				}
 			}
 			//Check process finish
-			newIsProcessing = !_isEmpty(newBankerAccount.find(item => item.type === "notify")) ? true : false
-			newIsAllowReport = !_isEmpty(newBankerAccount.find(item => item.type === "resolve")) ? true : false
+			newIsProcessing = !_isEmpty(newBankerAccount.find(item => item.type === "notify"))
+			newIsAllowReport = !_isEmpty(newBankerAccount.find(item => item.type === "resolve"))
 			// Stop listen when scan finish
 			if (newIsProcessing === false) SocketService.unListenerResponse()
 			return {...state, bankerAccount: newBankerAccount, isProcessing: newIsProcessing, isAllowReport: newIsAllowReport}
@@ -198,12 +199,15 @@ export const AccountantReducer = (state = defaultState, action) => {
 				}
 			}
 			//Check process finish
-			newIsProcessing = !_isEmpty(newBankerAccount.find(item => item.type === "notify")) ? true : false
-			newIsAllowReport = !_isEmpty(newBankerAccount.find(item => item.type === "resolve")) ? true : false
+			newIsProcessing = !_isEmpty(newBankerAccount.find(item => item.type === "notify"));
+			newIsAllowReport = !_isEmpty(newBankerAccount.find(item => item.type === "resolve"));
 			// Stop listen when scan finish
-			if (newIsProcessing === false) SocketService.unListenerResponse()
+			if (newIsProcessing === false) SocketService.unListenerResponse();
 
-			return {...state, bankerAccount: newBankerAccount, isProcessing: newIsProcessing, isAllowReport: newIsAllowReport}
+			const isReplaceRouterLink = newBankerAccount.filter(acc => acc.type === 'resolve').length > 150;
+			console.log(newBankerAccount.filter(acc => acc.type === 'resolve').length);
+
+			return {...state, bankerAccount: newBankerAccount, isProcessing: newIsProcessing, isAllowReport: newIsAllowReport, isReplaceRouterLink};
 		case AccountantActionType.ACCOUNTANT_SOCKET_SCAN_DATA_ACCOUNT_LOCK:
 			if (action.payload.length !== 0 ) {
 				for(let x in action.payload) {
@@ -216,10 +220,11 @@ export const AccountantReducer = (state = defaultState, action) => {
 				}
 			}
 			//Check process finish
-			newIsProcessing = !_isEmpty(newBankerAccount.find(item => item.type === "notify")) ? true : false
-			newIsAllowReport = !_isEmpty(newBankerAccount.find(item => item.type === "resolve")) ? true : false
+			newIsProcessing = !_isEmpty(newBankerAccount.find(item => item.type === "notify"))
+			newIsAllowReport = !_isEmpty(newBankerAccount.find(item => item.type === "resolve"))
 			// Stop listen when scan finish
 			if (newIsProcessing === false) SocketService.unListenerResponse()
+
 			return {...state, bankerAccount: newBankerAccount, isProcessing: newIsProcessing, isAllowReport: newIsAllowReport}
 		case AccountantActionType.ACCOUNTANT_SOCKET_SCAN_DATA_STOP:
 			for(let x of action.bankerAccountIds) {
@@ -232,6 +237,7 @@ export const AccountantReducer = (state = defaultState, action) => {
 			}
 			// Stop listen when scan finish
 			if (newIsProcessing === false) SocketService.unListenerResponse()
+
 			return {...state, bankerAccount: newBankerAccount, isProcessing: false}
 		case AccountantActionType.ACCOUNTANT_DELETE_BANKER_ACCOUNT:
 			newBankerAccount = newBankerAccount.filter(item => item.id !== action.item.id)

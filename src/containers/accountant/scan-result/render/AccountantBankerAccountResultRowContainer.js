@@ -70,7 +70,6 @@ class AccountantBankerAccountResultRowContainer extends Component {
     generateRowData = _ => {
         const { item, rootAccInfo, rootAccInfoFull} = this.props
         const { dataFieldList, dataHiddenFields, scanData } = this.props.bankerAccount
-        console.log(this.props.bankerAccount)
         const bankerAccountId = _get(this.props.bankerAccount, 'accountant[0].accInfo.id')
         
         let xhtml = []
