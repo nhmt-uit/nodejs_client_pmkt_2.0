@@ -284,9 +284,9 @@ export const AccountantReducer = (state = defaultState, action) => {
 					var objIndex = newBankerAccount.findIndex((obj => obj.id === action.payload[x].id))
 					if (objIndex !== -1) {
 						newBankerAccount[objIndex].type = null
-						// newBankerAccount[objIndex].message = null
-						// newBankerAccount[objIndex].uuid = null
-						// newBankerAccount[objIndex].data = null
+						newBankerAccount[objIndex].message = null
+						newBankerAccount[objIndex].uuid = null
+						newBankerAccount[objIndex].data = null
 					}
 				}
 			}

@@ -410,43 +410,43 @@ export const resetWhenChangeDate = params => {
         if(!_isEmpty(params)) {
             $('.remove-when-reset').hide()
 
-            dispatch({
-                type: AccountantActionType.ACCOUNTANT_RESET_WHEN_CHANGE_DATE,
-                payload: params.filter(item => item.type === "reject" || item.type === "stop" || item.type === "resolve")
-            });
+            // dispatch({
+            //     type: AccountantActionType.ACCOUNTANT_RESET_WHEN_CHANGE_DATE,
+            //     payload: params.filter(item => item.type === "reject" || item.type === "stop" || item.type === "resolve")
+            // });
 
-            // let range_index = 50
-            // let dispatchQueue = []
-            // let queues = params.filter(item => item.type === "reject" || item.type === "stop")
-            // let i = 0
-            // if(queues.length) {
-            //     while(queues.slice(i, i + range_index).length) {
-            //         if(queues.slice(i, i + range_index).length) {
-            //             dispatch({
-            //                 type: AccountantActionType.ACCOUNTANT_RESET_WHEN_CHANGE_DATE,
-            //                 payload: queues.slice(i, i + range_index)
-            //             });
-            //         }
-            //         i += range_index
-            //     }
-            // }
+            let range_index = 50
+            let dispatchQueue = []
+            let queues = params.filter(item => item.type === "reject" || item.type === "stop")
+            let i = 0
+            if(queues.length) {
+                while(queues.slice(i, i + range_index).length) {
+                    if(queues.slice(i, i + range_index).length) {
+                        dispatch({
+                            type: AccountantActionType.ACCOUNTANT_RESET_WHEN_CHANGE_DATE,
+                            payload: queues.slice(i, i + range_index)
+                        });
+                    }
+                    i += range_index
+                }
+            }
 
-            // // Clear Resolve
-            // queues = params.filter(item => item.type === "resolve")
-            // i = 0
-            // if(queues.length) {
+            // Clear Resolve
+            queues = params.filter(item => item.type === "resolve")
+            i = 0
+            if(queues.length) {
                 
-            //     while(queues.slice(i, i + range_index).length) {
-            //         if(queues.slice(i, i + range_index).length) {
-            //             await Helpers.sleep(5)
-            //             dispatch({
-            //                 type: AccountantActionType.ACCOUNTANT_RESET_WHEN_CHANGE_DATE,
-            //                 payload: queues.slice(i, i + range_index)
-            //             });
-            //         }
-            //         i += range_index
-            //     }
-            // }
+                while(queues.slice(i, i + range_index).length) {
+                    if(queues.slice(i, i + range_index).length) {
+                        await Helpers.sleep(5)
+                        dispatch({
+                            type: AccountantActionType.ACCOUNTANT_RESET_WHEN_CHANGE_DATE,
+                            payload: queues.slice(i, i + range_index)
+                        });
+                    }
+                    i += range_index
+                }
+            }
         }
         
     }

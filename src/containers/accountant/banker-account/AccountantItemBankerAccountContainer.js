@@ -21,8 +21,6 @@ class AccountantItemBankerAccountContainer extends Component {
             || !_isEqual(newBankerAccount.acc_name, oldBankerAccount.acc_name)
             || !_isEqual(newBankerAccount.note, oldBankerAccount.note)
             || !_isEqual(newBankerAccount.data, oldBankerAccount.data)
-            || newBankerAccount.type === "resolve"
-            || newBankerAccount.type === "notify"
         )
             return true
         return false
@@ -47,7 +45,7 @@ class AccountantItemBankerAccountContainer extends Component {
                             </div>
                             <div className="col-xs-4 col-md-5" style={{paddingLeft: '0px'}}><label className="mt-checkbox "> {bankerAccount.note}</label></div>
                             <div className="col-xs-2 col-md-1 text-right">
-                            {bankerAccount.type === "resolve" && bankerAccount.data ?
+                            {bankerAccount.data ?
                                 <label className="mt-checkbox remove-when-reset" onClick={_ => this.props.collapseBankerAccount(bankerAccount.id)} style={{paddingLeft: '0px'}}>
                                     {bankerAccount.collapse ?  <i className="fa fa-minus"/> : <i className="fa fa-plus"/>}
                                 </label>
@@ -57,7 +55,7 @@ class AccountantItemBankerAccountContainer extends Component {
                         </h4>
                     </div>
                     {
-                        bankerAccount.type === "resolve" && bankerAccount.data ?
+                        bankerAccount.data ?
                             <div  className="remove-when-reset">
                                 <LazyLoad>
                                     <Collapse isOpen={bankerAccount.collapse}>
