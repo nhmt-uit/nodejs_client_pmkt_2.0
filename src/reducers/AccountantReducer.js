@@ -165,7 +165,10 @@ export const AccountantReducer = (state = defaultState, action) => {
 			if (action.payload.length !== 0 ) {
 				for(let x in action.payload) {
 					var objIndex = newBankerAccount.findIndex((obj => obj.uuid === action.payload[x].uuid))
-					if (objIndex !== -1) newBankerAccount[objIndex].message = _get(action.payload[x], 'data.message')
+					if (objIndex !== -1){
+						newBankerAccount[objIndex].message = _get(action.payload[x], 'data.message')
+						newBankerAccount[objIndex].data = null
+					}
 				}
 			}
 			return {...state, bankerAccount: newBankerAccount}
@@ -175,8 +178,8 @@ export const AccountantReducer = (state = defaultState, action) => {
 					var objIndex = newBankerAccount.findIndex((obj => obj.uuid === action.payload[x].uuid))
 					if (objIndex !== -1) {
 						newBankerAccount[objIndex].type = "reject"
-						newBankerAccount[objIndex].message = _get(action.payload[x], 'data.message')
 						newBankerAccount[objIndex].data = null
+						newBankerAccount[objIndex].message = _get(action.payload[x], 'data.message')
 					}
 				}
 			}
