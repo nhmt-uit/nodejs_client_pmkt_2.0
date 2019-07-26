@@ -23,10 +23,6 @@ class Header extends Component {
         lang: CookieService.get('lang')
     };
 
-    shouldComponentUpdate(nextProps, nextState, nextContext) {
-        return nextProps.isReplaceRouterLink !== this.props.isReplaceRouterLink;
-    }
-
     handleLogout = _ => {
         AuthService.logout();
 
