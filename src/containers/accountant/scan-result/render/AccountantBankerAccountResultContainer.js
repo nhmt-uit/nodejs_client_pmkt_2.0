@@ -95,7 +95,7 @@ class AccountantBankerAccountResultContainer extends Component {
         const accountant = isShowAllFormula === false ? this.handleProcessDataWhenActiveFilterNoFormula(_cloneDeep(payload.accountant)) : _cloneDeep(payload.accountant)
         
         return (
-            <div className="panel-body bootstrap-table">
+            <div className="panel-body bootstrap-table remove-when-reset">
                 <div className="table-responsive">
                     <Table responsive striped bordered condensed className="tbl-scan-result">
                         <thead>

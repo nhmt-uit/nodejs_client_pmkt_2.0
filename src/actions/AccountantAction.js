@@ -1,6 +1,7 @@
 import moment  from 'moment'
 import uuidv4 from 'uuid/v4'
 import { get as _get, isEmpty as _isEmpty } from 'lodash'
+import $ from 'jquery'
 
 import { AccountantActionType } from 'my-constants/action-types';
 import { SocketService, EventsService } from 'my-utils/core';
@@ -65,6 +66,7 @@ export const socketInitData = (params) => {
 */
 export const socketScanData = (params) => {
     return async (dispatch) => {
+        $('.remove-when-reset').show()
         let from_date = moment(params.from_date).format(AppConfig.FORMAT_DATE)
         let to_date = moment(params.to_date).format(AppConfig.FORMAT_DATE)
 
@@ -269,7 +271,6 @@ export const socketGetReport = params => {
                 if (res.type === "resolve") {
                     EventsService.removeAllListeners('accountant_get_report_banker_account')
                 }
-                console.log(res)
                 // Dispatch data to reducer
                 dispatch({
                     type: AccountantActionType.ACCOUNTANT_SOCKET_GET_REPORT_BANKER_ACCOUNT,
@@ -404,11 +405,50 @@ export const toggleShowHideBankerAccountChild = params => {
     }
 }
 
-export const resetWhenChangeDate = _ => {
-    return (dispatch) => {
-        dispatch({
-            type: AccountantActionType.ACCOUNTANT_RESET_WHEN_CHANGE_DATE,
-        });
+export const resetWhenChangeDate = params => {
+    return async (dispatch) => {
+        if(!_isEmpty(params)) {
+            $('.remove-when-reset').hide()
+
+            dispatch({
+                type: AccountantActionType.ACCOUNTANT_RESET_WHEN_CHANGE_DATE,
+                payload: params.filter(item => item.type === "reject" || item.type === "stop" || item.type === "resolve")
+            });
+
+            // let range_index = 50
+            // let dispatchQueue = []
+            // let queues = params.filter(item => item.type === "reject" || item.type === "stop")
+            // let i = 0
+            // if(queues.length) {
+            //     while(queues.slice(i, i + range_index).length) {
+            //         if(queues.slice(i, i + range_index).length) {
+            //             dispatch({
+            //                 type: AccountantActionType.ACCOUNTANT_RESET_WHEN_CHANGE_DATE,
+            //                 payload: queues.slice(i, i + range_index)
+            //             });
+            //         }
+            //         i += range_index
+            //     }
+            // }
+
+            // // Clear Resolve
+            // queues = params.filter(item => item.type === "resolve")
+            // i = 0
+            // if(queues.length) {
+                
+            //     while(queues.slice(i, i + range_index).length) {
+            //         if(queues.slice(i, i + range_index).length) {
+            //             await Helpers.sleep(5)
+            //             dispatch({
+            //                 type: AccountantActionType.ACCOUNTANT_RESET_WHEN_CHANGE_DATE,
+            //                 payload: queues.slice(i, i + range_index)
+            //             });
+            //         }
+            //         i += range_index
+            //     }
+            // }
+        }
+        
     }
 }
 
