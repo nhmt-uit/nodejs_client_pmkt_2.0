@@ -580,3 +580,16 @@ h5.modal-title {font-size: 16px; font-weight: bold; color: #E26A6A!important;}
 .border-none {
     border: none;
 }
+
+.font-size-11 {
+    font-size: 11px !important;
+}
+
+.font-silver {
+    color: silver
+}
+
+.version-header {
+    top: 20px;
+    left: 0;
+}

@@ -15,7 +15,7 @@ const RenderRoutes = () => {
     }
 
     return <Switch>{xhtml}</Switch>
-}
+};
 
 export default RenderRoutes;
 
