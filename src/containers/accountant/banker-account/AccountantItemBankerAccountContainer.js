@@ -21,7 +21,8 @@ class AccountantItemBankerAccountContainer extends Component {
             || !_isEqual(newBankerAccount.acc_name, oldBankerAccount.acc_name)
             || !_isEqual(newBankerAccount.note, oldBankerAccount.note)
             || !_isEqual(newBankerAccount.data, oldBankerAccount.data)
-            || !_isEqual(newBankerAccount.type, oldBankerAccount.type)
+            || newBankerAccount.type === "resolve"
+            || newBankerAccount.type === "notify"
         )
             return true
         return false
