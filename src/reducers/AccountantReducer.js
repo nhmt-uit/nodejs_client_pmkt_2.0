@@ -165,7 +165,10 @@ export const AccountantReducer = (state = defaultState, action) => {
 			if (action.payload.length !== 0 ) {
 				for(let x in action.payload) {
 					var objIndex = newBankerAccount.findIndex((obj => obj.uuid === action.payload[x].uuid))
-					if (objIndex !== -1) newBankerAccount[objIndex].message = _get(action.payload[x], 'data.message')
+					if (objIndex !== -1){
+						newBankerAccount[objIndex].message = _get(action.payload[x], 'data.message')
+						newBankerAccount[objIndex].data = null
+					}
 				}
 			}
 			return {...state, bankerAccount: newBankerAccount}
@@ -175,6 +178,7 @@ export const AccountantReducer = (state = defaultState, action) => {
 					var objIndex = newBankerAccount.findIndex((obj => obj.uuid === action.payload[x].uuid))
 					if (objIndex !== -1) {
 						newBankerAccount[objIndex].type = "reject"
+						newBankerAccount[objIndex].data = null
 						newBankerAccount[objIndex].message = _get(action.payload[x], 'data.message')
 					}
 				}
@@ -214,6 +218,7 @@ export const AccountantReducer = (state = defaultState, action) => {
 					if (objIndex !== -1) {
 						newBankerAccount[objIndex].type = "reject"
 						newBankerAccount[objIndex].message = "account is suspend! please call company for open account"
+						newBankerAccount[objIndex].data = null
 					}
 				}
 			}
@@ -230,6 +235,7 @@ export const AccountantReducer = (state = defaultState, action) => {
 				if (objIndex !== -1) {
 					newBankerAccount[objIndex].type = "stop"
 					newBankerAccount[objIndex].message = "Stopped"
+					newBankerAccount[objIndex].data = null
 				}
 			}
 			// Stop listen when scan finish
@@ -273,13 +279,27 @@ export const AccountantReducer = (state = defaultState, action) => {
 			}
 			return {...state, bankerAccount: newBankerAccount}
 		case AccountantActionType.ACCOUNTANT_RESET_WHEN_CHANGE_DATE:
-			newBankerAccount = newBankerAccount.map(item => {
-				item.type = null
-				item.message = null
-				item.uuid = null
-				item.data = null
-				return item
-			})
+			if (action.payload.length !== 0 ) {
+				for(let x in action.payload) {
+					var objIndex = newBankerAccount.findIndex((obj => obj.id === action.payload[x].id))
+					if (objIndex !== -1) {
+						newBankerAccount[objIndex].type = null
+						newBankerAccount[objIndex].message = null
+						newBankerAccount[objIndex].uuid = null
+						newBankerAccount[objIndex].data = null
+					}
+				}
+			}
+			// if(!_isEmpty(action.payload)) {
+			// 	newBankerAccount = newBankerAccount.map(item => {
+			// 		item.type = null
+			// 		item.message = null
+			// 		item.uuid = null
+			// 		item.data = null
+			// 		return item
+			// 	})
+			// }
+			
 			return {...state, bankerAccount: newBankerAccount, isAllowReport: false}
 		default:
 			return {...state}

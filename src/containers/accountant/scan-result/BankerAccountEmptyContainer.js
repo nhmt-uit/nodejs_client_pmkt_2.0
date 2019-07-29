@@ -76,7 +76,7 @@ class BankerAccountEmptyContainer extends Component {
         const bankerAccounts = this.props.bankerAccount.filter(item => item.type === "reject" && item.message === "Empty data")
         if (_isEmpty(bankerAccounts)) return false
         return (
-            <div className="col-md-6">
+            <div className="col-md-6 remove-when-reset">
                 <div className="portlet box">
                     <div className="portlet-title bg-default">
                         <div className="caption"><TransComponent i18nKey="Empty data account" /></div>

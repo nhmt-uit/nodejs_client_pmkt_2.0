@@ -102,7 +102,7 @@ class AccountantFormScanContainer extends Component {
         }
 
         // Reset data banker account
-        this.props.resetWhenChangeDate()
+        this.props.resetWhenChangeDate(this.props.bankerAccount.filter(item => item.type !== null))
     }
 
     /*
@@ -112,7 +112,7 @@ class AccountantFormScanContainer extends Component {
     */
     changeGroupDate = type => {
         // Reset data banker account
-        this.props.resetWhenChangeDate()
+        this.props.resetWhenChangeDate(this.props.bankerAccount.filter(item => item.type !== null))
 
         this.setState({typeGroupDate: type})
         switch (type) {
@@ -140,7 +140,7 @@ class AccountantFormScanContainer extends Component {
     changeAccountRole = type => {
         
         // Reset data banker account
-        this.props.resetWhenChangeDate()
+        this.props.resetWhenChangeDate(this.props.bankerAccount.filter(item => item.type !== null))
         
         this.setState({accountRole: type})
     }
@@ -153,7 +153,7 @@ class AccountantFormScanContainer extends Component {
     changeFlagType = type => {
         
         // Reset data banker account
-        this.props.resetWhenChangeDate()
+        this.props.resetWhenChangeDate(this.props.bankerAccount.filter(item => item.type !== null))
         this.setState({flagType: type})
     }
 
@@ -268,6 +268,7 @@ class AccountantFormScanContainer extends Component {
 
 const mapStateToProps = state => {
     return {
+        bankerAccount : state.AccountantReducer.bankerAccount,
         member : state.AccountantReducer.member,
         isProcessing : state.AccountantReducer.isProcessing,
     }
@@ -276,7 +277,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch) => {
     return {
         checkBankerAccount: (type_check, params) => {dispatch(checkBankerAccount(type_check, params))},
-        resetWhenChangeDate: _ => {dispatch(resetWhenChangeDate())},
+        resetWhenChangeDate: params => {dispatch(resetWhenChangeDate(params))},
     }
 };
 
