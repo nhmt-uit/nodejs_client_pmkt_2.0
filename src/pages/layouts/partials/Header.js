@@ -40,6 +40,7 @@ class Header extends Component {
 
     render() {
         const status = CookieService.get("status");
+        const roles = CookieService.get("roles");
         const lang = this.state.lang
         return (
             <>
@@ -60,13 +61,18 @@ class Header extends Component {
                                 {
                                     Number(status) === 1 ?
                                     <>
-                                        <li className="dropdown dropdown-document">
-                                            <a href="/assets/images/HDSD PMKT VERSION 3.3.pdf" target="_blank" className="dropdown-toggle">
-                                                <span className="fa fa-book"/> &nbsp;
-                                                <span className="hide-on-mobile"><TransComponent i18nKey="document for new features" /></span>
-                                            </a>
-                                        </li>
-                                        <ZopimChat />
+                                        {
+                                            Number(roles) === 0 ? null :
+                                                <>
+                                                    <li className="dropdown dropdown-document">
+                                                        <a href="/assets/images/HDSD PMKT VERSION 3.3.pdf" target="_blank" className="dropdown-toggle">
+                                                            <span className="fa fa-book"/> &nbsp;
+                                                            <span className="hide-on-mobile"><TransComponent i18nKey="document for new features" /></span>
+                                                        </a>
+                                                    </li>
+                                                    <ZopimChat />
+                                                </>
+                                        }
                                         <Notification />
                                         <li className="dropdown dropdown-extended dropdown-inbox" id="header_inbox_bar">
                                             <a className="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">

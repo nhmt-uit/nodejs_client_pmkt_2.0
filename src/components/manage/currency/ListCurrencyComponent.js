@@ -68,7 +68,6 @@ class ListCurrencyComponent extends Component {
         let idx = this.getIndexCurrencyListById(item._id);
         let data = this.state.currencyList;
         if(checkAll){
-            console.log(item.checked)
             for (let key in data) {
                 if (!data.hasOwnProperty(key)) continue;
                 data[key].checked = false;
@@ -110,7 +109,7 @@ class ListCurrencyComponent extends Component {
         if(total > 0 && !checked) {
             this.setState({
                 isOpenModalConfirm: true,
-                message: 'Ban co chac chan muon xoa loai tien ' + item.name + '. Viec xoa nay se xoa toan bo cong thuc su dung loai tien nay va khong the phuc hoi.',
+                message: 'Ban co chac chan muon xoa loai tien {{item}}. Viec xoa nay se xoa toan bo cong thuc su dung loai tien nay va khong the phuc hoi.',
                 checkAll: false,
                 item: item
             })
@@ -200,7 +199,7 @@ class ListCurrencyComponent extends Component {
                         </strong>
                     </ModalHeader>
                     <ModalBody>
-                        <TransComponent i18nKey={this.state.message}/>
+                        <TransComponent i18nKey={this.state.message} i18nObj={{ item: this.state.item.name }} />
                     </ModalBody>
                     <ModalFooter>
                         <Button className="bg-red font-white" onClick={this.handleConfirmModal}><TransComponent i18nKey="Confirm"/></Button>

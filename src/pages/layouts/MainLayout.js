@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {connect} from "react-redux";
 import { BrowserRouter as Router } from "react-router-dom";
 import { isEqual as _isEqual } from 'lodash'
+import { CookieService } from 'my-utils/core';
 
 import { Header, MainNavigation, Footer } from 'my-pages/layouts/partials';
 import RenderRoutes from 'my-routes/RenderRoutes';
@@ -13,7 +14,8 @@ class MainLayout extends Component {
         return false;
     }
     render() {
-        return (
+		const isAdmin = CookieService.get("isAdmin");
+		return (
 			<Router>
 				<div className={this.props.isFullScreen ? "page-header-fixed page-sidebar-closed-hide-logo page-content-white full-screen" :  "page-header-fixed page-sidebar-closed-hide-logo page-content-white" }>
 					<div className="page-wrapper">

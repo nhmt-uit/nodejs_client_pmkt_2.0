@@ -40,7 +40,7 @@ class BankerListContainer extends React.Component{
                             var url = items.logo.replace(".", "")
                             return(
                                 <tr key={items.name} role="row" className="odd">
-                                    <td><img src={"/assets" + url} alt={items.name} style={{height:60, width:120}} /></td>
+                                    <td><img src={"/assets" + url} alt={items.name} style={{height:35, width:90}} /></td>
                                     <td>
                                         {
                                             items.agent_url.map(item => {

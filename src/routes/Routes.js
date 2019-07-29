@@ -202,6 +202,60 @@ const RoutesRoles11_12 = [
 	},
 ];
 
+const RoutesRoles0 = [
+	...CommonRoutes,
+	{
+		path: RoutesService.getPath('ADMIN', 'ACCOUNTANT_LIST'),
+		exact: true,
+		component: AccountantListPage,
+	},
+	{
+		path: RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT'),
+		exact: true,
+		component: ReportPage,
+	},
+	{
+		path: RoutesService.getPath('ADMIN', 'CHANGE_PASSWORD'),
+		exact: true,
+		component: ChangePasswordPage,
+	},
+	{
+		path: RoutesService.getPath('ADMIN', 'CHANGE_PASSWORD_2'),
+		exact: true,
+		component: ChangePassword2Page,
+	},
+	{
+		path: RoutesService.getPath('ADMIN', 'CHANGE_SECURE_CODE'),
+		exact: true,
+		component: ChangeSecureCodePage,
+	},
+	{
+		path: RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT_DETAIL'),
+		exact: true,
+		component: ReportDetailPage,
+	},
+	{
+		path: RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT_TRANSACTION'),
+		exact: true,
+		component: TransactionPage,
+	},
+	/*
+	|--------------------------------------------------------------------------
+	| Manage Routes Area
+	|--------------------------------------------------------------------------
+	*/
+	{
+		path: RoutesService.getPath('ADMIN', 'MANAGE_CREATE_NEW'),
+		exact: true,
+		component: CreateNewPage,
+	},
+	{
+		path: '*',
+		exact: true,
+		component: DashboardPage,
+	},
+];
+
 let route;
 const status = CookieService.get("status");
 const roles = CookieService.get("roles");
@@ -209,6 +263,8 @@ const roles = CookieService.get("roles");
 if(status === '1' || status === undefined){
 	if(roles === '11' || roles === '12'){
 		route = RoutesRoles11_12
+	} if(roles === '0') {
+		route = RoutesRoles0
 	} else {
 		route = Routes
 	}
