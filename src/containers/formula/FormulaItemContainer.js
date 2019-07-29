@@ -15,14 +15,14 @@ export default class FormulaItemContainer extends Component {
 
     render() {
         const { formula, order } = this.props;
-        const fieldValueLength = _get(formula, 'field_value.length', 0);
+        const fieldValueLength = _get(formula, 'field_value.length', 0) === 0 ? 1 : _get(formula, 'field_value.length', 0);
         const fieldValElement = (
             <>
                 <td><TransComponent i18nKey={_get(formula, 'field_value[0].field_name', '')} /></td>
                 <td>{ _get(formula, 'field_value[0].value', '') }</td>
             </>
         );
-        const extraFieldValElement = _get(formula, 'field_value', []).map(function (item, index) {
+        let extraFieldValElement = _get(formula, 'field_value', []).map(function (item, index) {
             if (index === 0) {
                 return null;
             }
