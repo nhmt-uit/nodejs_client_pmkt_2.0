@@ -21,6 +21,7 @@ let defaultState = {
 	// Handel button form
 	isProcessing: false,
 	isAllowReport: false,
+	isReplaceRouterLink: false,
 
 
 	// Handel delete formula after scan
@@ -119,7 +120,7 @@ export const AccountantReducer = (state = defaultState, action) => {
 				newBankerAccountByMember = []
 				newMember.map(item => { item.checked = false })
 				newBankerAccount.map(item => {
-					item.checked = item.type === "reject" && item.message !== "Empty data" ? true : false
+					item.checked = item.type === "reject" && item.message !== "Empty data"
 					toggleBanker(newBanker, newBankerAccount, true, item.banker )
 				})
 			}
@@ -159,12 +160,14 @@ export const AccountantReducer = (state = defaultState, action) => {
 					newBankerAccount[objIndex].uuid = x
 				}
 			}
-			return {...state, bankerAccount: newBankerAccount, isProcessing: true}
+			return {...state, bankerAccount: newBankerAccount, isProcessing: true, isReplaceRouterLink: false };
 		case AccountantActionType.ACCOUNTANT_SOCKET_SCAN_DATA_NOTIFY:
 			if (action.payload.length !== 0 ) {
 				for(let x in action.payload) {
 					var objIndex = newBankerAccount.findIndex((obj => obj.uuid === action.payload[x].uuid))
-					if (objIndex !== -1) newBankerAccount[objIndex].message = _get(action.payload[x], 'data.message')
+					if (objIndex !== -1){
+						newBankerAccount[objIndex].message = _get(action.payload[x], 'data.message')
+					}
 				}
 			}
 			return {...state, bankerAccount: newBankerAccount}
@@ -174,13 +177,14 @@ export const AccountantReducer = (state = defaultState, action) => {
 					var objIndex = newBankerAccount.findIndex((obj => obj.uuid === action.payload[x].uuid))
 					if (objIndex !== -1) {
 						newBankerAccount[objIndex].type = "reject"
+						newBankerAccount[objIndex].data = null
 						newBankerAccount[objIndex].message = _get(action.payload[x], 'data.message')
 					}
 				}
 			}
 			//Check process finish
-			newIsProcessing = !_isEmpty(newBankerAccount.find(item => item.type === "notify")) ? true : false
-			newIsAllowReport = !_isEmpty(newBankerAccount.find(item => item.type === "resolve")) ? true : false
+			newIsProcessing = !_isEmpty(newBankerAccount.find(item => item.type === "notify"))
+			newIsAllowReport = !_isEmpty(newBankerAccount.find(item => item.type === "resolve"))
 			// Stop listen when scan finish
 			if (newIsProcessing === false) SocketService.unListenerResponse()
 			return {...state, bankerAccount: newBankerAccount, isProcessing: newIsProcessing, isAllowReport: newIsAllowReport}
@@ -197,12 +201,15 @@ export const AccountantReducer = (state = defaultState, action) => {
 				}
 			}
 			//Check process finish
-			newIsProcessing = !_isEmpty(newBankerAccount.find(item => item.type === "notify")) ? true : false
-			newIsAllowReport = !_isEmpty(newBankerAccount.find(item => item.type === "resolve")) ? true : false
+			newIsProcessing = !_isEmpty(newBankerAccount.find(item => item.type === "notify"));
+			newIsAllowReport = !_isEmpty(newBankerAccount.find(item => item.type === "resolve"));
 			// Stop listen when scan finish
-			if (newIsProcessing === false) SocketService.unListenerResponse()
+			if (newIsProcessing === false) SocketService.unListenerResponse();
 
-			return {...state, bankerAccount: newBankerAccount, isProcessing: newIsProcessing, isAllowReport: newIsAllowReport}
+			const isReplaceRouterLink = newBankerAccount.filter(acc => acc.type === 'resolve').length > 150;
+			console.log(newBankerAccount.filter(acc => acc.type === 'resolve').length);
+
+			return {...state, bankerAccount: newBankerAccount, isProcessing: newIsProcessing, isAllowReport: newIsAllowReport, isReplaceRouterLink};
 		case AccountantActionType.ACCOUNTANT_SOCKET_SCAN_DATA_ACCOUNT_LOCK:
 			if (action.payload.length !== 0 ) {
 				for(let x in action.payload) {
@@ -210,14 +217,16 @@ export const AccountantReducer = (state = defaultState, action) => {
 					if (objIndex !== -1) {
 						newBankerAccount[objIndex].type = "reject"
 						newBankerAccount[objIndex].message = "account is suspend! please call company for open account"
+						newBankerAccount[objIndex].data = null
 					}
 				}
 			}
 			//Check process finish
-			newIsProcessing = !_isEmpty(newBankerAccount.find(item => item.type === "notify")) ? true : false
-			newIsAllowReport = !_isEmpty(newBankerAccount.find(item => item.type === "resolve")) ? true : false
+			newIsProcessing = !_isEmpty(newBankerAccount.find(item => item.type === "notify"))
+			newIsAllowReport = !_isEmpty(newBankerAccount.find(item => item.type === "resolve"))
 			// Stop listen when scan finish
 			if (newIsProcessing === false) SocketService.unListenerResponse()
+
 			return {...state, bankerAccount: newBankerAccount, isProcessing: newIsProcessing, isAllowReport: newIsAllowReport}
 		case AccountantActionType.ACCOUNTANT_SOCKET_SCAN_DATA_STOP:
 			for(let x of action.bankerAccountIds) {
@@ -225,10 +234,12 @@ export const AccountantReducer = (state = defaultState, action) => {
 				if (objIndex !== -1) {
 					newBankerAccount[objIndex].type = "stop"
 					newBankerAccount[objIndex].message = "Stopped"
+					newBankerAccount[objIndex].data = null
 				}
 			}
 			// Stop listen when scan finish
 			if (newIsProcessing === false) SocketService.unListenerResponse()
+
 			return {...state, bankerAccount: newBankerAccount, isProcessing: false}
 		case AccountantActionType.ACCOUNTANT_DELETE_BANKER_ACCOUNT:
 			newBankerAccount = newBankerAccount.filter(item => item.id !== action.item.id)
@@ -267,13 +278,27 @@ export const AccountantReducer = (state = defaultState, action) => {
 			}
 			return {...state, bankerAccount: newBankerAccount}
 		case AccountantActionType.ACCOUNTANT_RESET_WHEN_CHANGE_DATE:
-			newBankerAccount = newBankerAccount.map(item => {
-				item.type = null
-				item.message = null
-				item.uuid = null
-				item.data = null
-				return item
-			})
+			if (action.payload.length !== 0 ) {
+				for(let x in action.payload) {
+					var objIndex = newBankerAccount.findIndex((obj => obj.id === action.payload[x].id))
+					if (objIndex !== -1) {
+						newBankerAccount[objIndex].type = null
+						newBankerAccount[objIndex].message = null
+						newBankerAccount[objIndex].uuid = null
+						newBankerAccount[objIndex].data = null
+					}
+				}
+			}
+			// if(!_isEmpty(action.payload)) {
+			// 	newBankerAccount = newBankerAccount.map(item => {
+			// 		item.type = null
+			// 		item.message = null
+			// 		item.uuid = null
+			// 		item.data = null
+			// 		return item
+			// 	})
+			// }
+			
 			return {...state, bankerAccount: newBankerAccount, isAllowReport: false}
 		default:
 			return {...state}

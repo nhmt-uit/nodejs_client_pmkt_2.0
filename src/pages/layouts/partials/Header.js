@@ -13,6 +13,7 @@ import 'my-styles/reactstrap-modal.css'
 import { changeLanguage } from 'my-actions/systems/LanguageAction'
 import { AuthService } from 'my-services/systems'
 import { TransComponent } from 'my-components'
+import { AppConfig } from 'my-constants'
 
 import 'my-styles/styles.css'
 
@@ -23,8 +24,13 @@ class Header extends Component {
     };
 
     handleLogout = _ => {
-        this.props.history.push(RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'login' }))
         AuthService.logout();
+
+        if (this.props.isReplaceRouterLink) {
+            window.location.href = RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'login' });
+        } else {
+            this.props.history.push(RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'login' }))
+        }
         // window.location.reload()
     };
 
@@ -40,16 +46,31 @@ class Header extends Component {
 
     render() {
         const status = CookieService.get("status");
+        const lang = this.state.lang;
+        const isReplaceRouterLink = this.props.isReplaceRouterLink;
         const roles = CookieService.get("roles");
-        const lang = this.state.lang
+
         return (
             <>
                 <div className="page-header navbar navbar-fixed-top">
                     <div className="page-header-inner ">
                         <div className="page-logo">
-                            <Link to={RoutesService.getPath('ADMIN', 'DASHBOARD')} style={{height: '100%', lineHeight: '50px', color: 'white', fontWeight: 'bold', fontSize: '20px'}}>
-                                <span>VW3 Application</span>
-                            </Link>
+                            {
+                                isReplaceRouterLink
+                                    ? (
+                                        <a className="position-relative" href={RoutesService.getPath('ADMIN', 'DASHBOARD')} style={{height: '100%', lineHeight: '35px', color: 'white', fontWeight: 'bold', fontSize: '20px'}}>
+                                            <span>VW3 Application</span>
+                                            <span className="version-header position-absolute display-block font-size-11 font-silver">Ver: {AppConfig.VERSION_RELEASE}</span>
+                                        </a>
+
+                                    )
+                                    : (
+                                        <Link className="position-relative" to={RoutesService.getPath('ADMIN', 'DASHBOARD')} style={{height: '100%', lineHeight: '35px', color: 'white', fontWeight: 'bold', fontSize: '20px'}}>
+                                            <span>VW3 Application</span>
+                                            <span className="version-header position-absolute display-block font-size-11 font-silver">Ver: {AppConfig.VERSION_RELEASE}</span>
+                                        </Link>
+                                    )
+                            }
                             <div className="menu-toggler sidebar-toggler"><span /></div>
                         </div>
                         <a className="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse"><span></span></a>
@@ -111,30 +132,68 @@ class Header extends Component {
                                             <ul className="dropdown-menu dropdown-menu-default">
                                                 <Fragment>
                                                     <li>
-                                                        <Link to={RoutesService.getPath('ADMIN', 'CHANGE_PASSWORD')}>
-                                                            <i className="icon-lock" /> <TransComponent i18nKey="Change Password" />
-                                                        </Link>
+                                                        {
+                                                            isReplaceRouterLink
+                                                                ? (
+                                                                    <a href={RoutesService.getPath('ADMIN', 'CHANGE_PASSWORD')}>
+                                                                        <i className="icon-lock" /> <TransComponent i18nKey="Change Password" />
+                                                                    </a>
+                                                                )
+                                                                : (
+                                                                    <Link to={RoutesService.getPath('ADMIN', 'CHANGE_PASSWORD')}>
+                                                                        <i className="icon-lock" /> <TransComponent i18nKey="Change Password" />
+                                                                    </Link>
+                                                                )
+                                                        }
                                                     </li>
                                                     <li>
-                                                        <Link to={RoutesService.getPath('ADMIN', 'CHANGE_PASSWORD_2')}>
-                                                            <i className="icon-lock" /> <TransComponent i18nKey="Change password 2" />
-                                                        </Link>
+                                                        {
+                                                            isReplaceRouterLink
+                                                                ? (
+                                                                    <a href={RoutesService.getPath('ADMIN', 'CHANGE_PASSWORD_2')}>
+                                                                        <i className="icon-lock" /> <TransComponent i18nKey="Change password 2" />
+                                                                    </a>
+                                                                )
+                                                                : (
+                                                                    <Link to={RoutesService.getPath('ADMIN', 'CHANGE_PASSWORD_2')}>
+                                                                        <i className="icon-lock" /> <TransComponent i18nKey="Change password 2" />
+                                                                    </Link>
+                                                                )
+                                                        }
                                                     </li>
                                                     <li>
-                                                        <Link to={RoutesService.getPath('ADMIN', 'CHANGE_SECURE_CODE')}>
-                                                            <i className="icon-lock" /> <TransComponent i18nKey="Change Secure Code" />
-                                                        </Link>
+                                                        {
+                                                            isReplaceRouterLink
+                                                                ? (
+                                                                    <a href={RoutesService.getPath('ADMIN', 'CHANGE_SECURE_CODE')}>
+                                                                        <i className="icon-lock" /> <TransComponent i18nKey="Change Secure Code" />
+                                                                    </a>
+                                                                )
+                                                                : (
+                                                                    <Link to={RoutesService.getPath('ADMIN', 'CHANGE_SECURE_CODE')}>
+                                                                        <i className="icon-lock" /> <TransComponent i18nKey="Change Secure Code" />
+                                                                    </Link>
+                                                                )
+                                                        }
                                                     </li>
                                                 </Fragment>
                                                 <li>
-                                                    <a onClick={this.handleLogout}> <i className="icon-key" /><TransComponent i18nKey="Logout" /></a>
+                                                    {
+                                                        isReplaceRouterLink
+                                                            ? <a href={RoutesService.getPath('ADMIN', 'AUTH_LOGOUT' )}> <i className="icon-key" /><TransComponent i18nKey="Logout" /></a>
+                                                            : <a onClick={this.handleLogout}> <i className="icon-key" /><TransComponent i18nKey="Logout" /></a>
+                                                    }
                                                 </li>
                                             </ul>
                                         </li>
                                     </> : null
                                 }
                                 <li className="dropdown dropdown-quick-sidebar-toggler">
-                                    <a href="#/" className="dropdown-toggle"  onClick={this.handleLogout}><i className="icon-logout" /></a>
+                                    {
+                                        isReplaceRouterLink
+                                            ? <a href={RoutesService.getPath('ADMIN', 'AUTH_LOGOUT' )} className="dropdown-toggle"><i className="icon-logout" /></a>
+                                            : <a href="#/" className="dropdown-toggle"  onClick={this.handleLogout}><i className="icon-logout" /></a>
+                                    }
                                 </li>
                             </ul>
                         </div>
@@ -144,7 +203,7 @@ class Header extends Component {
 
                 {/* Modal Banker */}
                 <Modal isOpen={this.state.isOpenModalBaner} toggle={this.toggleModalBanker} scrollable={true}>
-                    <ModalHeader toggle={this.toggleModalBanker} ><i className="icon-social-dribbble"></i>&nbsp;&nbsp;<span className="caption-subject bold uppercase"><TransComponent i18nKey="Company" /></span></ModalHeader>
+                    <ModalHeader toggle={this.toggleModalBanker} ><i className="icon-social-dribbble" />&nbsp;&nbsp;<span className="caption-subject bold uppercase"><TransComponent i18nKey="Company" /></span></ModalHeader>
                     <ModalBody>
                         <BankerListContainer />
                     </ModalBody>
@@ -157,6 +216,12 @@ class Header extends Component {
     }
 }
 
+const mapStateToProps = state => {
+    return {
+        isReplaceRouterLink: state.AccountantReducer.isReplaceRouterLink || false,
+    };
+};
+
 const mapDispatchToProps = dispatch => {
     return {
         changeLanguage: type => dispatch(changeLanguage(type)),
@@ -164,6 +229,6 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default compose(
-    connect(null, mapDispatchToProps),
+    connect(mapStateToProps, mapDispatchToProps),
     withRouter,
 )(Header)

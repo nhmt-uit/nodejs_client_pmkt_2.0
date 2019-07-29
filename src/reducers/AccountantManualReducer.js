@@ -20,7 +20,7 @@ export const AccountantManualReducer = (state = defaultState, action) => {
 			let payload = action.payload || state.payload
 			let full_payload_reject = action.full_payload_reject || state.full_payload_reject
 			let payload_reject = action.payload_reject || state.payload_reject
-			let isRenderFinish = action.isRenderFinish || state.isRenderFinish
+			let isRenderFinish = action.isRenderFinish
 			return {...state, isRenderFinish: isRenderFinish, full_payload: full_payload, payload: payload, full_payload_reject: full_payload_reject, payload_reject: payload_reject, }
 		}
 		case AccountantManualActionType.ACCOUNTANT_MANUAL_SOCKET_SUBMIT_FORM_BANKER: {

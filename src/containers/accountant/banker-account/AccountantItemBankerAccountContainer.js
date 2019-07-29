@@ -46,7 +46,7 @@ class AccountantItemBankerAccountContainer extends Component {
                             <div className="col-xs-4 col-md-5" style={{paddingLeft: '0px'}}><label className="mt-checkbox "> {bankerAccount.note}</label></div>
                             <div className="col-xs-2 col-md-1 text-right">
                             {bankerAccount.data ?
-                                <label className="mt-checkbox" onClick={_ => this.props.collapseBankerAccount(bankerAccount.id)} style={{paddingLeft: '0px'}}>
+                                <label className="mt-checkbox remove-when-reset" onClick={_ => this.props.collapseBankerAccount(bankerAccount.id)} style={{paddingLeft: '0px'}}>
                                     {bankerAccount.collapse ?  <i className="fa fa-minus"/> : <i className="fa fa-plus"/>}
                                 </label>
                                 : null }
@@ -56,11 +56,13 @@ class AccountantItemBankerAccountContainer extends Component {
                     </div>
                     {
                         bankerAccount.data ?
-                            <LazyLoad>
-                                <Collapse isOpen={bankerAccount.collapse}>
-                                    <AccountantBankerAccountResultContainer payload={bankerAccount.data} bankerAccountType={bankerAccount.type}  />
-                                </Collapse>
-                            </LazyLoad>
+                            <div  className="remove-when-reset">
+                                <LazyLoad>
+                                    <Collapse isOpen={bankerAccount.collapse}>
+                                        <AccountantBankerAccountResultContainer payload={bankerAccount.data} bankerAccountType={bankerAccount.type}  />
+                                    </Collapse>
+                                </LazyLoad>
+                            </div>
                         : null
                     }
                 </div>

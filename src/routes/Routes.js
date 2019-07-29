@@ -13,8 +13,9 @@ import {
 } from 'my-pages/manages';
 import { CookieService } from 'my-utils/core';
 import { FormulaPage } from 'my-pages/formula';
-import FormulaGroupPage from "../pages/formula-group/FormulaGroupPage";
-import { MemberPage } from "../pages/member";
+import FormulaGroupPage from "my-pages/formula-group/FormulaGroupPage";
+import { MemberPage } from "my-pages/member";
+import { LogoutContainer } from 'my-containers/auth';
 
 const CommonRoutes = [
 	{
@@ -23,6 +24,11 @@ const CommonRoutes = [
 		component: DashboardPage,
 	},
 	// authentication
+	{
+		path: RoutesService.getPath('ADMIN', 'AUTH_LOGOUT'),
+		exact: true,
+		component: LogoutContainer,
+	},
 	{
 		path: RoutesService.getPath('ADMIN', 'AUTH_LOGIN', { type: 'login' }),
 		exact: true,

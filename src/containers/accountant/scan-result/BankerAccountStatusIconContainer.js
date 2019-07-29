@@ -20,14 +20,14 @@ class BankerAccountStatusIconContainer extends Component {
         let xhtml
         switch (bankerAccount.type) {
             case "notify" :
-                xhtml = <i className="fa fa-spinner font-yellow-soft spinner-animate" style={{marginLeft: '5px'}} />
+                xhtml = <i className="fa fa-spinner font-yellow-soft spinner-animate remove-when-reset" style={{marginLeft: '5px'}} />
             break
             case "resolve" :
-                xhtml = <i className="fa fa-check font-green-jungle" style={{marginLeft: '5px'}} />
+                xhtml = <i className="fa fa-check font-green-jungle remove-when-reset" style={{marginLeft: '5px'}} />
             break
             case "reject" :
             case "stop" :
-                xhtml = <i className="fa fa-close font-red-pink" style={{marginLeft: '5px'}} />
+                xhtml = <i className="fa fa-close font-red-pink remove-when-reset" style={{marginLeft: '5px'}} />
             break
             default: break
         }

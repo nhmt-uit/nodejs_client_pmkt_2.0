@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Route, Link } from "react-router-dom";
+import { connect } from 'react-redux';
 
-import {isEqual} from "lodash";
 import { RoutesService } from 'my-routes';
 import { CookieService } from 'my-utils/core';
 import { TransComponent } from 'my-components'
@@ -27,12 +27,12 @@ export const menus = [
             { to: RoutesService.getPath('ADMIN', 'MANAGE_ACCOUNT_SUB'), roles: [10], exact: true, name: 'create sub', icon: 'fa fa-user-plus' },
         ],
     },
-]
+];
 
 /*===============================
  * Custom HTML Link Router
  * ==============================*/
-const MenuLink = ({ menu }) => {
+const MenuLink = ({ menu, isReplaceRouterLink }) => {
     const roles = CookieService.get("roles");
     const status = CookieService.get("status");
     return (
@@ -45,23 +45,36 @@ const MenuLink = ({ menu }) => {
                     let sub_menus = ""
                     if (typeof menu.sub_menus !== "undefined") {
                         sub_menus = menu.sub_menus.map((menu, index) => {
-                            if(menu.roles.indexOf(Number(roles)) === -1 || Number(status) === 0) return null
+                            if(menu.roles.indexOf(Number(roles)) === -1 || Number(status) === 0) return null;
+
                             return (
-                                <SubMenuLink key={index} menu={menu}/>
+                                <SubMenuLink key={index} menu={menu} isReplaceRouterLink={isReplaceRouterLink}/>
                             )
                         })
                     }
 
                     return (
                         <li className={`nav-item ${active}`}>
-                            <Link
-                                to={menu.to}
-                                className="nav-link text-uppercase text-expanded"
-                            >
-                                <i className={menu.icon}></i>
-                                <span className="title"><TransComponent i18nKey={menu.name}/></span>
-                                {sub_menus ? <span className="arrow"></span> : ""}
-                            </Link>
+                            {
+                                isReplaceRouterLink
+                                    ? (
+                                        <a href={menu.to} className="nav-link text-uppercase text-expanded">
+                                            <i className={menu.icon} />
+                                            <span className="title"><TransComponent i18nKey={menu.name}/></span>
+                                            {sub_menus ? <span className="arrow" /> : ""}
+                                        </a>
+                                    )
+                                    : (
+                                        <Link
+                                            to={menu.to}
+                                            className="nav-link text-uppercase text-expanded"
+                                        >
+                                            <i className={menu.icon} />
+                                            <span className="title"><TransComponent i18nKey={menu.name}/></span>
+                                            {sub_menus ? <span className="arrow" /> : ""}
+                                        </Link>
+                                    )
+                            }
                             {sub_menus ? <ul className="sub-menu">
                                 {sub_menus}
                             </ul> : ""}
@@ -76,21 +89,31 @@ const MenuLink = ({ menu }) => {
 /*===============================
  * Custom HTML Link Router
  * ==============================*/
-const SubMenuLink = ({ menu }) => (
+const SubMenuLink = ({ menu, isReplaceRouterLink }) => (
     <Route
         path={menu.to}
         exact={menu.exact}
         children={
             ({ match }) => {
-                let active = (match) ? "active" : ""
+                let active = (match) ? "active" : "";
                 return (
                     <li className={`nav-item ${active}`}>
-                        <Link
-                            to={menu.to}
-                            className="nav-link"
-                        >
-                            <span className="title"><TransComponent i18nKey={menu.name} /></span>
-                        </Link>
+                        {
+                            isReplaceRouterLink
+                                ? (
+                                    <a href={menu.to} className="nav-link">
+                                        <span className="title"><TransComponent i18nKey={menu.name} /></span>
+                                    </a>
+                                )
+                                : (
+                                    <Link
+                                        to={menu.to}
+                                        className="nav-link"
+                                    >
+                                        <span className="title"><TransComponent i18nKey={menu.name} /></span>
+                                    </Link>
+                                )
+                        }
                     </li>
                 )
             }
@@ -99,7 +122,6 @@ const SubMenuLink = ({ menu }) => (
 );
     
 class MainNavigation extends Component {
-
     /*====================================
      * Initial Menu Elements
      *====================================*/
@@ -109,9 +131,10 @@ class MainNavigation extends Component {
         let xhtml = null
         if (menus.length) {
             xhtml = menus.map((menu, index) => {
-                if(menu.roles.indexOf(Number(roles)) === -1 || Number(status) === 0) return null
+                if(menu.roles.indexOf(Number(roles)) === -1 || Number(status) === 0) return null;
+
                 return (
-                    <MenuLink key={index} menu={menu} />
+                    <MenuLink key={index} menu={menu} isReplaceRouterLink={this.props.isReplaceRouterLink} />
                 )
             })
         }
@@ -131,4 +154,10 @@ class MainNavigation extends Component {
     }
 }
 
-export default MainNavigation;
+const mapStateToProps = state => {
+    return {
+        isReplaceRouterLink: state.AccountantReducer.isReplaceRouterLink,
+    };
+};
+
+export default connect(mapStateToProps, null)(MainNavigation);
