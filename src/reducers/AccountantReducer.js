@@ -167,7 +167,6 @@ export const AccountantReducer = (state = defaultState, action) => {
 					var objIndex = newBankerAccount.findIndex((obj => obj.uuid === action.payload[x].uuid))
 					if (objIndex !== -1){
 						newBankerAccount[objIndex].message = _get(action.payload[x], 'data.message')
-						newBankerAccount[objIndex].data = null
 					}
 				}
 			}
