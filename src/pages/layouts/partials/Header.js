@@ -47,7 +47,7 @@ class Header extends Component {
     render() {
         const status = CookieService.get("status");
         const lang = this.state.lang;
-        const isReplaceRouterLink = this.props.isReplaceRouterLink;console.log(isReplaceRouterLink)
+        const isReplaceRouterLink = this.props.isReplaceRouterLink;
 
         return (
             <>
