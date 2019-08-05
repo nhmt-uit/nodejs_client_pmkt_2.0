@@ -61,7 +61,7 @@ const MenuLink = ({ menu, isReplaceRouterLink }) => {
                                         <a href={menu.to} className="nav-link text-uppercase text-expanded">
                                             <i className={menu.icon} />
                                             <span className="title"><TransComponent i18nKey={menu.name}/></span>
-                                            {sub_menus ? <span className="arrow" /> : ""}
+                                            {sub_menus ? active ? <span className="arrow open" /> : <span className="arrow" /> : ""}
                                         </a>
                                     )
                                     : (
@@ -71,7 +71,7 @@ const MenuLink = ({ menu, isReplaceRouterLink }) => {
                                         >
                                             <i className={menu.icon} />
                                             <span className="title"><TransComponent i18nKey={menu.name}/></span>
-                                            {sub_menus ? <span className="arrow" /> : ""}
+                                            {sub_menus ? active ? <span className="arrow open" /> : <span className="arrow" /> : ""}
                                         </Link>
                                     )
                             }
