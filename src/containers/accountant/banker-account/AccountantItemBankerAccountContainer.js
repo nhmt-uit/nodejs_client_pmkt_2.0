@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { Collapse } from 'reactstrap'
 import { isEmpty as _isEmpty, isEqual as _isEqual } from 'lodash'
-import LazyLoad from 'react-lazyload';
+import LazyLoad, { forceCheck }  from 'react-lazyload';
 
 import { collapseBankerAccount } from 'my-actions/AccountantAction';
 import { AccountantBankerAccountResultContainer, AccountantItemBankerAccountCheckboxContainer, BankerAccountStatusIconContainer } from 'my-containers/accountant';
@@ -26,6 +26,11 @@ class AccountantItemBankerAccountContainer extends Component {
         return false
     }
     
+    componentDidMount () {
+        // debug('componentDidMount', this.props.alt);
+        forceCheck();
+    }
+
     render() {
         const bankerAccount = this.props.bankerAccount.find(item => item.id === this.props.bankerAccountId)
         if(_isEmpty(bankerAccount)) return null
@@ -45,7 +50,7 @@ class AccountantItemBankerAccountContainer extends Component {
                             </div>
                             <div className="col-xs-4 col-md-5" style={{paddingLeft: '0px'}}><label className="mt-checkbox "> {bankerAccount.note}</label></div>
                             <div className="col-xs-2 col-md-1 text-right">
-                            {bankerAccount.data ?
+                            {!_isEmpty(bankerAccount.data)  ?
                                 <label className="mt-checkbox remove-when-reset" onClick={_ => this.props.collapseBankerAccount(bankerAccount.id)} style={{paddingLeft: '0px'}}>
                                     {bankerAccount.collapse ?  <i className="fa fa-minus"/> : <i className="fa fa-plus"/>}
                                 </label>
@@ -55,9 +60,9 @@ class AccountantItemBankerAccountContainer extends Component {
                         </h4>
                     </div>
                     {
-                        bankerAccount.data ?
+                        !_isEmpty(bankerAccount.data) ?
                             <div  className="remove-when-reset">
-                                <LazyLoad>
+                                <LazyLoad once={true}>
                                     <Collapse isOpen={bankerAccount.collapse}>
                                         <AccountantBankerAccountResultContainer payload={bankerAccount.data} bankerAccountType={bankerAccount.type}  />
                                     </Collapse>
