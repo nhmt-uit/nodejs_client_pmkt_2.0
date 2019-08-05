@@ -27,6 +27,14 @@ export const menus = [
             { to: RoutesService.getPath('ADMIN', 'MANAGE_ACCOUNT_SUB'), roles: [10], exact: true, name: 'create sub', icon: 'fa fa-user-plus' },
         ],
     },
+    /* ========= ADMIN NAVIGATION =========== */
+    { to: RoutesService.getPath('ADMIN_MANAGE', 'LANGUAGE'), roles: [0], exact: true, name: 'Language', icon: 'fa fa-language fa-fw'},
+    { to: RoutesService.getPath('ADMIN_MANAGE', 'CURRENCY_TYPE'), roles: [0], exact: true, name: 'CurrencyType', icon: 'fa fa-usd fa-fw'},
+    { to: RoutesService.getPath('ADMIN_MANAGE', 'HOST'), roles: [0], exact: true, name: 'Host', icon: 'fa fa-cubes fa-fw'},
+    { to: RoutesService.getPath('ADMIN_MANAGE', 'NOTICE'), roles: [0], exact: true, name: 'Notice', icon: 'fa fa-sticky-note fa-fw'},
+    { to: RoutesService.getPath('ADMIN_MANAGE', 'LOG_CHANGE_PASSWORD'), roles: [0], exact: true, name: 'Log Change Password', icon: 'fa fa-sticky-note fa-fw'},
+    { to: RoutesService.getPath('ADMIN_MANAGE', 'SUB_STATUS'), roles: [0], exact: true, name: 'Sub Status Management', icon: 'fa fa-group'},
+    { to: RoutesService.getPath('ADMIN_MANAGE', 'SET_FEATURES'), roles: [0], exact: true, name: 'Set Features', icon: 'fa fa-group'},
 ];
 
 /*===============================
