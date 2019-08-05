@@ -22,6 +22,7 @@ export default class FormulaItemContainer extends Component {
                 <td>{ _get(formula, 'field_value[0].value', '') }</td>
             </>
         );
+
         let extraFieldValElement = _get(formula, 'field_value', []).map(function (item, index) {
             if (index === 0) {
                 return null;

@@ -96,30 +96,28 @@ class AccountantBankerAccountResultContainer extends Component {
         
         return (
             <div className="panel-body bootstrap-table remove-when-reset">
-                <div className="table-responsive">
-                    <Table responsive striped bordered condensed className="tbl-scan-result">
-                        <thead>
-                            <tr>
-                                <th><TransComponent i18nKey="Account" /></th>
-                                <th><TransComponent i18nKey="Report Type" /></th>
-                                {this.generateDynamicColumn()}
-                                <th>
-                                    <span style={{float: 'left', padding: "5px 10px"}}><TransComponent i18nKey="Formula" /></span>
-                                    <a className="btn btn-default btn-sm btn-fullscreen bg-blue-oleo bg-font-blue-oleo" href="javascript:;" onClick={_ => this.props.toggleFullScreen() } style={{float: 'right'}}>
-                                        <i className="fa fa-info" />
-                                        {isFullScreen ? <TransComponent i18nKey="Hide" /> : <TransComponent i18nKey="Detail" />}
-                                    </a>
-                                </th>
-                                <AccountantBankerAccountResultHiddenTableThContainer dataHiddenFields={dataHiddenFields} />
-                                <th><TransComponent i18nKey="Member" /></th>
-                                <th><TransComponent i18nKey="Result" /></th>
-                                <th><TransComponent i18nKey="Currency" /></th>
-                                <th colSpan="2"><TransComponent i18nKey="+/- Formula" /> </th>
-                            </tr>
-                        </thead>
-                        { !_isEmpty(accountant) ? this.handleNestedDataAccountant(accountant) : null }
-                    </Table>
-                </div>
+                <Table responsive striped bordered condensed className="tbl-scan-result">
+                    <thead>
+                        <tr>
+                            <th><TransComponent i18nKey="Account" /></th>
+                            <th><TransComponent i18nKey="Report Type" /></th>
+                            {this.generateDynamicColumn()}
+                            <th>
+                                <span style={{float: 'left', padding: "5px 10px"}}><TransComponent i18nKey="Formula" /></span>
+                                <a className="btn btn-default btn-sm btn-fullscreen bg-blue-oleo bg-font-blue-oleo" href="javascript:;" onClick={_ => this.props.toggleFullScreen() } style={{float: 'right'}}>
+                                    <i className="fa fa-info" />
+                                    {isFullScreen ? <TransComponent i18nKey="Hide" /> : <TransComponent i18nKey="Detail" />}
+                                </a>
+                            </th>
+                            <AccountantBankerAccountResultHiddenTableThContainer dataHiddenFields={dataHiddenFields} />
+                            <th><TransComponent i18nKey="Member" /></th>
+                            <th><TransComponent i18nKey="Result" /></th>
+                            <th><TransComponent i18nKey="Currency" /></th>
+                            <th colSpan="2"><TransComponent i18nKey="+/- Formula" /> </th>
+                        </tr>
+                    </thead>
+                    { !_isEmpty(accountant) ? this.handleNestedDataAccountant(accountant) : null }
+                </Table>
             </div>
         )
     }
