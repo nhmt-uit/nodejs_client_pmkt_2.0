@@ -12,14 +12,19 @@ class InfoUserContainer extends Component {
         const roles = CookieService.get("roles");
 
         return (
-            <div className="col-md-4 hide-on-mobile" style={{paddingTop: "10px", fontSize: '12px'}}>
-                <div className="font-white"><span><TransComponent i18nKey="hello: " /> </span><span> {username} </span></div>
+            <>
                 {
-                    Number(status) === 0 || (Number(roles) === 11 || Number(roles) === 12 ) ?
-                        null :
-                        <div className="font-white"><span><TransComponent i18nKey="expires day: " /> </span><span> {expires} </span></div>
+                    (Number(roles) === 0) ? null :
+                        <div className="col-md-4 hide-on-mobile" style={{paddingTop: "10px", fontSize: '12px'}}>
+                            <div className="font-white"><span><TransComponent i18nKey="hello: " /> </span><span> {username} </span></div>
+                            {
+                                Number(status) === 0 || (Number(roles) === 11 || Number(roles) === 12 ) ?
+                                    null :
+                                    <div className="font-white"><span><TransComponent i18nKey="expires day: " /> </span><span> {expires} </span></div>
+                            }
+                        </div>
                 }
-            </div>
+            </>
         );
     }
 }
