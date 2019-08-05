@@ -593,3 +593,11 @@ h5.modal-title {font-size: 16px; font-weight: bold; color: #E26A6A!important;}
     top: 20px;
     left: 0;
 }
+
+.font-success {
+    color: #3C763D;
+}
+
+.border-success {
+    border-color: #dff0d8;
+}

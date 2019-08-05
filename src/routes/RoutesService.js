@@ -1,4 +1,4 @@
-import { find, forEach } from "lodash";
+import { find, forEach, cloneDeep } from "lodash";
 import path from 'path';
 
 const listAdminRoutes = [
@@ -107,7 +107,11 @@ class RoutesService {
             case "ADMIN_MANAGE":
                 routes = find(listAdminRoutes, { name, language : this.language });
 
-                if (routes && routes.path) routes.path = path.join('/admin', routes.path);
+                if (routes && routes.path) {
+                    routes = cloneDeep(routes);
+
+                    routes.path = path.join('/admin', routes.path);
+                }
 
                 break;
             default: break;

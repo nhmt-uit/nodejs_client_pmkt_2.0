@@ -17,6 +17,8 @@ import FormulaGroupPage from "my-pages/formula-group/FormulaGroupPage";
 import { MemberPage } from "my-pages/member";
 import { LogoutContainer } from 'my-containers/auth';
 
+import { CurrencyTypePage } from 'my-pages/admin/currency-type';
+
 const CommonRoutes = [
 	{
 		path: "/",
@@ -211,16 +213,6 @@ const RoutesRoles11_12 = [
 const RoutesRoles0 = [
 	...CommonRoutes,
 	{
-		path: RoutesService.getPath('ADMIN', 'ACCOUNTANT_LIST'),
-		exact: true,
-		component: AccountantListPage,
-	},
-	{
-		path: RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT'),
-		exact: true,
-		component: ReportPage,
-	},
-	{
 		path: RoutesService.getPath('ADMIN', 'CHANGE_PASSWORD'),
 		exact: true,
 		component: ChangePasswordPage,
@@ -236,24 +228,9 @@ const RoutesRoles0 = [
 		component: ChangeSecureCodePage,
 	},
 	{
-		path: RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT_DETAIL'),
+		path: RoutesService.getPath('ADMIN_MANAGE', 'CURRENCY_TYPE'),
 		exact: true,
-		component: ReportDetailPage,
-	},
-	{
-		path: RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT_TRANSACTION'),
-		exact: true,
-		component: TransactionPage,
-	},
-	/*
-	|--------------------------------------------------------------------------
-	| Manage Routes Area
-	|--------------------------------------------------------------------------
-	*/
-	{
-		path: RoutesService.getPath('ADMIN', 'MANAGE_CREATE_NEW'),
-		exact: true,
-		component: CreateNewPage,
+		component: CurrencyTypePage,
 	},
 	{
 		path: '*',
