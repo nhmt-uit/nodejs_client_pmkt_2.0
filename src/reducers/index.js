@@ -23,6 +23,9 @@ import AccountSubReducer from "./account_sub/AccountSubReducer"
 import FormulaReducer from "./formula/FormulaReducer"
 import FormulaGroupReducer from "./formula-group/FormulaGroupReducer"
 import ConfigurationReducer from './manage/ConfigurationReducer'
+import LanguageManageReducer from './language/LanguageManageReducer'
+import HostManageReducer from './host/HostManageReducer'
+
 
 const appReducers = combineReducers({
     // Redux form reducer
@@ -37,6 +40,8 @@ const appReducers = combineReducers({
 
     // System reducers
     AppReducer,
+    HostManageReducer,
+    LanguageManageReducer,
     LanguageReducer,
     MemberReducer,
     AuthReducer,

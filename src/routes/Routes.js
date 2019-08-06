@@ -16,6 +16,7 @@ import { FormulaPage } from 'my-pages/formula';
 import FormulaGroupPage from "my-pages/formula-group/FormulaGroupPage";
 import { MemberPage } from "my-pages/member";
 import { LogoutContainer } from 'my-containers/auth';
+import {LanguagePage, HostPage} from "my-pages/admin";
 
 const CommonRoutes = [
 	{
@@ -226,11 +227,6 @@ const RoutesRoles0 = [
 		component: ChangePasswordPage,
 	},
 	{
-		path: RoutesService.getPath('ADMIN', 'CHANGE_PASSWORD_2'),
-		exact: true,
-		component: ChangePassword2Page,
-	},
-	{
 		path: RoutesService.getPath('ADMIN', 'CHANGE_SECURE_CODE'),
 		exact: true,
 		component: ChangeSecureCodePage,
@@ -244,6 +240,16 @@ const RoutesRoles0 = [
 		path: RoutesService.getPath('ADMIN', 'ACCOUNTANT_REPORT_TRANSACTION'),
 		exact: true,
 		component: TransactionPage,
+	},
+	{
+		path: RoutesService.getPath('ADMIN_MANAGE', 'LANGUAGE'),
+		exact: true,
+		component: LanguagePage,
+	},
+	{
+		path: RoutesService.getPath('ADMIN_MANAGE', 'HOST'),
+		exact: true,
+		component: HostPage,
 	},
 	/*
 	|--------------------------------------------------------------------------

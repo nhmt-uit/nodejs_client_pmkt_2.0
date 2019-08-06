@@ -160,6 +160,7 @@ class CreateTransaction extends Component {
         ]
         //Get data Cycle
         const {optCycle, optMoney, optMember} = this.props;
+        console.log(optMember)
         // sort optCycle by Date closest to farthest
         var Cycle = sortBy(optCycle, ['label']).reverse();
 
