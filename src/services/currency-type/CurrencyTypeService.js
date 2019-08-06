@@ -13,6 +13,18 @@ class CurrencyTypeService extends BaseService {
 
         return HttpService.post(url, payload);
     }
+
+    validator(payload) {
+        const url = `${this.serviceUrl}/validator`;
+
+        return HttpService.post(url, payload);
+    }
+
+    deleteCurrency(payload) {
+        const url = `${this.serviceUrl}/delete_currency`
+
+        return HttpService.post(url, payload);
+    }
 }
 
 export default new CurrencyTypeService()

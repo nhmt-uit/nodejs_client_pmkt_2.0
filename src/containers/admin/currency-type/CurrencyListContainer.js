@@ -1,16 +1,22 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { get as _get } from 'lodash';
 
 import { TransComponent, LoadingComponent } from 'my-components'
 import { getCurrencyType } from 'my-actions/currency-type/CurrencyTypeAction';
-import { CurrencyEditModal } from 'my-containers/admin/currency-type';
+import { CurrencyEditModal, CurrencyCreateModal } from 'my-containers/admin/currency-type';
+import {Button, Col, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
+import Select from "react-select";
+
+import { CurrencyTypeService } from 'my-services/currency-type';
 
 class CurrencyListContainer extends Component {
     state = {
         isOpenEditModal: false,
         currencySelected: {},
+        isOpenCreateModal: false,
+        isOpenDeleteModal: false,
+        isDeleting: false,
     };
 
     componentDidMount() {
@@ -46,11 +52,28 @@ class CurrencyListContainer extends Component {
                     <td className="text-center">
                         <i className="fa fa-edit font-green cursor-pointer" onClick={this.handleChangeState({ isOpenEditModal: true, currencySelected: currency })} />
                     </td>
-                    <td className="text-center"><i className="fa fa-times-circle cursor-pointer font-red-sunglo" /></td>
+                    <td className="text-center">
+                        <i onClick={this.handleChangeState({ isOpenDeleteModal: true, currencySelected: currency })} className="fa fa-times-circle cursor-pointer font-red-sunglo" />
+                    </td>
                 </tr>
             );
         });
     }
+
+    handleDelete = () => {
+        const currency = this.state.currencySelected;
+
+        this.setState({ isDeleting: true }, async () => {
+            const result = await CurrencyTypeService.deleteCurrency({ id: currency.id });
+            const newState = { isOpenDeleteModal: false, isDeleting: false };
+
+            newState.isSuccess = result.status;
+
+            this.setState(newState, () => {
+                if (result.status) this.props.getCurrencyType();
+            })
+        })
+    };
 
     render() {
         const { isFetchingCurrency, lstCurrencyType } = this.props;
@@ -59,7 +82,7 @@ class CurrencyListContainer extends Component {
             <>
                 <div className="portlet box blue-hoki position-relative">
                     { isFetchingCurrency && !lstCurrencyType.length ? <LoadingComponent/> : null }
-                    <button onClick={this.handle()} className="btn btn-danger btn-add-formula"><TransComponent i18nKey="Add new" /></button>
+                    <button onClick={this.handleChangeState({ isOpenCreateModal: true })} className="btn btn-danger btn-add-formula"><TransComponent i18nKey="Add new" /></button>
                     <div className="portlet-title">
                         <div className="caption bold uppercase font-size-15"><TransComponent i18nKey="Currency list" /></div>
                     </div>
@@ -89,6 +112,25 @@ class CurrencyListContainer extends Component {
                     onToggle={this.handleChangeState({ isOpenEditModal: !this.state.isOpenEditModal })}
                     onFinish={() => this.props.getCurrencyType()}
                 />
+                <CurrencyCreateModal
+                    isOpenCreateModal={this.state.isOpenCreateModal}
+                    onToggle={this.handleChangeState({ isOpenCreateModal: !this.state.isOpenCreateModal })}
+                    onFinish={() => this.props.getCurrencyType()}
+                />
+                <Modal isOpen={this.state.isOpenDeleteModal} toggle={this.handleChangeState({ isOpenDeleteModal: !this.state.isOpenDeleteModal })}>
+                    <ModalHeader toggle={this.handleChangeState({ isOpenDeleteModal: !this.state.isOpenDeleteModal })}>
+                        <strong><TransComponent i18nKey="Xac nhan" /></strong>
+                    </ModalHeader>
+                    <ModalBody><TransComponent i18nKey="Are you sure ?" /></ModalBody>
+                    <ModalFooter>
+                        <Button
+                            className="red"
+                            onClick={this.handleDelete}
+                            disabled={this.state.isDeleting}
+                        ><TransComponent i18nKey="Save" />{ this.state.isDeleting ? <>&nbsp;<i className="fa fa-spin fa-spinner" /></> : null }</Button>&nbsp;
+                        <Button className="green" onClick={this.toggleModal}><TransComponent i18nKey="Close" /></Button>
+                    </ModalFooter>
+                </Modal>
             </>
         );
     }
