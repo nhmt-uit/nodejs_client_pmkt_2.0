@@ -19,6 +19,7 @@ import { LogoutContainer } from 'my-containers/auth';
 
 import { CurrencyTypePage } from 'my-pages/admin/currency-type';
 import { SubStatusPage } from 'my-pages/admin/sub-status';
+import { SetFeaturePage } from 'my-pages/admin/set-feature';
 
 const CommonRoutes = [
 	{
@@ -237,6 +238,11 @@ const RoutesRoles0 = [
 		path: RoutesService.getPath('ADMIN_MANAGE', 'SUB_STATUS'),
 		exact: true,
 		component: SubStatusPage,
+	},
+	{
+		path: RoutesService.getPath('ADMIN_MANAGE', 'SET_FEATURES'),
+		exact: true,
+		component: SetFeaturePage,
 	},
 	{
 		path: '*',

@@ -1,11 +1,10 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { get as _get } from 'lodash';
+import { isEqual as _isEqual } from 'lodash';
 import { connect } from 'react-redux';
 
 import { TransComponent } from 'my-components';
-import { SubStatusService } from 'my-services/sub-status';
-import { toggleModal } from 'my-actions/sub-status/SubStatusAction';
+import { toggleModal, getSubActive, getSubLocked } from 'my-actions/sub-status/SubStatusAction';
 
 class AccountItemContainer extends Component {
     static propTypes = {
@@ -22,37 +21,44 @@ class AccountItemContainer extends Component {
 
     state = {
         isLoading: false,
-        lstChild: [],
         isToggle: false,
     };
+
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+        return !(_isEqual(nextState, this.state) && _isEqual(nextProps.account, this.props.account));
+    }
 
     handleToggleChild = () => {
         if (this.state.isLoading) return ;
 
-        if (this.state.isToggle) this.setState({ isToggle: false, lstChild: [] });
+        if (this.state.isToggle) this.setState({ isToggle: false });
         else {
             this.setState({ isLoading: true }, async () => {
-                const result = await SubStatusService.getSubLocked({ id: this.props.account.id });
+                if (this.props.isActive) await this.props.getSubActive(this.props.account);
+                else await this.props.getSubLocked(this.props.account);
 
-                if (result.status) {
-                    this.setState({
-                        lstChild: Array.isArray(_get(result, 'res.data')) ? _get(result, 'res.data') : [],
-                        isLoading: false, isToggle: true
-                    })
-                } else {
-                    this.setState({ lstChild: [], isLoading: false })
-                }
+                this.setState({
+                    isLoading: false,
+                    isToggle: true
+                })
             })
         }
     };
 
     renderChild() {
-        return this.state.lstChild.map((child, idx) => (
+        if (!this.state.isToggle) return null;
+
+        return (this.props.account.child || []).map((child, idx) => (
             <tr key={idx}>
                 <td />
                 <td><span className="margin-left-10">{ child.username }</span></td>
                 <td>{ this.props.isActive ? <TransComponent i18nKey="Active" /> : <TransComponent i18nKey="InActive" /> }</td>
-                <td className="text-center"><i onClick={() => this.props.toggleModal(child)} className={`cursor-pointer font-green fa ${ this.props.isActive ? 'fa-lock' : 'fa-unlock' }`} /></td>
+                <td className="text-center">
+                    <i
+                        onClick={() => this.props.toggleModal({ ...child, isActive: this.props.isActive, parent: this.props.account })}
+                        className={`cursor-pointer font-green fa ${ this.props.isActive ? 'fa-lock' : 'fa-unlock' }`}
+                    />
+                </td>
             </tr>
         ))
     }
@@ -73,7 +79,12 @@ class AccountItemContainer extends Component {
                         <i className={`fa ${icon} font-size-12`} />&nbsp;<span>{ account.username }</span>
                     </td>
                     <td/>
-                    <td className="text-center"><i onClick={() => this.props.toggleModal(account)} className={`cursor-pointer font-green fa ${ isActive ? 'fa-lock' : 'fa-unlock' }`} /></td>
+                    <td className="text-center">
+                        <i
+                            onClick={() => this.props.toggleModal({ ...account, isActive })}
+                            className={`font-size-15 cursor-pointer font-green fa ${ isActive ? 'fa-lock' : 'fa-unlock' }`}
+                        />
+                    </td>
                 </tr>
                 { this.renderChild() }
             </>
@@ -84,6 +95,8 @@ class AccountItemContainer extends Component {
 const mapDispatchToProps = dispatch => {
     return {
         toggleModal: selectedItem => dispatch(toggleModal(selectedItem)),
+        getSubActive: formData => dispatch(getSubActive(formData)),
+        getSubLocked: formData => dispatch(getSubLocked(formData)),
     };
 };
 

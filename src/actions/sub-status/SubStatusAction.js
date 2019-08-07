@@ -37,6 +37,34 @@ export const getSubUsers = () => {
     }
 };
 
+export const getSubActive = (item) => {
+    return async dispatch => {
+        const res = await SubStatusService.getSubActive({ id: item.id });
+
+        if (res.status) {
+            dispatch({
+                type: SubStatusActionType.GET_SUB_ACTIVE_SUCCESS,
+                lstChild: _get(res, 'res.data', []),
+                item,
+            });
+        }
+    }
+};
+
+export const getSubLocked = (item) => {
+    return async dispatch => {
+        const res = await SubStatusService.getSubLocked({ id: item.id });
+
+        if (res.status) {
+            dispatch({
+                type: SubStatusActionType.GET_SUB_LOCKED_SUCCESS,
+                lstChild: _get(res, 'res.data', []),
+                item,
+            });
+        }
+    }
+};
+
 export const toggleModal = selectedItem => {
     return dispatch => dispatch({
         type: SubStatusActionType.TOGGLE_MODAL,

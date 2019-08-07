@@ -9,15 +9,27 @@ class SubStatusService extends BaseService {
     }
 
     getSubLocked(payload) {
-        const url = `${this.serviceUrl}/get_locked`;
+        return HttpService.post(`${this.serviceUrl}/get_locked`, payload);
+    }
 
-        return HttpService.post(url, payload);
+    getSubActive(payload) {
+        return HttpService.post(`${this.serviceUrl}/get_active`, payload);
     }
 
     unlockSub(payload) {
-        const url = `${this.serviceUrl}/unlock`;
+        return HttpService.post(`${this.serviceUrl}/unlock`, payload);
+    }
 
-        return HttpService.post(url, payload);
+    unlockSubByUser(payload) {
+        return HttpService.post(`${this.serviceUrl}/unlock_by_user`, payload);
+    }
+
+    lockSubByUser(payload) {
+        return HttpService.post(`${this.serviceUrl}/lock_by_user`, payload);
+    }
+
+    lockSub(payload) {
+        return HttpService.post(`${this.serviceUrl}/lock`, payload);
     }
 }
 
