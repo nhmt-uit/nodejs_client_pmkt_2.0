@@ -16,7 +16,7 @@ import { FormulaPage } from 'my-pages/formula';
 import FormulaGroupPage from "my-pages/formula-group/FormulaGroupPage";
 import { MemberPage } from "my-pages/member";
 import { LogoutContainer } from 'my-containers/auth';
-import {LanguagePage, HostPage} from "my-pages/admin";
+import {LanguagePage, HostPage, NoticePage} from "my-pages/admin";
 
 const CommonRoutes = [
 	{
@@ -250,6 +250,11 @@ const RoutesRoles0 = [
 		path: RoutesService.getPath('ADMIN_MANAGE', 'HOST'),
 		exact: true,
 		component: HostPage,
+	},
+	{
+		path: RoutesService.getPath('ADMIN_MANAGE', 'NOTICE'),
+		exact: true,
+		component: NoticePage,
 	},
 	/*
 	|--------------------------------------------------------------------------

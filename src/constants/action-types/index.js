@@ -20,6 +20,8 @@ import * as FormulaGroupActionType from './FormulaGroupActionType'
 import * as ConfigurationActionType from './ConfigurationActionType';
 import * as LanguageManageActionType from './LanguageManageActionType';
 import * as HostManageActionType from './HostManageActionType';
+import * as NoticeManageActionType from './NoticeManageActionType';
+
 export {
     AppActionType,
     LanguageActionType,
@@ -43,4 +45,5 @@ export {
     ConfigurationActionType,
     LanguageManageActionType,
     HostManageActionType,
+    NoticeManageActionType,
 }

@@ -54,9 +54,6 @@ export const saveLanguageManage = (post) => {
                 formSaveStatus: res.status,
                 formSaveResponse: res.res
             })
-            //Clear Message
-            await Helpers.sleep(2000)
-            dispatch(resetFormSaveResponse())
         })
     }
 };

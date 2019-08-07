@@ -108,6 +108,9 @@ class LanguageFormContainer extends Component{
     renderAlert = _ => {
         const {formSaveStatus, formSaveResponse} = this.props
         if (formSaveStatus === false) {
+            setTimeout(()=>{
+                this.props.resetFormSaveResponse();
+            }, 2000);
             return (
                 <div className="alert alert-danger">
                     <button className="close" onClick={this.props.resetFormSaveResponse}/>
@@ -115,6 +118,9 @@ class LanguageFormContainer extends Component{
                 </div>
             )
         } else if (formSaveStatus === true) {
+            setTimeout(()=>{
+                this.props.resetFormSaveResponse();
+            }, 2000);
             return (
                 <div className="alert bg-success">
                     <button className="close" onClick={this.props.resetFormSaveResponse} />

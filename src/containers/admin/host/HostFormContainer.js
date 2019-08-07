@@ -29,6 +29,18 @@ class HostFormContainer extends Component {
         this.props.onRef(undefined)
     }
 
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.initialValues){
+            var company = _get(nextProps.initialValues, 'company','');
+            var host = _get(nextProps.initialValues, 'host','');
+            if (company && host){
+                this.setState({ onSubmit: false })
+            } else {
+            this.setState({ onSubmit: true })
+            }
+        }
+    }
+
     callHostForm = item => {
         const {optBanker} = this.props
         this.setState({
@@ -40,7 +52,6 @@ class HostFormContainer extends Component {
             company: optBanker.filter(obj => obj.value === item.banker_id),
             id: _get(item, 'id', ''),
         })
-        console.log(this.props)
     }
 
     saveHostManage = (e) => {
@@ -50,7 +61,7 @@ class HostFormContainer extends Component {
         if(id){
             post = {
                 host: _get(this.props.initialValues, 'host',''),
-                company: _get(this.props.initialValues, 'company.value',''),
+                company: _get(this.props.initialValues, 'company[0].value',''),
                 id: id,
             }
         } else {
@@ -63,14 +74,46 @@ class HostFormContainer extends Component {
             .then( () => {
                 this.props.getHostManage()
             })
+            .then( () => {
+                this.setState({
+                    isEdit: false,
+                })
+                this.props.destroy('formHost')
+            })
     }
 
     clickAddNew = () => {
         this.setState({
             isEdit: false,
+            onSubmit: true,
         })
         this.props.destroy('formHost');
     }
+
+    renderAlert = _ => {
+        const {formSaveStatus, formSaveResponse} = this.props
+        if (formSaveStatus === false) {
+            setTimeout(()=>{
+                this.props.resetFormSaveResponse();
+            }, 2000);
+            return (
+                <div className="alert alert-danger">
+                    <button className="close" onClick={this.props.resetFormSaveResponse}/>
+                    <span><b> <TransComponent i18nKey={formSaveResponse.data.message}/>  </b></span>
+                </div>
+            )
+        } else if (formSaveStatus === true) {
+            setTimeout(()=>{
+                this.props.resetFormSaveResponse();
+            }, 2000);
+            return (
+                <div className="alert bg-success">
+                    <button className="close" onClick={this.props.resetFormSaveResponse} />
+                    <span><b> Successful! </b></span>
+                </div>
+            )
+        }
+    };
 
     render() {
         const { bankerList } = this.props;
@@ -83,6 +126,7 @@ class HostFormContainer extends Component {
         }
         return (
             <div className="portlet light bordered">
+                {this.renderAlert()}
                 <div className="portlet-title">
                     <div className="caption">
                         <span className="caption-subject caption-subject font-green bold uppercase"><TransComponent i18nKey="Form"/></span>
@@ -109,7 +153,7 @@ class HostFormContainer extends Component {
                         <div className="form-actions right">
                             {isEdit ?
                                 <button className="btn green" onClick={this.clickAddNew}><TransComponent i18nKey="Add new"/></button> : null}
-                            <button type="submit" className="btn red" disabled={this.props.invalid} onClick={this.saveHostManage}><TransComponent i18nKey="Save"/></button>
+                            <button type="submit" className="btn red" disabled={onSubmit} onClick={this.saveHostManage}><TransComponent i18nKey="Save"/></button>
                         </div>
                     </form>
                 </div>

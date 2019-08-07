@@ -1,5 +1,6 @@
 import { HostManageActionType } from 'my-constants/action-types'
 import HostManageService from 'my-services/host/HostManageService'
+import { Helpers } from 'my-utils'
 
 export const getHostManage = () => {
     return (dispatch) => {
@@ -33,7 +34,7 @@ export const delHostManage = (post) => {
 
 export const saveHostManage = (post) => {
     return (dispatch) => {
-        return HostManageService.saveHostManage(post).then( res => {
+        return HostManageService.saveHostManage(post).then( async res => {
             dispatch({
                 type: HostManageActionType.SAVE_HOST_MANAGE,
                 formSaveStatus: res.status,

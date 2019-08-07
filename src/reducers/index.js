@@ -25,6 +25,7 @@ import FormulaGroupReducer from "./formula-group/FormulaGroupReducer"
 import ConfigurationReducer from './manage/ConfigurationReducer'
 import LanguageManageReducer from './language/LanguageManageReducer'
 import HostManageReducer from './host/HostManageReducer'
+import NoticeManageReducer from './notice/NoticeManageReducer'
 
 
 const appReducers = combineReducers({
@@ -40,6 +41,7 @@ const appReducers = combineReducers({
 
     // System reducers
     AppReducer,
+    NoticeManageReducer,
     HostManageReducer,
     LanguageManageReducer,
     LanguageReducer,
