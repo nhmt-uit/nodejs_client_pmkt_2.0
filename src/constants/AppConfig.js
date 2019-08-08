@@ -16,7 +16,7 @@ export const API_CLIENT_SECRET = "jashdfjkh1#!$%#^2342@#$@35"
 
 export const SOCKET_SERVER_URL = "http://124.248.229.43:5013"
 export const DATE_RELEASE = '22/05/2019'
-export const VERSION_RELEASE = '3.3.0.0'
+export const VERSION_RELEASE = '2.0.0'
 
 /*
 |--------------------------------------------------------------------------
