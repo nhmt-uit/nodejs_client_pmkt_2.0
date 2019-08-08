@@ -5,7 +5,7 @@ import {Field, reduxForm} from "redux-form";
 import {renderError} from 'my-utils/components/redux-form/render-form'
 import {compose} from "redux/es/redux";
 import {connect} from "react-redux";
-import {get as _get, isEmpty as _isEmpty} from "lodash";
+import {get as _get, isEmpty as _isEmpty, keyBy} from "lodash";
 import { getLanguageManage, saveLanguageManage, resetFormSaveResponse } from 'my-actions/language/LanguageManageAction'
 import LanguageManageService from "../../../services/language/LanguageManageService";
 
@@ -56,12 +56,13 @@ class LanguageFormContainer extends Component{
         this.setState({
             isEdit: true,
         })
+        item.child = keyBy(item.child, 'lang_code')
         this.props.initialize({
             ...this.props.initialValues,
             lang_key: item.name,
-            vi: _get(item, 'child[0].name', ''),
-            en: _get(item, 'child[1].name', ''),
-            cn: _get(item, 'child[2].name', ''),
+            vi: _get(item, 'child[vi].name', ''),
+            en: _get(item, 'child[en].name', ''),
+            cn: _get(item, 'child[cn].name', ''),
             id: _get(item, 'id',''),
         })
     }
@@ -69,7 +70,7 @@ class LanguageFormContainer extends Component{
     clickAddNew = (e) => {
         this.setState({
             isEdit: false,
-            submit: true
+            submit: true,
         })
         this.props.destroy('formLanguage');
     }
@@ -190,8 +191,10 @@ const asyncValidate = (values, dispatch, props, currentFieldName) => {
     });
 }
 
-const validate = values => {
+const validate = (values, props) => {
     const errors = {}
+    if(!props.touched ) return errors;
+
     if (!values.lang_key) {
         errors.lang_key = '"Lang key" is not allowed to be empty'
     }

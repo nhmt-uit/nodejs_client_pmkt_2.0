@@ -15,6 +15,14 @@ class NoticeManageService extends BaseService {
     saveNoticeManage(post){
         return HttpService.post(`${this.serviceUrl}/notice_manage/action`, post)
     }
+
+    validateLangKey(lang_key) {
+        const payload = {
+            value: lang_key,
+            except: false,
+        }
+        return HttpService.post(`${this.serviceUrl}/notice_manage/validate`, payload)
+    }
 }
 
 export default new NoticeManageService()

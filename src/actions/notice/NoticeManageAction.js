@@ -28,3 +28,24 @@ export const delNoticeManage = (post) => {
         })
     }
 }
+
+export const saveNoticeManage = (post) => {
+    return (dispatch) => {
+        return NoticeManageService.saveNoticeManage(post).then( res => {
+            dispatch({
+                type: NoticeManageActionType.SAVE_NOTICE_MANAGE,
+                formSaveStatus: res.status,
+                formSaveResponse: res.res,
+            })
+        })
+    }
+
+}
+
+export const resetFormSaveResponse = () => {
+    return (dispatch) => {
+        dispatch({
+            type: NoticeManageActionType.RESET_FORM_SAVE_RESPONSE,
+        })
+    }
+}
