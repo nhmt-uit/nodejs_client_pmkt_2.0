@@ -56,13 +56,13 @@ class LanguageFormContainer extends Component{
         this.setState({
             isEdit: true,
         })
-        item.child = keyBy(item.child, 'lang_code')
+        item.childMap = keyBy(item.child, 'lang_code')
         this.props.initialize({
             ...this.props.initialValues,
             lang_key: item.name,
-            vi: _get(item, 'child[vi].name', ''),
-            en: _get(item, 'child[en].name', ''),
-            cn: _get(item, 'child[cn].name', ''),
+            vi: _get(item, 'childMap[vi].name', ''),
+            en: _get(item, 'childMap[en].name', ''),
+            cn: _get(item, 'childMap[cn].name', ''),
             id: _get(item, 'id',''),
         })
     }
