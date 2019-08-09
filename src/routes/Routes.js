@@ -16,6 +16,7 @@ import { FormulaPage } from 'my-pages/formula';
 import FormulaGroupPage from "my-pages/formula-group/FormulaGroupPage";
 import { MemberPage } from "my-pages/member";
 import { LogoutContainer } from 'my-containers/auth';
+import {LanguagePage, HostPage, NoticePage} from "my-pages/admin";
 
 import { CurrencyTypePage } from 'my-pages/admin/currency-type';
 import { SubStatusPage } from 'my-pages/admin/sub-status';
@@ -221,11 +222,6 @@ const RoutesRoles0 = [
 		component: ChangePasswordPage,
 	},
 	{
-		path: RoutesService.getPath('ADMIN', 'CHANGE_PASSWORD_2'),
-		exact: true,
-		component: ChangePassword2Page,
-	},
-	{
 		path: RoutesService.getPath('ADMIN', 'CHANGE_SECURE_CODE'),
 		exact: true,
 		component: ChangeSecureCodePage,
@@ -240,6 +236,26 @@ const RoutesRoles0 = [
 		exact: true,
 		component: SubStatusPage,
 	},
+	{
+		path: RoutesService.getPath('ADMIN_MANAGE', 'LANGUAGE'),
+		exact: true,
+		component: LanguagePage,
+	},
+	{
+		path: RoutesService.getPath('ADMIN_MANAGE', 'HOST'),
+		exact: true,
+		component: HostPage,
+	},
+	{
+		path: RoutesService.getPath('ADMIN_MANAGE', 'NOTICE'),
+		exact: true,
+		component: NoticePage,
+	},
+	/*
+	|--------------------------------------------------------------------------
+	| Manage Routes Area
+	|--------------------------------------------------------------------------
+	*/
 	{
 		path: RoutesService.getPath('ADMIN_MANAGE', 'SET_FEATURES'),
 		exact: true,

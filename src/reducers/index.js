@@ -26,6 +26,10 @@ import ConfigurationReducer from './manage/ConfigurationReducer';
 import CurrencyTypeReducer from './currency-type/CurrencyTypeReducer';
 import SubStatusReducer from './sub-status/SubStatusReducer';
 import UserReducer from './user/UserReducer';
+import LanguageManageReducer from './language/LanguageManageReducer'
+import HostManageReducer from './host/HostManageReducer'
+import NoticeManageReducer from './notice/NoticeManageReducer'
+
 
 const appReducers = combineReducers({
     // Redux form reducer
@@ -40,6 +44,9 @@ const appReducers = combineReducers({
 
     // System reducers
     AppReducer,
+    NoticeManageReducer,
+    HostManageReducer,
+    LanguageManageReducer,
     LanguageReducer,
     MemberReducer,
     AuthReducer,

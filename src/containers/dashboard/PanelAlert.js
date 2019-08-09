@@ -57,7 +57,7 @@ class PanelAlert extends Component{
                                 <span className="caption-subject font-dark bold uppercase"> <TransComponent i18nKey="Alert" /></span>
                             </div>
                         </div>
-                        <div className="portlet-body table-responsive" style={{maxHeight:"400px", overflowY: 'scroll'}}>
+                        <div className="portlet-body table-responsive" style={{maxHeight:"400px", overflowY: 'auto', overflowX: 'hidden'}}>
                             <div className="mt-btm-transform ">
                                 {/*====================================================================*/}
                                 {
@@ -70,7 +70,7 @@ class PanelAlert extends Component{
                                                     <i className="fa fa-newspaper-o"></i> {items.created_format}
                                                 </div>
                                             </div>
-                                            <div className="portlet-body">
+                                            <div className="portlet-body" className={items.type === 1 ? 'bg-success' : items.type === 2 ? 'bg-danger' : 'bg-white'} style={{padding: '10px'}}>
                                                 <div id="sample_3_wrapper" className="dataTables_wrapper no-footer">
                                                     <div className="row">
                                                         <div className="col-md-12">

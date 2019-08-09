@@ -21,6 +21,9 @@ import * as ConfigurationActionType from './ConfigurationActionType';
 import * as CurrencyTypeActionType from './CurrencyTypeActionType';
 import * as SubStatusActionType from './SubStatusActionType';
 import * as UserActionType from './UserActionType';
+import * as LanguageManageActionType from './LanguageManageActionType';
+import * as HostManageActionType from './HostManageActionType';
+import * as NoticeManageActionType from './NoticeManageActionType';
 
 export {
     AppActionType,
@@ -45,5 +48,8 @@ export {
     ConfigurationActionType,
     CurrencyTypeActionType,
     SubStatusActionType,
-    UserActionType
+    UserActionType,
+    LanguageManageActionType,
+    HostManageActionType,
+    NoticeManageActionType,
 }

@@ -61,11 +61,17 @@ const listAdminRoutes = [
 
     /*============================== start ADMIN ROUTES ==================================*/
     { name: "LANGUAGE", path: "/lang", language: "en"},
+    /*==========================================================================*/
     { name: "CURRENCY_TYPE", path: "/currency-type", language: "en"},
+    /*==========================================================================*/
     { name: "HOST", path: "/host", language: "en"},
+    /*==========================================================================*/
     { name: "NOTICE", path: "/notice", language: "en"},
+    /*==========================================================================*/
     { name: "LOG_CHANGE_PASSWORD", path: "/log-change-password", language: "en"},
+    /*==========================================================================*/
     { name: "SUB_STATUS", path: "/sub-status", language: "en"},
+    /*==========================================================================*/
     { name: "SET_FEATURES", path: "/user-features", language: "en"},
     /*============================== end ADMIN ROUTES ==================================*/
 ];
@@ -106,13 +112,10 @@ class RoutesService {
                 break;
             case "ADMIN_MANAGE":
                 routes = find(listAdminRoutes, { name, language : this.language });
-
                 if (routes && routes.path) {
-                    routes = cloneDeep(routes);
-
+                    routes = cloneDeep(routes)
                     routes.path = path.join('/admin', routes.path);
                 }
-
                 break;
             default: break;
         }
