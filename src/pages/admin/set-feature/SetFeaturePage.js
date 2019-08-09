@@ -1,16 +1,21 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
+
+import { ListUserContainer } from 'my-containers/admin/set-feature';
+import { TransComponent } from 'my-components';
 
 class SetFeaturePage extends Component {
     render() {
         return (
-            <div>
-                
+            <div className="portlet light bordered" id="portlet-set-feature">
+                <div className="portlet-title">
+                    <div className="caption font-red-sunglo bold uppercase font-size-15"><TransComponent i18nKey="Add Features" /></div>
+                </div>
+                <div className="portlet-body">
+                    <ListUserContainer />
+                </div>
             </div>
         );
     }
 }
-
-SetFeaturePage.propTypes = {};
 
 export default SetFeaturePage;

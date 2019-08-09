@@ -69,6 +69,9 @@ const SubStatusReducer = (state = defaultState, action) => {
 
             return {...state, lstSub: { locked: _sortBy(newLstLocked, ['username']), active: lstActive }};
 
+        case SubStatusActionType.CLEAR_SUB_USERS:
+            return defaultState;
+
         default:
             return {...state};
     }

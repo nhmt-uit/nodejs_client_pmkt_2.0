@@ -601,3 +601,7 @@ h5.modal-title {font-size: 16px; font-weight: bold; color: #E26A6A!important;}
 .border-success {
     border-color: #dff0d8;
 }
+
+.margin-bottom-5 {
+    margin-bottom: 5px!important;
+}

@@ -71,3 +71,9 @@ export const toggleModal = selectedItem => {
         selectedItem: selectedItem || {},
     })
 };
+
+export const clearSubUsers = () => {
+    return dispatch => dispatch({
+        type: SubStatusActionType.CLEAR_SUB_USERS,
+    })
+};

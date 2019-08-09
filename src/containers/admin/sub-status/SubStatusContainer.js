@@ -1,10 +1,9 @@
-import React, {Component} from 'react';
-import ReactLazyLoad, { forceCheck } from 'react-lazyload';
+import React, {Component, Fragment} from 'react';
 import { connect } from 'react-redux';
 import { cloneDeep as _cloneDeep } from 'lodash';
 
 import { TransComponent, LoadingComponent } from 'my-components';
-import { getSubUsers } from 'my-actions/sub-status/SubStatusAction';
+import { getSubUsers, clearSubUsers } from 'my-actions/sub-status/SubStatusAction';
 import { AccountItemContainer, ActionModalContainer } from 'my-containers/admin/sub-status';
 
 class SubStatusContainer extends Component {
@@ -12,8 +11,8 @@ class SubStatusContainer extends Component {
         this.props.getSubUsers();
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        forceCheck();
+    componentWillUnmount() {
+        this.props.clearSubUsers();
     }
 
     renderBody(type) {
@@ -33,20 +32,20 @@ class SubStatusContainer extends Component {
 
                 if (!result.length) {
                     result.push(
-                        <>{ lstMap.map(acc => <AccountItemContainer key={acc.id} isActive={type === 'active'} account={acc} order={ ++order } />) }</>
+                        <Fragment key={result.length}>{ lstMap.map(acc => <AccountItemContainer key={acc.id} isActive={type === 'active'} account={acc} order={ ++order } />) }</Fragment>
                     );
                 } else {
                     result.push(
-                        <>
+                        <Fragment key={result.length}>
                             { lstMap.map(acc => <AccountItemContainer key={acc.id} isActive={type === 'active'} account={acc} order={ ++order } />) }
-                        </>
+                        </Fragment>
                     );
                 }
 
                 loopResult(lst);
             } else {
                 result.push(
-                    <>{ lst.map(acc => <AccountItemContainer key={acc.id} isActive={type === 'active'} account={acc} order={ ++order } />) }</>
+                    <Fragment key={result.length}>{ lst.map(acc => <AccountItemContainer key={acc.id} isActive={type === 'active'} account={acc} order={ ++order } />) }</Fragment>
                 );
             }
         };
@@ -127,6 +126,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         getSubUsers: () => dispatch(getSubUsers()),
+        clearSubUsers: () => dispatch(clearSubUsers()),
     }
 };
 

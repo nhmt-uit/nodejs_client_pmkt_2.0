@@ -56,7 +56,7 @@ class AccountItemContainer extends Component {
                 <td className="text-center">
                     <i
                         onClick={() => this.props.toggleModal({ ...child, isActive: this.props.isActive, parent: this.props.account })}
-                        className={`cursor-pointer font-green fa ${ this.props.isActive ? 'fa-lock' : 'fa-unlock' }`}
+                        className={`font-size-15 cursor-pointer font-green fa ${ this.props.isActive ? 'fa-lock' : 'fa-unlock' }`}
                     />
                 </td>
             </tr>

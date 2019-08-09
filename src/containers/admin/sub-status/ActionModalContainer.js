@@ -46,8 +46,8 @@ class ActionModalContainer extends Component {
 
     render() {
         return (
-            <Modal isOpen={this.props.isOpenModal} toggle={this.props.toggleModal}>
-                <ModalHeader toggle={this.props.toggleModal}><strong><TransComponent i18nKey="Xac nhan" /></strong></ModalHeader>
+            <Modal isOpen={this.props.isOpenModal} toggle={ _ => this.props.toggleModal() }>
+                <ModalHeader toggle={ _ => this.props.toggleModal() }><strong><TransComponent i18nKey="Xac nhan" /></strong></ModalHeader>
                 <ModalBody>
                     <TransComponent i18nKey="Are you sure ?" />
                 </ModalBody>
@@ -57,7 +57,7 @@ class ActionModalContainer extends Component {
                         onClick={this.handleSave}
                         disabled={this.state.isLoading}
                     ><TransComponent i18nKey="Save" />{ this.state.isLoading ? <>&nbsp;<i className="fa fa-spin fa-spinner" /></> : null }</Button>&nbsp;
-                    <Button className="green" onClick={this.props.toggleModal}><TransComponent i18nKey="Close" /></Button>
+                    <Button className="green" onClick={ _ => this.props.toggleModal() }><TransComponent i18nKey="Close" /></Button>
                 </ModalFooter>
             </Modal>
         );

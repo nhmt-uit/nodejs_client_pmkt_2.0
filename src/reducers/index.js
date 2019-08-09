@@ -25,6 +25,7 @@ import FormulaGroupReducer from "./formula-group/FormulaGroupReducer"
 import ConfigurationReducer from './manage/ConfigurationReducer';
 import CurrencyTypeReducer from './currency-type/CurrencyTypeReducer';
 import SubStatusReducer from './sub-status/SubStatusReducer';
+import UserReducer from './user/UserReducer';
 
 const appReducers = combineReducers({
     // Redux form reducer
@@ -56,7 +57,8 @@ const appReducers = combineReducers({
     FormulaGroupReducer,
     ConfigurationReducer,
     CurrencyTypeReducer,
-    SubStatusReducer
+    SubStatusReducer,
+    UserReducer
 });
 
 export default appReducers;

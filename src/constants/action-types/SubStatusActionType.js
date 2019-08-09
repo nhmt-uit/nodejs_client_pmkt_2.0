@@ -7,3 +7,5 @@ export const TOGGLE_MODAL               = 'TOGGLE_MODAL';
 export const GET_SUB_ACTIVE_SUCCESS     = 'GET_SUB_ACTIVE_SUCCESS';
 
 export const GET_SUB_LOCKED_SUCCESS     = 'GET_SUB_LOCKED_SUCCESS';
+
+export const CLEAR_SUB_USERS            = 'CLEAR_SUB_USERS';

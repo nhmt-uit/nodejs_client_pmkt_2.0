@@ -1,5 +1,7 @@
-import ListUserFeature from './ListUserFeature';
+import ListUserContainer from './ListUserContainer';
+import UserItemContainer from './UserItemContainer';
 
 export {
-    ListUserFeature
+    ListUserContainer,
+    UserItemContainer
 }
