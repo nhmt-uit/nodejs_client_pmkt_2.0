@@ -17,16 +17,6 @@ class LanguageListContainer extends Component {
         }
     }
 
-    componentDidUpdate() {
-        const { formSaveStatus } = this.props;
-        if(formSaveStatus){
-            setTimeout(()=>{
-                this.props.getLanguageManage()
-                this.props.resetFormSaveResponse()
-            }, 2000);
-        }
-    }
-
     handleOpenModelDel = (item) => {
         if(item){
             this.setState({
