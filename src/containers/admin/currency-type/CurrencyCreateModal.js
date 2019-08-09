@@ -55,10 +55,15 @@ class CurrencyCreateModal extends Component {
 
     handleValidator = _debounce(async () => {
         const formData = { value: this.state.currencyName.trim() };
-        const result = await CurrencyTypeService.validator(formData);
 
-        if (!result.status) {
-            this.setState({ msgValidateName: _get(result, 'res.data.message') })
+        if (this.state.currencyName) {
+            const result = await CurrencyTypeService.validator(formData);
+
+            if (!result.status) {
+                this.setState({ msgValidateName: _get(result, 'res.data.message') })
+            } else {
+                this.setState({ msgValidateName: null })
+            }
         } else {
             this.setState({ msgValidateName: null })
         }

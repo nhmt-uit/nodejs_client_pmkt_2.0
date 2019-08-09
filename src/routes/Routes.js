@@ -21,6 +21,7 @@ import {LanguagePage, HostPage, NoticePage} from "my-pages/admin";
 import { CurrencyTypePage } from 'my-pages/admin/currency-type';
 import { SubStatusPage } from 'my-pages/admin/sub-status';
 import { SetFeaturePage } from 'my-pages/admin/set-feature';
+import { LogChangePasswordPage } from 'my-pages/admin/log-change-password';
 
 const CommonRoutes = [
 	{
@@ -259,6 +260,11 @@ const RoutesRoles0 = [
 		path: RoutesService.getPath('ADMIN_MANAGE', 'SET_FEATURES'),
 		exact: true,
 		component: SetFeaturePage,
+	},
+	{
+		path: RoutesService.getPath('ADMIN_MANAGE', 'LOG_CHANGE_PASSWORD'),
+		exact: true,
+		component: LogChangePasswordPage,
 	},
 	{
 		path: '*',

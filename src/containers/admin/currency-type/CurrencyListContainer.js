@@ -5,8 +5,7 @@ import { connect } from 'react-redux';
 import { TransComponent, LoadingComponent } from 'my-components'
 import { getCurrencyType } from 'my-actions/currency-type/CurrencyTypeAction';
 import { CurrencyEditModal, CurrencyCreateModal } from 'my-containers/admin/currency-type';
-import {Button, Col, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
-import Select from "react-select";
+import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 
 import { CurrencyTypeService } from 'my-services/currency-type';
 
@@ -35,8 +34,8 @@ class CurrencyListContainer extends Component {
         switch (value) {
             case -1: return 'XO';
             case 0: return 'X';
-            case 1: return '0.X';
-            case 2: return '0.0X';
+            case 1: return 'O.X';
+            case 2: return 'O.OX';
         }
     }
 
@@ -127,7 +126,7 @@ class CurrencyListContainer extends Component {
                             className="red"
                             onClick={this.handleDelete}
                             disabled={this.state.isDeleting}
-                        ><TransComponent i18nKey="Save" />{ this.state.isDeleting ? <>&nbsp;<i className="fa fa-spin fa-spinner" /></> : null }</Button>&nbsp;
+                        ><TransComponent i18nKey="Delete" />{ this.state.isDeleting ? <>&nbsp;<i className="fa fa-spin fa-spinner" /></> : null }</Button>&nbsp;
                         <Button className="green" onClick={this.toggleModal}><TransComponent i18nKey="Close" /></Button>
                     </ModalFooter>
                 </Modal>

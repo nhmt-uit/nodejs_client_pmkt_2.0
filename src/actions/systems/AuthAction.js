@@ -7,6 +7,10 @@ import { AppConfig } from 'my-constants';
 
 export const login = (user) => {
     return (dispatch) => {
+        dispatch({
+            type: AuthActionType.AUTH_LOGIN,
+        });
+
         return AuthService.login(user).then(resLogin => {
             CookieService.set('access_token', resLogin.access_token);
 

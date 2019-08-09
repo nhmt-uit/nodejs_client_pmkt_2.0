@@ -54,15 +54,22 @@ class CurrencyEditModal extends Component {
     toggleModal = () => this.props.onToggle();
 
     handleChangeInput = (name, value) => {
-        this.setState({ [name]: value }, () => this.handleValidator());
+        this.setState({ [name]: value }, () => {
+            this.handleValidator()
+        } );
     };
 
     handleValidator = _debounce(async () => {
         const formData = { value: this.state.currencyName, except: this.props.currency.name };
-        const result = await CurrencyTypeService.validator(formData);
 
-        if (!result.status) {
-            this.setState({ msgValidateName: _get(result, 'res.data.message') })
+        if (this.state.currencyName) {
+            const result = await CurrencyTypeService.validator(formData);
+
+            if (!result.status) {
+                this.setState({ msgValidateName: _get(result, 'res.data.message') })
+            } else {
+                this.setState({ msgValidateName: null })
+            }
         } else {
             this.setState({ msgValidateName: null })
         }
@@ -164,7 +171,7 @@ class CurrencyEditModal extends Component {
                     <Button
                         className="red"
                         onClick={this.handleSave}
-                        disabled={this.state.isLoading || this.state.msgValidateName}
+                        disabled={this.state.isLoading || this.state.msgValidateName || !this.state.currencyName}
                     ><TransComponent i18nKey="Save" />{ this.state.isLoading ? <>&nbsp;<i className="fa fa-spin fa-spinner" /></> : null }</Button>&nbsp;
                     <Button className="green" onClick={this.toggleModal}><TransComponent i18nKey="Close" /></Button>
                 </ModalFooter>
