@@ -13,7 +13,7 @@ const LanguageManageReducer = (state = defaultState, action) => {
 
     switch (action.type) {
         case LanguageManageActionType.GET_LANGUAGE_MANAGE:
-            return {...state, allLang: action.allLang, lang: action.lang, langFlag: action.langFlag, isFetching: action.isFetching};
+            return {...state, allLang: action.allLang || state.allLang, lang: action.lang || state.lang, langFlag: action.langFlag || state.langFlag, isFetching: action.isFetching};
 
         case LanguageManageActionType.DEL_LANGUAGE_MANAGE:
             return {...state, };
