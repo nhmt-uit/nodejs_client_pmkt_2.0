@@ -3,15 +3,9 @@ import LanguageManageService from 'my-services/language/LanguageManageService'
 import _get from "lodash/get";
 import { Helpers } from 'my-utils'
 
-export const getLanguageManage = (isInitial = false) => {
+export const getLanguageManage = () => {
     return (dispatch) => {
-        if(!isInitial){
-            dispatch({
-                type: LanguageManageActionType.GET_LANGUAGE_MANAGE,
-                isFetching: true,
-            })
-        }
-        LanguageManageService.getLanguageManage().then(res => {
+        return LanguageManageService.getLanguageManage().then(res => {
             if(res.status) {
                 var data = res.res.data
                 dispatch({
@@ -19,16 +13,6 @@ export const getLanguageManage = (isInitial = false) => {
                     allLang : data.allLang,
                     lang: data.lang,
                     langFlag: data.langFlag,
-                    isFetching: false,
-                })
-            } else {
-                dispatch({
-                    type: LanguageManageActionType.GET_LANGUAGE_MANAGE,
-                    payload: {
-                        status: false,
-                        error_description: _get(res, 'res.data.message', '')
-                    },
-                    isFetching: false
                 })
             }
         })

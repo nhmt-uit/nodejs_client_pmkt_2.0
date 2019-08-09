@@ -55,7 +55,7 @@ class LanguageListContainer extends Component {
     };
 
     render() {
-        const { allLang, isFetching } = this.props;
+        const { allLang } = this.props;
         const {visible} = this.state;
         let tbody = [], level = 0, index = 0;
         if(!_isEmpty(allLang)){
@@ -109,13 +109,13 @@ class LanguageListContainer extends Component {
 
         return (
             <div className="portlet light bordered">
+                {_isEmpty(allLang) ? <LoadingComponent/> : null}
                 <div className="portlet-title">
                     <div className="caption">
                         <span className="caption-subject caption-subject font-green bold uppercase"><TransComponent i18nKey="Language list"/></span>
                     </div>
                 </div>
                 <div className="portlet-body">
-                    { isFetching ? <LoadingComponent /> : null }
                     <div className="table-responsive">
                         <table className="table table-striped table-bordered table-hover dataTable no-footer dtr-inline">
                             <thead>
@@ -154,7 +154,6 @@ class LanguageListContainer extends Component {
 const mapStateToProps = state => {
     return {
         allLang: _get(state, 'LanguageManageReducer.allLang', {}),
-        isFetching: _get(state, 'LanguageManageReducer.isFetching', false),
     };
 };
 

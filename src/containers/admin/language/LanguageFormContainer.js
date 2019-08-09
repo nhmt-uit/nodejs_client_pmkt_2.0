@@ -33,10 +33,7 @@ class LanguageFormContainer extends Component{
     componentDidUpdate() {
         const { formSaveStatus } = this.props;
         if(formSaveStatus){
-            setTimeout(()=>{
-                this.props.getLanguageManage()
-                this.props.resetFormSaveResponse()
-            }, 2000);
+            this.props.getLanguageManage()
         }
     }
 
@@ -132,7 +129,7 @@ class LanguageFormContainer extends Component{
     };
 
     render() {
-        const { lang, isFetching} = this.props;
+        const { lang} = this.props;
         const { isEdit, submit } = this.state;
         var langValue;
         if(!_isEmpty(lang)){
@@ -150,7 +147,6 @@ class LanguageFormContainer extends Component{
         return (
             <div className="portlet light bordered">
                 {this.renderAlert()}
-                { isFetching ? <LoadingComponent /> : null }
                 <div className="portlet-title">
                     <div className="caption">
                         <span className="caption-subject caption-subject font-green bold uppercase"><TransComponent i18nKey="Form"/></span>
@@ -213,7 +209,6 @@ const mapStateToProps = state => {
     return {
         initialValues: _get(state, 'form.formLanguage.values'),
         lang: _get(state, 'LanguageManageReducer.lang', {}),
-        isFetching: _get(state, 'LanguageManageReducer.isFetching', false),
         formSaveStatus: _get(state, 'LanguageManageReducer.formSaveStatus', null),
         formSaveResponse: _get(state, 'LanguageManageReducer.formSaveResponse', {}),
     };
