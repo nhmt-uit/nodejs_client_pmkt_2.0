@@ -9,14 +9,17 @@ let defaultState = {
 	secureCode: null,
 	checkSecureStatus: null,
 	resetSecurePasswordStatus: false,
+	isFetching: false,
 };
 
 const AuthReducer = (state = defaultState, action) => {
 	switch(action.type){
+		case AuthActionType.AUTH_LOGIN:
+			return {...state, isFetching: true };
 		case AuthActionType.AUTH_LOGIN_SUCCESS:
-			return {...state, login_status: true, checkSecureStatus: null, payload: action.payload, errors: {}};
+			return {...state, login_status: true, checkSecureStatus: null, payload: action.payload, errors: {}, isFetching: false};
 		case AuthActionType.AUTH_LOGIN_FAIL:
-			return {...state, login_status: false, checkSecureStatus: null, errors: action.payload};
+			return {...state, login_status: false, checkSecureStatus: null, errors: action.payload, isFetching: false};
 
 		case AuthActionType.AUTH_GET_SECURE_SUCCESS:
 			return {...state, secureCode: _.get(action, 'payload.res.data', null), errors: {}};

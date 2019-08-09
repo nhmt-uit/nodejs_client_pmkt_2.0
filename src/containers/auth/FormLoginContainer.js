@@ -111,7 +111,13 @@ class FormLoginContainer extends React.Component {
                             </Field>
                         </div>
                         <div className="form-actions text-center">
-                            <button type="submit" className="btn red uppercase" disabled={!onSubmit}><TransComponent i18nKey="Login" /></button>
+                            <button
+                                type="submit"
+                                className="btn red uppercase"
+                                disabled={!onSubmit || _get(this.props, 'auth.isFetching', false)}>
+                                <TransComponent i18nKey="Login" />&nbsp;
+                                { _get(this.props, 'auth.isFetching', false) ? <i className="fa fa-spinner fa-spin" /> : null }
+                            </button>
                         </div>
                     </form>
                 </div>

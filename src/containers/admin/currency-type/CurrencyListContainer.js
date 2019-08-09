@@ -5,8 +5,7 @@ import { connect } from 'react-redux';
 import { TransComponent, LoadingComponent } from 'my-components'
 import { getCurrencyType } from 'my-actions/currency-type/CurrencyTypeAction';
 import { CurrencyEditModal, CurrencyCreateModal } from 'my-containers/admin/currency-type';
-import {Button, Col, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
-import Select from "react-select";
+import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 
 import { CurrencyTypeService } from 'my-services/currency-type';
 
