@@ -127,7 +127,7 @@ class CurrencyListContainer extends Component {
                             className="red"
                             onClick={this.handleDelete}
                             disabled={this.state.isDeleting}
-                        ><TransComponent i18nKey="Save" />{ this.state.isDeleting ? <>&nbsp;<i className="fa fa-spin fa-spinner" /></> : null }</Button>&nbsp;
+                        ><TransComponent i18nKey="Delete" />{ this.state.isDeleting ? <>&nbsp;<i className="fa fa-spin fa-spinner" /></> : null }</Button>&nbsp;
                         <Button className="green" onClick={this.toggleModal}><TransComponent i18nKey="Close" /></Button>
                     </ModalFooter>
                 </Modal>
