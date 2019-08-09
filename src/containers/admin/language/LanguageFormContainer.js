@@ -191,9 +191,8 @@ const asyncValidate = (values, dispatch, props, currentFieldName) => {
     });
 }
 
-const validate = (values, props) => {
+const validate = (values) => {
     const errors = {}
-    if(!props.touched ) return errors;
 
     if (!values.lang_key) {
         errors.lang_key = '"Lang key" is not allowed to be empty'
