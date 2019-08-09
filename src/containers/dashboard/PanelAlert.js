@@ -63,7 +63,6 @@ class PanelAlert extends Component{
                                 {
                                     listNotify.length ?
                                     listNotify.map(function (items) {
-                                        console.log(items)
                                     return(
                                         <div className="portlet box blue-hoki" key={items.created}>
                                             <div className="portlet-title">
