@@ -35,8 +35,8 @@ class CurrencyListContainer extends Component {
         switch (value) {
             case -1: return 'XO';
             case 0: return 'X';
-            case 1: return '0.X';
-            case 2: return '0.0X';
+            case 1: return 'O.X';
+            case 2: return 'O.OX';
         }
     }
 
