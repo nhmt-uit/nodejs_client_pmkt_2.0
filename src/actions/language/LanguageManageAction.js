@@ -1,10 +1,14 @@
 import {LanguageManageActionType} from 'my-constants/action-types'
 import LanguageManageService from 'my-services/language/LanguageManageService'
-import _get from "lodash/get";
-import { Helpers } from 'my-utils'
 
-export const getLanguageManage = () => {
+export const getLanguageManage = (isInitial = false) => {
     return (dispatch) => {
+        if (!isInitial){
+            dispatch({
+                type: LanguageManageActionType.GET_LANGUAGE_MANAGE,
+                isFetching: true
+            });
+        }
         return LanguageManageService.getLanguageManage().then(res => {
             if(res.status) {
                 var data = res.res.data
@@ -13,6 +17,7 @@ export const getLanguageManage = () => {
                     allLang : data.allLang,
                     lang: data.lang,
                     langFlag: data.langFlag,
+                    isFetching: false,
                 })
             }
         })
@@ -30,13 +35,20 @@ export const delLanguageManage = (post) => {
     }
 }
 
-export const saveLanguageManage = (post) => {
+export const saveLanguageManage = (post, isInitial = false) => {
     return (dispatch) => {
+        if (!isInitial){
+            dispatch({
+                type: LanguageManageActionType.SAVE_LANGUAGE_MANAGE,
+                isSaveLoading: true
+            });
+        }
         return LanguageManageService.saveLanguageManage(post).then( async res => {
             dispatch({
                 type: LanguageManageActionType.SAVE_LANGUAGE_MANAGE,
                 formSaveStatus: res.status,
-                formSaveResponse: res.res
+                formSaveResponse: res.res,
+                isSaveLoading: false
             })
         })
     }

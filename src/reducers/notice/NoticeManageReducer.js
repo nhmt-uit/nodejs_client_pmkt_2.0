@@ -15,7 +15,7 @@ const NoticeManageReducer = (state = defaultState, action) => {
         case NoticeManageActionType.DEL_NOTICE_MANAGE:
             return {...state};
         case NoticeManageActionType.SAVE_NOTICE_MANAGE:
-            return {...state, formSaveStatus: action.formSaveStatus, formSaveResponse: action.formSaveResponse};
+            return {...state, formSaveStatus: action.formSaveStatus, formSaveResponse: action.formSaveResponse, isSaveLoading: action.isSaveLoading};
         case NoticeManageActionType.RESET_FORM_SAVE_RESPONSE:
             return {...state, formSaveStatus: null, formSaveResponse: {} };
         default:

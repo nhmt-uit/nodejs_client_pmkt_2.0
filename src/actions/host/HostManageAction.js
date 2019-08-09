@@ -32,13 +32,20 @@ export const delHostManage = (post) => {
     }
 }
 
-export const saveHostManage = (post) => {
+export const saveHostManage = (post, isInitial = false) => {
     return (dispatch) => {
+        if (!isInitial){
+            dispatch({
+                type: HostManageActionType.SAVE_HOST_MANAGE,
+                isSaveLoading: true
+            });
+        }
         return HostManageService.saveHostManage(post).then( async res => {
             dispatch({
                 type: HostManageActionType.SAVE_HOST_MANAGE,
                 formSaveStatus: res.status,
                 formSaveResponse: res.res,
+                isSaveLoading: false,
             })
         })
     }

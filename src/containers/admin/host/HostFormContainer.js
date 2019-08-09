@@ -116,7 +116,7 @@ class HostFormContainer extends Component {
     };
 
     render() {
-        const { bankerList } = this.props;
+        const { bankerList, isSaveLoading } = this.props;
         const {isEdit, onSubmit} = this.state;
         var optBanker;
         if(!_isEmpty(bankerList)){
@@ -153,7 +153,14 @@ class HostFormContainer extends Component {
                         <div className="form-actions right">
                             {isEdit ?
                                 <button className="btn green" onClick={this.clickAddNew}><TransComponent i18nKey="Add new"/></button> : null}
-                            <button type="submit" className="btn red" disabled={onSubmit} onClick={this.saveHostManage}><TransComponent i18nKey="Save"/></button>
+                            <button type="submit"
+                                    className="btn red"
+                                    disabled={onSubmit}
+                                    onClick={this.saveHostManage}>
+                                <TransComponent i18nKey="Save"/>
+
+                                { isSaveLoading ? <i className="fa fa-spinner fa-spin" /> : null }
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -180,6 +187,7 @@ const mapStateToProps = state => {
         optBanker: _get(state, 'HostManageReducer.optBanker', {}),
         formSaveStatus: _get(state, 'HostManageReducer.formSaveStatus', null),
         formSaveResponse: _get(state, 'HostManageReducer.formSaveResponse', {}),
+        isSaveLoading: _get(state, 'HostManageReducer.isSaveLoading', false),
     };
 };
 

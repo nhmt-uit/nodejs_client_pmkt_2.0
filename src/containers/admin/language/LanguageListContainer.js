@@ -5,7 +5,7 @@ import {connect} from "react-redux";
 import {compose} from "redux/es/redux";
 import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 
-import { getLanguageManage, delLanguageManage } from 'my-actions/language/LanguageManageAction'
+import { getLanguageManage, delLanguageManage, resetFormSaveResponse } from 'my-actions/language/LanguageManageAction'
 
 class LanguageListContainer extends Component {
     constructor(props){
@@ -14,6 +14,16 @@ class LanguageListContainer extends Component {
             delValueID: '',
             isOpenDelModal: false,
             visible: {},
+        }
+    }
+
+    componentDidUpdate() {
+        const { formSaveStatus } = this.props;
+        if(formSaveStatus){
+            setTimeout(()=>{
+                this.props.getLanguageManage()
+                this.props.resetFormSaveResponse()
+            }, 2000);
         }
     }
 
@@ -55,7 +65,7 @@ class LanguageListContainer extends Component {
     };
 
     render() {
-        const { allLang } = this.props;
+        const { allLang, isFetching } = this.props;
         const {visible} = this.state;
         let tbody = [], level = 0, index = 0;
         if(!_isEmpty(allLang)){
@@ -109,7 +119,7 @@ class LanguageListContainer extends Component {
 
         return (
             <div className="portlet light bordered">
-                {_isEmpty(allLang) ? <LoadingComponent/> : null}
+                {isFetching ? <LoadingComponent/> : null}
                 <div className="portlet-title">
                     <div className="caption">
                         <span className="caption-subject caption-subject font-green bold uppercase"><TransComponent i18nKey="Language list"/></span>
@@ -154,6 +164,8 @@ class LanguageListContainer extends Component {
 const mapStateToProps = state => {
     return {
         allLang: _get(state, 'LanguageManageReducer.allLang', {}),
+        formSaveStatus: _get(state, 'LanguageManageReducer.formSaveStatus', null),
+        isFetching: _get(state, 'LanguageManageReducer.isFetching', false),
     };
 };
 
@@ -161,6 +173,7 @@ const mapDispatchToProps = dispatch => {
     return {
         getLanguageManage: () => dispatch(getLanguageManage()),
         delLanguageManage: params => dispatch(delLanguageManage(params)),
+        resetFormSaveResponse: params => dispatch(resetFormSaveResponse(params)),
     };
 };
 

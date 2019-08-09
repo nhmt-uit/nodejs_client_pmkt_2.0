@@ -30,13 +30,6 @@ class LanguageFormContainer extends Component{
         }
     }
 
-    componentDidUpdate() {
-        const { formSaveStatus } = this.props;
-        if(formSaveStatus){
-            this.props.getLanguageManage()
-        }
-    }
-
     componentWillMount() {
         this.props.getLanguageManage()
     }
@@ -106,9 +99,6 @@ class LanguageFormContainer extends Component{
     renderAlert = _ => {
         const {formSaveStatus, formSaveResponse} = this.props
         if (formSaveStatus === false) {
-            setTimeout(()=>{
-                this.props.resetFormSaveResponse();
-            }, 2000);
             return (
                 <div className="alert alert-danger">
                     <button className="close" onClick={this.props.resetFormSaveResponse}/>
@@ -116,9 +106,6 @@ class LanguageFormContainer extends Component{
                 </div>
             )
         } else if (formSaveStatus === true) {
-            setTimeout(()=>{
-                this.props.resetFormSaveResponse();
-            }, 2000);
             return (
                 <div className="alert bg-success">
                     <button className="close" onClick={this.props.resetFormSaveResponse} />
@@ -129,7 +116,7 @@ class LanguageFormContainer extends Component{
     };
 
     render() {
-        const { lang} = this.props;
+        const { lang, isSaveLoading } = this.props;
         const { isEdit, submit } = this.state;
         var langValue;
         if(!_isEmpty(lang)){
@@ -163,7 +150,14 @@ class LanguageFormContainer extends Component{
                         <div className="form-actions right">
                             {isEdit ?
                                 <button className="btn green" onClick={this.clickAddNew}><TransComponent i18nKey="Add new"/></button> : null}
-                            <button type="submit" className="btn red" disabled={this.props.invalid || submit} onClick={this.saveLanguageManage}><TransComponent i18nKey="Save"/></button>
+                            <button type="submit"
+                                    className='btn red'
+                                    disabled={this.props.invalid || submit}
+                                    onClick={this.saveLanguageManage}>
+                                <TransComponent i18nKey="Save"/>
+
+                                { isSaveLoading ? <i className="fa fa-spinner fa-spin" /> : null }
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -211,6 +205,7 @@ const mapStateToProps = state => {
         lang: _get(state, 'LanguageManageReducer.lang', {}),
         formSaveStatus: _get(state, 'LanguageManageReducer.formSaveStatus', null),
         formSaveResponse: _get(state, 'LanguageManageReducer.formSaveResponse', {}),
+        isSaveLoading: _get(state, 'LanguageManageReducer.isSaveLoading', false)
     };
 };
 

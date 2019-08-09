@@ -141,7 +141,7 @@ class NoticeFormContainer extends Component {
     };
 
     render() {
-        const { lang } = this.props;
+        const { lang, isSaveLoading } = this.props;
         const { fieldSubmit, isEdit, submit, content } = this.state;
         let onSubmit = false;
         if(_isEmpty(content.vi) && _isEmpty(content.en) && _isEmpty(content.cn) ){ onSubmit = true }
@@ -217,7 +217,13 @@ class NoticeFormContainer extends Component {
                         <div className="form-actions right">
                             {isEdit ?
                                 <button className="btn green" onClick={this.clickAddNew}><TransComponent i18nKey="Add new"/></button> : null}
-                            <button type="submit" className="btn red" disabled={this.props.invalid || submit || onSubmit} onClick={this.saveHostManage}><TransComponent i18nKey="Save"/></button>
+                            <button type="submit"
+                                    className="btn red"
+                                    disabled={this.props.invalid || submit || onSubmit}
+                                    onClick={this.saveHostManage}>
+                                <TransComponent i18nKey="Save"/>
+                                { isSaveLoading ? <i className="fa fa-spinner fa-spin" /> : null }
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -259,6 +265,7 @@ const mapStateToProps = state => {
         lang: _get(state, 'NoticeManageReducer.lang', {}),
         formSaveStatus: _get(state, 'NoticeManageReducer.formSaveStatus', {}),
         formSaveResponse: _get(state, 'NoticeManageReducer.formSaveResponse', {}),
+        isSaveLoading: _get(state, 'NoticeManageReducer.isSaveLoading', false)
     }
 }
 

@@ -29,13 +29,20 @@ export const delNoticeManage = (post) => {
     }
 }
 
-export const saveNoticeManage = (post) => {
+export const saveNoticeManage = (post, isInitial = false) => {
     return (dispatch) => {
+        if (!isInitial){
+            dispatch({
+                type: NoticeManageActionType.SAVE_NOTICE_MANAGE,
+                isSaveLoading: true
+            });
+        }
         return NoticeManageService.saveNoticeManage(post).then( res => {
             dispatch({
                 type: NoticeManageActionType.SAVE_NOTICE_MANAGE,
                 formSaveStatus: res.status,
                 formSaveResponse: res.res,
+                isSaveLoading: false,
             })
         })
     }
