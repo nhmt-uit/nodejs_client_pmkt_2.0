@@ -19,7 +19,7 @@ const LanguageManageReducer = (state = defaultState, action) => {
             return {...state, };
 
         case LanguageManageActionType.SAVE_LANGUAGE_MANAGE:
-            return {...state, formSaveStatus: action.formSaveStatus, formSaveResponse: action.formSaveResponse}
+            return {...state, formSaveStatus: action.formSaveStatus, formSaveResponse: action.formSaveResponse, isSaveLoading: action.isSaveLoading}
 
         case LanguageManageActionType.RESET_FORM_LANGUAGE_MANAGE:
             return {...state, formSaveStatus: null, formSaveResponse: {}}
