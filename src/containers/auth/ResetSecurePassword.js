@@ -107,9 +107,7 @@ class ResetSecurePassword extends Component {
             <div className="login" style={{ backgroundColor : 'transparent' }}>
                 <div className="content">
                     <div className="logo">
-                        <a href="index.html">
-                            <img src="/assets/images/logo.png" alt="logo vw3" />
-                        </a>
+                        <img src="/assets/images/logo.png" alt="logo vw3" />
                     </div>
                     <form className="login-form" onSubmit={handleSubmit(this.handleSubmit)} onKeyDown={e => this.handleKeyDown(e)} >
                         <h3 className="form-title font-red"><TransComponent i18nKey="Update secure password" /></h3>

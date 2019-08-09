@@ -72,9 +72,7 @@ class FormLoginContainer extends React.Component {
             <div className="login" style={{ backgroundColor : 'transparent' }}>
                 <div className="content">
                     <div className="logo">
-                        <a href="index.html">
-                            <img src="/assets/images/logo.png" alt="logo vw3" />
-                        </a>
+                        <img src="/assets/images/logo.png" alt="logo vw3" />
                     </div>
                     <form className="login-form" onSubmit={this.handleSubmit} onKeyDown={e => this.handleKeyDown(e)}>
                         <h3 className="form-title font-red">Login to VW3 Application</h3>
