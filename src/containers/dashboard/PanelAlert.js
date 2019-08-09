@@ -70,7 +70,7 @@ class PanelAlert extends Component{
                                                     <i className="fa fa-newspaper-o"></i> {items.created_format}
                                                 </div>
                                             </div>
-                                            <div className="portlet-body">
+                                            <div className="portlet-body" className={items.type === 1 ? 'bg-success' : items.type === 2 ? 'bg-danger' : 'bg-white'}>
                                                 <div id="sample_3_wrapper" className="dataTables_wrapper no-footer">
                                                     <div className="row">
                                                         <div className="col-md-12">

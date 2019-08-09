@@ -148,6 +148,7 @@ class Header extends Component {
                                                     </li>
                                                     <li>
                                                         {
+                                                            Number(roles) === 0 ? null :
                                                             isReplaceRouterLink
                                                                 ? (
                                                                     <a href={RoutesService.getPath('ADMIN', 'CHANGE_PASSWORD_2')}>
