@@ -18,6 +18,10 @@ import * as AccountSubActionType from './AccountSubActionType'
 import * as FormulaActionType from './FormulaActionType'
 import * as FormulaGroupActionType from './FormulaGroupActionType'
 import * as ConfigurationActionType from './ConfigurationActionType';
+import * as CurrencyTypeActionType from './CurrencyTypeActionType';
+import * as SubStatusActionType from './SubStatusActionType';
+import * as UserActionType from './UserActionType';
+
 export {
     AppActionType,
     LanguageActionType,
@@ -38,5 +42,8 @@ export {
     AccountSubActionType,
     FormulaActionType,
     FormulaGroupActionType,
-    ConfigurationActionType
+    ConfigurationActionType,
+    CurrencyTypeActionType,
+    SubStatusActionType,
+    UserActionType
 }

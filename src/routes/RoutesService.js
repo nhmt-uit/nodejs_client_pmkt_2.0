@@ -1,4 +1,5 @@
-import { find, forEach } from "lodash";
+import { find, forEach, cloneDeep } from "lodash";
+import path from 'path';
 
 const listAdminRoutes = [
     /*==========================================================================*/
@@ -57,6 +58,16 @@ const listAdminRoutes = [
     /*==========================================================================*/
     { name: "CHANGE_SECURE_CODE", path: "/change-secure-code", language: "en"},
     /*==========================================================================*/
+
+    /*============================== start ADMIN ROUTES ==================================*/
+    { name: "LANGUAGE", path: "/lang", language: "en"},
+    { name: "CURRENCY_TYPE", path: "/currency-type", language: "en"},
+    { name: "HOST", path: "/host", language: "en"},
+    { name: "NOTICE", path: "/notice", language: "en"},
+    { name: "LOG_CHANGE_PASSWORD", path: "/log-change-password", language: "en"},
+    { name: "SUB_STATUS", path: "/sub-status", language: "en"},
+    { name: "SET_FEATURES", path: "/user-features", language: "en"},
+    /*============================== end ADMIN ROUTES ==================================*/
 ];
 
 /*
@@ -92,7 +103,17 @@ class RoutesService {
         switch (area) {
             case "ADMIN":
                 routes = find(listAdminRoutes, { name, language : this.language });
-            break;
+                break;
+            case "ADMIN_MANAGE":
+                routes = find(listAdminRoutes, { name, language : this.language });
+
+                if (routes && routes.path) {
+                    routes = cloneDeep(routes);
+
+                    routes.path = path.join('/admin', routes.path);
+                }
+
+                break;
             default: break;
         }
 

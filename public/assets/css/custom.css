@@ -557,7 +557,7 @@ h5.modal-title {font-size: 16px; font-weight: bold; color: #E26A6A!important;}
     border: 1px solid silver;
 }
 
-.nav-tab-account li.active > a {
+.nav-tab-account li.active > a, .nav-tab-account li.active > a {
     color: #35dfef!important;
 }
 
@@ -592,4 +592,16 @@ h5.modal-title {font-size: 16px; font-weight: bold; color: #E26A6A!important;}
 .version-header {
     top: 20px;
     left: 0;
+}
+
+.font-success {
+    color: #3C763D;
+}
+
+.border-success {
+    border-color: #dff0d8;
+}
+
+.margin-bottom-5 {
+    margin-bottom: 5px!important;
 }
