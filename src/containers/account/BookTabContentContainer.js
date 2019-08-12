@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
-import { isPlainObject as _isPlainObject, merge as _merge } from 'lodash';
+import { isPlainObject as _isPlainObject, merge as _merge, cloneDeep as _cloneDeep } from 'lodash';
 import {connect} from "react-redux";
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import LazyLoad from 'react-lazyload';
+import LazyLoad, { forceCheck } from 'react-lazyload';
 
 import { TransComponent } from 'my-components';
 import { AccountItemContainer } from 'my-containers/account';
@@ -31,6 +31,10 @@ class BookTabContentContainer extends Component {
             isLoading: false,
         },
     };
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        forceCheck();
+    }
 
     handleChangeState = (state, cb) => () => {
         const oldState = this.state;
@@ -63,12 +67,14 @@ class BookTabContentContainer extends Component {
                         this.handleChangeState({ deleteState }, () => this.props.getAccount())()
                     } else {
                         deleteState.isLoading = false;
+                        deleteState.isOpenModal = false;
 
                         this.handleChangeState({ deleteState })()
                     }
                 })
                 .catch(() => {
                     deleteState.isLoading = false;
+                    deleteState.isOpenModal = false;
 
                     this.handleChangeState({ deleteState })()
                 });
@@ -101,7 +107,7 @@ class BookTabContentContainer extends Component {
 
                 if (!result.length) {
                     result.push(
-                        <>
+                        <Fragment key={result.length}>
                             { lstMap.map(item => {
                                     const orderItem = ++order;
 
@@ -112,11 +118,11 @@ class BookTabContentContainer extends Component {
                                         onChangeProps={props => this.handleChangeState(props)()}
                                     />;
                                 }) }
-                        </>
+                        </Fragment>
                     );
                 } else {
                     result.push(
-                        <LazyLoad>
+                        <LazyLoad key={result.length}>
                             { lstMap.map(item => {
                                 const orderItem = ++order;
 
@@ -134,7 +140,7 @@ class BookTabContentContainer extends Component {
                 loopResult(lst);
             } else {
                 result.push(
-                    <>
+                    <Fragment key={result.length}>
                         { lst.map(item => {
                                 const orderItem = ++order;
 
@@ -145,12 +151,12 @@ class BookTabContentContainer extends Component {
                                     onChangeProps={props => this.handleChangeState(props)()}
                                 />;
                             }) }
-                    </>
+                    </Fragment>
                 );
             }
         };
 
-        loopResult(this.props.lstAccount);
+        loopResult(_cloneDeep(this.props.lstAccount));
 
         return result;
     }
