@@ -18,6 +18,7 @@ class BillTransaction extends Component {
             amount: '',
             rowInTable: false,
             showInvoice: false,
+            post: {},
         }
     }
 
@@ -35,6 +36,13 @@ class BillTransaction extends Component {
         })
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const {post} = this.state;
+        if(prevState.post.memberId !== post.memberId || prevState.post.cycleId !== post.cycleId ){
+            this.props.getDetailReport(post);
+        }
+    }
+
     callBillTransaction = (memberValues, cycleValues, typeOfMoney, transactionMethod, amount) => {
         if(memberValues){
             var memberId = memberValues.value;
@@ -46,7 +54,9 @@ class BillTransaction extends Component {
             memberId: memberId,
             cycleId: cycleId
         };
-        this.props.getDetailReport(post);
+        this.setState({
+            post: post
+        })
         if(memberValues && cycleValues){
             this.setState({
                 showInvoice: true,
@@ -110,7 +120,7 @@ class BillTransaction extends Component {
         //Khai bao Header
         let rowNew = currencyIDs.map(function (id) {
             return(
-                <td key={id} className="caption-subject font-green text-center">
+                <td key={id} className="caption-subject font-green text-right">
                     {typeOfMoney === id ?
                     amount < 0 ? <span className="font-red"> {Helpers.formatMoney(amount,0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney(amount,0)} </span> : ''}
                 </td>
@@ -182,11 +192,11 @@ class BillTransaction extends Component {
             if(!this.state.rowInTable) itemNew = null;
             if(itemNew){
                 headers.push(
-                    <th key={itemNew[1].value + 'header'} className="caption-subject font-red text-center"> {itemNew[1].label} </th>
+                    <th key={itemNew[1].value + 'header'} className="caption-subject font-red"> {itemNew[1].label} </th>
                 );
 
                 rowNew.push(
-                    <td key={itemNew[1].value + 'rowNew'} className="caption-subject font-green text-center">
+                    <td key={itemNew[1].value + 'rowNew'} className="caption-subject font-green text-right">
                         {amount < 0 ? <span className="font-red"> {Helpers.formatMoney(amount,0)} </span> : <span className="font-blue-steel"> {Helpers.formatMoney(amount,0)} </span>}
                     </td>
                 );

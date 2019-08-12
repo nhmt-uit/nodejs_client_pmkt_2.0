@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { TransComponent } from 'my-components';
+import { TransComponent, LoadingComponent } from 'my-components';
 import {get as _get} from "lodash";
 import {compose} from "redux/es/redux";
 import {connect} from "react-redux";
@@ -20,6 +20,7 @@ class FormulaGroupListContainer extends Component {
             delBankerId: '',
             isOpenDelModal: false,
             visible: {},
+            item: '',
         }
     }
 
@@ -48,17 +49,9 @@ class FormulaGroupListContainer extends Component {
 
     handleOpenModelDel = (item) => {
         if(item){
-            if(item.id){
-                this.setState({
-                    delValueID: item.id,
-                })
-            }
-            if(item.formula_group_id && item.banker){
-                this.setState({
-                    formulaGroupId: item.formula_group_id,
-                    delBankerId: item.banker.id
-                })
-            }
+            this.setState({
+                item: item,
+            })
         }
         let isOpenDelModal = this.state.isOpenDelModal;
         this.setState({
@@ -71,12 +64,11 @@ class FormulaGroupListContainer extends Component {
     }
 
     handleDelFormulaGroup = () => {
-        let delBankerId = this.state.delBankerId;
-        let formulaGroupId = this.state.formulaGroupId;
-        if(delBankerId && formulaGroupId){
+        let item = this.state.item;
+        if(item.formula_group_id){
             let payload = {
-                formula_group_id: formulaGroupId,
-                banker_id: delBankerId
+                formula_group_id: item.formula_group_id,
+                banker_id: item.banker.id
             }
             this.props.delFormulaGroup(payload)
                 .then( () => {
@@ -92,8 +84,8 @@ class FormulaGroupListContainer extends Component {
                 })
         } else {
             let payload = {
-                id: this.state.delValueID
-            };
+                id: item.id
+            }
             this.props.delFormulaGroupDetail(payload)
                 .then( () => {
                     this.setState({
@@ -123,7 +115,7 @@ class FormulaGroupListContainer extends Component {
 
     render() {
         const { t } = this.props;
-        const { formulaGroupList, bankerList } = this.props;
+        const { formulaGroupList, bankerList, isDeleteLoading } = this.props;
         const { bankerId, filterText, visible } = this.state;
         let level = 0, index = 0;
         const tbody = [];
@@ -243,6 +235,7 @@ class FormulaGroupListContainer extends Component {
                 </div>
                 <div>
                     <Modal isOpen={this.state.isOpenDelModal} toggle={() => this.handleCloseModalDel()}>
+                        {isDeleteLoading ? <LoadingComponent/> : null}
                         <ModalHeader toggle={() => this.handleCloseModalDel()} className="text-uppercase">
                             <strong>
                                 <TransComponent i18nKey="xac nhan"/>
@@ -267,6 +260,7 @@ const mapStateToProps = state => {
     return {
         formulaGroupList: _get(state, 'FormulaGroupReducer.formulaGroupList', []),
         bankerList: _get(state, 'FormulaGroupReducer.bankerList', []),
+        isDeleteLoading: _get(state, 'FormulaGroupReducer.isDeleteLoading', false),
     };
 }
 

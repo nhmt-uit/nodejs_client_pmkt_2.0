@@ -5,8 +5,9 @@ import {compose} from "redux/es/redux";
 import {connect} from "react-redux";
 import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 import {withTranslation} from "react-i18next";
-import {TransComponent} from 'my-components'
+import {TransComponent, LoadingComponent} from 'my-components'
 import ModalFormEditSubUserContainer from "my-containers/user_sub/ModalFormEditSubUserContainer"
+import {get as _get} from "lodash";
 
 class ListSubUserContainer extends Component{
     constructor(props) {
@@ -63,7 +64,7 @@ class ListSubUserContainer extends Component{
     }
 
     render() {
-        const {t, memberSub} = this.props
+        const {t, memberSub, isDeleteLoading} = this.props
         var listMemberSub = memberSub
         const filterTextChange = this.state.filterText;
         var x = 0;
@@ -123,6 +124,7 @@ class ListSubUserContainer extends Component{
                         </div>
                         <div>
                             <Modal isOpen={this.state.isOpenDelModal} toggle={() => this.toggleDelMemberSubModal()}>
+                                {isDeleteLoading ? <LoadingComponent/> : null}
                                 <ModalHeader toggle={() => this.toggleDelMemberSubModal()} className="text-uppercase">
                                     <strong>
                                         <TransComponent i18nKey="xac nhan"/>
@@ -149,6 +151,7 @@ const mapStateToProps = state => {
     return {
         memberSub: state.AccountSubReducer.memberSub,
         formMemberSubSaveStatus: state.AccountSubReducer.formSaveStatus,
+        isDeleteLoading: _get(state, 'AccountSubReducer.isDeleteLoading', false),
     }
 };
 

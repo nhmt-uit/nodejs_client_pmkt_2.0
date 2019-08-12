@@ -34,13 +34,19 @@ export const getSuffixesMember = () => {
     }
 }
 
-export const delMemberSub = (post) => {
+export const delMemberSub = (post, isInitial = false) => {
     return (dispatch) => {
-        return AccountSubService.delMemberSub(post).then(res => {
-
+        if (!isInitial){
             dispatch({
                 type: AccountSubActionType.DEL_MEMBER_SUB,
-                post: post
+                isDeleteLoading: true
+            });
+        }
+        return AccountSubService.delMemberSub(post).then(res => {
+            dispatch({
+                type: AccountSubActionType.DEL_MEMBER_SUB,
+                post: post,
+                isDeleteLoading: false,
             })
         })
     }

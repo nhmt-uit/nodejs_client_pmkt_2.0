@@ -35,6 +35,8 @@ let defaultState = {
     isOpenModalEditFormula: false,
     // isFetching
     isFetching: false,
+    //isDeleteLoading
+    isDeleteLoading: false,
 }
 
 const FormulaGroupReducer = (state = defaultState, action) => {
@@ -43,9 +45,9 @@ const FormulaGroupReducer = (state = defaultState, action) => {
         case FormulaGroupActionType.GET_FORMULA_GROUP:
             return {...state, formulaGroupList: action.formulaGroupList, bankerList: action.bankerList}
         case FormulaGroupActionType.DEL_FORMULA_GROUP:
-            return {...state};
+            return {...state, isDeleteLoading: action.isDeleteLoading};
         case FormulaGroupActionType.DEL_FORMULA_GROUP_DETAIL:
-            return {...state,};
+            return {...state, isDeleteLoading: action.isDeleteLoading};
 
         case FormulaGroupActionType.FORMULA_RESET_STORE: {
             return {...defaultState}

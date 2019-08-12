@@ -19,24 +19,38 @@ export const getFormulaGroup = () => {
     }
 }
 
-export const delFormulaGroup = (payload) => {
+export const delFormulaGroup = (payload, isInitial = false) => {
     return (dispatch) => {
+        if (!isInitial){
+            dispatch({
+                type: FormulaGroupActionType.DEL_FORMULA_GROUP,
+                isDeleteLoading: true
+            });
+        }
         return FormulaGroupService.delFormulaGroup(payload).then( res => {
 
             dispatch({
                 type: FormulaGroupActionType.DEL_FORMULA_GROUP,
+                isDeleteLoading: false
             })
         })
     }
 }
 
 
-export const delFormulaGroupDetail = (payload) => {
+export const delFormulaGroupDetail = (payload, isInitial = false) => {
     return (dispatch) => {
+        if (!isInitial){
+            dispatch({
+                type: FormulaGroupActionType.DEL_FORMULA_GROUP_DETAIL,
+                isDeleteLoading: true
+            });
+        }
         return FormulaGroupService.delFormulaGroupDetail(payload).then(res => {
 
             dispatch({
                 type: FormulaGroupActionType.DEL_FORMULA_GROUP_DETAIL,
+                isDeleteLoading: false
             })
         })
     }
