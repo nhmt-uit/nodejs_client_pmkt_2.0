@@ -47,7 +47,7 @@ class ChangeSecureCodeContainer extends Component {
                 err={dataStore.errors || {}}
                 success={{
                     status: dataStore.status || false,
-                    msg: <TransComponent i18nKey="Change secure code successfully" />
+                    msg: "Change secure code successfully"
                 }}
             />
         );
