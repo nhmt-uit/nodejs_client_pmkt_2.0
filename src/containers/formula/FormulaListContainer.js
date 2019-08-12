@@ -61,7 +61,7 @@ class FormulaListContainer extends Component {
         if (nextProps.formulaList && !_isEmpty(this.state.formulaSelected)) {
             const newFormulaSelected = _find(nextProps.formulaList, ['id', this.state.formulaSelected.id]);
             const newState = {
-                formulaSelected: newFormulaSelected,
+                formulaSelected: newFormulaSelected || {},
                 listAccDelete: [],
                 listAccEdit: [],
                 listMemberUpdate: [],
@@ -127,7 +127,7 @@ class FormulaListContainer extends Component {
         formulaList = formulaList.splice((currentPage - 1) * 10, perPage);
 
         if (formulaList.length === 0) {
-            return <tr><td className="text-center" colSpan="20"><TransComponent i18nKey="Data Empty" /></td></tr>
+            return <tr><td className="text-center" colSpan="20"><TransComponent i18nKey="Empty data" /></td></tr>
         }
 
         return formulaList.map((item, index) =>
@@ -470,24 +470,9 @@ class FormulaListContainer extends Component {
     };
 
     renderBodyDeleteModal = () => {
-        const { isLoadingDelete } = this.state;
         const formulaSelected = this.state.formulaSelected || {};
 
-        return (
-            <>
-                <p className="text-center"><TransComponent i18nKey="confirm delete {{item}}" i18nObj={{ item: formulaSelected.tenct }} /></p>
-                <p className="text-center">
-                    <button
-                        disabled={isLoadingDelete}
-                        onClick={this.handleDeleleFormula}
-                        className="btn green"
-                    >
-                        <TransComponent i18nKey="Delete" />&nbsp;{ isLoadingDelete ? <i className="fa fa-spinner spin" /> : null }
-                    </button>
-                    &nbsp;<button className="btn btn-danger" onClick={this.handleChangeState({ isOpenDeleteModal: false })}><TransComponent i18nKey="Cancel" /></button>
-                </p>
-            </>
-        )
+        return <TransComponent i18nKey="confirm delete {{item}}" i18nObj={{ item: formulaSelected.tenct }} />
     };
 
     handleToggleNewModal = () => {
@@ -506,7 +491,7 @@ class FormulaListContainer extends Component {
 
     render() {
         const { banker, formulaList, isFetching } = this.props
-        const { bankerId, isOpenAccountModal, isOpenRelinkModal, isOpenDeleteModal, isEdit, currentPage, perPage } = this.state;
+        const { bankerId, isOpenAccountModal, isOpenRelinkModal, isOpenDeleteModal, isEdit, currentPage, perPage, isLoadingDelete } = this.state;
 
         return (
             <div className="portlet box blue-hoki position-relative">
@@ -596,6 +581,13 @@ class FormulaListContainer extends Component {
                     header={<strong><TransComponent i18nKey="xac nhan" /></strong>}
                     onToggle={this.handleChangeState({ isOpenDeleteModal: !isOpenDeleteModal })}
                     body={this.renderBodyDeleteModal()}
+                    footer={(<>
+                        <button disabled={isLoadingDelete} onClick={this.handleDeleleFormula} className="btn green">
+                            <TransComponent i18nKey="Delete" />&nbsp;{ isLoadingDelete ? <i className="fa fa-spinner spin" /> : null }
+                        </button>&nbsp;
+                        <button className="btn btn-danger" onClick={this.handleChangeState({ isOpenDeleteModal: false })}><TransComponent i18nKey="Cancel" /></button>
+                        </>
+                    )}
                 />
                 { isEdit ? <ModalFormFormulaContainer formType="update" /> : <ModalFormFormulaContainer formType="create" /> }
             </div>

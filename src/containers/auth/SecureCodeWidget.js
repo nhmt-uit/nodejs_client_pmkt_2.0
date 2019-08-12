@@ -119,7 +119,7 @@ class SecureCodeWidget extends Component {
             <div className="login">
                 <div className="content" style={{width: "420px"}}>
                     <div className="logo">
-                            <img src="/assets/images/logo.png" alt="logo vw3" />
+                        <img src="/assets/images/logo.png" alt="logo vw3" />
                     </div>
                         <h3 className="form-title font-red-sunglo"><TransComponent i18nKey="Please insert your security code" /></h3>
                         <div className="row text-center">
