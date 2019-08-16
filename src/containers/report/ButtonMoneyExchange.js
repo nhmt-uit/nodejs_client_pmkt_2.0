@@ -7,15 +7,21 @@ import { TransComponent } from 'my-components';
 class ButtonMoneyExchange extends Component {
     state = { btnMoneyExchangeClicked: false, showAll: true };
 
+    componentWillReceiveProps(nextProps, nextContext) {
+        if (nextProps.btnMoneyExchangeClicked !== undefined) {
+            this.setState({ btnMoneyExchangeClicked: nextProps.btnMoneyExchangeClicked })
+        }
+    }
+
     changeState = state => _ => {
         this.setState(state, _ => {
             this.props.toggleBtnMoneyExchange(this.state.btnMoneyExchangeClicked);
         });
-    }
+    };
 
     handleToggleModalMoneyExchange = () => {
         return this.props.onToggleModalMoneyExchange();
-    }
+    };
 
     handleToggleShowAll = () => {
         this.setState({
@@ -23,7 +29,7 @@ class ButtonMoneyExchange extends Component {
         }, () => {
             return this.props.onToggleShowAll(this.state.showAll);
         });
-    }
+    };
 
     render() {
         const { btnMoneyExchangeClicked, showAll } = this.state;

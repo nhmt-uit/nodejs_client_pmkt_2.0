@@ -210,7 +210,7 @@ class ReportStatisticContainer extends Component {
         visible[id] = visible[id] !== undefined ? !visible[id] : true;
 
         this.setState({ visible });
-    }
+    };
 
     handleDeleteMoneyExchange = (memberId, tranIds) => {
         const { itemActive, reportType } = this.props.reportStore;
@@ -228,11 +228,11 @@ class ReportStatisticContainer extends Component {
                 
                 return this.props.getReportByMember({ chuky_id: itemActive.id, member_name: itemActive.memberName }, itemActive);
             });
-    }
+    };
 
     handleToggleCheckMoneyExchange = id => {
         return this.props.changeMoneyExchangeIds(id);
-    }
+    };
 
     renderBookTabContent = (type, id, isActive) => {
         const { data = {}, totalAccounting = {}, totalByBook = {}, totalByTypeReport = {}, totalReport = {}, statusBtnMoneyExchange } = this.props.reportStore;
@@ -266,6 +266,7 @@ class ReportStatisticContainer extends Component {
                             onToggleShowAll={this.toggleShowAll}
                             typeReport={type}
                             tabActive={id}
+                            btnMoneyExchangeClicked={statusBtnMoneyExchange !== undefined ? statusBtnMoneyExchange : false}
                         />
                 }
                 <div className="portlet-body">

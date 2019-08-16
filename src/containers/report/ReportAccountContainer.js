@@ -35,11 +35,11 @@ export default class ReportAccountContainer extends Component {
 
     handleDeleteMoneyExchange = (memberId, tranIds) => _ => {
         return this.props.onDeleteMoneyExchange(memberId, tranIds);
-    }
+    };
 
     handleToggleCheckMoneyExchange = id => _ => {
         return this.props.onToggleCheckMoneyExchange(id);
-    }
+    };
 
     renderItem(account) {
         const { currencyMap, order, btnMoneyExchangeClicked, tabActive } = this.props;
@@ -92,7 +92,7 @@ export default class ReportAccountContainer extends Component {
                     });
                 }
             }
-        })
+        });
 
         recursiveItem(account, level);
 
