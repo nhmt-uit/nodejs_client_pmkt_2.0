@@ -64,6 +64,8 @@ class FormMemberContainer extends Component {
             s1: _get(this.props.initialValues, 's1'),
             s2: _get(this.props.initialValues, 's2'),
             s3: _get(this.props.initialValues, 's3'),
+            password: _get(this.props.initialValues, 'password'),
+            re_password: _get(this.props.initialValues, 're_password'),
         }
 
         if(this.props.formType === "update") {
