@@ -184,7 +184,8 @@ class NoticeFormContainer extends Component {
                                     'searchreplace visualblocks code fullscreen',
                                     'insertdatetime media table paste code help wordcount'
                                 ],
-                                toolbar: 'bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat', }}
+                                menubar: false,
+                                toolbar: 'formatselect bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent', }}
                         />
                     </div>
                 )

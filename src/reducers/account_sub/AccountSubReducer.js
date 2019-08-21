@@ -7,6 +7,7 @@ let defaultState = {
     suffixesMember: {},
     formSaveStatus: null,
     formSaveResponse: {},
+    isDeleteLoading: false,
 }
 
 const AccountSubReducer = (state = defaultState, action) => {
@@ -17,7 +18,7 @@ const AccountSubReducer = (state = defaultState, action) => {
         case AccountSubActionType.GET_SUFFIXES_MEMBER:
             return {...state, suffixesMember: action.suffixesMember}
         case AccountSubActionType.DEL_MEMBER_SUB:
-            return {...state,};
+            return {...state, isDeleteLoading: action.isDeleteLoading};
         case AccountSubActionType.CREATE_MEMBER_SUB:
             return {...state, formSaveStatus: action.formSaveStatus, formSaveResponse: action.formSaveResponse};
         case AccountSubActionType.RESET_FORM_SAVE_ACCOUNT_SUB:

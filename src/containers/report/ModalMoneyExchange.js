@@ -24,6 +24,16 @@ class ModalMoneyExchange extends Component {
         };
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (!this.props.isOpenModalMoneyExchange && (prevProps.isOpenModalMoneyExchange !== this.props.isOpenModalMoneyExchange)) {
+            this.setState({
+                rate: '',
+                from: { label: '', value: '' },
+                to: { label: '', value: '' }
+            })
+        }
+    }
+
     toggleModalMoneyExchange = () => this.props.onToggleModalMoneyExchange();
 
     handleChangeRate = e => {

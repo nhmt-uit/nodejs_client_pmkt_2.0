@@ -34,7 +34,7 @@ class CreateTransaction extends Component {
         }
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps(nextProps, prevProps) {
         if(nextProps.initialValues){
             var memberValues = nextProps.initialValues.member;
             var cycleValues = nextProps.initialValues.cycle;
@@ -55,7 +55,6 @@ class CreateTransaction extends Component {
                     submit: true
                 })
             }
-
             if(nextProps.initialValues.member || nextProps.initialValues.cycle){
                 this.props.callParentFromCreateTransaction(memberValues, cycleValues, typeOfMoney, transactionMethod, amount)
             }
@@ -190,7 +189,7 @@ class CreateTransaction extends Component {
                         type="radio"
                         value={item.value}
                     />
-                    {item.label}
+                    <TransComponent i18nKey={item.label}/>
                     <span></span>
                 </label>
             )
