@@ -198,6 +198,7 @@ class FormFormulaContainer extends Component {
                             isSearchable={true}
                             options={this.props.optBanker}
                             onChange={this.handleChangeBanker}
+                            isDisabled={this.props.formType === "update"}
                             />
                     </div>
                     <div className="form-group">
@@ -313,7 +314,7 @@ const asyncValidate = (values, dispatch, props, currentFieldName) => {
         const payload = {value : values.formula_name}
         if (!_isEmpty(props.values.except))  {
             payload.except = props.values.except;
-        }   
+        }
 
         // Ignore validate unique incase same value
         if(props.values.except === props.values.formula_name) {

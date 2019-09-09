@@ -134,8 +134,21 @@ class HttpService {
     //Handle when request fail
     handleError = error => {
         let responstStatus = _get(error, 'response.status')
+        let responstError = _get(error, 'response.data.error')
         const pathname = window.location.pathname;
         if(responstStatus === 400 && !pathname.match(/\/auth\/login/i) ) {
+            CookieService.removeAll()
+            window.history.pushState(null, null, '/auth/login')
+            window.location.reload()
+        }
+
+        /*======================================================
+         * Server Manage Error
+         * code: 500
+         * error: "invalid_login"
+         * error_description: "Not found user"
+         *======================================================*/
+        if(responstStatus === 500 && responstError === "invalid_login" && !pathname.match(/\/auth\/login/i) ) {
             CookieService.removeAll()
             window.history.pushState(null, null, '/auth/login')
             window.location.reload()

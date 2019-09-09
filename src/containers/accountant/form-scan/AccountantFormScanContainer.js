@@ -16,20 +16,20 @@ import { TransComponent } from 'my-components'
 import { AccountantFormScanButtonContainer, AccountantFormButtonFullScreenContainer } from 'my-containers/accountant'
 
 
-const today = moment().format('YYYY-MM-DD')
-const yesterday = moment().subtract(1, 'days').format('YYYY-MM-DD')
-const start_this_week = moment().startOf('week').add(1, 'days').format('YYYY-MM-DD')
-const end_this_week = moment().endOf('week').add(1, 'days').format('YYYY-MM-DD')
-const start_last_week = moment().startOf('week').subtract(6, 'days').format('YYYY-MM-DD')
-const end_last_week = moment().endOf('week').subtract(6, 'days').format('YYYY-MM-DD')
+const today = moment().subtract(1, 'days').format('YYYY-MM-DD')
+const yesterday = moment().subtract(2, 'days').format('YYYY-MM-DD')
+const start_this_week = moment().startOf('week').subtract(6, 'days').format('YYYY-MM-DD')
+const end_this_week = moment().endOf('week').subtract(6, 'days').format('YYYY-MM-DD')
+const start_last_week = moment().startOf('week').subtract(13, 'days').format('YYYY-MM-DD')
+const end_last_week = moment().endOf('week').subtract(13, 'days').format('YYYY-MM-DD')
 
 class AccountantFormScanContainer extends Component {
     state = {
         flagType: 0,
         accountRole: 0,
         typeGroupDate: 'today',
-        from_date: new Date(),
-        to_date: new Date()
+        from_date: new Date(today),
+        to_date: new Date(today)
     }
 
     shouldComponentUpdate(newProps, newState) {

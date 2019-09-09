@@ -332,7 +332,7 @@ class FormulaListContainer extends Component {
     };
 
     renderBodyAccountModal = () => {
-        const { formulaSelected, listAccDelete, listAccEdit, isLoadingDelete, isLoadingUpdate } = this.state;
+        const { formulaSelected = {}, listAccDelete, listAccEdit, isLoadingDelete, isLoadingUpdate } = this.state;
         const listAccUse = formulaSelected ? (formulaSelected.list_acc_use || []) : [];
         const listOptionFormula = this.props.formulaList.filter(item => {
             if (item.banker_id === formulaSelected.banker_id) {
