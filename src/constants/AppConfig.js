@@ -26,7 +26,8 @@ export const VERSION_RELEASE = '2.0.0'
 export const BASE_HREF = ""
 export const SESSION_EXPIRED = 24
 export const DEFAULT_LANG = "vi"
-export const DEFAULT_TIMEZONE = "Asia/Ho_Chi_Minh"
+export const DEFAULT_LOCALE = "en-US"
+export const DEFAULT_TIMEZONE = "America/Caracas"
 export const FORMAT_DATE = "MM/DD/YYYY"
 export const FORMAT_DATE_DATEPICKER = "MM/dd/yyyy"
 

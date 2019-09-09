@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
-import moment  from 'moment'
+import moment  from 'moment-timezone'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css"
 import MultiSelect from "@khanacademy/react-multi-select";
@@ -16,12 +16,12 @@ import { TransComponent } from 'my-components'
 import { AccountantFormScanButtonContainer, AccountantFormButtonFullScreenContainer } from 'my-containers/accountant'
 
 
-const today = moment().subtract(1, 'days').format('YYYY-MM-DD')
-const yesterday = moment().subtract(2, 'days').format('YYYY-MM-DD')
-const start_this_week = moment().startOf('week').subtract(6, 'days').format('YYYY-MM-DD')
-const end_this_week = moment().endOf('week').subtract(6, 'days').format('YYYY-MM-DD')
-const start_last_week = moment().startOf('week').subtract(13, 'days').format('YYYY-MM-DD')
-const end_last_week = moment().endOf('week').subtract(13, 'days').format('YYYY-MM-DD')
+const today = moment().locale(AppConfig.DEFAULT_LOCALE).tz(AppConfig.DEFAULT_TIMEZONE).format('YYYY-MM-DD')
+const yesterday = moment().locale(AppConfig.DEFAULT_LOCALE).tz(AppConfig.DEFAULT_TIMEZONE).subtract(1, 'days').format('YYYY-MM-DD')
+const start_this_week = moment().locale(AppConfig.DEFAULT_LOCALE).tz(AppConfig.DEFAULT_TIMEZONE).startOf('week').add(1, 'days').format('YYYY-MM-DD')
+const end_this_week = moment().locale(AppConfig.DEFAULT_LOCALE).tz(AppConfig.DEFAULT_TIMEZONE).endOf('week').add(1, 'days').format('YYYY-MM-DD')
+const start_last_week = moment().locale(AppConfig.DEFAULT_LOCALE).tz(AppConfig.DEFAULT_TIMEZONE).startOf('week').subtract(6, 'days').format('YYYY-MM-DD')
+const end_last_week = moment().locale(AppConfig.DEFAULT_LOCALE).tz(AppConfig.DEFAULT_TIMEZONE).endOf('week').subtract(6, 'days').format('YYYY-MM-DD')
 
 class AccountantFormScanContainer extends Component {
     state = {
