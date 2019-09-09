@@ -12,23 +12,30 @@ class AccountantService {
             payload['payloadMemberOptions'] = _sortBy(memberOptions, [o => o.label.toLowerCase()])
         }
 
+        //Gernate List Banker Account
+        let bankerCheckedList = {}
+        if (payload && payload.scanAccMap) {
+            let bankerAccountOptions = []
+            for(let x in payload.scanAccMap) {
+                const bankerAccountChecked = payload.scanAccMap[x].checked === 1 ? true : false
+
+                if (bankerAccountChecked === false) {
+                    bankerCheckedList[payload.scanAccMap[x].banker] = false
+                }
+
+                bankerAccountOptions.push({...payload.scanAccMap[x], type: null, message: null, data: null, checked: bankerAccountChecked, collapse: true})
+            }
+            payload['payloadBankerAccount'] = _sortBy(bankerAccountOptions, [o => o.acc_name.toLowerCase()])
+        }
+
         //Gernate List Banker
         if (payload && payload.bankerMap) {
             let bankerOptions = []
             for(let x in payload.bankerMap) {
-                bankerOptions.push({...payload.bankerMap[x], checked: true, collapse: true})
+                const bankerChecked = bankerCheckedList[payload.bankerMap[x].id] === false ? false : true
+                bankerOptions.push({...payload.bankerMap[x], checked: bankerChecked, collapse: true})
             }
             payload['payloadBanker'] = _sortBy(bankerOptions, [o => o.name.toLowerCase()])
-            
-        }
-
-        //Gernate List Banker Account
-        if (payload && payload.scanAccMap) {
-            let bankerAccountOptions = []
-            for(let x in payload.scanAccMap) {
-                bankerAccountOptions.push({...payload.scanAccMap[x], type: null, message: null, data: null, checked: true, collapse: true})
-            }
-            payload['payloadBankerAccount'] = _sortBy(bankerAccountOptions, [o => o.acc_name.toLowerCase()])
         }
 
 
