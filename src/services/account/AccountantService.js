@@ -1,3 +1,5 @@
+import { sortBy as _sortBy } from 'lodash'
+
 class AccountantService {
 
     processDataFromSocket(payload){
@@ -7,7 +9,7 @@ class AccountantService {
             payload.memberMap.map(item => {
                 memberOptions.push({label : item.member.fullname, value: item.member.id, id: item.member.id, checked: false, bankerAccount: item.accounts})
             })
-            payload['payloadMemberOptions'] = memberOptions
+            payload['payloadMemberOptions'] = _sortBy(memberOptions, [o => o.label.toLowerCase()])
         }
 
         //Gernate List Banker
@@ -16,7 +18,7 @@ class AccountantService {
             for(let x in payload.bankerMap) {
                 bankerOptions.push({...payload.bankerMap[x], checked: true, collapse: true})
             }
-            payload['payloadBanker'] = bankerOptions
+            payload['payloadBanker'] = _sortBy(bankerOptions, [o => o.name.toLowerCase()])
             
         }
 
@@ -26,7 +28,7 @@ class AccountantService {
             for(let x in payload.scanAccMap) {
                 bankerAccountOptions.push({...payload.scanAccMap[x], type: null, message: null, data: null, checked: true, collapse: true})
             }
-            payload['payloadBankerAccount'] = bankerAccountOptions
+            payload['payloadBankerAccount'] = _sortBy(bankerAccountOptions, [o => o.acc_name.toLowerCase()])
         }
 
 

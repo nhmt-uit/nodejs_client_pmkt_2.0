@@ -1,4 +1,4 @@
-import { groupBy as _groupBy } from 'lodash'
+import { groupBy as _groupBy, sortBy as _sortBy } from 'lodash'
 
 import { AppConfig} from 'my-constants'
 import { BaseService, HttpService} from 'my-utils/core'
@@ -16,16 +16,20 @@ class AccountService extends BaseService {
                         let groupOtion = []
                         let bankerId, bankerName
                         if(bankerList[x].length !== 0) {
-                            groupOtion = bankerList[x].map(item => {
+                            bankerList[x].forEach(item => {
                                 bankerId = item.banker
                                 bankerName = item.banker_name
-                                return { label: item.acc_name.toUpperCase(), value: item.id, bankerId: bankerId}
+                                const tree2flatPayload = tree2flat([item])
+                                tree2flatPayload.forEach(el => {
+                                    groupOtion.push({ label: el.acc_name.toUpperCase(), value: el.id, bankerId: bankerId})
+                                })
+                               
                             })
                         }
                         optBanker.push({ value: bankerId, label: bankerName.toUpperCase(), options: groupOtion})
                     }
                 }
-                res.res.data.bankerAccountMap = optBanker
+                res.res.data.bankerAccountMap = _sortBy(optBanker, [o => o.label.toLowerCase()])
             }
             return res
         })
@@ -59,6 +63,17 @@ class AccountService extends BaseService {
 
         return HttpService.post(`${this.serviceUrl}/check_login`, payload);
     }
+}
+
+
+// Get all child
+function tree2flat(data, result = []) {
+    if(!data) return result
+    data.forEach(item => {
+        result.push(item)
+        return tree2flat(item.child, result)
+    })
+    return result
 }
 
 export default new AccountService()

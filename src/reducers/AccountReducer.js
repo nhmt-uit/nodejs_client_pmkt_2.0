@@ -1,4 +1,4 @@
-import { get as _get } from 'lodash'
+import { get as _get, sortBy as _sortBy } from 'lodash'
 import { AccountActionType } from 'my-constants/action-types'
 
 let defaultState = {
@@ -42,6 +42,7 @@ export const AccountReducer = (state = defaultState, action) => {
 			let optAccountBelong = []
 			let bankerList = _get(action.initFormData, 'bankerList')
 			if(bankerList) {
+				bankerList = _sortBy(bankerList, [o => o.name.toLowerCase()])
 				for(let x in bankerList) {
 					optBanker.push({ ...bankerList[x], value: bankerList[x].id, label: bankerList[x].name.toUpperCase()})
 

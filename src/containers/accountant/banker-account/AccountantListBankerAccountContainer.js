@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { isEmpty as _isEmpty, isEqual as _isEqual } from 'lodash'
+import { isEmpty as _isEmpty, isEqual as _isEqual, sortBy as _sortBy } from 'lodash'
 import uuidv4 from 'uuid/v4'
 
 import { AccountantItemBankerAccountContainer } from 'my-containers/accountant';
@@ -24,8 +24,10 @@ class AccountantListBankerAccountContainer extends Component {
     }
     
     render() {
-        const bankerAccounts = this.props.bankerAccount.filter(item => item.banker === this.props.bankerId)
+        let bankerAccounts = this.props.bankerAccount.filter(item => item.banker === this.props.bankerId)
         if(_isEmpty(bankerAccounts)) return null
+        // bankerAccounts = _sortBy(bankerAccounts, [o => o.acc_name.toLowerCase()])
+        // console.log(bankerAccounts)
         return bankerAccounts.map((item, idx) => {
             return <AccountantItemBankerAccountContainer key={uuidv4()} bankerAccountId={item.id} />
         })

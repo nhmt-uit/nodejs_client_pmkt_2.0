@@ -54,20 +54,26 @@ class Header extends Component {
             <>
                 <div className="page-header navbar navbar-fixed-top">
                     <div className="page-header-inner ">
-                        <div className="page-logo">
+                        <div className="page-logo" style={{paddingLeft: "10px"}}>
                             {
                                 isReplaceRouterLink
                                     ? (
-                                        <a className="position-relative" href={RoutesService.getPath('ADMIN', 'DASHBOARD')} style={{height: '100%', lineHeight: '35px', color: 'white', fontWeight: 'bold', fontSize: '20px'}}>
-                                            <span>VW3 Application</span>
-                                            <span className="version-header position-absolute display-block font-size-11 font-silver">Ver: {AppConfig.VERSION_RELEASE}</span>
+                                        <a className="position-relative" href={RoutesService.getPath('ADMIN', 'DASHBOARD')} style={{height: '100%', lineHeight: '18px', color: 'white', fontWeight: 'bold', fontSize: '20px'}}>
+                                            <img src="/assets/images/logo.png" style={{width: "30px", height: "30px", float: "left", marginTop: "10px"}} />
+                                            <div style={{float: "left", fontSize: "17px", marginLeft: "7px", marginTop: "8px",}}>
+                                                <span>VW3 Application</span>
+                                                <span className="display-block font-size-11 font-silver">Ver: {AppConfig.VERSION_RELEASE}</span>
+                                            </div>
                                         </a>
 
                                     )
                                     : (
-                                        <Link className="position-relative" to={RoutesService.getPath('ADMIN', 'DASHBOARD')} style={{height: '100%', lineHeight: '35px', color: 'white', fontWeight: 'bold', fontSize: '20px'}}>
-                                            <span>VW3 Application</span>
-                                            <span className="version-header position-absolute display-block font-size-11 font-silver">Ver: {AppConfig.VERSION_RELEASE}</span>
+                                        <Link className="position-relative" to={RoutesService.getPath('ADMIN', 'DASHBOARD')} style={{height: '100%', lineHeight: '18px', color: 'white', fontWeight: 'bold', fontSize: '20px'}}>
+                                            <img src="/assets/images/logo.png" style={{width: "30px", height: "30px", float: "left", marginTop: "10px"}} />
+                                            <div style={{float: "left", fontSize: "17px", marginLeft: "7px", marginTop: "8px",}}>
+                                                <span>VW3 Application</span>
+                                                <span className="display-block font-size-11 font-silver">Ver: {AppConfig.VERSION_RELEASE}</span>
+                                            </div>
                                         </Link>
                                     )
                             }

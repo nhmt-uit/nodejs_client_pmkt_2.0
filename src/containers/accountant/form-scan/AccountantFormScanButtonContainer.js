@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from "react-router"
 import { Link } from 'react-router-dom'
-import { isEqual as _isEqual, map as _map, isEmpty as _isEmpty, sortBy as _sortBy, toArray as _toArray } from 'lodash'
+import { isEqual as _isEqual, map as _map, isEmpty as _isEmpty, sortBy as _sortBy, toArray as _toArray, get as _get } from 'lodash'
 
 import { socketScanData, socketStopScanData } from 'my-actions/AccountantAction';
 import { TransComponent } from 'my-components'
@@ -57,7 +57,7 @@ class AccountantFormScanButtonContainer extends Component {
     */
     handleSaveReport = _ => {
         Helpers.showLoading()
-        const payloadBankerAccount = this.props.bankerAccount.filter(item => item.type === 'resolve' && !_isEmpty(item.data.reportSave.reportSaveList))
+        const payloadBankerAccount = this.props.bankerAccount.filter(item => item.type === 'resolve' && !_isEmpty(_get(item, "data.reportSave.reportSaveList")))
         for(let x in payloadBankerAccount) {
             const requestObj = {
                 from_date: payloadBankerAccount[x].data.from_date,
