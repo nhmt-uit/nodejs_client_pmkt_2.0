@@ -48,7 +48,7 @@ export const AccountReducer = (state = defaultState, action) => {
 				for(let x in bankerList) {
 					optBanker.push({ ...bankerList[x], value: bankerList[x].id, label: bankerList[x].name.toUpperCase()})
 
-					let groupOtion = action.initFormData.accountList.filter(item => item.banker_id === bankerList[x].id)
+					let groupOtion = accountList.filter(item => item.banker_id === bankerList[x].id)
 					groupOtion.map(item => {
 						item.value = item.id
 						item.label = item.acc_name.toUpperCase()
