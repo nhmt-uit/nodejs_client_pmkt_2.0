@@ -41,8 +41,10 @@ export const AccountReducer = (state = defaultState, action) => {
 			let optBanker = []
 			let optAccountBelong = []
 			let bankerList = _get(action.initFormData, 'bankerList')
+			let accountList = _get(action.initFormData, 'accountList')
 			if(bankerList) {
 				bankerList = _sortBy(bankerList, [o => o.name.toLowerCase()])
+				accountList = _sortBy(accountList, [o => o.acc_name.toLowerCase()])
 				for(let x in bankerList) {
 					optBanker.push({ ...bankerList[x], value: bankerList[x].id, label: bankerList[x].name.toUpperCase()})
 
